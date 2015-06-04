@@ -1,0 +1,59 @@
+<div ng-controller="RegisterCtrl">
+    <ion-header-bar class="bar-stable">
+        <h1 class="title">Sign Up</h1>
+    </ion-header-bar>
+    <ion-content has-header="true" padding="true">
+        <form name="registrationForm" novalidate="novalidate" ng-submit="registrationForm.$valid && register(registrationForm)">
+            <div class="list">
+
+                <label class="item item-input"
+                       ng-class="{ 'has-error' : registrationForm.email.$invalid && registrationForm.email.$touched, 'valid-lr' : registrationForm.email.$valid}"
+                       ng-messages-include="templates/register-error-list.html">
+                    <input type="email" placeholder="Email" name="email" ng-model="email" autofocus
+                           ng-minlength="5" ng-maxlength="50" required>
+                </label>
+
+                <div class="error-container form-errors" ng-show="registrationForm.email.$error && registrationForm.$submitted"
+                     ng-messages="registrationForm.email.$error"
+                     ng-if="registrationForm.email.$dirty"
+                     ng-messages-include="templates/register-error-list.html">
+                </div>
+
+                <label class="item item-input"
+                       ng-class="{ 'has-error' : registrationForm.password.$invalid  && registrationForm.$submitted, 'valid-lr' : registrationForm.password.$valid  && registrationForm.$submitted}">
+                    <input type="password" placeholder="Password" name="password" ng-model="password"
+                           ng-minlength="5" ng-maxlength="50" required>
+                </label>
+
+                <div class="error-container last-error-container form-errors"
+                     ng-show="registrationForm.password.$error && registrationForm.$submitted"
+                     ng-messages="registrationForm.password.$error"
+                     ng-messages-include="templates/register-error-list.html">
+                </div>
+
+                <label class="item item-input"
+                       ng-class="{ 'has-error' : registrationForm.retypedPassword.$invalid  && registrationForm.$submitted, 'valid-lr' : registrationForm.retypedPassword.$valid  && registrationForm.$submitted}">
+                    <input type="password" placeholder="Retype Password" name="retypedPassword"
+                           ng-model="retypedPassword" ng-minlength="5" ng-maxlength="50" required my-compare-to="registrationForm.password">
+                </label>
+
+                <div class="error-container last-error-container form-errors"
+                     ng-show="registrationForm.retypedPassword.$error && registrationForm.$submitted"
+                     ng-messages="registrationForm.retypedPassword.$error"
+                     ng-messages-include="templates/register-error-list.html">
+                </div>
+
+            </div>
+
+            <button class="button button-full button-positive button-assertive" type="submit">
+                Sign Up
+            </button>
+
+            <div class="padding">
+                Already have an account?
+                <a class="link" href="#/app/login">Sign In</a>
+            </div>
+
+        </form>
+    </ion-content>
+</div>
