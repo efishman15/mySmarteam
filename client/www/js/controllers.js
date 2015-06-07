@@ -12,6 +12,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     $rootScope.isLoggedIn = true;
                     $rootScope.user = currentUser;
                     console.log("Logged In as: " + currentUser.email);
+                    $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status) {
                     console.log("Failed to auto log in as: " + currentUser.email + " (" + status + ")");
@@ -33,6 +34,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                 function (data) {
                     UserService.setCurrentUser($rootScope.user);
                     $rootScope.isLoggedIn = true;
+                    $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status) {
                     if (status == 401) {
@@ -96,48 +98,10 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
         $ionicHistory.clearHistory;
     })
 
-    .controller('SessionsCtrl', function ($scope, $rootScope, SessionsService) {
-        $scope.$on('$ionicView.beforeEnter', function () {
-            SessionsService.getSessions(
-                function (data) {
-                    $scope.sessions = data;
-                },
-                function (status) {
-                    alert("Error retrieving sessions list (" + status + ")");
-                }
-            )
-        });
-
-        $rootScope.$on('event:auth-logoutCompleted', function (e, rejection) {
-            $scope.sessions = null;
-        });
-    })
-
-    .controller('SessionCtrl', function ($scope, $stateParams, SessionsService) {
-        SessionsService.getSession($stateParams.sessionId,
-            function (data) {
-                $scope.session = data;
-            },
-            function (status) {
-                alert("Error retrieving session information for session " + $stateParams.sessionId + "(" + status + ")");
-            });
-
-        $scope.share = function (event) {
-            openFB.api({
-                method: 'POST',
-                path: '/me/feed',
-                params: {
-                    message: "I'll be attending: '" + $scope.session.title + "' by " +
-                    $scope.session.speaker
-                },
-                success: function () {
-                    alert('The session was shared on Facebook');
-                },
-                error: function () {
-                    alert('An error occurred while sharing this session on Facebook');
-                }
-            });
-        };
+    .controller('PlayCtrl', function ($scope) {
+        $scope.play = function() {
+            alert("Play...");
+        }
     })
 
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, $ionicHistory) {

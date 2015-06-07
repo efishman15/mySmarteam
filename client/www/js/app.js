@@ -60,22 +60,12 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
                 }
             })
 
-            .state('app.sessions', {
-                url: "/sessions",
+            .state('app.play', {
+                url: "/play",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/sessions.html",
-                        controller: 'SessionsCtrl'
-                    }
-                }
-            })
-
-            .state('app.session', {
-                url: "/sessions/:sessionId",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/session.html",
-                        controller: 'SessionCtrl'
+                        templateUrl: "templates/play.html",
+                        controller: 'PlayCtrl'
                     }
                 }
             })
