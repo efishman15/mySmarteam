@@ -12,7 +12,7 @@ exports.register = function (req, res, next) {
 
     var operations = [
 
-        //Connect to the db
+        //Connect to the db and get the adminsCollection
         function (callback) {
             mongoClient.connect(CONNECTION_STRING, function (err, db) {
                 if (err) {
@@ -21,15 +21,9 @@ exports.register = function (req, res, next) {
                     callback(err, message);
                     return;
                 }
-                callback(null, db);
+                var adminsCollection = db.collection("Admins");
+                callback(null, db, adminsCollection);
             })
-        },
-
-        //Get the admin collections
-        function (db, callback) {
-            var adminsCollection = db.collection("Admins");
-            console.log("Admin collection: " + adminsCollection);
-            callback(null, db, adminsCollection);
         },
 
         //Try to insert the new admin
@@ -50,19 +44,15 @@ exports.register = function (req, res, next) {
                     callback(err, message);
                     return;
                 }
+
                 callback(null, db, item._id);
             })
         },
 
-        //Get the sessions collection
-        function (db, adminId, callback) {
-            var sessionsCollection = db.collection('Sessions');
-            callback(null, db, sessionsCollection, adminId);
-        },
-
         //Create the session
-        function (db, sessionsCollection, adminId, callback) {
+        function (db, adminId, callback) {
             var userToken = uuid.v1();
+            var sessionsCollection = db.collection('Sessions');
             sessionsCollection.insert({
                 "adminId": adminId,
                 "createdAt": new Date(),
@@ -78,6 +68,7 @@ exports.register = function (req, res, next) {
             })
         },
 
+        //Close the db
         function (db, userToken, callback) {
             db.close();
             callback(null, userToken);
@@ -108,3 +99,4 @@ exports.logout = function (req, res, next) {
     console.log("logged out user with token: " + token);
     res.send(200, "OK")
 };
+

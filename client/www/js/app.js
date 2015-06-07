@@ -70,6 +70,16 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
                 }
             })
 
+            .state('app.otherwise', {
+                url: "/otherwise",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/play.html",
+                        controller: 'OtherwiseCtrl'
+                    }
+                }
+            })
+
             .state('app.logout', {
                 url: "/logout",
                 views: {
@@ -79,8 +89,18 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
                 }
             });
 
-        // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/app/home');
+        $urlRouterProvider.otherwise(function($injector, $location) {
+            var $state = $injector.get('$state');
+            var UserService = $injector.get('UserService');
+            var currentUser = UserService.getCurrentUser();
+
+            if (currentUser && currentUser.email) {
+                return 'app/play';
+            }
+            else {
+                return 'app/home';
+            }
+        });
     })
 
     .directive('myCompareTo', function () {

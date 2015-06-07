@@ -1,10 +1,11 @@
 angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
-    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService) {
+    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, $ionicHistory) {
 
         //Perform auto-login if login details are saved in store
         $rootScope.isLoggedIn = false;
         var currentUser = UserService.getCurrentUser();
+
         if (currentUser && currentUser.email) {
             //Auto silent login based on the credentials in the storage
             LoginService.login(currentUser,
@@ -12,7 +13,6 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     $rootScope.isLoggedIn = true;
                     $rootScope.user = currentUser;
                     console.log("Logged In as: " + currentUser.email);
-                    $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status) {
                     console.log("Failed to auto log in as: " + currentUser.email + " (" + status + ")");
@@ -22,7 +22,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
         }
     })
 
-    .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, authService) {
+    .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, $ionicHistory) {
         $rootScope.user = UserService.initUser();
 
         $scope.register = function (registrationForm) {
@@ -34,6 +34,11 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                 function (data) {
                     UserService.setCurrentUser($rootScope.user);
                     $rootScope.isLoggedIn = true;
+
+                    $ionicHistory.clearHistory();
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
                     $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status) {
@@ -95,13 +100,12 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
     .controller('HomeCtrl', function ($ionicHistory) {
         // This a temporary solution to solve an issue where the back button is displayed when it should not be.
         // This is fixed in the nightly ionic build so the next release should fix the issue
-        $ionicHistory.clearHistory;
     })
 
     .controller('PlayCtrl', function ($scope) {
-        $scope.play = function() {
+        $scope.play = function () {
             alert("Play...");
-        }
+        };
     })
 
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, $ionicHistory) {
