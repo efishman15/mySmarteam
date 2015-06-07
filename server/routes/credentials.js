@@ -7,8 +7,6 @@ var async = require('async');
 
 exports.register = function (req, res, next) {
     var user = req.body;
-    console.log("about to register:");
-    console.log(JSON.stringify(user, null, 2));
 
     var operations = [
 
@@ -49,24 +47,7 @@ exports.register = function (req, res, next) {
             })
         },
 
-        //Create the session
-        function (db, adminId, callback) {
-            var userToken = uuid.v1();
-            var sessionsCollection = db.collection('Sessions');
-            sessionsCollection.insert({
-                "adminId": adminId,
-                "createdAt": new Date(),
-                "userToken": uuid.v1()
-            }, {}, function (err, item) {
-
-                if (err) {
-                    console.dir(err);
-                    callback(err, "Error creating sessions for adminId: " + adminId);
-                }
-
-                callback(null, db, userToken);
-            })
-        },
+        createSession,
 
         //Close the db
         function (db, userToken, callback) {
@@ -76,8 +57,6 @@ exports.register = function (req, res, next) {
     ];
 
     async.waterfall(operations, function (err, result) {
-        console.log("err: " + err);
-        console.log("result: " + result);
         if (!err) {
             res.json({"token": result})
         }
@@ -89,14 +68,130 @@ exports.register = function (req, res, next) {
 
 exports.login = function (req, res, next) {
     var user = req.body;
-    console.log("email: " + user.email);
-    console.log("password: " + user.password);
-    res.send({"token": "1234567890"})
-};
+
+    var operations = [
+
+        //Connect to the db and get the adminsCollection
+        function (callback) {
+            mongoClient.connect(CONNECTION_STRING, function (err, db) {
+                if (err) {
+                    var message = "Error connecting to the database";
+                    console.log(message);
+                    callback(err, message);
+                    return;
+                }
+                var adminsCollection = db.collection("Admins");
+                callback(null, db, adminsCollection);
+            })
+        },
+
+        //Look for this admin
+        function (db, adminsCollection, callback) {
+            adminsCollection.findOne({
+                "email": user.email,
+                "password": md5(user.password + "|" + user.email)
+            }, {}, function (err, item) {
+                if (err) {
+                    console.log("Error finding user with email:" + user.email);
+                    var message = "Invalid Email or Password";
+                    console.log(message);
+                    callback(err, message);
+                    return;
+                }
+
+                console.log("Found user with email:" + user.email);
+                callback(null, db, item._id);
+            })
+        },
+
+        createSession,
+
+        //Close the db
+        function (db, userToken, callback) {
+            db.close();
+            callback(null, userToken);
+        }
+    ];
+
+    async.waterfall(operations, function (err, result) {
+        if (!err) {
+            res.json({"token": result})
+        }
+        else {
+            res.status(403).json({"error": result});
+        }
+    });
+}
 
 exports.logout = function (req, res, next) {
     var token = req.headers.authorization;
-    console.log("logged out user with token: " + token);
-    res.send(200, "OK")
+
+    var operations = [
+
+        //Connect to the db and get the adminsCollection
+        function (callback) {
+            mongoClient.connect(CONNECTION_STRING, function (err, db) {
+                if (err) {
+                    var message = "Error connecting to the database";
+                    console.log(message);
+                    callback(err, message);
+                    return;
+                }
+                var sessionsCollection = db.collection("Sessions");
+                callback(null, db, sessionsCollection);
+            })
+        },
+
+        //Look for this session
+        function (db, sessionsCollection, callback) {
+            console.log("Logout Token: " + token);
+            sessionsCollection.remove({
+                "userToken" : token
+            }, 1, function (err, numberOfRemovedDocs) {
+                if (err) {
+                    //Session does not exist - stop the call chain
+                    console.dir(err);
+                    callback(err, message);
+                    return;
+                }
+
+                console.log("no errors deleting session with token: " + token + ". No of docs removed: " + numberOfRemovedDocs);
+                callback(null, db);
+            })
+        },
+
+        //Close the db
+        function (db, callback) {
+            db.close();
+            callback(null);
+        }
+    ];
+
+    async.waterfall(operations, function (err, result) {
+        if (!err) {
+            res.send(200, "OK");
+        }
+        else {
+            res.status(403).json({"error": result});
+        }
+    })
 };
 
+//Create the session
+function createSession(db, adminId, callback) {
+    var userToken = uuid.v1();
+    var sessionsCollection = db.collection('Sessions');
+    sessionsCollection.insert({
+        "adminId": adminId,
+        "createdAt": new Date(),
+        "userToken": uuid.v1()
+    }, {}, function (err, item) {
+
+        if (err) {
+            console.dir(err);
+            callback(err, "Error creating sessions for adminId: " + adminId);
+        }
+
+        callback(null, db, userToken);
+    })
+}

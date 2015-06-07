@@ -27,13 +27,15 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
         $scope.register = function (registrationForm) {
 
-            $rootScope.user.email = registrationForm.email.$modelValue;
-            $rootScope.user.password = registrationForm.password.$modelValue;
+            var user = UserService.initUser();
+            user.email = registrationForm.email.$modelValue;
+            user.password = registrationForm.password.$modelValue;
 
-            LoginService.register($rootScope.user,
+            LoginService.register(user,
                 function (data) {
-                    UserService.setCurrentUser($rootScope.user);
+                    UserService.setCurrentUser(user);
                     $rootScope.isLoggedIn = true;
+                    $rootScope.user = user;
 
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
@@ -64,16 +66,29 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
     })
 
 
-    .controller('LoginCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, authService) {
+    .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, authService, $ionicHistory) {
         $scope.message = "";
         $rootScope.user = UserService.initUser();
 
-        $scope.login = function () {
-            LoginService.login($rootScope.user,
+        $scope.login = function (loginForm) {
+
+            var user = UserService.initUser();
+            user.email = loginForm.email.$modelValue;
+            user.password = loginForm.password.$modelValue;
+
+            LoginService.login(user,
                 function (data) {
-                    UserService.setCurrentUser($rootScope.user);
+                    UserService.setCurrentUser(user);
                     $rootScope.isLoggedIn = true;
+                    $rootScope.user = user;
                     authService.loginConfirmed(); //will release queued http requests
+
+                    $ionicHistory.clearHistory();
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
+
+                    $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status) {
                     if (status == 401) {

@@ -1,7 +1,6 @@
 var express = require('express'),
     bodyParser     = require('body-parser'),
     methodOverride = require('method-override'),
-    sessions = require('./routes/sessions'),
     credentials = require('./routes/credentials'),
     app = express();
 
@@ -27,10 +26,6 @@ function isAuthenticated(req,res,next){
     }
 }
 
-sessions.initSessions();
-
-app.get('/sessions', isAuthenticated,sessions.findAll);
-app.get('/sessions/:id', isAuthenticated, sessions.findById);
 app.post('/users/logout', isAuthenticated, credentials.logout);
 
 app.post('/users/login', credentials.login);

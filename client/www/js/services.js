@@ -40,7 +40,7 @@ angular.module('eddy1.services', [])
         var currentUser = null;
 
         service.initUser = function() {
-            return {"email": null, "password": null, "token": null};
+            return {"email": null, "password": null};
         };
 
         service.setCurrentUser = function (user) {
