@@ -4,6 +4,7 @@ var CONNECTION_STRING = "mongodb://localhost:27017/studyB4";
 var md5 = require("MD5");
 var uuid = require('node-uuid');
 var async = require('async');
+var ObjectId = require('mongodb').ObjectID;
 
 exports.register = function (req, res, next) {
     var user = req.body;
@@ -99,7 +100,6 @@ exports.login = function (req, res, next) {
                     return;
                 }
 
-                console.log("Found user with email:" + user.email);
                 callback(null, db, item._id);
             })
         },
@@ -137,27 +137,35 @@ exports.logout = function (req, res, next) {
                     callback(err, message);
                     return;
                 }
-                var sessionsCollection = db.collection("Sessions");
+                callback(null, db);
+            })
+        },
+
+        //Get the Sessions collection
+        function (db, callback) {
+            db.collection("Sessions", {}, function (err, sessionsCollection) {
                 callback(null, db, sessionsCollection);
             })
         },
 
         //Look for this session
         function (db, sessionsCollection, callback) {
-            console.log("Logout Token: " + token);
-            sessionsCollection.remove({
-                "userToken" : token
-            }, 1, function (err, numberOfRemovedDocs) {
-                if (err) {
-                    //Session does not exist - stop the call chain
-                    console.dir(err);
-                    callback(err, message);
-                    return;
+            sessionsCollection.remove(
+                {
+                    "userToken": token
                 }
-
-                console.log("no errors deleting session with token: " + token + ". No of docs removed: " + numberOfRemovedDocs);
-                callback(null, db);
-            })
+                , {w: 1, single: true},
+                function (err, numberOfRemovedDocs) {
+                    if (err) {
+                        //Session does not exist - stop the call chain
+                        console.log("error finding session with token: " + token, "error: " + err);
+                        callback(err, message);
+                        return;
+                    }
+                    ;
+                    callback(null, db);
+                }
+            )
         },
 
         //Close the db
@@ -184,7 +192,7 @@ function createSession(db, adminId, callback) {
     sessionsCollection.insert({
         "adminId": adminId,
         "createdAt": new Date(),
-        "userToken": uuid.v1()
+        "userToken": userToken
     }, {}, function (err, item) {
 
         if (err) {
