@@ -2,6 +2,14 @@
     <i class="ion-information-circled"></i>
     This field is required!
 </div>
+<div class="form-error slide-right" ng-message="email">
+    <i class="ion-information-circled"></i>
+    wrong email format!
+</div>
+<div class="form-error" ng-message="serverError">
+    <i class="ion-information-circled"></i>
+    {{loginForm.serverError.innerHTML}}
+</div>
 <div class="form-error" ng-message="minlength">
     <i class="ion-information-circled"></i>
     Minimum length of this field is 5 characters!

@@ -1,39 +1,5 @@
 angular.module('eddy1.services', [])
 
-    .factory('SessionsService', function ($http, ENDPOINT_URI) {
-
-        var service = this;
-        var path = 'sessions/';
-
-        service.getUrl = function () {
-            return ENDPOINT_URI + path;
-        };
-
-        service.getSessions = function (callbackOnSuccess, callbackOnError) {
-            $http.get(service.getUrl())
-                .success(function (data, status, headers, config) {
-                    callbackOnSuccess(data);
-                })
-                .error(function (data, status, headers, config) {
-                    console.log("Error occurred.  Status:" + status);
-                    callbackOnError(status);
-                });
-        };
-
-        service.getSession = function (sessionId, callbackOnSuccess, callbackOnError) {
-            $http.get(service.getUrl() + sessionId)
-                .success(function (data, status, headers, config) {
-                    callbackOnSuccess(data);
-                })
-                .error(function (data, status, headers, config) {
-                    console.log("Error occurred.  Status:" + status);
-                    callbackOnError(status);
-                });
-        };
-
-        return service;
-    })
-
     //User Service
     .factory('UserService', function (store) {
         var service = this;
@@ -76,11 +42,11 @@ angular.module('eddy1.services', [])
         service.register = function (credentials, callbackOnSuccess, callbackOnError) {
             return $http.post(service.getLogUrl('register'), credentials)
                 .success(function (data, status, headers, config) {
+                    $http.defaults.headers.common.Authorization = data.token;
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
-                    console.log("Error occurred.  Status:" + status);
-                    callbackOnError(status);
+                    callbackOnError(status, data);
                 })};
 
         service.login = function (credentials, callbackOnSuccess, callbackOnError) {
@@ -90,8 +56,7 @@ angular.module('eddy1.services', [])
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
-                    console.log("Error occurred.  Status:" + status);
-                    callbackOnError(status);
+                    callbackOnError(status, data);
                 })};
 
         service.logout = function (callbackOnSuccess, callbackOnError) {
@@ -101,10 +66,28 @@ angular.module('eddy1.services', [])
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
-                    console.log("Error occurred.  Status:" + status);
                     delete $http.defaults.headers.common.Authorization;
                     callbackOnError(status);
                 })};
+
+        //Used for both login and register forms - clear last server error upon field change
+        service.fieldChange =  function (currentField, serverErrorField) {
+
+            if (serverErrorField) {
+                if (!serverErrorField.$error) {
+                    serverErrorField.$error = {};
+                }
+
+                serverErrorField.$error.serverError = false;
+            }
+
+            if (currentField) {
+                if (!currentField.$error) {
+                    currentField.$error = {};
+                }
+                currentField.$error.serverError = false;
+            }
+        };
 
         return service;
     });

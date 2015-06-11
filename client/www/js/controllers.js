@@ -4,6 +4,8 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
         //Perform auto-login if login details are saved in store
         $rootScope.isLoggedIn = false;
+        $rootScope.user = UserService.initUser();
+
         var currentUser = UserService.getCurrentUser();
 
         if (currentUser && currentUser.email) {
@@ -23,7 +25,8 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
     })
 
     .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, $ionicHistory) {
-        $rootScope.user = UserService.initUser();
+
+        $scope.fieldChange = LoginService.fieldChange;
 
         $scope.register = function (registrationForm) {
 
@@ -43,32 +46,35 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     });
                     $state.go('app.play', {}, {reload: true, inherit: true});
                 },
-                function (status) {
-                    if (status == 401) {
-                        $scope.message = "Email already exist.";
+                function (status, error) {
+                    registrationForm.serverError.innerHTML = error.message;
+                    if (error.fieldName) {
+                        //Error in a specific field
+                        registrationForm[error.fieldName].$invalid = true;
+                        if (!registrationForm[error.fieldName].$error) {
+                            registrationForm[error.fieldName].$error = {};
+                        }
+                        registrationForm[error.fieldName].$error.serverError = true;
                     }
                     else {
-                        $scope.message = "Invalid email address."
+                        //General Error in the server
+                        if (!registrationForm.serverError.$error) {
+                            registrationForm.serverError.$error = {};
+                        }
+                        registrationForm.serverError.$error.serverError = true;
                     }
                 });
         };
 
         $scope.$on('event:auth-loginRequired', function (e, rejection) {
-            $scope.user = UserService.getCurrentUser();
-            if ($rootScope.user && !$rootScope.user.email) {
-                $rootScope.user = UserService.initUser();
-                $state.go('app.login', {}, {reload: true, inherit: true});
-            }
-            else {
-                $scope.login();
-            }
+            $rootScope.user = UserService.initUser();
+            $state.go('app.login', {}, {reload: true, inherit: true});
         });
     })
 
-
     .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, authService, $ionicHistory) {
-        $scope.message = "";
-        $rootScope.user = UserService.initUser();
+
+        $scope.fieldChange = LoginService.fieldChange;
 
         $scope.login = function (loginForm) {
 
@@ -90,12 +96,22 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
                     $state.go('app.play', {}, {reload: true, inherit: true});
                 },
-                function (status) {
-                    if (status == 401) {
-                        $scope.message = "Invalid Username or Password.";
+                function (status, error) {
+                    loginForm.serverError.innerHTML = error.message;
+                    if (error.fieldName) {
+                        //Error in a specific field
+                        loginForm[error.fieldName].$invalid = true;
+                        if (!loginForm[error.fieldName].$error) {
+                            loginForm[error.fieldName].$error = {};
+                        }
+                        loginForm[error.fieldName].$error.serverError = true;
                     }
                     else {
-                        $scope.message = "Login failed."
+                        //General Error in the server
+                        if (!loginForm.serverError.$error) {
+                            loginForm.serverError.$error = {};
+                        }
+                        loginForm.serverError.$error.serverError = true;
                     }
                 });
         };
@@ -107,7 +123,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                 $state.go('app.login', {}, {reload: true, inherit: true});
             }
             else {
-                $scope.login();
+                $scope.login($scope.loginForm);
             }
         });
     })
