@@ -28,9 +28,9 @@ module.exports.register = function (req, res, next) {
         }
     ];
 
-    async.waterfall(operations, function (err, result) {
+    async.waterfall(operations, function (err, userToken) {
         if (!err) {
-            res.json({"token": result})
+            res.json({"token": userToken})
         }
         else {
             res.send(err.status,err);
@@ -61,9 +61,9 @@ module.exports.login = function (req, res, next) {
         }
     ];
 
-    async.waterfall(operations, function (err, result) {
+    async.waterfall(operations, function (err, userToken) {
         if (!err) {
-            res.json({"token": result})
+            res.json({"token": userToken})
         }
         else {
             res.send(err.status,err);
@@ -96,7 +96,7 @@ module.exports.logout = function (req, res, next) {
             res.send(200, "OK");
         }
         else {
-            res.status(403).json({"error": result});
+            res.send(err.status,err);
         }
     })
 };
@@ -151,7 +151,7 @@ function createSession(dbHelper, adminId, callback) {
 
         if (err) {
             console.dir(err);
-            callback(err, "Error creating sessions for adminId: " + adminId);
+            callback(new excptions.GeneralError(500));
         }
 
         callback(null, dbHelper, userToken);
@@ -170,7 +170,7 @@ function logout(dbHelper, token, callback) {
             if (err) {
                 //Session does not exist - stop the call chain
                 console.log("error finding session with token: " + token, "error: " + err);
-                callback(err, message);
+                callback(new excptions.GeneralError(500));
                 return;
             }
             ;

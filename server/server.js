@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var credentials = require('./business_logic/credentials')
+var quiz = require('./business_logic/quiz')
 var domain = require('domain');
 var GeneralError = require('./business_logic/exceptions').GeneralError;
 var app = express();
@@ -38,6 +39,7 @@ app.all('*', function (req, res, next) {
 });
 
 //API's require authentication
+app.post('/quiz/start', isAuthenticated, quiz.start);
 app.post('/users/logout', isAuthenticated, credentials.logout);
 
 //API's that do NOT require authentication

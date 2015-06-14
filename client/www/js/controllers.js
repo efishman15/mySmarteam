@@ -1,6 +1,6 @@
 angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
-    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, $ionicHistory) {
+    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
 
         //Perform auto-login if login details are saved in store
         $rootScope.isLoggedIn = false;
@@ -14,17 +14,24 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                 function (data) {
                     $rootScope.isLoggedIn = true;
                     $rootScope.user = currentUser;
-                    console.log("Logged In as: " + currentUser.email);
                 },
-                function (status) {
-                    console.log("Failed to auto log in as: " + currentUser.email + " (" + status + ")");
+                function (status, error) {
                     UserService.setCurrentUser(UserService.initUser());
+                    ErrorService.logError(status, error, false);
                 }
             )
         }
+
+        $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
+            $rootScope.user = UserService.getCurrentUser();
+            if ($rootScope.user && !$rootScope.user.email) {
+                $rootScope.user = UserService.initUser();
+            }
+            $state.go('app.login', {}, {reload: true, inherit: true});
+        });
     })
 
-    .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, $ionicHistory) {
+    .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, ErrorService, $ionicHistory) {
 
         $scope.fieldChange = LoginService.fieldChange;
 
@@ -62,17 +69,13 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                             registrationForm.serverError.$error = {};
                         }
                         registrationForm.serverError.$error.serverError = true;
+                        ErrorService.logError(status, error, false);
                     }
                 });
         };
-
-        $scope.$on('event:auth-loginRequired', function (e, rejection) {
-            $rootScope.user = UserService.initUser();
-            $state.go('app.login', {}, {reload: true, inherit: true});
-        });
     })
 
-    .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, authService, $ionicHistory) {
+    .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, authService, $ionicHistory) {
 
         $scope.fieldChange = LoginService.fieldChange;
 
@@ -112,34 +115,34 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                             loginForm.serverError.$error = {};
                         }
                         loginForm.serverError.$error.serverError = true;
+                        ErrorService.logError(status, error, false);
                     }
                 });
         };
-
-        $scope.$on('event:auth-loginRequired', function (e, rejection) {
-            $scope.user = UserService.getCurrentUser();
-            if ($rootScope.user && !$rootScope.user.email) {
-                $rootScope.user = UserService.initUser();
-                $state.go('app.login', {}, {reload: true, inherit: true});
-            }
-            else {
-                $scope.login($scope.loginForm);
-            }
-        });
     })
 
     .controller('HomeCtrl', function ($ionicHistory) {
-        // This a temporary solution to solve an issue where the back button is displayed when it should not be.
-        // This is fixed in the nightly ionic build so the next release should fix the issue
     })
 
-    .controller('PlayCtrl', function ($scope) {
+    .controller('PlayCtrl', function ($scope, $state) {
         $scope.play = function () {
-            alert("Play...");
+            $state.go('app.quiz', {}, {reload: true, inherit: true});
         };
     })
 
-    .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, $ionicHistory) {
+    .controller('QuizCtrl', function ($scope, QuizService, ErrorService) {
+        $scope.$on('$ionicView.beforeEnter', function () {
+            QuizService.start(
+                function (data) {
+                    $scope.quiz = data;
+                },
+                function (status, error) {
+                    ErrorService.logError(status, error, true);
+                })
+        });
+    })
+
+    .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function () {
             LoginService.logout(
                 function (data) {
@@ -155,8 +158,8 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     $state.go('app.home', {}, {reload: true, inherit: true});
                     $rootScope.$broadcast('event:auth-logoutCompleted');
                 },
-                function (status) {
-                    alert("Error logging out (" + status + ")");
+                function (status, error) {
+                    ErrorService.logError(status, error, true);
                 })
         })
     });

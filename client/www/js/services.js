@@ -3,23 +3,18 @@ angular.module('eddy1.services', [])
     //User Service
     .factory('UserService', function (store) {
         var service = this;
-        var currentUser = null;
 
-        service.initUser = function() {
+        service.initUser = function () {
             return {"email": null, "password": null};
         };
 
         service.setCurrentUser = function (user) {
-            currentuser = user;
             store.set('user', user);
-            return currentUser;
+            return user;
         };
 
         service.getCurrentUser = function () {
-            if (!currentUser) {
-                currentUser = store.get('user');
-            }
-            return currentUser;
+                return store.get('user');
         };
 
         return service;
@@ -35,43 +30,46 @@ angular.module('eddy1.services', [])
             return ENDPOINT_URI + path;
         };
 
-        service.getLogUrl = function (action) {
+        service.getActionUrl = function (action) {
             return service.getUrl() + action;
         };
 
         service.register = function (credentials, callbackOnSuccess, callbackOnError) {
-            return $http.post(service.getLogUrl('register'), credentials)
+            return $http.post(service.getActionUrl('register'), credentials)
                 .success(function (data, status, headers, config) {
                     $http.defaults.headers.common.Authorization = data.token;
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
                     callbackOnError(status, data);
-                })};
+                })
+        };
 
         service.login = function (credentials, callbackOnSuccess, callbackOnError) {
-            $http.post(service.getLogUrl('login'), credentials)
+            $http.post(service.getActionUrl('login'), credentials)
                 .success(function (data, status, headers, config) {
                     $http.defaults.headers.common.Authorization = data.token;
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
                     callbackOnError(status, data);
-                })};
+                })
+        };
 
         service.logout = function (callbackOnSuccess, callbackOnError) {
-            return $http.post(service.getLogUrl('logout'))
+            return $http.post(service.getActionUrl('logout'))
                 .success(function (data, status, headers, config) {
                     delete $http.defaults.headers.common.Authorization;
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
                     delete $http.defaults.headers.common.Authorization;
-                    callbackOnError(status);
-                })};
+                    callbackOnError(status, data);
+                })
+        };
 
         //Used for both login and register forms - clear last server error upon field change
-        service.fieldChange =  function (currentField, serverErrorField) {
+        service.fieldChange = function (currentField, serverErrorField) {
 
             if (serverErrorField) {
                 if (!serverErrorField.$error) {
@@ -90,4 +88,49 @@ angular.module('eddy1.services', [])
         };
 
         return service;
+    })
+
+    //Quiz Service
+    .factory('QuizService', function ($http, ENDPOINT_URI) {
+
+        var service = this;
+
+        var path = 'quiz/';
+
+        service.getActionUrl = function (action) {
+            return service.getUrl() + action;
+        };
+
+        service.getUrl = function () {
+            return ENDPOINT_URI + path;
+        };
+
+        service.start = function (callbackOnSuccess, callbackOnError) {
+            return $http.post(service.getActionUrl('start'))
+                .success(function (data, status, headers, config) {
+                    callbackOnSuccess(data);
+                })
+                .error(function (data, status, headers, config) {
+                    callbackOnError(status, data);
+                })
+        };
+
+        return service;
+    })
+
+    //Error Service
+    .factory('ErrorService', function () {
+
+        var service = this;
+
+        service.logError = function (status, error, displayAlert) {
+            var message = "Error " + status + ": " + error.message;
+            console.log(message);
+            if (displayAlert && displayAlert == true) {
+                alert(message);
+            }
+        };
+
+        return service;
     });
+

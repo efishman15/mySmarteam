@@ -1,0 +1,18 @@
+<ion-view view-title="Play">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-header-bar class="bar-stable">
+        <h1 class="title">Quiz</h1>
+    </ion-header-bar>
+    <ion-content padding="true">
+        <p>{{quiz.currentQuestion.text}}</p>
+        <ion-list>
+            <ion-item ng-repeat="answer in quiz.currentQuestion.answers" class="button button-block button-stable button-positive" href="answer({{answer.id}});">{{answer.text}}>
+            </ion-item>
+        </ion-list>
+        <div class="bar bar-footer bar-balanced">
+            <div class="Question # {{quiz.currentQuestionIndex}}">Footer</div>
+        </div>
+    </ion-content>
+</ion-view>

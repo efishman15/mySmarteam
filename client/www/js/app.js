@@ -20,6 +20,30 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
         });
     })
 
+    .run(function ($rootScope, $ionicLoading) {
+        $rootScope.$on('loading:show', function () {
+            $ionicLoading.show({template: 'Loading...'})
+        })
+
+        $rootScope.$on('loading:hide', function () {
+            $ionicLoading.hide()
+        })
+    })
+
+    .config(function ($httpProvider) {
+        $httpProvider.interceptors.push(function ($rootScope) {
+            return {
+                request: function (config) {
+                    $rootScope.$broadcast('loading:show')
+                    return config
+                },
+                response: function (response) {
+                    $rootScope.$broadcast('loading:hide')
+                    return response
+                }
+            }
+        })
+    })
     .config(function ($stateProvider, $urlRouterProvider) {
 
         $stateProvider
@@ -70,6 +94,16 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
                 }
             })
 
+            .state('app.quiz', {
+                url: "/quiz",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/quiz.html",
+                        controller: 'QuizCtrl'
+                    }
+                }
+            })
+
             .state('app.otherwise', {
                 url: "/otherwise",
                 views: {
@@ -89,7 +123,7 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
                 }
             });
 
-        $urlRouterProvider.otherwise(function($injector, $location) {
+        $urlRouterProvider.otherwise(function ($injector, $location) {
             var $state = $injector.get('$state');
             var UserService = $injector.get('UserService');
             var currentUser = UserService.getCurrentUser();
