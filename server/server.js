@@ -20,11 +20,14 @@ function domainWrapper() {
         res.on('close', function () {
             reqDomain.dispose();
         });
+
         reqDomain.on('error', function (err) {
             console.log("ooooooooooopsssss....");
-            console.error(err.stack);
+            console.log("Error: " + JSON.stringify(err));
             var status = 500;
             res.status(status).send(new GeneralError(status));
+            next(err);
+            reqDomain.dispose();
         });
         reqDomain.run(next)
     }
@@ -33,13 +36,15 @@ app.use(domainWrapper());
 
 // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
 app.all('*', function (req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        next();
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
 });
 
 //API's require authentication
 app.post('/quiz/start', isAuthenticated, quiz.start);
+app.post('/quiz/answer', isAuthenticated, quiz.answer);
+app.post('/quiz/nextQuestion', isAuthenticated, quiz.nextQuestion);
 app.post('/users/logout', isAuthenticated, credentials.logout);
 
 //API's that do NOT require authentication

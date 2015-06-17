@@ -20,3 +20,46 @@ label.item.valid-lr {
     padding: 2px 0 2px 16px;
     color: red;
 }
+
+button.item.quiz-answer {
+    margin-bottom: 30px;
+}
+
+.blink {
+    -webkit-animation-name: blink;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: step-end;
+    -webkit-animation-iteration-count: 2;
+    animation-name: blink;
+    anmation-duration: 1s;
+    animation-timing-function: step-end;
+    animation-iteration-count: 2;
+}
+
+@-webkit-keyframes blink {
+    50% {
+        visibility: hidden
+    }
+    100% {
+        visibility: visible;
+    }
+}
+
+@keyframes blink {
+    50% {
+        visibility: hidden
+    }
+    100% {
+        visibility: visible;
+    }
+}
+
+
+.center {
+    text-align: center;
+}
+
+.question-text {
+    padding-top: 40px;
+    padding-bottom: 20px;
+}

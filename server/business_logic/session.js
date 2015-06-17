@@ -37,7 +37,7 @@ function retrieveSession(dbHelper, token, callback) {
         }
         , {},
         function (err, session) {
-            if (err) {
+            if (err || !session) {
                 //Session does not exist - stop the call chain
                 console.log("error finding session with token: " + token, "error: " + err);
                 callback(new excptions.GeneralError(401, "Session expired"));

@@ -1,6 +1,6 @@
 angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
-    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
+    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService) {
 
         //Perform auto-login if login details are saved in store
         $rootScope.isLoggedIn = false;
@@ -8,12 +8,18 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
         var currentUser = UserService.getCurrentUser();
 
-        if (currentUser && currentUser.email) {
+        function silentLogin(currentUser, releaseHttpRequests) {
             //Auto silent login based on the credentials in the storage
             LoginService.login(currentUser,
                 function (data) {
                     $rootScope.isLoggedIn = true;
                     $rootScope.user = currentUser;
+                    console.log("logged in with token: " + data.token);
+                    if (releaseHttpRequests && releaseHttpRequests == true) {
+                        authService.loginConfirmed(null, function (config) {
+                            return MyAuthService.confirmLogin(data.token, config);
+                        });
+                    }
                 },
                 function (status, error) {
                     UserService.setCurrentUser(UserService.initUser());
@@ -22,12 +28,19 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
             )
         }
 
+        if (currentUser && currentUser.email) {
+            silentLogin(currentUser, false);
+        }
+
         $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
             $rootScope.user = UserService.getCurrentUser();
             if ($rootScope.user && !$rootScope.user.email) {
                 $rootScope.user = UserService.initUser();
+                $state.go('app.login', {}, {reload: true, inherit: true});
             }
-            $state.go('app.login', {}, {reload: true, inherit: true});
+            else {
+                silentLogin($rootScope.user, true);
+            }
         });
     })
 
@@ -75,7 +88,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
         };
     })
 
-    .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, authService, $ionicHistory) {
+    .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, $ionicHistory) {
 
         $scope.fieldChange = LoginService.fieldChange;
 
@@ -90,7 +103,9 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     UserService.setCurrentUser(user);
                     $rootScope.isLoggedIn = true;
                     $rootScope.user = user;
-                    authService.loginConfirmed(); //will release queued http requests
+                    authService.loginConfirmed(null, function (config) {
+                        return MyAuthService.confirmLogin(data.token, config);
+                    });
 
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
@@ -121,7 +136,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
         };
     })
 
-    .controller('HomeCtrl', function ($ionicHistory) {
+    .controller('HomeCtrl', function ($scope, $rootScope, $state) {
     })
 
     .controller('PlayCtrl', function ($scope, $state) {
@@ -135,11 +150,54 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
             QuizService.start(
                 function (data) {
                     $scope.quiz = data;
+                    $scope.quiz.currentQuestion.answered = false;
                 },
                 function (status, error) {
                     ErrorService.logError(status, error, true);
                 })
         });
+
+        function getNextQuestion(currentCorrectAnswerId) {
+            QuizService.nextQuestion(
+                function (data) {
+                        for(i=0; i<$scope.quiz.currentQuestion.answers.length; i++) {
+                            document.getElementById("buttonAnswer" + $scope.quiz.currentQuestion.answers[i].id).className = "button-positive";
+                        }
+                        $scope.quiz = data;
+                        $scope.quiz.currentQuestion.answered = false;
+                },
+                function (status, error) {
+                    ErrorService.logError(status, error, true);
+                })
+        };
+
+        $scope.submitAnswer = function (answerId) {
+            $scope.quiz.currentQuestion.answered = true;
+            QuizService.answer({"id": answerId},
+                function (data) {
+                    var correctAnswerId;
+                    if (data.correct == true) {
+                        correctAnswerId = answerId;
+                        $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
+                    }
+                    else {
+                        correctAnswerId = data.correctAnswerId;
+                        $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
+                        setTimeout(function () {
+                            $scope.$apply(function () {
+                                $scope.quiz.currentQuestion.answers[data.correctAnswerId - 1].correct = true;
+                            })
+                        }, 3000);
+                    }
+                    document.getElementById("buttonAnswer" + correctAnswerId).addEventListener("animationend", function () {
+                        this.removeEventListener("animationend", arguments.callee);
+                        getNextQuestion(correctAnswerId);
+                    });
+                },
+                function (status, error) {
+                    ErrorService.logError(status, error, true);
+                })
+        };
     })
 
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {

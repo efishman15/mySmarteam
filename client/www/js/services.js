@@ -14,56 +14,40 @@ angular.module('eddy1.services', [])
         };
 
         service.getCurrentUser = function () {
-                return store.get('user');
+            return store.get('user');
         };
 
         return service;
     })
 
     //Login Service
-    .factory('LoginService', function ($http, $rootScope, ENDPOINT_URI) {
+    .factory('LoginService', function ($http, ApiService) {
 
         var service = this;
         var path = 'users/';
 
-        service.getUrl = function () {
-            return ENDPOINT_URI + path;
-        };
-
-        service.getActionUrl = function (action) {
-            return service.getUrl() + action;
-        };
-
         service.register = function (credentials, callbackOnSuccess, callbackOnError) {
-            return $http.post(service.getActionUrl('register'), credentials)
+            return ApiService.post(path, "register", credentials, callbackOnSuccess, callbackOnError)
                 .success(function (data, status, headers, config) {
                     $http.defaults.headers.common.Authorization = data.token;
-                    callbackOnSuccess(data);
-                })
-                .error(function (data, status, headers, config) {
-                    callbackOnError(status, data);
-                })
+                });
         };
 
         service.login = function (credentials, callbackOnSuccess, callbackOnError) {
-            $http.post(service.getActionUrl('login'), credentials)
+            return ApiService.post(path, "login", credentials, callbackOnSuccess, callbackOnError)
                 .success(function (data, status, headers, config) {
                     $http.defaults.headers.common.Authorization = data.token;
-                    callbackOnSuccess(data);
-                })
-                .error(function (data, status, headers, config) {
-                    callbackOnError(status, data);
-                })
+                });
         };
 
         service.logout = function (callbackOnSuccess, callbackOnError) {
-            return $http.post(service.getActionUrl('logout'))
+            return ApiService.post(path, "logout", credentials, callbackOnSuccess, callbackOnError)
                 .success(function (data, status, headers, config) {
-                    delete $http.defaults.headers.common.Authorization;
+                    delete headers["Authorization"];
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
-                    delete $http.defaults.headers.common.Authorization;
+                    delete headers["Authorization"];
                     callbackOnError(status, data);
                 })
         };
@@ -91,28 +75,22 @@ angular.module('eddy1.services', [])
     })
 
     //Quiz Service
-    .factory('QuizService', function ($http, ENDPOINT_URI) {
+    .factory('QuizService', function ($http, ApiService) {
 
         var service = this;
 
         var path = 'quiz/';
 
-        service.getActionUrl = function (action) {
-            return service.getUrl() + action;
-        };
-
-        service.getUrl = function () {
-            return ENDPOINT_URI + path;
-        };
-
         service.start = function (callbackOnSuccess, callbackOnError) {
-            return $http.post(service.getActionUrl('start'))
-                .success(function (data, status, headers, config) {
-                    callbackOnSuccess(data);
-                })
-                .error(function (data, status, headers, config) {
-                    callbackOnError(status, data);
-                })
+            return ApiService.post(path, "start", null, callbackOnSuccess, callbackOnError)
+        };
+
+        service.answer = function (answer, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "answer", answer, callbackOnSuccess, callbackOnError)
+        };
+
+        service.nextQuestion = function (callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "nextQuestion", null, callbackOnSuccess, callbackOnError)
         };
 
         return service;
@@ -132,5 +110,47 @@ angular.module('eddy1.services', [])
         };
 
         return service;
-    });
+    })
+
+    //Error Service
+    .factory('MyAuthService', function () {
+
+        var service = this;
+
+        service.confirmLogin = function (token, config) {
+            config.headers['Authorization'] = token;
+            return config;
+        };
+
+        return service;
+    })
+
+    //Api Service
+    .factory('ApiService', function ($http, ENDPOINT_URI) {
+
+        var service = this;
+
+        function getActionUrl(path, action) {
+            return getUrl(path) + action;
+        };
+
+        function getUrl(path) {
+            return ENDPOINT_URI + path;
+        };
+
+        service.post = function (path, action, postData, callbackOnSuccess, callbackOnError) {
+            return $http.post(getActionUrl(path, action), postData)
+                .success(function (data, status, headers, config) {
+                    callbackOnSuccess(data);
+                })
+                .error(function (data, status, headers, config) {
+                    callbackOnError(status, data);
+                })
+        };
+
+        return service;
+    })
+
+
+
 

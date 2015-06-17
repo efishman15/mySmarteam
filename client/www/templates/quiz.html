@@ -1,4 +1,4 @@
-<ion-view view-title="Play">
+<ion-view view-title="Quiz">
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
@@ -6,13 +6,20 @@
         <h1 class="title">Quiz</h1>
     </ion-header-bar>
     <ion-content padding="true">
-        <p>{{quiz.currentQuestion.text}}</p>
-        <ion-list>
-            <ion-item ng-repeat="answer in quiz.currentQuestion.answers" class="button button-block button-stable button-positive" href="answer({{answer.id}});">{{answer.text}}>
-            </ion-item>
-        </ion-list>
-        <div class="bar bar-footer bar-balanced">
-            <div class="Question # {{quiz.currentQuestionIndex}}">Footer</div>
+        <h2 class="center question-text">{{quiz.currentQuestion.text}}</h2>
+
+        <div class="list padding">
+            <button id="buttonAnswer{{answer.id}}" ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
+                    ng-repeat="answer in quiz.currentQuestion.answers" class="item button button-full quiz-answer"
+                    ng-class="{'button-positive' : !quiz.currentQuestion.answered,
+                                'button-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
+                                'button-assertive blink' : answer.answeredCorrectly == false && answer.correct == null}",
+                    ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)">
+                {{answer.answer}}
+            </button>
+        </div>
+        <div class="bar bar-footer bar-light">
+            <span>Question # {{quiz.currentQuestionIndex}}</span>
         </div>
     </ion-content>
 </ion-view>

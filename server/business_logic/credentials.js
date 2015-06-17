@@ -19,7 +19,7 @@ module.exports.register = function (req, res, next) {
             register(dbHelper, user, callback);
         },
 
-        createSession, //db, adminId, callback
+        createOrUpdateSession, //db, adminId, callback
 
         //Close the db
         function (dbHelper, userToken, callback) {
@@ -33,18 +33,17 @@ module.exports.register = function (req, res, next) {
             res.json({"token": userToken})
         }
         else {
-            res.send(err.status,err);
+            res.send(err.status, err);
         }
     });
 }
 
 module.exports.login = function (req, res, next) {
     var user = req.body;
-
     var operations = [
 
         //connect
-        dal.connect, //"returns" db
+        dal.connect,
 
         //login
         function (dbHelper, callback) {
@@ -52,7 +51,7 @@ module.exports.login = function (req, res, next) {
         },
 
         //Create session
-        createSession,
+        createOrUpdateSession,
 
         //Close the db
         function (dbHelper, userToken, callback) {
@@ -66,7 +65,7 @@ module.exports.login = function (req, res, next) {
             res.json({"token": userToken})
         }
         else {
-            res.send(err.status,err);
+            res.send(err.status, err);
         }
     });
 }
@@ -91,12 +90,12 @@ module.exports.logout = function (req, res, next) {
         }
     ];
 
-    async.waterfall(operations, function (err, result) {
+    async.waterfall(operations, function (err) {
         if (!err) {
             res.send(200, "OK");
         }
         else {
-            res.send(err.status,err);
+            res.send(err.status, err);
         }
     })
 };
@@ -129,33 +128,36 @@ function login(dbHelper, user, callback) {
     adminsCollection.findOne({
         "email": user.email,
         "password": md5(user.password + "|" + user.email)
-    }, {}, function (err, item) {
-        if (err || !item) {
+    }, {}, function (err, admin) {
+        if (err || !admin) {
             callback(new excptions.GeneralError(424, "Invalid Email or Password"));
             return;
         }
 
-        callback(null, dbHelper, item._id);
+        callback(null, dbHelper, admin._id);
     })
 };
 
 //Create the session
-function createSession(dbHelper, adminId, callback) {
+function createOrUpdateSession(dbHelper, adminId, callback) {
     var userToken = uuid.v1();
     var sessionsCollection = dbHelper.getCollection('Sessions');
-    sessionsCollection.insert({
-        "adminId": adminId,
-        "createdAt": new Date(),
-        "userToken": userToken
-    }, {}, function (err, item) {
+    sessionsCollection.findAndModify({"adminId": ObjectId(adminId)}, {},
+        {
+            $set: {
+                "adminId": adminId,
+                "createdAt": new Date(),
+                "userToken": userToken
+            }
+        }, {upsert: true, new: true}, function (err, session) {
 
-        if (err) {
-            console.dir(err);
-            callback(new excptions.GeneralError(500));
-        }
-
-        callback(null, dbHelper, userToken);
-    })
+            if (err) {
+                console.log("Error finding session for admin Id: " + adminId + ", err: " + JSON.stringify(err));
+                callback(new excptions.GeneralError(500));
+                return;
+            }
+            callback(null, dbHelper, userToken);
+        })
 };
 
 //Logout (remove session)
