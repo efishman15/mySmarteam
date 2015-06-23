@@ -1,7 +1,8 @@
 // Retrieve
-var session = require("../business_logic/session");
+var sessionUtils = require("../business_logic/session");
 var async = require('async');
 var excptions = require('../business_logic/exceptions');
+var random = require('../business_logic/random');
 
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
@@ -9,7 +10,7 @@ module.exports.start = function (req, res, next) {
 
         //Connect
         function (callback) {
-            session.getSession(token, callback);
+            sessionUtils.getSession(token, callback);
         },
 
         //Init quiz
@@ -18,6 +19,8 @@ module.exports.start = function (req, res, next) {
 
             quiz.clientData.totalQuestions = 5;
             quiz.clientData.currentQuestionIndex = 0;
+            quiz.clientData.finished = false;
+            quiz.serverData.score = 0;
 
             session.quiz = quiz;
 
@@ -31,7 +34,7 @@ module.exports.start = function (req, res, next) {
         getNextQuestion,
 
         //Stores the session with the quiz in the db
-        session.storeSession,
+        sessionUtils.storeSession,
 
         //Clears the "Correct" property from each answer before sending to client
         clearCorrectProperty,
@@ -56,18 +59,17 @@ module.exports.start = function (req, res, next) {
 module.exports.answer = function (req, res, next) {
     var token = req.headers.authorization;
     var answer = req.body;
+    var result = {};
 
     var operations = [
 
         //Connect
         function (callback) {
-            session.getSession(token, callback);
+            sessionUtils.getSession(token, callback);
         },
 
         //Check answer
         function (dbHelper, session, callback) {
-
-            var result = {};
             var answers = session.quiz.clientData.currentQuestion.answers;
             var answerId = parseInt(answer.id, 10);
             if (answerId < 1 || answerId > answers.length) {
@@ -75,24 +77,35 @@ module.exports.answer = function (req, res, next) {
             }
 
             result.answerId = answerId;
-            if (answers[answerId-1].correct) {
+            if (answers[answerId - 1].correct) {
                 result.correct = true;
+                session.quiz.serverData.score += Math.ceil(100 / session.quiz.clientData.totalQuestions);
             }
             else {
                 result.correct = false;
-                for(i=0; i<answers.length; i++) {
+                for (i = 0; i < answers.length; i++) {
                     if (answers[i].correct && answers[i].correct == true) {
-                        result.correctAnswerId = i+1;
+                        result.correctAnswerId = i + 1;
                         break;
                     }
                 }
             }
 
-            callback(null, dbHelper, result);
+            result.score = session.quiz.serverData.score;
+            callback(null, dbHelper, session);
+        },
+
+        function (dbHelper, session, callback) {
+            if (result.correct) {
+                sessionUtils.storeSession(dbHelper, session, callback);
+            }
+            else {
+                callback(null, dbHelper, session);
+            }
         },
 
         //Close the db
-        function (dbHelper, result, callback) {
+        function (dbHelper, session, callback) {
             dbHelper.close();
             callback(null, result);
         }
@@ -114,7 +127,7 @@ module.exports.nextQuestion = function (req, res, next) {
 
         //Connect
         function (callback) {
-            session.getSession(token, callback);
+            sessionUtils.getSession(token, callback);
         },
 
         //Count number of questions excluding the previous questions
@@ -124,7 +137,7 @@ module.exports.nextQuestion = function (req, res, next) {
         getNextQuestion,
 
         //Stores the session with the quiz in the db
-        session.storeSession,
+        sessionUtils.storeSession,
 
         //Clears the "Correct" property from each answer before sending to client
         clearCorrectProperty,
@@ -161,9 +174,7 @@ function getQuestionsCount(dbHelper, session, callback) {
 
 //Get the next question
 function getNextQuestion(dbHelper, session, count, callback) {
-
-    console.log("Getting next question, prevQuestions: " + JSON.stringify(session.quiz.serverData.previousQuestions));
-    var skip = Math.floor(Math.random() * count);
+    var skip = random.rnd(0, count-1);
     var questionsCollection = dbHelper.getCollection("Questions");
     questionsCollection.findOne({
         "_id": {"$nin": session.quiz.serverData.previousQuestions}
@@ -174,7 +185,36 @@ function getNextQuestion(dbHelper, session, count, callback) {
         }
 
         session.quiz.clientData.currentQuestionIndex++;
-        session.quiz.clientData.currentQuestion = {"text" : question.text, "answers" : question.answers};
+        if (session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
+            session.quiz.clientData.finished = true;
+        }
+
+        //Session is dynamic - perform some evals...
+        if (question.vars) {
+
+            //define the vars as "global" vars so they can be referenced by further evals
+            for (var key in question.vars) {
+                if (question.vars.hasOwnProperty(key)) {
+                    global[key] = eval(question.vars[key]);
+                }
+            }
+
+            //The question.text can include expressions like these: {{xp1}} {{xp2}} which need to be "evaled"
+            question.text = question.text.replace(/\{\{(.*?)\}\}/g,function(match) {
+                return eval(match.substring(2,match.length-2));
+            });
+
+            console.log("QuestionId: " + question.questionId);
+            //The answer.answer can include expressions like these: {{xp1}} {{xp2}} which need to be "evaled"
+            question.answers.forEach(function (element, index, array) {
+                console.log("answer: " + element["answer"]);
+                element["answer"] = element["answer"].replace(/\{\{(.*?)\}\}/g,function(match) {
+                    return eval(match.substring(2,match.length-2));
+                });
+            })
+        }
+
+        session.quiz.clientData.currentQuestion = {"text": question.text, "answers": question.answers};
 
         //Add this question id to the list of questions already asked during this quiz
         session.quiz.serverData.previousQuestions.push(question._id);

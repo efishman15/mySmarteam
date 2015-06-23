@@ -28,10 +28,6 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
             )
         }
 
-        if (currentUser && currentUser.email) {
-            silentLogin(currentUser, false);
-        }
-
         $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
             $rootScope.user = UserService.getCurrentUser();
             if ($rootScope.user && !$rootScope.user.email) {
@@ -145,7 +141,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
         };
     })
 
-    .controller('QuizCtrl', function ($scope, QuizService, ErrorService) {
+    .controller('QuizCtrl', function ($scope, $state, QuizService, ErrorService, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function () {
             QuizService.start(
                 function (data) {
@@ -160,6 +156,8 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
         function getNextQuestion(currentCorrectAnswerId) {
             QuizService.nextQuestion(
                 function (data) {
+
+                        //Will forcibly clear all animations from buttons - to restore them to the initial state
                         for(i=0; i<$scope.quiz.currentQuestion.answers.length; i++) {
                             document.getElementById("buttonAnswer" + $scope.quiz.currentQuestion.answers[i].id).className = "button-positive";
                         }
@@ -176,11 +174,14 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
             QuizService.answer({"id": answerId},
                 function (data) {
                     var correctAnswerId;
+                    var audioSound = document.getElementById("audioSound");
                     if (data.correct == true) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
+                        audioSound.src = "audio/correct.ogg";
                     }
                     else {
+                        audioSound.src = "audio/wrong.ogg";
                         correctAnswerId = data.correctAnswerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
                         setTimeout(function () {
@@ -190,14 +191,28 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                         }, 3000);
                     }
                     document.getElementById("buttonAnswer" + correctAnswerId).addEventListener("animationend", function () {
+                        audioSound.src = "";
                         this.removeEventListener("animationend", arguments.callee);
-                        getNextQuestion(correctAnswerId);
+                        if ($scope.quiz.finished == true) {
+                            // using the ionicViewService to hide the back button on next view
+                            $ionicHistory.nextViewOptions({
+                                disableBack: true
+                            });
+                            $state.go('app.quizResult', {score: data.score}, {reload: true, inherit: true});
+                        }
+                        else {
+                            getNextQuestion(correctAnswerId);
+                        }
                     });
                 },
                 function (status, error) {
                     ErrorService.logError(status, error, true);
                 })
         };
+    })
+
+    .controller('QuizResultCtrl', function ($scope, $stateParams) {
+        $scope.score = $stateParams.score;
     })
 
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {

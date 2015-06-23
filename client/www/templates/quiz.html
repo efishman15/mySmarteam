@@ -6,7 +6,7 @@
         <h1 class="title">Quiz</h1>
     </ion-header-bar>
     <ion-content padding="true">
-        <h2 class="center question-text">{{quiz.currentQuestion.text}}</h2>
+        <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
 
         <div class="list padding">
             <button id="buttonAnswer{{answer.id}}" ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
@@ -14,12 +14,13 @@
                     ng-class="{'button-positive' : !quiz.currentQuestion.answered,
                                 'button-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
                                 'button-assertive blink' : answer.answeredCorrectly == false && answer.correct == null}",
-                    ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)">
-                {{answer.answer}}
+                    ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"
+                    ng-bind-html="answer.answer">
             </button>
         </div>
         <div class="bar bar-footer bar-light">
             <span>Question # {{quiz.currentQuestionIndex}}</span>
         </div>
+        <audio id="audioSound" autoplay src=""></audio>
     </ion-content>
 </ion-view>

@@ -23,12 +23,13 @@ function domainWrapper() {
 
         reqDomain.on('error', function (err) {
             console.log("ooooooooooopsssss....");
-            console.log("Error: " + JSON.stringify(err));
+            console.log("Error: " + err.stack);
             var status = 500;
             res.status(status).send(new GeneralError(status));
             next(err);
             reqDomain.dispose();
         });
+
         reqDomain.run(next)
     }
 }

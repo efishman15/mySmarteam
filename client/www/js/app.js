@@ -31,15 +31,19 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
     })
 
     .config(function ($httpProvider) {
-        $httpProvider.interceptors.push(function ($rootScope) {
+        $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
                     $rootScope.$broadcast('loading:show')
-                    return config
+                    return config;
                 },
                 response: function (response) {
                     $rootScope.$broadcast('loading:hide')
-                    return response
+                    return response;
+                },
+                responseError: function (rejection) {
+                    $rootScope.$broadcast('loading:hide')
+                    return $q.reject(rejection);
                 }
             }
         })
@@ -100,6 +104,17 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
                     'menuContent': {
                         templateUrl: "templates/quiz.html",
                         controller: 'QuizCtrl'
+                    }
+                }
+            })
+
+            .state('app.quizResult', {
+                url: "/quizResult",
+                params: {score: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/quizResult.html",
+                        controller: 'QuizResultCtrl'
                     }
                 }
             })
