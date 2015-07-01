@@ -4,7 +4,8 @@ var methodOverride = require('method-override');
 var credentials = require('./business_logic/credentials')
 var quiz = require('./business_logic/quiz')
 var domain = require('domain');
-var GeneralError = require('./business_logic/exceptions').GeneralError;
+var GeneralError = require('./utils/exceptions').GeneralError;
+var generalUtils = require('./utils/general');
 var app = express();
 
 app.use(bodyParser());          // pull information from html in POST
@@ -43,6 +44,7 @@ app.all('*', function (req, res, next) {
 });
 
 //API's require authentication
+app.post('/quiz/subjects', isAuthenticated, quiz.subjects);
 app.post('/quiz/start', isAuthenticated, quiz.start);
 app.post('/quiz/answer', isAuthenticated, quiz.answer);
 app.post('/quiz/nextQuestion', isAuthenticated, quiz.nextQuestion);
@@ -51,6 +53,7 @@ app.post('/users/logout', isAuthenticated, credentials.logout);
 //API's that do NOT require authentication
 app.post('/users/login', credentials.login);
 app.post('/users/register', credentials.register);
+app.post('/info/geo', generalUtils.geoInfo);
 
 app.set('port', process.env.PORT || 7000);
 

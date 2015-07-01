@@ -4,7 +4,8 @@ var uuid = require('node-uuid');
 var async = require('async');
 var ObjectId = require('mongodb').ObjectID;
 var dal = require('../dal/myMongoDB');
-var excptions = require('../business_logic/exceptions');
+var excptions = require('../utils/exceptions');
+var generalUtils = require('../utils/general');
 
 module.exports.register = function (req, res, next) {
     var user = req.body;
@@ -19,18 +20,18 @@ module.exports.register = function (req, res, next) {
             register(dbHelper, user, callback);
         },
 
-        createOrUpdateSession, //db, adminId, callback
+        createOrUpdateSession, //dbHelper, admin, callback
 
         //Close the db
-        function (dbHelper, userToken, callback) {
+        function (dbHelper, session, callback) {
             dbHelper.close();
-            callback(null, userToken);
+            callback(null, session);
         }
     ];
 
-    async.waterfall(operations, function (err, userToken) {
+    async.waterfall(operations, function (err, session) {
         if (!err) {
-            res.json({"token": userToken})
+            res.json(getSessionResponse(session))
         }
         else {
             res.send(err.status, err);
@@ -54,15 +55,15 @@ module.exports.login = function (req, res, next) {
         createOrUpdateSession,
 
         //Close the db
-        function (dbHelper, userToken, callback) {
+        function (dbHelper, session, callback) {
             dbHelper.close();
-            callback(null, userToken);
+            callback(null, session);
         }
     ];
 
-    async.waterfall(operations, function (err, userToken) {
+    async.waterfall(operations, function (err, session) {
         if (!err) {
-            res.json({"token": userToken})
+            res.json(getSessionResponse(session))
         }
         else {
             res.send(err.status, err);
@@ -103,23 +104,28 @@ module.exports.logout = function (req, res, next) {
 //Try to register the new admin
 function register(dbHelper, user, callback) {
     var adminsCollection = dbHelper.getCollection("Admins");
-    adminsCollection.insert({
+    var language = generalUtils.getLanguageByCountryCode(user.geoInfo.country_code);
+    var newAdmin = {
         "email": user.email,
-        "password": md5(user.password + "|" + user.email)
-    }, {}, function (err, item) {
-        if (err) {
-            var message;
-            if (err.code == 11000) {
-                callback(new excptions.FormValidationError(424, 'email', 'The email ' + user.email + ' is already taken'));
-            }
-            else {
-                callback(new excptions.GeneralError(500));
-            }
-            return;
-        }
+        "password": md5(user.password + "|" + user.email),
+        "questionsLanguage": language,
+        "interfaceLanguage": language,
+        "geoInfo": user.geoInfo
+    };
 
-        callback(null, dbHelper, item._id);
-    })
+    adminsCollection.insert(newAdmin
+        , {}, function (err, result) {
+            if (err) {
+                if (err.code == 11000) {
+                    callback(new excptions.FormValidationError(424, 'email', 'The email ' + user.email + ' is already taken'));
+                }
+                else {
+                    callback(new excptions.GeneralError(500));
+                }
+                return;
+            }
+            callback(null, dbHelper, newAdmin);
+        })
 };
 
 //Login and return the adminId if email/password match
@@ -134,20 +140,22 @@ function login(dbHelper, user, callback) {
             return;
         }
 
-        callback(null, dbHelper, admin._id);
+        callback(null, dbHelper, admin);
     })
 };
 
 //Create the session
-function createOrUpdateSession(dbHelper, adminId, callback) {
+function createOrUpdateSession(dbHelper, admin, callback) {
     var userToken = uuid.v1();
     var sessionsCollection = dbHelper.getCollection('Sessions');
-    sessionsCollection.findAndModify({"adminId": ObjectId(adminId)}, {},
+    sessionsCollection.findAndModify({"adminId": ObjectId(admin._id)}, {},
         {
             $set: {
-                "adminId": adminId,
+                "adminId": ObjectId(admin._id),
                 "createdAt": new Date(),
-                "userToken": userToken
+                "userToken": userToken,
+                "questionsLanguage": admin.questionsLanguage,
+                "interfaceLanguage": admin.interfaceLanguage
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -156,7 +164,7 @@ function createOrUpdateSession(dbHelper, adminId, callback) {
                 callback(new excptions.GeneralError(500));
                 return;
             }
-            callback(null, dbHelper, userToken);
+            callback(null, dbHelper, session.value);
         })
 };
 
@@ -180,3 +188,11 @@ function logout(dbHelper, token, callback) {
         }
     )
 };
+
+function getSessionResponse(session) {
+    return {
+        "token": session.userToken,
+        "interfaceLanguage": session.interfaceLanguage,
+        "questionsLanguage": session.questionsLanguage
+    };
+}

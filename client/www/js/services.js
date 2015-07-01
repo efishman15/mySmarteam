@@ -1,58 +1,163 @@
-angular.module('eddy1.services', [])
+angular.module('studyB4.services', [])
 
     //User Service
-    .factory('UserService', function (store) {
+    .factory('UserService', function (store, GeoInfoService, ErrorService, $rootScope) {
         var service = this;
 
-        service.initUser = function () {
-            return {"email": null, "password": null};
+        service.getStoreUser = function () {
+            return store.get("user");
         };
 
-        service.setCurrentUser = function (user) {
+        service.setStoreUser = function (user) {
             store.set('user', user);
             return user;
         };
 
-        service.getCurrentUser = function () {
-            return store.get('user');
+        service.clearStoreUser = function () {
+            store.set('user', null);
+        };
+
+        service.initUser = function (callbackOnSuccess, callbackOnError) {
+
+            GeoInfoService.getGeoInfo(function (geoResult) {
+                    $rootScope.user = {
+                        "email": null,
+                        "password": null,
+                        "interfaceLanguage": geoResult.language,
+                        "questionsLanguage": geoResult.language
+                    };
+                    $rootScope.isloggedOn = false;
+                    service.setStoreUser($rootScope.user);
+
+                    if (callbackOnSuccess) {
+                        callbackOnSuccess();
+                    }
+                },
+                callbackOnError
+            )
         };
 
         return service;
     })
 
+    //geoInfo service
+    .factory('GeoInfoService', function ($http, ApiService, $rootScope) {
+
+        var service = this;
+        var path = 'info/';
+
+        service.getGeoInfo = function (callbackOnSuccess, callbackOnError) {
+            return ApiService.get("http://freegeoip.net/json/",
+                function (geoInfo) {
+                    $rootScope.geoInfo = geoInfo;
+                    return ApiService.post(path, "geo", geoInfo, callbackOnSuccess, callbackOnError)
+                        .success(function (geoResult, status, headers, config) {
+                            geoResult.geoInfo = geoInfo;
+                            if (callbackOnSuccess) {
+                                callbackOnSuccess(geoResult);
+                            }
+                        })
+                        .error(function (geoInfo, status, headers, config) {
+                            if (callbackOnError) {
+                                callbackOnError(status, geoInfo);
+                            }
+                        })
+                },
+                callbackOnError)
+        }
+
+        return service;
+    })
+
     //Login Service
-    .factory('LoginService', function ($http, ApiService) {
+    .factory('LoginService', function ($rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService) {
 
         var service = this;
         var path = 'users/';
 
-        service.register = function (credentials, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "register", credentials, callbackOnSuccess, callbackOnError)
+        service.register = function (user, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "register", user, callbackOnSuccess, callbackOnError)
                 .success(function (data, status, headers, config) {
-                    $http.defaults.headers.common.Authorization = data.token;
+
+                    //Was set just in order to pass it to the server - no need to save this in the Store
+                    delete $rootScope.user["geoInfo"];
+
+                    saveUser(user, data);
+                    callbackOnSuccess()
                 });
         };
 
-        service.login = function (credentials, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "login", credentials, callbackOnSuccess, callbackOnError)
+        service.login = function (user, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "login", user, callbackOnSuccess, callbackOnError)
                 .success(function (data, status, headers, config) {
-                    $http.defaults.headers.common.Authorization = data.token;
+                    saveUser(user, data);
+                    callbackOnSuccess(data);
                 });
         };
 
         service.logout = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "logout", credentials, callbackOnSuccess, callbackOnError)
+            return ApiService.post(path, "logout", null, callbackOnSuccess, callbackOnError)
                 .success(function (data, status, headers, config) {
                     delete headers["Authorization"];
-                    callbackOnSuccess(data);
+                    delete $http.defaults.headers.common["Authorization"];
+                    UserService.clearStoreUser();
+                    UserService.initUser(callbackOnSuccess, callbackOnError);
                 })
                 .error(function (data, status, headers, config) {
                     delete headers["Authorization"];
-                    callbackOnError(status, data);
+                    delete $http.defaults.headers.common["Authorization"];
+                    UserService.clearStoreUser();
+                    UserService.initUser(callbackOnSuccess, callbackOnError);
                 })
         };
 
-        //Used for both login and register forms - clear last server error upon field change
+        service.initLogin = function () {
+
+            $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
+                if (!$rootScope.user.email) {
+                    $state.go('app.login', {}, {reload: true, inherit: true});
+                }
+                else {
+                    silentLogin($rootScope.user, true);
+                }
+            });
+
+            var currentUser = UserService.getStoreUser();
+            if (currentUser && currentUser.email) {
+                silentLogin(currentUser, false);
+            }
+            else {
+                UserService.initUser();
+            }
+        };
+
+        function silentLogin(currentUser, releaseHttpRequests) {
+            //Auto silent login based on the credentials in the storage
+            service.login(currentUser,
+                function (data) {
+                    $rootScope.user = currentUser;
+                    if (releaseHttpRequests && releaseHttpRequests == true) {
+                        authService.loginConfirmed(null, function (config) {
+                            return MyAuthService.confirmLogin(data.token, config);
+                        });
+                    }
+                },
+                ErrorService.logError
+            )
+        }
+
+        function saveUser(user, serverData) {
+            $http.defaults.headers.common.Authorization = serverData.token;
+
+            $rootScope.isloggedOn = true;
+
+            $rootScope.user = user;
+            $rootScope.user.interfaceLanguage = serverData.interfaceLanguage;
+            $rootScope.user.questionsLanguage = serverData.questionsLanguage;
+            UserService.setStoreUser($rootScope.user);
+        }
+
+//Used for both login and register forms - clear last server error upon field change
         service.fieldChange = function (currentField, serverErrorField) {
 
             if (serverErrorField) {
@@ -74,8 +179,9 @@ angular.module('eddy1.services', [])
         return service;
     })
 
-    //Quiz Service
-    .factory('QuizService', function ($http, ApiService) {
+//Quiz Service
+    .
+    factory('QuizService', function ($http, ApiService) {
 
         var service = this;
 
@@ -101,12 +207,16 @@ angular.module('eddy1.services', [])
 
         var service = this;
 
-        service.logError = function (status, error, displayAlert) {
-            var message = "Error " + status + ": " + error.message;
-            console.log(message);
-            if (displayAlert && displayAlert == true) {
-                alert(message);
-            }
+        service.logError = function (status, error) {
+            var errorMessage = "Error " + status + ": " + error.message;
+            console.log(errorMessage);
+            return errorMessage;
+        };
+
+        service.logErrorAndAlert = function (status, error) {
+            var errorMessage = service.logError(status, error);
+            alert(errorMessage);
+            return errorMessage;
         };
 
         return service;
@@ -148,9 +258,15 @@ angular.module('eddy1.services', [])
                 })
         };
 
+        service.get = function (path, callbackOnSuccess, callbackOnError) {
+            return $http.get(path)
+                .success(function (data, status, headers, config) {
+                    callbackOnSuccess(data);
+                })
+                .error(function (data, status, headers, config) {
+                    callbackOnError(status, data);
+                })
+        };
+
         return service;
     })
-
-
-
-

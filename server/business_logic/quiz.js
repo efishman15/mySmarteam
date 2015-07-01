@@ -1,8 +1,40 @@
 // Retrieve
 var sessionUtils = require("../business_logic/session");
 var async = require('async');
-var excptions = require('../business_logic/exceptions');
-var random = require('../business_logic/random');
+var excptions = require('../utils/exceptions');
+var random = require('../utils/random');
+var dal = require('../dal/myMongoDB');
+
+module.exports.subjects = function (req, res, next) {
+    var token = req.headers.authorization;
+    var operations = [
+
+        //Connect
+        function (callback) {
+            sessionUtils.getSession(token, callback);
+        },
+
+        //get subjects
+        function (dbHelper, session, callback) {
+            dal.getSubjects(session.questionsLanguage, callback);
+        },
+
+        //Close the db
+        function (dbHelper, subjects, callback) {
+            dbHelper.close();
+            callback(null, subjects);
+        }
+    ];
+
+    async.waterfall(operations, function (err, subjects) {
+        if (!err) {
+            res.send(200, subjects);
+        }
+        else {
+            res.send(err.status, err);
+        }
+    })
+}
 
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
@@ -174,10 +206,11 @@ function getQuestionsCount(dbHelper, session, callback) {
 
 //Get the next question
 function getNextQuestion(dbHelper, session, count, callback) {
-    var skip = random.rnd(0, count-1);
+    var skip = random.rnd(0, count - 1);
     var questionsCollection = dbHelper.getCollection("Questions");
     questionsCollection.findOne({
         "_id": {"$nin": session.quiz.serverData.previousQuestions}
+        //"questionId": 2439
     }, {skip: skip}, function (err, question) {
         if (err || !question) {
             callback(new excptions.GeneralError(500, "Error retrieving next question from database"));
@@ -189,32 +222,46 @@ function getNextQuestion(dbHelper, session, count, callback) {
             session.quiz.clientData.finished = true;
         }
 
+        console.log("question: " + question.questionId);
         //Session is dynamic - perform some evals...
         if (question.vars) {
 
             //define the vars as "global" vars so they can be referenced by further evals
             for (var key in question.vars) {
-                if (question.vars.hasOwnProperty(key)) {
-                    global[key] = eval(question.vars[key]);
-                }
+                global[key] = eval(question.vars[key]);
             }
 
             //The question.text can include expressions like these: {{xp1}} {{xp2}} which need to be "evaled"
-            question.text = question.text.replace(/\{\{(.*?)\}\}/g,function(match) {
-                return eval(match.substring(2,match.length-2));
+            question.text = question.text.replace(/\{\{(.*?)\}\}/g, function (match) {
+                return eval(match.substring(2, match.length - 2));
             });
 
-            console.log("QuestionId: " + question.questionId);
             //The answer.answer can include expressions like these: {{xp1}} {{xp2}} which need to be "evaled"
             question.answers.forEach(function (element, index, array) {
-                console.log("answer: " + element["answer"]);
-                element["answer"] = element["answer"].replace(/\{\{(.*?)\}\}/g,function(match) {
-                    return eval(match.substring(2,match.length-2));
+                element["text"] = element["text"].replace(/\{\{(.*?)\}\}/g, function (match) {
+                    return eval(match.substring(2, match.length - 2));
                 });
             })
+
+            //delete global vars used for the evaluation
+            for (var key in question.vars) {
+                delete global[key];
+            }
         }
 
         session.quiz.clientData.currentQuestion = {"text": question.text, "answers": question.answers};
+        dal.getTopic(question.topicId, function(err, topic) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            if (topic.forceDirection) {
+                session.quiz.clientData.currentQuestion.forceDirection = topic.forceDirection;
+            }
+            else {
+                session.quiz.clientData.currentQuestion.forceDirection = "";
+            }
+        })
 
         //Add this question id to the list of questions already asked during this quiz
         session.quiz.serverData.previousQuestions.push(question._id);

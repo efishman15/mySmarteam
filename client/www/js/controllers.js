@@ -1,61 +1,21 @@
-angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
+angular.module('studyB4.controllers', ['studyB4.services', 'ngResource'])
 
     .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService) {
 
-        //Perform auto-login if login details are saved in store
-        $rootScope.isLoggedIn = false;
-        $rootScope.user = UserService.initUser();
-
-        var currentUser = UserService.getCurrentUser();
-
-        function silentLogin(currentUser, releaseHttpRequests) {
-            //Auto silent login based on the credentials in the storage
-            LoginService.login(currentUser,
-                function (data) {
-                    $rootScope.isLoggedIn = true;
-                    $rootScope.user = currentUser;
-                    console.log("logged in with token: " + data.token);
-                    if (releaseHttpRequests && releaseHttpRequests == true) {
-                        authService.loginConfirmed(null, function (config) {
-                            return MyAuthService.confirmLogin(data.token, config);
-                        });
-                    }
-                },
-                function (status, error) {
-                    UserService.setCurrentUser(UserService.initUser());
-                    ErrorService.logError(status, error, false);
-                }
-            )
-        }
-
-        $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
-            $rootScope.user = UserService.getCurrentUser();
-            if ($rootScope.user && !$rootScope.user.email) {
-                $rootScope.user = UserService.initUser();
-                $state.go('app.login', {}, {reload: true, inherit: true});
-            }
-            else {
-                silentLogin($rootScope.user, true);
-            }
-        });
     })
 
-    .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, ErrorService, $ionicHistory) {
+    .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, ApiService, ErrorService, $ionicHistory) {
 
         $scope.fieldChange = LoginService.fieldChange;
 
         $scope.register = function (registrationForm) {
 
-            var user = UserService.initUser();
-            user.email = registrationForm.email.$modelValue;
-            user.password = registrationForm.password.$modelValue;
+            $rootScope.user.email = registrationForm.email.$modelValue;
+            $rootScope.user.password = registrationForm.password.$modelValue;
+            $rootScope.user.geoInfo = $rootScope.geoInfo;
 
-            LoginService.register(user,
+            LoginService.register($rootScope.user,
                 function (data) {
-                    UserService.setCurrentUser(user);
-                    $rootScope.isLoggedIn = true;
-                    $rootScope.user = user;
-
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
                         disableBack: true
@@ -63,6 +23,12 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status, error) {
+
+                    //Reset $rootScope.user fields
+                    $rootScope.user.email = null;
+                    $rootScope.user.password = null;
+                    delete $rootScope.user["geoInfo"];
+
                     registrationForm.serverError.innerHTML = error.message;
                     if (error.fieldName) {
                         //Error in a specific field
@@ -78,10 +44,10 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                             registrationForm.serverError.$error = {};
                         }
                         registrationForm.serverError.$error.serverError = true;
-                        ErrorService.logError(status, error, false);
+                        ErrorService.logError(status, error);
                     }
                 });
-        };
+        }
     })
 
     .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, $ionicHistory) {
@@ -90,19 +56,11 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
 
         $scope.login = function (loginForm) {
 
-            var user = UserService.initUser();
-            user.email = loginForm.email.$modelValue;
-            user.password = loginForm.password.$modelValue;
+            $rootScope.user.email = loginForm.email.$modelValue;
+            $rootScope.user.password = loginForm.password.$modelValue;
 
-            LoginService.login(user,
+            LoginService.login($rootScope.user,
                 function (data) {
-                    UserService.setCurrentUser(user);
-                    $rootScope.isLoggedIn = true;
-                    $rootScope.user = user;
-                    authService.loginConfirmed(null, function (config) {
-                        return MyAuthService.confirmLogin(data.token, config);
-                    });
-
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
                         disableBack: true
@@ -111,6 +69,11 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status, error) {
+
+                    //Reset $rootScope.user fields
+                    $rootScope.user.email = null;
+                    $rootScope.user.password = null;
+
                     loginForm.serverError.innerHTML = error.message;
                     if (error.fieldName) {
                         //Error in a specific field
@@ -126,16 +89,32 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                             loginForm.serverError.$error = {};
                         }
                         loginForm.serverError.$error.serverError = true;
-                        ErrorService.logError(status, error, false);
+                        ErrorService.logError(status, error);
                     }
                 });
         };
     })
 
-    .controller('HomeCtrl', function ($scope, $rootScope, $state) {
+    .controller('HomeCtrl', function ($scope, $rootScope, LoginService) {
+        //Figure out the user's language based on geo information (country code by ip)
+
+        if (!$rootScope.user) {
+            LoginService.initLogin();
+        }
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+            if ($rootScope.isLoggedOn == true) {
+                $state.go('app.play', {}, {reload: true, inherit: true});
+            }
+        });
     })
 
-    .controller('PlayCtrl', function ($scope, $state) {
+    .controller('PlayCtrl', function ($scope, $state, $rootScope, LoginService) {
+
+        if (!$rootScope.user) {
+            LoginService.initLogin();
+        }
+
         $scope.play = function () {
             $state.go('app.quiz', {}, {reload: true, inherit: true});
         };
@@ -148,25 +127,28 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
                 },
-                function (status, error) {
-                    ErrorService.logError(status, error, true);
-                })
+                ErrorService.logErrorAndAlert)
         });
+
+        $scope.$on('$ionicView.afterLeave', function () {
+            clearButtonAnimations();
+        });
+
+        function clearButtonAnimations() {
+            //Will forcibly clear all animations from buttons - to restore them to the initial state
+            for (i = 0; i < $scope.quiz.currentQuestion.answers.length; i++) {
+                document.getElementById("buttonAnswer" + $scope.quiz.currentQuestion.answers[i].id).className = "button-positive";
+            }
+        };
 
         function getNextQuestion(currentCorrectAnswerId) {
             QuizService.nextQuestion(
                 function (data) {
-
-                        //Will forcibly clear all animations from buttons - to restore them to the initial state
-                        for(i=0; i<$scope.quiz.currentQuestion.answers.length; i++) {
-                            document.getElementById("buttonAnswer" + $scope.quiz.currentQuestion.answers[i].id).className = "button-positive";
-                        }
-                        $scope.quiz = data;
-                        $scope.quiz.currentQuestion.answered = false;
+                    $scope.quiz = data;
+                    $scope.quiz.currentQuestion.answered = false;
+                    clearButtonAnimations();
                 },
-                function (status, error) {
-                    ErrorService.logError(status, error, true);
-                })
+                ErrorService.logErrorAndAlert)
         };
 
         $scope.submitAnswer = function (answerId) {
@@ -205,9 +187,7 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
                         }
                     });
                 },
-                function (status, error) {
-                    ErrorService.logError(status, error, true);
-                })
+                ErrorService.logErrorAndAlert)
         };
     })
 
@@ -218,21 +198,14 @@ angular.module('eddy1.controllers', ['eddy1.services', 'ngResource'])
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function () {
             LoginService.logout(
-                function (data) {
-                    $rootScope.user = UserService.initUser();
-                    UserService.setCurrentUser($rootScope.user);
-                    $rootScope.isLoggedIn = false;
-
+                function () {
                     // using the ionicViewService to hide the back button on next view
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
 
-                    $state.go('app.home', {}, {reload: true, inherit: true});
-                    $rootScope.$broadcast('event:auth-logoutCompleted');
+                    $state.go('app.home', {}, {reload: false, inherit: true});
                 },
-                function (status, error) {
-                    ErrorService.logError(status, error, true);
-                })
+                ErrorService.logErrorAndAlert)
         })
     });

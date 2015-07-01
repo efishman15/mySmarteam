@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages'])
+angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages'])
     .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -141,15 +141,14 @@ angular.module('eddy1.app', ['eddy1.services', 'eddy1.controllers', 'angular-sto
         $urlRouterProvider.otherwise(function ($injector, $location) {
             var $state = $injector.get('$state');
             var UserService = $injector.get('UserService');
-            var currentUser = UserService.getCurrentUser();
-
-            if (currentUser && currentUser.email) {
+            var user = UserService.getStoreUser();
+            if (user && user.email) {
                 return 'app/play';
             }
             else {
                 return 'app/home';
             }
-        });
+        })
     })
 
     .directive('myCompareTo', function () {

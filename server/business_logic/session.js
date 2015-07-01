@@ -1,7 +1,7 @@
 // Retrieve
 var async = require('async');
 var dal = require('../dal/myMongoDB');
-var excptions = require('../business_logic/exceptions');
+var exceptions = require('../utils/exceptions');
 
 module.exports.getSession = function (token, callback) {
 
@@ -40,7 +40,7 @@ function retrieveSession(dbHelper, token, callback) {
             if (err || !session) {
                 //Session does not exist - stop the call chain
                 console.log("error finding session with token: " + token, "error: " + err);
-                callback(new excptions.GeneralError(401, "Session expired"));
+                callback(new exceptions.GeneralError(401, "Session expired"));
                 return;
             }
             ;
@@ -62,7 +62,7 @@ function storeSession(dbHelper, session, callback) {
             if (err) {
                 //Session does not exist - stop the call chain
                 console.log("error finding session with token: " + token, "error: " + err);
-                callback(new excptions.GeneralError(401, "Session expired"));
+                callback(new exceptions.GeneralError(401, "Session expired"));
                 return;
             }
             ;
