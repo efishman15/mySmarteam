@@ -111,27 +111,7 @@ angular.module('studyB4.services', [])
                 })
         };
 
-        service.initLogin = function () {
-
-            $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
-                if (!$rootScope.user.email) {
-                    $state.go('app.login', {}, {reload: true, inherit: true});
-                }
-                else {
-                    silentLogin($rootScope.user, true);
-                }
-            });
-
-            var currentUser = UserService.getStoreUser();
-            if (currentUser && currentUser.email) {
-                silentLogin(currentUser, false);
-            }
-            else {
-                UserService.initUser();
-            }
-        };
-
-        function silentLogin(currentUser, releaseHttpRequests) {
+        service.silentLogin = function (currentUser, releaseHttpRequests) {
             //Auto silent login based on the credentials in the storage
             service.login(currentUser,
                 function (data) {
@@ -154,10 +134,11 @@ angular.module('studyB4.services', [])
             $rootScope.user = user;
             $rootScope.user.interfaceLanguage = serverData.interfaceLanguage;
             $rootScope.user.questionsLanguage = serverData.questionsLanguage;
+            $rootScope.user.direction = serverData.direction;
             UserService.setStoreUser($rootScope.user);
         }
 
-//Used for both login and register forms - clear last server error upon field change
+        //Used for both login and register forms - clear last server error upon field change
         service.fieldChange = function (currentField, serverErrorField) {
 
             if (serverErrorField) {
@@ -179,16 +160,29 @@ angular.module('studyB4.services', [])
         return service;
     })
 
-//Quiz Service
-    .
-    factory('QuizService', function ($http, ApiService) {
+    //Play Service
+    .factory('PlayService', function ($http, ApiService) {
 
         var service = this;
 
         var path = 'quiz/';
 
-        service.start = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "start", null, callbackOnSuccess, callbackOnError)
+        service.getSubjects = function (callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "subjects", null, callbackOnSuccess, callbackOnError)
+        };
+
+        return service;
+    })
+
+    //Quiz Service
+    .factory('QuizService', function ($http, ApiService) {
+
+        var service = this;
+
+        var path = 'quiz/';
+
+        service.start = function (subjectId, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "start", {"subjectId" : subjectId}, callbackOnSuccess, callbackOnError)
         };
 
         service.answer = function (answer, callbackOnSuccess, callbackOnError) {

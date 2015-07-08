@@ -1,12 +1,14 @@
-<ion-view view-title="Play">
-  <ion-content padding="true">
+<ion-view view-title="Pick a Subject">
+  <ion-content dir="{{$root.user.direction}}">
     <ion-nav-buttons side="left">
       <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
-    <p>Welcome to the studyB4 play page!</p>
-    <p>Press the PLAY butto to start playing...</p>
-    <div class="padding">
-      <a class="button button-block button-stable button-royal" ng-click="play()">Play</a>
+    <div class="list card">
+      <a
+              ng-repeat="subject in subjects" class="item item-icon-left"
+              ng-click="play(subject.subjectId)"
+              ng-bind-html="subject.displayNames[$root.user.interfaceLanguage]">
+      </a>
     </div>
   </ion-content>
 </ion-view>

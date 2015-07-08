@@ -30,6 +30,26 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
         })
     })
 
+    .run(function ($rootScope, $state, LoginService, UserService) {
+
+        $rootScope.user = UserService.getStoreUser();
+        if ($rootScope.user && $rootScope.user.email) {
+            LoginService.silentLogin($rootScope.user, false);
+        }
+        else {
+            UserService.initUser();
+        }
+
+        $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
+            if ($rootScope.user && $rootScope.user.email) {
+                LoginService.silentLogin($rootScope.user, true);
+            }
+            else {
+                $state.go('app.login', {}, {reload: true, inherit: true});
+            }
+        });
+    })
+
     .config(function ($httpProvider) {
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
@@ -48,7 +68,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
             }
         })
     })
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $injector) {
 
         $stateProvider
             .state('app', {
@@ -100,6 +120,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
             .state('app.quiz', {
                 url: "/quiz",
+                params: {subjectId: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quiz.html",
@@ -148,7 +169,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
             else {
                 return 'app/home';
             }
-        })
+        });
     })
 
     .directive('myCompareTo', function () {
@@ -165,6 +186,24 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
                 scope.$watch("otherModelValue", function () {
                     ngModel.$validate();
+                });
+            }
+        };
+    })
+
+    .directive('animationend', function () {
+        return {
+            restrict: 'A',
+            scope: {
+                animationend: '&'
+            },
+            link: function (scope, element) {
+                var callback = scope.animationend(),
+                    events = 'animationend webkitAnimationEnd MSAnimationEnd' +
+                        'transitionend webkitTransitionEnd';
+
+                element.on(events, function (event) {
+                    callback.call(element[0], element[0], event);
                 });
             }
         };

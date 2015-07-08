@@ -155,7 +155,8 @@ function createOrUpdateSession(dbHelper, admin, callback) {
                 "createdAt": new Date(),
                 "userToken": userToken,
                 "questionsLanguage": admin.questionsLanguage,
-                "interfaceLanguage": admin.interfaceLanguage
+                "interfaceLanguage": admin.interfaceLanguage,
+                "direction": generalUtils.getDirectionByLanguage(admin.interfaceLanguage)
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -193,6 +194,7 @@ function getSessionResponse(session) {
     return {
         "token": session.userToken,
         "interfaceLanguage": session.interfaceLanguage,
-        "questionsLanguage": session.questionsLanguage
+        "questionsLanguage": session.questionsLanguage,
+        "direction": session.direction
     };
 }

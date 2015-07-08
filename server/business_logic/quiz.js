@@ -4,6 +4,7 @@ var async = require('async');
 var excptions = require('../utils/exceptions');
 var random = require('../utils/random');
 var dal = require('../dal/myMongoDB');
+var generalUtils = require('../utils/general');
 
 module.exports.subjects = function (req, res, next) {
     var token = req.headers.authorization;
@@ -16,7 +17,7 @@ module.exports.subjects = function (req, res, next) {
 
         //get subjects
         function (dbHelper, session, callback) {
-            dal.getSubjects(session.questionsLanguage, callback);
+            dal.getSubjects(dbHelper, session.questionsLanguage, callback);
         },
 
         //Close the db
@@ -28,7 +29,7 @@ module.exports.subjects = function (req, res, next) {
 
     async.waterfall(operations, function (err, subjects) {
         if (!err) {
-            res.send(200, subjects);
+            res.json(subjects);
         }
         else {
             res.send(err.status, err);
@@ -38,6 +39,8 @@ module.exports.subjects = function (req, res, next) {
 
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
+    var quizPostData = req.body;
+
     var operations = [
 
         //Connect
@@ -53,6 +56,21 @@ module.exports.start = function (req, res, next) {
             quiz.clientData.currentQuestionIndex = 0;
             quiz.clientData.finished = false;
             quiz.serverData.score = 0;
+            quiz.subjectId = quizPostData.subjectId;
+
+            //Attach the selected subject to the quiz
+            dal.getSubjects(dbHelper, session.questionsLanguage, function (err, dbHelper, subjects) {
+                if (err) {
+                    callback(new excptions.GeneralError(424, "Error retrieving subjects"));
+                    return;
+                }
+                for(var i=0; i<subjects.length; i++) {
+                    if (subjects[i].subjectId == quizPostData.subjectId) {
+                        quiz.subject = subjects[i];
+                        break;
+                    }
+                }
+            });
 
             session.quiz = quiz;
 
@@ -65,11 +83,11 @@ module.exports.start = function (req, res, next) {
         //Get the next question for the quiz
         getNextQuestion,
 
+        //Sets the direction of the question
+        setQuestionDirection,
+
         //Stores the session with the quiz in the db
         sessionUtils.storeSession,
-
-        //Clears the "Correct" property from each answer before sending to client
-        clearCorrectProperty,
 
         //Close the db
         function (dbHelper, session, callback) {
@@ -102,7 +120,7 @@ module.exports.answer = function (req, res, next) {
 
         //Check answer
         function (dbHelper, session, callback) {
-            var answers = session.quiz.clientData.currentQuestion.answers;
+            var answers = session.quiz.serverData.currentQuestion.answers;
             var answerId = parseInt(answer.id, 10);
             if (answerId < 1 || answerId > answers.length) {
                 callback(new excptions.GeneralError(424, "Invalid answer id: " + answer.id));
@@ -168,11 +186,11 @@ module.exports.nextQuestion = function (req, res, next) {
         //Get the next question for the quiz
         getNextQuestion,
 
+        //Sets the direction of the question
+        setQuestionDirection,
+
         //Stores the session with the quiz in the db
         sessionUtils.storeSession,
-
-        //Clears the "Correct" property from each answer before sending to client
-        clearCorrectProperty,
 
         //Close the db
         function (dbHelper, session, callback) {
@@ -191,10 +209,11 @@ module.exports.nextQuestion = function (req, res, next) {
     })
 };
 
-//Count questions collection
+//Count questions collection in the selected subject (its topics)
 function getQuestionsCount(dbHelper, session, callback) {
     var questionsCollection = dbHelper.getCollection("Questions");
-    questionsCollection.count({"_id": {"$nin": session.quiz.serverData.previousQuestions}}, function (err, count) {
+    questionsCollection.count({"_id": {"$nin": session.quiz.serverData.previousQuestions}, "topicId": {"$in": session.quiz.subject.topics}
+}, function (err, count) {
         if (err) {
             callback(new excptions.GeneralError(500, "Error retrieving number of questions from database"));
             return;
@@ -209,8 +228,8 @@ function getNextQuestion(dbHelper, session, count, callback) {
     var skip = random.rnd(0, count - 1);
     var questionsCollection = dbHelper.getCollection("Questions");
     questionsCollection.findOne({
-        "_id": {"$nin": session.quiz.serverData.previousQuestions}
-        //"questionId": 2439
+        "_id": {"$nin": session.quiz.serverData.previousQuestions},
+        "topicId": {"$in": session.quiz.subject.topics}
     }, {skip: skip}, function (err, question) {
         if (err || !question) {
             callback(new excptions.GeneralError(500, "Error retrieving next question from database"));
@@ -223,6 +242,7 @@ function getNextQuestion(dbHelper, session, count, callback) {
         }
 
         console.log("question: " + question.questionId);
+
         //Session is dynamic - perform some evals...
         if (question.vars) {
 
@@ -249,19 +269,15 @@ function getNextQuestion(dbHelper, session, count, callback) {
             }
         }
 
-        session.quiz.clientData.currentQuestion = {"text": question.text, "answers": question.answers};
-        dal.getTopic(question.topicId, function(err, topic) {
-            if (err) {
-                callback(err);
-                return;
-            }
-            if (topic.forceDirection) {
-                session.quiz.clientData.currentQuestion.forceDirection = topic.forceDirection;
-            }
-            else {
-                session.quiz.clientData.currentQuestion.forceDirection = "";
-            }
-        })
+        //Shuffle the answers
+        question.answers = random.shuffle(question.answers);
+
+        session.quiz.serverData.currentQuestion = question;
+
+        session.quiz.clientData.currentQuestion = {"text": question.text, "answers": []};
+        for (var i = 0; i < question.answers.length; i++) {
+            session.quiz.clientData.currentQuestion.answers.push({"id": i + 1, "text": question.answers[i].text})
+        }
 
         //Add this question id to the list of questions already asked during this quiz
         session.quiz.serverData.previousQuestions.push(question._id);
@@ -270,9 +286,21 @@ function getNextQuestion(dbHelper, session, count, callback) {
     })
 };
 
-function clearCorrectProperty(dbHelper, session, callback) {
-    session.quiz.clientData.currentQuestion.answers.forEach(function (element, index, array) {
-        delete element["correct"];
+function setQuestionDirection(dbHelper, session, callback) {
+
+    dal.getTopic(session.quiz.serverData.currentQuestion.topicId, function (err, topic) {
+        if (err) {
+            callback(err);
+            return;
+        }
+        if (topic.forceDirection) {
+            session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
+        }
+        else {
+            session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(session.questionsLanguage);
+        }
+
+        callback(null, dbHelper, session);
+
     })
-    callback(null, dbHelper, session);
 };

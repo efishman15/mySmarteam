@@ -5,6 +5,16 @@ module.exports.geoInfo = function (req, res, next) {
 
 module.exports.getLanguageByCountryCode = getLanguageByCountryCode;
 
+module.exports.getDirectionByLanguage = function(languageCodeIso2) {
+    switch (languageCodeIso2)
+    {
+        case "he":
+            return "rtl";
+        default:
+            return "ltr";
+    }
+}
+
 function getLanguageByCountryCode(countryCode) {
     switch (countryCode) {
         case "IL":

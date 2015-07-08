@@ -1,4 +1,4 @@
-angular.module('studyB4.controllers', ['studyB4.services', 'ngResource'])
+angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnimate'])
 
     .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService) {
 
@@ -95,12 +95,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource'])
         };
     })
 
-    .controller('HomeCtrl', function ($scope, $rootScope, LoginService) {
+    .controller('HomeCtrl', function ($scope, $rootScope) {
         //Figure out the user's language based on geo information (country code by ip)
-
-        if (!$rootScope.user) {
-            LoginService.initLogin();
-        }
 
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($rootScope.isLoggedOn == true) {
@@ -109,20 +105,31 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource'])
         });
     })
 
-    .controller('PlayCtrl', function ($scope, $state, $rootScope, LoginService) {
+    .controller('PlayCtrl', function ($scope, $state, PlayService, ErrorService) {
 
-        if (!$rootScope.user) {
-            LoginService.initLogin();
-        }
+        $scope.$on('$ionicView.beforeEnter', function () {
+            PlayService.getSubjects(
+                function (data) {
+                    $scope.subjects = data;
+                },
+                ErrorService.logErrorAndAlert)
+        });
 
-        $scope.play = function () {
-            $state.go('app.quiz', {}, {reload: true, inherit: true});
+        $scope.play = function (subjectId) {
+            $state.go('app.quiz', {subjectId: subjectId}, {reload: true, inherit: true});
         };
     })
 
-    .controller('QuizCtrl', function ($scope, $state, QuizService, ErrorService, $ionicHistory) {
+    .controller('QuizCtrl', function ($scope, $state, $stateParams, QuizService, ErrorService, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function () {
-            QuizService.start(
+
+            if (!$stateParams.subjectId) {
+                //Probably view is refreshed in browser - go back to pick a subject
+                $state.go('app.play', {}, {reload: true, inherit: true});
+                return;
+            }
+
+            QuizService.start($stateParams.subjectId,
                 function (data) {
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
@@ -131,24 +138,34 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource'])
         });
 
         $scope.$on('$ionicView.afterLeave', function () {
-            clearButtonAnimations();
+            if ($stateParams.subjectId) {
+            }
         });
 
-        function clearButtonAnimations() {
-            //Will forcibly clear all animations from buttons - to restore them to the initial state
-            for (i = 0; i < $scope.quiz.currentQuestion.answers.length; i++) {
-                document.getElementById("buttonAnswer" + $scope.quiz.currentQuestion.answers[i].id).className = "button-positive";
-            }
-        };
-
-        function getNextQuestion(currentCorrectAnswerId) {
+        function getNextQuestion() {
             QuizService.nextQuestion(
                 function (data) {
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
-                    clearButtonAnimations();
                 },
                 ErrorService.logErrorAndAlert)
+        };
+
+        $scope.buttonAnimationEnded = function (button, event) {
+
+            if ($scope.correctButtonId == button.id) {
+                document.getElementById("audioSound").src = "";
+                if ($scope.quiz.finished == true) {
+                    // using the ionicViewService to hide the back button on next view
+                    $ionicHistory.nextViewOptions({
+                        disableBack: true
+                    });
+                    $state.go('app.quizResult', {score: $scope.quiz.score}, {reload: true, inherit: true});
+                }
+                else {
+                    getNextQuestion();
+                }
+            }
         };
 
         $scope.submitAnswer = function (answerId) {
@@ -157,6 +174,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource'])
                 function (data) {
                     var correctAnswerId;
                     var audioSound = document.getElementById("audioSound");
+                    $scope.quiz.score = data.score;
                     if (data.correct == true) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
@@ -172,27 +190,24 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource'])
                             })
                         }, 3000);
                     }
-                    document.getElementById("buttonAnswer" + correctAnswerId).addEventListener("animationend", function () {
-                        audioSound.src = "";
-                        this.removeEventListener("animationend", arguments.callee);
-                        if ($scope.quiz.finished == true) {
-                            // using the ionicViewService to hide the back button on next view
-                            $ionicHistory.nextViewOptions({
-                                disableBack: true
-                            });
-                            $state.go('app.quizResult', {score: data.score}, {reload: true, inherit: true});
-                        }
-                        else {
-                            getNextQuestion(correctAnswerId);
-                        }
-                    });
+
+                    $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
                 },
                 ErrorService.logErrorAndAlert)
         };
-    })
+    }
+)
 
-    .controller('QuizResultCtrl', function ($scope, $stateParams) {
-        $scope.score = $stateParams.score;
+    .
+    controller('QuizResultCtrl', function ($scope, $stateParams, $state) {
+        $scope.$on('$ionicView.beforeEnter', function () {
+            if ($stateParams.score == null) {
+                //Probably view is refreshed in browser - go back to pick a subject
+                $state.go('app.play', {}, {reload: true, inherit: true});
+                return;
+            }
+            $scope.score = $stateParams.score;
+        });
     })
 
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
