@@ -1,18 +1,20 @@
 <ion-view title="Home">
-  <ion-nav-buttons side="left">
-    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-  </ion-nav-buttons>
-  <ion-content padding="true">
-   
-    <p>Welcome to the studyB4 home page!</p>
-    <p>The best educational software that runs on all platforms</p>
-    <div class="padding">
-      <a class="button button-block button-stable button-assertive" href="#/app/register">Sign Up</a>
-    </div>
-    <div class="padding">
-      Already have an account?
-      <a class="link" href="#/app/login">Sign In</a>
-    </div>
-     
-  </ion-content>
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-content padding="true" dir="{{$root.user.settings.direction}}">
+
+        <p>Welcome to the studyB4 home page!</p>
+
+        <p>The best educational software that runs on all platforms</p>
+
+        <div class="padding">
+            <a class="button button-block button-stable button-assertive" href="#/app/register">Sign Up</a>
+        </div>
+        <div class="padding">
+            Already have an account?
+            <a class="link" href="#/app/login">Sign In</a>
+        </div>
+
+    </ion-content>
 </ion-view>

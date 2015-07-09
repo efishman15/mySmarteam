@@ -17,7 +17,7 @@ module.exports.subjects = function (req, res, next) {
 
         //get subjects
         function (dbHelper, session, callback) {
-            dal.getSubjects(dbHelper, session.questionsLanguage, callback);
+            dal.getSubjects(dbHelper, session.questionsLanguage, false, callback);
         },
 
         //Close the db
@@ -59,7 +59,7 @@ module.exports.start = function (req, res, next) {
             quiz.subjectId = quizPostData.subjectId;
 
             //Attach the selected subject to the quiz
-            dal.getSubjects(dbHelper, session.questionsLanguage, function (err, dbHelper, subjects) {
+            dal.getSubjects(dbHelper, session.questionsLanguage, true, function (err, dbHelper, subjects) {
                 if (err) {
                     callback(new excptions.GeneralError(424, "Error retrieving subjects"));
                     return;

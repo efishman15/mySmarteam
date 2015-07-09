@@ -1,13 +1,13 @@
 <ion-view view-title="Pick a Subject">
-  <ion-content dir="{{$root.user.direction}}">
-    <ion-nav-buttons side="left">
-      <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-    </ion-nav-buttons>
-    <div class="list card">
+  <ion-content dir="{{$root.user.settings.direction}}">
+      <ion-nav-buttons side="left">
+          <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+      </ion-nav-buttons>
+      <div class="list card">
       <a
               ng-repeat="subject in subjects" class="item item-icon-left"
               ng-click="play(subject.subjectId)"
-              ng-bind-html="subject.displayNames[$root.user.interfaceLanguage]">
+              ng-bind-html="subject.displayNames[$root.user.settings.interfaceLanguage]">
       </a>
     </div>
   </ion-content>

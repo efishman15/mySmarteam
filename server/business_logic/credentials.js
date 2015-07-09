@@ -108,9 +108,11 @@ function register(dbHelper, user, callback) {
     var newAdmin = {
         "email": user.email,
         "password": md5(user.password + "|" + user.email),
-        "questionsLanguage": language,
-        "interfaceLanguage": language,
-        "geoInfo": user.geoInfo
+        "settings" : {
+            "questionsLanguage": language,
+            "interfaceLanguage": language,
+            "geoInfo": user.geoInfo
+        }
     };
 
     adminsCollection.insert(newAdmin

@@ -1,0 +1,14 @@
+<ion-view view-title="Settings">
+  <ion-content dir="{{$root.user.settings.direction}}">
+      <div class="list card">
+          <ion-toggle ng-model="$root.user.settings.protected" toggle-class="toggle-calm">
+              Settings protected by password
+          </ion-toggle>
+          <ion-item ng-click="chooseLanguage()">
+              <span>Interface Language</span>
+              <br/>
+              <h3>{{$root.user.settings.interfaceLanguage}}</h3>
+          </ion-item>
+    </div>
+  </ion-content>
+</ion-view>

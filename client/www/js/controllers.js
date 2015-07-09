@@ -2,6 +2,9 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
     .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService) {
 
+        $scope.updateSound = function () {
+            UserService.setStoreUser($rootScope.user);
+        };
     })
 
     .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, ApiService, ErrorService, $ionicHistory) {
@@ -120,7 +123,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         };
     })
 
-    .controller('QuizCtrl', function ($scope, $state, $stateParams, QuizService, ErrorService, $ionicHistory) {
+    .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, QuizService, ErrorService, $ionicHistory) {
+
         $scope.$on('$ionicView.beforeEnter', function () {
 
             if (!$stateParams.subjectId) {
@@ -137,11 +141,6 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 ErrorService.logErrorAndAlert)
         });
 
-        $scope.$on('$ionicView.afterLeave', function () {
-            if ($stateParams.subjectId) {
-            }
-        });
-
         function getNextQuestion() {
             QuizService.nextQuestion(
                 function (data) {
@@ -154,7 +153,9 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         $scope.buttonAnimationEnded = function (button, event) {
 
             if ($scope.correctButtonId == button.id) {
-                document.getElementById("audioSound").src = "";
+                if ($rootScope.user.settings.sound == true) {
+                    document.getElementById("audioSound").src = "";
+                }
                 if ($scope.quiz.finished == true) {
                     // using the ionicViewService to hide the back button on next view
                     $ionicHistory.nextViewOptions({
@@ -173,15 +174,17 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             QuizService.answer({"id": answerId},
                 function (data) {
                     var correctAnswerId;
-                    var audioSound = document.getElementById("audioSound");
+                    var soundFile;
                     $scope.quiz.score = data.score;
                     if (data.correct == true) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
-                        audioSound.src = "audio/correct.ogg";
+                        if ($rootScope.user.settings.sound == true) {
+                            soundFile = "audio/correct.ogg";
+                        }
                     }
                     else {
-                        audioSound.src = "audio/wrong.ogg";
+                        soundFile = "audio/wrong.ogg";
                         correctAnswerId = data.correctAnswerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
                         setTimeout(function () {
@@ -191,15 +194,18 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                         }, 3000);
                     }
 
+                    //Play sound if sound is on
+                    if ($rootScope.user.settings.sound == true) {
+                        document.getElementById("audioSound").src = soundFile;
+                    }
+
                     $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
                 },
                 ErrorService.logErrorAndAlert)
-        };
-    }
-)
+        }
+    })
 
-    .
-    controller('QuizResultCtrl', function ($scope, $stateParams, $state) {
+    .controller('QuizResultCtrl', function ($scope, $stateParams, $state) {
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($stateParams.score == null) {
                 //Probably view is refreshed in browser - go back to pick a subject
@@ -222,5 +228,12 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     $state.go('app.home', {}, {reload: false, inherit: true});
                 },
                 ErrorService.logErrorAndAlert)
-        })
-    });
+        });
+    })
+
+    .controller('SettingsCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
+
+        $scope.chooseLanguage = function () {
+            alert("choose lang...");
+        }
+    })

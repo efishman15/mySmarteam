@@ -23,8 +23,12 @@ angular.module('studyB4.services', [])
                     $rootScope.user = {
                         "email": null,
                         "password": null,
-                        "interfaceLanguage": geoResult.language,
-                        "questionsLanguage": geoResult.language
+                        "settings": {
+                            "sound": true,
+                            "protected": true,
+                            "interfaceLanguage": geoResult.language,
+                            "questionsLanguage": geoResult.language
+                        }
                     };
                     $rootScope.isloggedOn = false;
                     service.setStoreUser($rootScope.user);
@@ -123,8 +127,8 @@ angular.module('studyB4.services', [])
                 )
             }
             else {
+                deferred.resolve();
                 UserService.initUser();
-                deferred.reject();
             }
             return deferred.promise;
         };
@@ -135,9 +139,9 @@ angular.module('studyB4.services', [])
             $rootScope.isloggedOn = true;
 
             $rootScope.user = user;
-            $rootScope.user.interfaceLanguage = serverData.interfaceLanguage;
-            $rootScope.user.questionsLanguage = serverData.questionsLanguage;
-            $rootScope.user.direction = serverData.direction;
+            $rootScope.user.settings.interfaceLanguage = serverData.interfaceLanguage;
+            $rootScope.user.settings.questionsLanguage = serverData.questionsLanguage;
+            $rootScope.user.settings.direction = serverData.direction;
             UserService.setStoreUser($rootScope.user);
         };
 
@@ -200,7 +204,7 @@ angular.module('studyB4.services', [])
     })
 
     //Error Service
-    .factory('ErrorService', function () {
+    .factory('ErrorService', function ($ionicPopup) {
 
         var service = this;
 
@@ -212,7 +216,7 @@ angular.module('studyB4.services', [])
 
         service.logErrorAndAlert = function (status, error) {
             var errorMessage = service.logError(status, error);
-            alert(errorMessage);
+            $ionicPopup.alert({title: "Oops...", template: errorMessage});
             return errorMessage;
         };
 

@@ -60,6 +60,11 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
             .state('app.home', {
                 url: "/home",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
                 views: {
                     'menuContent': {
                         controller: "HomeCtrl",
@@ -70,6 +75,11 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
             .state('app.register', {
                 url: '/register',
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
                 views: {
                     'menuContent': {
                         controller: "RegisterCtrl",
@@ -80,6 +90,11 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
             .state('app.login', {
                 url: '/login',
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
                 views: {
                     'menuContent': {
                         controller: "LoginCtrl",
@@ -135,6 +150,35 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                 }
             })
 
+            .state('app.logout', {
+                url: "/logout",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
+                views: {
+                    'menuContent': {
+                        controller: "LogoutCtrl"
+                    }
+                }
+            })
+
+            .state('app.settings', {
+                url: "/settings",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/settings.html",
+                        controller: "SettingsCtrl"
+                    }
+                }
+            })
+
             .state('app.otherwise', {
                 url: "/otherwise",
                 views: {
@@ -143,16 +187,8 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                         controller: 'OtherwiseCtrl'
                     }
                 }
-            })
-
-            .state('app.logout', {
-                url: "/logout",
-                views: {
-                    'menuContent': {
-                        controller: "LogoutCtrl"
-                    }
-                }
             });
+
 
         $urlRouterProvider.otherwise(function ($injector, $location) {
             var $state = $injector.get('$state');

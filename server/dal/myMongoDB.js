@@ -2,7 +2,8 @@ var mongoClient = require('mongodb').MongoClient;
 var CONNECTION_STRING = "mongodb://localhost:27017/studyB4";
 var exceptions = require('../utils/exceptions');
 var topics = {};
-var subjectsPerLanguages = {};
+var serverSubjectsPerLanguages = {};
+var clientSubjectsPerLanguages = {};
 
 module.exports.connect = function (callback) {
     mongoClient.connect(CONNECTION_STRING, function (err, db) {
@@ -30,8 +31,15 @@ DbHelper.prototype.close = function () {
     return this.db.close();
 };
 
-module.exports.getSubjects = function (dbHelper, questionsLanguage, callback) {
-    var subjects = subjectsPerLanguages[questionsLanguage];
+module.exports.getSubjects = function (dbHelper, questionsLanguage, serverSide, callback) {
+    var subjects;
+    if (serverSide) {
+        subjects = serverSubjectsPerLanguages[questionsLanguage];
+    }
+    else {
+        subjects = clientSubjectsPerLanguages[questionsLanguage];
+    }
+
     if (subjects) {
         callback(null, dbHelper, subjects);
     }
@@ -44,9 +52,22 @@ module.exports.getSubjects = function (dbHelper, questionsLanguage, callback) {
                 callback(new exceptions.GeneralError(500, "Error retrieving subjects for language: " + language + " from the database"));
                 return;
             }
-            subjectsCursor.toArray(function (err, subjects) {
-                subjectsPerLanguages[questionsLanguage] = subjects;
-                callback(null, dbHelper, subjects);
+            subjectsCursor.toArray(function (err, serverSubjects) {
+                serverSubjectsPerLanguages[questionsLanguage] = serverSubjects;
+                var clientSubjects = [];
+                for(var i=0; i<serverSubjects.length; i++) {
+                    clientSubject = {};
+                    clientSubject.subjectId = serverSubjects[i].subjectId;
+                    clientSubject.displayNames = serverSubjects[i].displayNames;
+                    clientSubjects.push(clientSubject);
+                }
+                clientSubjectsPerLanguages[questionsLanguage] = clientSubjects;
+                if (serverSide) {
+                    callback(null, dbHelper, serverSubjects);
+                }
+                else {
+                    callback(null, dbHelper, clientSubjects);
+                }
             })
         })
     }
