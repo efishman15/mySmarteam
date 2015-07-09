@@ -70,7 +70,7 @@ angular.module('studyB4.services', [])
     })
 
     //Login Service
-    .factory('LoginService', function ($rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService) {
+    .factory('LoginService', function ($q, $rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService) {
 
         var service = this;
         var path = 'users/';
@@ -111,20 +111,23 @@ angular.module('studyB4.services', [])
                 })
         };
 
-        service.silentLogin = function (currentUser, releaseHttpRequests) {
-            //Auto silent login based on the credentials in the storage
-            service.login(currentUser,
-                function (data) {
-                    $rootScope.user = currentUser;
-                    if (releaseHttpRequests && releaseHttpRequests == true) {
-                        authService.loginConfirmed(null, function (config) {
-                            return MyAuthService.confirmLogin(data.token, config);
-                        });
-                    }
-                },
-                ErrorService.logError
-            )
-        }
+        service.resolveAuthentication = function () {
+            var deferred = $q.defer();
+            $rootScope.user = UserService.getStoreUser();
+            if ($rootScope.user && $rootScope.user.email) {
+                service.login($rootScope.user,
+                    function (data) {
+                        deferred.resolve();
+                    },
+                    ErrorService.logError
+                )
+            }
+            else {
+                UserService.initUser();
+                deferred.reject();
+            }
+            return deferred.promise;
+        };
 
         function saveUser(user, serverData) {
             $http.defaults.headers.common.Authorization = serverData.token;
@@ -136,7 +139,7 @@ angular.module('studyB4.services', [])
             $rootScope.user.questionsLanguage = serverData.questionsLanguage;
             $rootScope.user.direction = serverData.direction;
             UserService.setStoreUser($rootScope.user);
-        }
+        };
 
         //Used for both login and register forms - clear last server error upon field change
         service.fieldChange = function (currentField, serverErrorField) {
@@ -182,7 +185,7 @@ angular.module('studyB4.services', [])
         var path = 'quiz/';
 
         service.start = function (subjectId, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "start", {"subjectId" : subjectId}, callbackOnSuccess, callbackOnError)
+            return ApiService.post(path, "start", {"subjectId": subjectId}, callbackOnSuccess, callbackOnError)
         };
 
         service.answer = function (answer, callbackOnSuccess, callbackOnError) {

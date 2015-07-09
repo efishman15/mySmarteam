@@ -293,6 +293,7 @@ function setQuestionDirection(dbHelper, session, callback) {
             callback(err);
             return;
         }
+        console.log("topic: " + topic.topicId + ", forceDirection: " + topic.forceDirection);
         if (topic.forceDirection) {
             session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
         }

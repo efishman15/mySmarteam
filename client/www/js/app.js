@@ -30,27 +30,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
         })
     })
 
-    .run(function ($rootScope, $state, LoginService, UserService) {
-
-        $rootScope.user = UserService.getStoreUser();
-        if ($rootScope.user && $rootScope.user.email) {
-            LoginService.silentLogin($rootScope.user, false);
-        }
-        else {
-            UserService.initUser();
-        }
-
-        $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
-            if ($rootScope.user && $rootScope.user.email) {
-                LoginService.silentLogin($rootScope.user, true);
-            }
-            else {
-                $state.go('app.login', {}, {reload: true, inherit: true});
-            }
-        });
-    })
-
-    .config(function ($httpProvider) {
+     .config(function ($httpProvider) {
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
@@ -110,6 +90,11 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
             .state('app.play', {
                 url: "/play",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
                 views: {
                     'menuContent': {
                         templateUrl: "templates/play.html",
@@ -120,6 +105,11 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
             .state('app.quiz', {
                 url: "/quiz",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
                 params: {subjectId: null},
                 views: {
                     'menuContent': {
@@ -131,6 +121,11 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
             .state('app.quizResult', {
                 url: "/quizResult",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
                 params: {score: null},
                 views: {
                     'menuContent': {
