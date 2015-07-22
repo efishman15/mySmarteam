@@ -16,15 +16,21 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-toggle ng-change="updateSound();" ng-model="$root.user.settings.sound" toggle-class="toggle-calm"
-                            nav-clear>
+                <ion-toggle
+                        ng-change="updateSound();"
+                        ng-model="$root.user.settings.sound"
+                        toggle-class="toggle-calm"
+                        nav-clear>
+                    <i class="icon ion-music-note"></i>
                     Sound
                 </ion-toggle>
                 <ion-item nav-clear menu-close href="#/app/settings">
+                    <i class="icon ion-gear-a"></i>
                     Settings
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/logout"">
-                    Logout {{$root.user.email}}
+                <ion-item nav-clear menu-close href="#/app/logout"
+                ">
+                Logout {{$root.user.email}}
                 </ion-item>
             </ion-list>
         </ion-content>

@@ -231,9 +231,34 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
     })
 
-    .controller('SettingsCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover) {
 
-        $scope.chooseLanguage = function () {
-            alert("choose lang...");
+        $scope.interfaceLanguages = [{"name": "English", "value": "en"},
+            {"name": "Hebrew", "value": "he"},
+            {"name": "Russian", "value": "ru"},
+            {"name": "Spanish", "value": "es"}
+        ]
+
+        $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
+            scope: $scope
+        }).then(function (popover) {
+            $scope.popover = popover;
+        });
+
+        $scope.openPopover = function ($event) {
+            $scope.popover.show($event);
+        };
+
+        $scope.closePopover = function (item) {
+            $rootScope.user.settings.interfaceLanguage = item.value;
+            $scope.popover.hide();
+        };
+
+        $scope.getInterfaceLanguageDisplayName = function() {
+            for(var i=0; i<$scope.interfaceLanguages.length; i++) {
+                if ($scope.interfaceLanguages[i].value == $rootScope.user.settings.interfaceLanguage) {
+                    return $scope.interfaceLanguages[i].name;
+                }
+            }
         }
     })
