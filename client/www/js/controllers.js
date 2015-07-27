@@ -21,9 +21,10 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 function (data) {
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
-                        disableBack: true
+                        disableBack: true,
+                        historyRoot: true
                     });
-                    $state.go('app.play', {}, {reload: true, inherit: true});
+                    $state.go('app.play', {}, {reload: false, inherit: true});
                 },
                 function (status, error) {
 
@@ -66,9 +67,10 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 function (data) {
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
-                        disableBack: true
+                        disableBack: true,
+                        historyRoot: true
                     });
-                    $state.go('app.play', {}, {reload: true, inherit: true});
+                    $state.go('app.play', {}, {reload: false, inherit: true});
                 },
                 function (status, error) {
                     //Reset $rootScope.user fields
@@ -99,7 +101,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
     .controller('HomeCtrl', function ($scope, $rootScope, $state) {
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($rootScope.isLoggedOn == true) {
-                $state.go('app.play', {}, {reload: true, inherit: true});
+                $state.go('app.play', {}, {reload: false, inherit: true});
             }
         });
     })
@@ -115,7 +117,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
 
         $scope.play = function (subjectId) {
-            $state.go('app.quiz', {subjectId: subjectId}, {reload: true, inherit: true});
+            $state.go('app.quiz', {subjectId: subjectId}, {reload: false, inherit: true});
         };
     })
 
@@ -125,7 +127,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
             if (!$stateParams.subjectId) {
                 //Probably view is refreshed in browser - go back to pick a subject
-                $state.go('app.play', {}, {reload: true, inherit: true});
+                $state.go('app.play', {}, {reload: false, inherit: true});
                 return;
             }
 
@@ -157,7 +159,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
-                    $state.go('app.quizResult', {score: $scope.quiz.score}, {reload: true, inherit: true});
+                    $state.go('app.quizResult', {score: $scope.quiz.score}, {reload: false, inherit: true});
                 }
                 else {
                     getNextQuestion();
@@ -205,7 +207,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($stateParams.score == null) {
                 //Probably view is refreshed in browser - go back to pick a subject
-                $state.go('app.play', {}, {reload: true, inherit: true});
+                $state.go('app.play', {}, {reload: false, inherit: true});
                 return;
             }
             $scope.score = $stateParams.score;
@@ -227,12 +229,14 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
     })
 
-    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate) {
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
+
         $scope.$on('$ionicView.beforeEnter', function () {
             $scope.settings = JSON.parse(JSON.stringify($rootScope.user.settings));
+            $ionicSideMenuDelegate.toggleLeft();
         });
 
         $scope.languages = [
@@ -257,7 +261,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $scope.popover.hide();
         };
 
-        $scope.getInterfaceLanguageDisplayName = function (languageProperty) {
+        $scope.getLanguageDisplayName = function (languageProperty) {
             for (var i = 0; i < $scope.languages.length; i++) {
                 if ($scope.languages[i].value == $scope.settings[languageProperty]) {
                     return $scope.languages[i].name;
