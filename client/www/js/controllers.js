@@ -68,11 +68,9 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
-
                     $state.go('app.play', {}, {reload: true, inherit: true});
                 },
                 function (status, error) {
-
                     //Reset $rootScope.user fields
                     $rootScope.user.email = null;
                     $rootScope.user.password = null;
@@ -98,9 +96,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         };
     })
 
-    .controller('HomeCtrl', function ($scope, $rootScope) {
-        //Figure out the user's language based on geo information (country code by ip)
-
+    .controller('HomeCtrl', function ($scope, $rootScope, $state) {
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($rootScope.isLoggedOn == true) {
                 $state.go('app.play', {}, {reload: true, inherit: true});
@@ -233,7 +229,14 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
     .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover) {
 
-        $scope.interfaceLanguages = [{"name": "English", "value": "en"},
+        //Clone the user settings from the root object - all screen changes will work on the local cloned object
+        //only "Apply" button will send the changes to the server
+        $scope.$on('$ionicView.beforeEnter', function () {
+            $scope.settings = JSON.parse(JSON.stringify($rootScope.user.settings));
+        });
+
+        $scope.languages = [
+            {"name": "English", "value": "en"},
             {"name": "Hebrew", "value": "he"},
             {"name": "Russian", "value": "ru"},
             {"name": "Spanish", "value": "es"}
@@ -245,19 +248,19 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $scope.popover = popover;
         });
 
-        $scope.openPopover = function ($event) {
+        $scope.openPopover = function (property, $event) {
+            $scope.languageProperty = property;
             $scope.popover.show($event);
         };
 
         $scope.closePopover = function (item) {
-            $rootScope.user.settings.interfaceLanguage = item.value;
             $scope.popover.hide();
         };
 
-        $scope.getInterfaceLanguageDisplayName = function() {
-            for(var i=0; i<$scope.interfaceLanguages.length; i++) {
-                if ($scope.interfaceLanguages[i].value == $rootScope.user.settings.interfaceLanguage) {
-                    return $scope.interfaceLanguages[i].name;
+        $scope.getInterfaceLanguageDisplayName = function (languageProperty) {
+            for (var i = 0; i < $scope.languages.length; i++) {
+                if ($scope.languages[i].value == $scope.settings[languageProperty]) {
+                    return $scope.languages[i].name;
                 }
             }
         }

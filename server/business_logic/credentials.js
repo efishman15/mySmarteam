@@ -108,10 +108,10 @@ function register(dbHelper, user, callback) {
     var newAdmin = {
         "email": user.email,
         "password": md5(user.password + "|" + user.email),
+        "geoInfo": user.geoInfo,
         "settings" : {
             "questionsLanguage": language,
-            "interfaceLanguage": language,
-            "geoInfo": user.geoInfo
+            "interfaceLanguage": language
         }
     };
 
@@ -156,9 +156,9 @@ function createOrUpdateSession(dbHelper, admin, callback) {
                 "adminId": ObjectId(admin._id),
                 "createdAt": new Date(),
                 "userToken": userToken,
-                "questionsLanguage": admin.questionsLanguage,
-                "interfaceLanguage": admin.interfaceLanguage,
-                "direction": generalUtils.getDirectionByLanguage(admin.interfaceLanguage)
+                "questionsLanguage": admin.settings.questionsLanguage,
+                "interfaceLanguage": admin.settings.interfaceLanguage,
+                "direction": generalUtils.getDirectionByLanguage(admin.settings.interfaceLanguage)
             }
         }, {upsert: true, new: true}, function (err, session) {
 

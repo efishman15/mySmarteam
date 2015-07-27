@@ -4,7 +4,7 @@
     </ion-header-bar>
     <ion-content>
         <ion-radio ng-repeat="item in interfaceLanguages"
-                   ng-model="$root.user.settings.interfaceLanguage"
+                   ng-model="settings[languageProperty]"
                    ng-change="closePopover(item)"
                    ng-value="item.value">{{item.name}}
         </ion-radio>

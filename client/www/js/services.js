@@ -30,7 +30,7 @@ angular.module('studyB4.services', [])
                             "questionsLanguage": geoResult.language
                         }
                     };
-                    $rootScope.isloggedOn = false;
+                    $rootScope.isLoggedOn = false;
                     service.setStoreUser($rootScope.user);
 
                     if (callbackOnSuccess) {
@@ -54,14 +54,14 @@ angular.module('studyB4.services', [])
             return ApiService.get("http://freegeoip.net/json/",
                 function (geoInfo) {
                     $rootScope.geoInfo = geoInfo;
-                    return ApiService.post(path, "geo", geoInfo, callbackOnSuccess, callbackOnError)
-                        .success(function (geoResult, status, headers, config) {
+                    return ApiService.post(path, "geo", geoInfo,
+                        function (geoResult) {
                             geoResult.geoInfo = geoInfo;
                             if (callbackOnSuccess) {
                                 callbackOnSuccess(geoResult);
                             }
-                        })
-                        .error(function (geoInfo, status, headers, config) {
+                        },
+                        function (status, data) {
                             if (callbackOnError) {
                                 callbackOnError(status, geoInfo);
                             }
@@ -80,55 +80,84 @@ angular.module('studyB4.services', [])
         var path = 'users/';
 
         service.register = function (user, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "register", user, callbackOnSuccess, callbackOnError)
-                .success(function (data, status, headers, config) {
-
+            return ApiService.post(path, "register", user,
+                function (data) {
                     //Was set just in order to pass it to the server - no need to save this in the Store
                     delete $rootScope.user["geoInfo"];
 
                     saveUser(user, data);
                     callbackOnSuccess()
-                });
+
+                },
+                function (status, data) {
+                    callbackOnError(status, data);
+                })
         };
 
         service.login = function (user, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "login", user, callbackOnSuccess, callbackOnError)
-                .success(function (data, status, headers, config) {
+            return ApiService.post(path, "login", user,
+                function (data) {
                     saveUser(user, data);
                     callbackOnSuccess(data);
-                });
+
+                },
+                function (status, data) {
+                    callbackOnError(status, data);
+                })
         };
 
         service.logout = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "logout", null, callbackOnSuccess, callbackOnError)
-                .success(function (data, status, headers, config) {
+            return ApiService.post(path, "logout", null,
+                function (data, headers) {
                     delete headers["Authorization"];
                     delete $http.defaults.headers.common["Authorization"];
+                    $rootScope.isLoggedOn == false;
                     UserService.clearStoreUser();
                     UserService.initUser(callbackOnSuccess, callbackOnError);
-                })
-                .error(function (data, status, headers, config) {
+                },
+                function (status, data, headers) {
                     delete headers["Authorization"];
                     delete $http.defaults.headers.common["Authorization"];
+                    $rootScope.isLoggedOn == false;
                     UserService.clearStoreUser();
                     UserService.initUser(callbackOnSuccess, callbackOnError);
-                })
+                }
+            )
         };
 
-        service.resolveAuthentication = function () {
+        service.resolveAuthentication = function (initUser) {
             var deferred = $q.defer();
+
+            if (initUser && initUser == true) {
+                if (!$rootScope.user) {
+                    UserService.initUser(function() {deferred.resolve()}, function() {deferred.resolve()});
+                }
+                else {
+                    deferred.resolve();
+                }
+                return deferred.promise;
+            }
+
+            if ($rootScope.isLoggedOn == true) {
+                deferred.resolve();
+                return deferred.promise;
+            }
+
             $rootScope.user = UserService.getStoreUser();
             if ($rootScope.user && $rootScope.user.email) {
                 service.login($rootScope.user,
                     function (data) {
                         deferred.resolve();
                     },
-                    ErrorService.logError
+                    function (status, error) {
+                        ErrorService.logError(status, error);
+                        deferred.resolve();
+                        UserService.initUser();
+                    }
                 )
             }
             else {
-                deferred.resolve();
-                UserService.initUser();
+                UserService.initUser(function() {deferred.resolve()}, function() {deferred.resolve()});
             }
             return deferred.promise;
         };
@@ -136,7 +165,7 @@ angular.module('studyB4.services', [])
         function saveUser(user, serverData) {
             $http.defaults.headers.common.Authorization = serverData.token;
 
-            $rootScope.isloggedOn = true;
+            $rootScope.isLoggedOn = true;
 
             $rootScope.user = user;
             $rootScope.user.settings.interfaceLanguage = serverData.interfaceLanguage;
@@ -252,10 +281,10 @@ angular.module('studyB4.services', [])
         service.post = function (path, action, postData, callbackOnSuccess, callbackOnError) {
             return $http.post(getActionUrl(path, action), postData)
                 .success(function (data, status, headers, config) {
-                    callbackOnSuccess(data);
+                    callbackOnSuccess(data, headers);
                 })
                 .error(function (data, status, headers, config) {
-                    callbackOnError(status, data);
+                    callbackOnError(status, data, headers);
                 })
         };
 
@@ -265,7 +294,9 @@ angular.module('studyB4.services', [])
                     callbackOnSuccess(data);
                 })
                 .error(function (data, status, headers, config) {
-                    callbackOnError(status, data);
+                    if (callbackOnError) {
+                        callbackOnError(status, data);
+                    }
                 })
         };
 

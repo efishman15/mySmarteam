@@ -62,7 +62,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                 url: "/home",
                 resolve: {
                     auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
+                        return LoginService.resolveAuthentication(true);
                     }
                 },
                 views: {
@@ -77,7 +77,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                 url: '/register',
                 resolve: {
                     auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
+                        return LoginService.resolveAuthentication(true);
                     }
                 },
                 views: {
@@ -92,7 +92,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                 url: '/login',
                 resolve: {
                     auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
+                        return LoginService.resolveAuthentication(true);
                     }
                 },
                 views: {

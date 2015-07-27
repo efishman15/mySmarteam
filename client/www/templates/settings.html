@@ -4,11 +4,11 @@
             <ion-toggle ng-model="$root.user.settings.protected" toggle-class="toggle-calm">
                 Settings protected by password
             </ion-toggle>
-            <ion-item ng-click="openPopover($event)">
+            <ion-item ng-click="openPopover('interfaceLanguage', $event)">
                 <span>Interface Language</span>
                 <br/>
 
-                <h3>{{getInterfaceLanguageDisplayName()}}</h3>
+                <h3>{{getLanguageDisplayName('interfaceLanguage')}}</h3>
             </ion-item>
         </div>
         <button class="button button-positive button-full">Apply</button>
