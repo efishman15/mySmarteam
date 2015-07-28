@@ -5,6 +5,28 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         $scope.updateSound = function () {
             UserService.setStoreUser($rootScope.user);
         };
+
+        $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
+                var currentUser = UserService.getStoreUser();
+                if (!currentUser || !currentUser.email) {
+                    UserService.initUser();
+                    $state.go('app.login', {}, {reload: false, inherit: true});
+                }
+                else {
+
+                    //Auto silent login based on the credentials in the storage
+                    LoginService.login(currentUser,
+                        function (data) {
+                            authService.loginConfirmed(null, function (config) {
+                                return MyAuthService.confirmLogin(data.token, config);
+                            });
+                        },
+                        ErrorService.logError
+                    )
+                }
+
+            }
+        );
     })
 
     .controller('RegisterCtrl', function ($scope, $rootScope, $http, $state, LoginService, UserService, ApiService, ErrorService, $ionicHistory) {

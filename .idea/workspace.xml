@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" afterPath="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/menu.html" afterPath="$PROJECT_DIR$/client/www/templates/menu.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/play.html" afterPath="$PROJECT_DIR$/client/www/templates/play.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/quiz.html" afterPath="$PROJECT_DIR$/client/www/templates/quiz.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/quizResult.html" afterPath="$PROJECT_DIR$/client/www/templates/quizResult.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/settings.html" afterPath="$PROJECT_DIR$/client/www/templates/settings.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ionic-tutorial.iws" />
@@ -36,18 +30,40 @@
       <file leaf-file-name="controllers.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48405465">
-              <caret line="238" column="47" selection-start-line="238" selection-start-column="47" selection-end-line="238" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.55498284">
+              <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
               <folding>
-                <element signature="e#222#339#0" expanded="false" />
-                <element signature="e#487#2431#0" expanded="false" />
-                <element signature="e#2585#4333#0" expanded="false" />
-                <element signature="e#4402#4618#0" expanded="false" />
-                <element signature="e#4702#5110#0" expanded="false" />
-                <element signature="e#5235#8489#0" expanded="false" />
-                <element signature="e#8566#8934#0" expanded="false" />
-                <element signature="e#9061#9553#0" expanded="false" />
+                <element signature="e#1364#3308#0" expanded="false" />
+                <element signature="e#3462#5210#0" expanded="false" />
+                <element signature="e#5279#5495#0" expanded="false" />
+                <element signature="e#5579#5987#0" expanded="false" />
+                <element signature="e#6112#9366#0" expanded="false" />
+                <element signature="e#9443#9811#0" expanded="false" />
+                <element signature="e#9938#10430#0" expanded="false" />
+                <element signature="e#10534#11914#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="services.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="19" column="8" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+              <folding>
+                <element signature="e#1489#2434#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="http-auth-interceptor.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/lib/angular-http-auth/src/http-auth-interceptor.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="58" column="63" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="63" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -390,6 +406,84 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="www" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-http-auth" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="www" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-http-auth" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="www" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="js" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -607,7 +701,13 @@
       <option name="project" value="LOCAL" />
       <updated>1437988724642</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Save settings to server (try avoiding apply/cancel - each change - store in local store + dirty flag, upon view leave - store in server and clear dirty from local)&#10;2. interface translation (Angular Translate)">
+      <created>1437999024515</created>
+      <option name="number" value="00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1437999024515</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -619,7 +719,7 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32491767" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32491767" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -686,7 +786,8 @@
     <MESSAGE value="Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Add &quot;Questions language&quot;&#10; - Save settings to server&#10;2. interface translation (Angular Translate)" />
     <MESSAGE value="++Fixed login/logout/register problem - calling success function from within apiService.post by mistake&#10;Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Add &quot;Questions language&quot;&#10; - Save settings to server&#10;2. interface translation (Angular Translate)" />
     <MESSAGE value="Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Save settings to server (try avoiding apply/cancel - each change - store in local store + dirty flag, upon view leave - store in server and clear dirty from local)&#10;2. interface translation (Angular Translate)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Save settings to server (try avoiding apply/cancel - each change - store in local store + dirty flag, upon view leave - store in server and clear dirty from local)&#10;2. interface translation (Angular Translate)" />
+    <MESSAGE value="***Restore loginRequired (401) error handling&#10;Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Save settings to server (try avoiding apply/cancel - each change - store in local store + dirty flag, upon view leave - store in server and clear dirty from local)&#10;2. interface translation (Angular Translate)" />
+    <option name="LAST_COMMIT_MESSAGE" value="***Restore loginRequired (401) error handling&#10;Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Save settings to server (try avoiding apply/cancel - each change - store in local store + dirty flag, upon view leave - store in server and clear dirty from local)&#10;2. interface translation (Angular Translate)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -860,13 +961,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/angular-http-auth/src/http-auth-interceptor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.264706">
-          <caret line="19" column="18" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/utils/random.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -946,14 +1040,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="106" column="62" selection-start-line="106" selection-start-column="62" selection-end-line="106" selection-end-column="62" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1040,19 +1126,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/lib/angular-http-auth/src/http-auth-interceptor.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="58" column="63" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="8" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="8" />
+          <folding>
+            <element signature="e#1489#2434#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48405465">
-          <caret line="238" column="47" selection-start-line="238" selection-start-column="47" selection-end-line="238" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.55498284">
+          <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
           <folding>
-            <element signature="e#222#339#0" expanded="false" />
-            <element signature="e#487#2431#0" expanded="false" />
-            <element signature="e#2585#4333#0" expanded="false" />
-            <element signature="e#4402#4618#0" expanded="false" />
-            <element signature="e#4702#5110#0" expanded="false" />
-            <element signature="e#5235#8489#0" expanded="false" />
-            <element signature="e#8566#8934#0" expanded="false" />
-            <element signature="e#9061#9553#0" expanded="false" />
+            <element signature="e#1364#3308#0" expanded="false" />
+            <element signature="e#3462#5210#0" expanded="false" />
+            <element signature="e#5279#5495#0" expanded="false" />
+            <element signature="e#5579#5987#0" expanded="false" />
+            <element signature="e#6112#9366#0" expanded="false" />
+            <element signature="e#9443#9811#0" expanded="false" />
+            <element signature="e#9938#10430#0" expanded="false" />
+            <element signature="e#10534#11914#0" expanded="false" />
           </folding>
         </state>
       </provider>
