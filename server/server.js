@@ -6,6 +6,8 @@ var quiz = require('./business_logic/quiz')
 var domain = require('domain');
 var GeneralError = require('./utils/exceptions').GeneralError;
 var generalUtils = require('./utils/general');
+var sessionUtils = require('./business_logic/session');
+
 var app = express();
 
 app.use(bodyParser());          // pull information from html in POST
@@ -49,6 +51,7 @@ app.post('/quiz/start', isAuthenticated, quiz.start);
 app.post('/quiz/answer', isAuthenticated, quiz.answer);
 app.post('/quiz/nextQuestion', isAuthenticated, quiz.nextQuestion);
 app.post('/users/logout', isAuthenticated, credentials.logout);
+app.post('/users/settings', sessionUtils.saveSettings);
 
 //API's that do NOT require authentication
 app.post('/users/login', credentials.login);

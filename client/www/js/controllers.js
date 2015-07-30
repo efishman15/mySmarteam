@@ -251,7 +251,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
     })
 
-    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService) {
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
@@ -259,6 +259,19 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         $scope.$on('$ionicView.beforeEnter', function () {
             $scope.settings = JSON.parse(JSON.stringify($rootScope.user.settings));
             $ionicSideMenuDelegate.toggleLeft();
+        });
+
+        $scope.$on('$ionicView.afterLeave', function () {
+            if (JSON.stringify($scope.settings) != JSON.stringify($rootScope.user.settings)) {
+                //Dirty settings - save to server
+                UserService.saveSettingsToServer($scope.settings,
+                    function (data) {
+                        if ($scope.settings.interfaceLanguage != $rootScope.user.settings.interfaceLanguage) {
+                            alert("Needs interface refresh!");
+                        }
+                        $rootScope.user.settings = $scope.settings;
+                    }, ErrorService.logError);
+            }
         });
 
         $scope.languages = [

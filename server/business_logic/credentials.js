@@ -110,6 +110,7 @@ function register(dbHelper, user, callback) {
         "password": md5(user.password + "|" + user.email),
         "geoInfo": user.geoInfo,
         "settings" : {
+            "passwordProtected" : true,
             "questionsLanguage": language,
             "interfaceLanguage": language
         }
@@ -156,9 +157,12 @@ function createOrUpdateSession(dbHelper, admin, callback) {
                 "adminId": ObjectId(admin._id),
                 "createdAt": new Date(),
                 "userToken": userToken,
-                "questionsLanguage": admin.settings.questionsLanguage,
-                "interfaceLanguage": admin.settings.interfaceLanguage,
-                "direction": generalUtils.getDirectionByLanguage(admin.settings.interfaceLanguage)
+                "direction": generalUtils.getDirectionByLanguage(admin.settings.interfaceLanguage),
+                "settings" : {
+                    "passwordProtected": admin.settings.passwordProtected,
+                    "questionsLanguage": admin.settings.questionsLanguage,
+                    "interfaceLanguage": admin.settings.interfaceLanguage
+                }
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -195,8 +199,7 @@ function logout(dbHelper, token, callback) {
 function getSessionResponse(session) {
     return {
         "token": session.userToken,
-        "interfaceLanguage": session.interfaceLanguage,
-        "questionsLanguage": session.questionsLanguage,
-        "direction": session.direction
+        "direction": session.direction,
+        "settings": session.settings
     };
 }

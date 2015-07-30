@@ -1,7 +1,7 @@
 <ion-view view-title="Settings" hide-back-button="false">
-    <ion-content dir="{{$root.user.settings.direction}}">
+    <ion-content dir="{{$root.user.direction}}">
         <ion-list class="card">
-            <ion-toggle ng-model="$root.user.settings.protected" toggle-class="toggle-calm">
+            <ion-toggle ng-model="settings.passwordProtected" toggle-class="toggle-calm">
                 Settings protected by password
             </ion-toggle>
             <ion-item ng-click="openPopover('interfaceLanguage', $event)">
@@ -17,7 +17,5 @@
                 <h3>{{getLanguageDisplayName('questionsLanguage')}}</h3>
             </ion-item>
         </ion-list>
-        <button class="button button-positive button-full">Apply</button>
-        <button class="button button-stable button-full">Cancel</button>
     </ion-content>
 </ion-view>

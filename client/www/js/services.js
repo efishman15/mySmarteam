@@ -1,8 +1,9 @@
 angular.module('studyB4.services', [])
 
     //User Service
-    .factory('UserService', function (store, GeoInfoService, ErrorService, $rootScope) {
+    .factory('UserService', function (store, GeoInfoService, ErrorService, $rootScope, ApiService) {
         var service = this;
+        var path = 'users/';
 
         service.getStoreUser = function () {
             return store.get("user");
@@ -40,6 +41,10 @@ angular.module('studyB4.services', [])
                 callbackOnError
             )
         };
+
+        service.saveSettingsToServer = function(settings, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "settings", settings, callbackOnSuccess, callbackOnError);
+        }
 
         return service;
     })
@@ -168,9 +173,8 @@ angular.module('studyB4.services', [])
             $rootScope.isLoggedOn = true;
 
             $rootScope.user = user;
-            $rootScope.user.settings.interfaceLanguage = serverData.interfaceLanguage;
-            $rootScope.user.settings.questionsLanguage = serverData.questionsLanguage;
-            $rootScope.user.settings.direction = serverData.direction;
+            $rootScope.user.direction = serverData.direction;
+            $rootScope.user.settings = serverData.settings;
             UserService.setStoreUser($rootScope.user);
         };
 

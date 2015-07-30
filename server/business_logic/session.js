@@ -2,6 +2,7 @@
 var async = require('async');
 var dal = require('../dal/myMongoDB');
 var exceptions = require('../utils/exceptions');
+var ObjectId = require('mongodb').ObjectID;
 
 module.exports.getSession = function (token, callback) {
 
@@ -48,6 +49,62 @@ function retrieveSession(dbHelper, token, callback) {
         }
     )
 };
+
+module.exports.saveSettings = function (req, res, next) {
+    var settings = req.body;
+    var token = req.headers.authorization;
+
+    var operations = [
+
+        //Connect to the database
+        dal.connect,
+
+        //Retrieve the session
+        function (dbHelper, callback) {
+            retrieveSession(dbHelper, token, callback);
+        },
+
+        //Update the session in db
+        function (dbHelper, session, callback) {
+            session.settings = settings;
+            storeSession(dbHelper, session, callback);
+        },
+
+        //Update the admin in db
+        function (dbHelper, session, callback) {
+            var adminsCollection = dbHelper.getCollection('Admins');
+            adminsCollection.findAndModify({"_id": ObjectId(session.adminId)}, {},
+                {
+                    $set: {
+                        "settings": settings
+                    }
+                }, {}, function (err, admin) {
+
+                    if (err) {
+                        console.log("Error finding admin with Id: " + session.adminId + ", err: " + JSON.stringify(err));
+                        callback(new excptions.GeneralError(500));
+                        return;
+                    }
+                    callback(null, dbHelper);
+                })
+        },
+
+        //Close the db
+        function (dbHelper, callback) {
+            dbHelper.close();
+            callback(null);
+        }
+    ]
+
+    async.waterfall(operations, function (err) {
+        if (!err) {
+            res.send(200, "OK");
+        }
+        else {
+            res.send(err.status, err);
+        }
+    });
+}
 
 
 //Retrieve Session
