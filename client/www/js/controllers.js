@@ -251,7 +251,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
     })
 
-    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate) {
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
@@ -267,7 +267,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 UserService.saveSettingsToServer($scope.settings,
                     function (data) {
                         if ($scope.settings.interfaceLanguage != $rootScope.user.settings.interfaceLanguage) {
-                            alert("Needs interface refresh!");
+                            $translate.use($scope.settings.interfaceLanguage);
+                            $rootScope.user.direction = data.direction;
                         }
                         $rootScope.user.settings = $scope.settings;
                     }, ErrorService.logError);

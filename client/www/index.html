@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -22,6 +22,8 @@
 	<script src="lib/angular-storage/angular-storage.js"></script>
     <script src="lib/angular-messages/angular-messages.min.js"></script>
     <script src="lib/angular-http-auth/src/http-auth-interceptor.js"></script>
+    <script src="lib/angular-translate/angular-translate.js"></script>
+    <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -31,7 +33,7 @@
     <script src="js/controllers.js"></script>
   </head>
 
-   <body ng-app="studyB4.app" animation="slide-left-right-ios7">
+   <body ng-app="studyB4.app" animation="slide-left-right-ios7" translate-cloak>
         <ion-nav-view></ion-nav-view>
   </body>
 </html>

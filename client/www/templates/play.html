@@ -6,9 +6,9 @@
         </button>
     </ion-nav-buttons>
 </ion-nav-bar>
-<ion-view view-title="Pick a Subject">
+<ion-view class="padding" view-title="{{ 'PICK_A_SUBJECT' | translate }}"
     <ion-content dir="{{$root.user.direction}}">
-        <div class="list card">
+        <div class="list card padding">
             <a
                     ng-repeat="subject in subjects" class="item item-icon-left"
                     ng-click="play(subject.subjectId)"

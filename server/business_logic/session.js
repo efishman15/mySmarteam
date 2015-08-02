@@ -3,6 +3,7 @@ var async = require('async');
 var dal = require('../dal/myMongoDB');
 var exceptions = require('../utils/exceptions');
 var ObjectId = require('mongodb').ObjectID;
+var generalUtils = require('../utils/general');
 
 module.exports.getSession = function (token, callback) {
 
@@ -67,6 +68,7 @@ module.exports.saveSettings = function (req, res, next) {
         //Update the session in db
         function (dbHelper, session, callback) {
             session.settings = settings;
+            session.direction = generalUtils.getDirectionByLanguage(settings.interfaceLanguage);
             storeSession(dbHelper, session, callback);
         },
 
@@ -85,20 +87,20 @@ module.exports.saveSettings = function (req, res, next) {
                         callback(new excptions.GeneralError(500));
                         return;
                     }
-                    callback(null, dbHelper);
+                    callback(null, dbHelper, session);
                 })
         },
 
         //Close the db
-        function (dbHelper, callback) {
+        function (dbHelper, session, callback) {
             dbHelper.close();
-            callback(null);
+            callback(null, session);
         }
     ]
 
-    async.waterfall(operations, function (err) {
+    async.waterfall(operations, function (err, session) {
         if (!err) {
-            res.send(200, "OK");
+            res.json({"direction" : session.direction});
         }
         else {
             res.send(err.status, err);

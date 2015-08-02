@@ -1,21 +1,14 @@
-module.exports.geoInfo = function (req, res, next) {
-    var geoInformation = req.body;
-    res.json({"language" : getLanguageByCountryCode(geoInformation.country_code)});
-}
-
-module.exports.getLanguageByCountryCode = getLanguageByCountryCode;
-
-module.exports.getDirectionByLanguage = function(languageCodeIso2) {
-    switch (languageCodeIso2)
-    {
-        case "he":
-            return "rtl";
-        default:
-            return "ltr";
-    }
-}
+ function getDirectionByLanguage(languageCodeIso2) {
+     switch (languageCodeIso2) {
+         case "he":
+             return "rtl";
+         default:
+             return "ltr";
+     }
+ }
 
 function getLanguageByCountryCode(countryCode) {
+
     switch (countryCode) {
         case "IL":
             return "he";
@@ -48,3 +41,13 @@ function getLanguageByCountryCode(countryCode) {
             return "en";
     }
 }
+
+module.exports.geoInfo = function (req, res, next) {
+    var geoInformation = req.body;
+    var language = getLanguageByCountryCode(geoInformation.country_code);
+    var direction = getDirectionByLanguage(language);
+    res.json({"language" : language, "direction" : direction});
+}
+
+ module.exports.getDirectionByLanguage = getDirectionByLanguage;
+ module.exports.getLanguageByCountryCode = getLanguageByCountryCode;

@@ -63,3 +63,7 @@ button.item.quiz-answer {
     padding-top: 40px;
     padding-bottom: 20px;
 }
+
+.translate-cloak {
+    display: none;
+}

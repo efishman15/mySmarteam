@@ -24,6 +24,7 @@ angular.module('studyB4.services', [])
                     $rootScope.user = {
                         "email": null,
                         "password": null,
+                        "direction": geoResult.direction,
                         "settings": {
                             "sound": true,
                             "protected": true,
@@ -42,7 +43,7 @@ angular.module('studyB4.services', [])
             )
         };
 
-        service.saveSettingsToServer = function(settings, callbackOnSuccess, callbackOnError) {
+        service.saveSettingsToServer = function (settings, callbackOnSuccess, callbackOnError) {
             ApiService.post(path, "settings", settings, callbackOnSuccess, callbackOnError);
         }
 
@@ -79,7 +80,7 @@ angular.module('studyB4.services', [])
     })
 
     //Login Service
-    .factory('LoginService', function ($q, $rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService) {
+    .factory('LoginService', function ($q, $rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService, $translate) {
 
         var service = this;
         var path = 'users/';
@@ -131,11 +132,18 @@ angular.module('studyB4.services', [])
         };
 
         service.resolveAuthentication = function (initUser) {
+
             var deferred = $q.defer();
 
             if (initUser && initUser == true) {
                 if (!$rootScope.user) {
-                    UserService.initUser(function() {deferred.resolve()}, function() {deferred.resolve()});
+                    UserService.initUser(function () {
+                        deferred.resolve();
+                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                    }, function () {
+                        deferred.resolve()
+                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                    });
                 }
                 else {
                     deferred.resolve();
@@ -153,16 +161,24 @@ angular.module('studyB4.services', [])
                 service.login($rootScope.user,
                     function (data) {
                         deferred.resolve();
+                        $translate.use($rootScope.user.settings.interfaceLanguage);
                     },
                     function (status, error) {
-                        ErrorService.logError(status, error);
                         deferred.resolve();
+                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                        ErrorService.logError(status, error);
                         UserService.initUser();
                     }
                 )
             }
             else {
-                UserService.initUser(function() {deferred.resolve()}, function() {deferred.resolve()});
+                UserService.initUser(function () {
+                    deferred.resolve()
+                    $translate.use($rootScope.user.settings.interfaceLanguage);
+                }, function () {
+                    deferred.resolve();
+                    $translate.use($rootScope.user.settings.interfaceLanguage);
+                });
             }
             return deferred.promise;
         };

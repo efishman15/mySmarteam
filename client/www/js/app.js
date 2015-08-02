@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages'])
+angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate'])
     .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -30,7 +30,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
         })
     })
 
-     .config(function ($httpProvider) {
+    .config(function ($httpProvider) {
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
@@ -48,7 +48,22 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
             }
         })
     })
-    .config(function ($stateProvider, $urlRouterProvider, $injector) {
+
+    .config(function ($translateProvider) {
+        $translateProvider.useSanitizeValueStrategy('escaped');
+        $translateProvider.useStaticFilesLoader({
+            prefix: '/languages/',
+            suffix: '.json'
+        });
+
+        var lang = navigator.language || navigator.userLanguage;
+        if (lang && lang.length >= 2) {
+            var shortLangKey = lang.substring(0,2);
+            $translateProvider.determinePreferredLanguage(function() {return shortLangKey});
+        }
+    })
+
+    .config(function ($stateProvider, $urlRouterProvider) {
 
         $stateProvider
             .state('app', {
@@ -195,12 +210,14 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
             var UserService = $injector.get('UserService');
             var user = UserService.getStoreUser();
             if (user && user.email) {
+
                 return 'app/play';
             }
             else {
                 return 'app/home';
             }
-        });
+        })
+
     })
 
     .directive('myCompareTo', function () {
