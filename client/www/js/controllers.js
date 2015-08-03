@@ -1,6 +1,24 @@
 angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnimate'])
 
-    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService) {
+    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, InfoService, $translate) {
+
+        InfoService.getLanguages(
+            function (data) {
+                $rootScope.languages = data;
+            },
+            ErrorService.logErrorAndAlert)
+
+        $scope.changeLanguage = function(language) {
+            $rootScope.user.direction = language.direction;
+            $rootScope.user.settings.interfaceLanguage = language.value;
+
+            UserService.setStoreUser($rootScope.user);
+            $translate.use(language.value);
+
+            if ($rootScope.isLoggedOn == true) {
+                UserService.saveSettingsToServer($rootScope.user.settings);
+            }
+        };
 
         $scope.updateSound = function () {
             UserService.setStoreUser($rootScope.user);
@@ -275,13 +293,6 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             }
         });
 
-        $scope.languages = [
-            {"name": "English", "value": "en"},
-            {"name": "Hebrew", "value": "he"},
-            {"name": "Russian", "value": "ru"},
-            {"name": "Spanish", "value": "es"}
-        ]
-
         $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
             scope: $scope
         }).then(function (popover) {
@@ -298,9 +309,9 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         };
 
         $scope.getLanguageDisplayName = function (languageProperty) {
-            for (var i = 0; i < $scope.languages.length; i++) {
-                if ($scope.languages[i].value == $scope.settings[languageProperty]) {
-                    return $scope.languages[i].name;
+            for (var i = 0; i < $rootScope.languages.length; i++) {
+                if ($rootScope.languages[i].value == $scope.settings[languageProperty]) {
+                    return $rootScope.languages[i].name;
                 }
             }
         }

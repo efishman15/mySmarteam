@@ -67,3 +67,8 @@ button.item.quiz-answer {
 .translate-cloak {
     display: none;
 }
+
+.language {
+    font-size: 9.5px;
+    cursor: pointer;
+}

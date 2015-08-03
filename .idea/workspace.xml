@@ -3,30 +3,24 @@
   <component name="AnalysisUIOptions">
     <option name="ANALYSIS_IN_BACKGROUND" value="true" />
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/client/www/templates/home.html" line="9" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate/.bower.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate-loader-static-files/.bower.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate-loader-static-files/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate/angular-translate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate/angular-translate.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate/bower.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-translate-loader-static-files/bower.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/languages/en.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/languages/es.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/languages/he.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/languages/ru.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/app.js" afterPath="$PROJECT_DIR$/client/www/js/app.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" afterPath="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/en.json" afterPath="$PROJECT_DIR$/client/www/languages/en.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/es.json" afterPath="$PROJECT_DIR$/client/www/languages/es.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/utils/general.js" afterPath="$PROJECT_DIR$/server/utils/general.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/he.json" afterPath="$PROJECT_DIR$/client/www/languages/he.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/home.html" afterPath="$PROJECT_DIR$/client/www/templates/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/index.html" afterPath="$PROJECT_DIR$/client/www/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/play.html" afterPath="$PROJECT_DIR$/client/www/templates/play.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/menu.html" afterPath="$PROJECT_DIR$/client/www/templates/menu.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/register.html" afterPath="$PROJECT_DIR$/client/www/templates/register.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/ru.json" afterPath="$PROJECT_DIR$/client/www/languages/ru.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server.js" afterPath="$PROJECT_DIR$/server/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/services.js" afterPath="$PROJECT_DIR$/client/www/js/services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/session.js" afterPath="$PROJECT_DIR$/server/business_logic/session.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/css/style.css" afterPath="$PROJECT_DIR$/client/www/css/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -53,15 +47,39 @@
         <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+              <caret line="11" column="59" selection-start-line="11" selection-start-column="59" selection-end-line="11" selection-end-column="59" />
               <folding>
-                <element signature="e#1364#3308#0" expanded="false" />
-                <element signature="e#3462#5210#0" expanded="false" />
-                <element signature="e#5279#5495#0" expanded="false" />
-                <element signature="e#5579#5987#0" expanded="false" />
-                <element signature="e#6112#9366#0" expanded="false" />
-                <element signature="e#9443#9811#0" expanded="false" />
-                <element signature="e#9938#10430#0" expanded="false" />
+                <element signature="e#1995#3939#0" expanded="false" />
+                <element signature="e#4093#5841#0" expanded="false" />
+                <element signature="e#5910#6126#0" expanded="false" />
+                <element signature="e#6210#6618#0" expanded="false" />
+                <element signature="e#6743#9997#0" expanded="false" />
+                <element signature="e#10074#10442#0" expanded="false" />
+                <element signature="e#10569#11061#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="chooseLanguage.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-5.8846154">
+              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+              <folding>
+                <element signature="n#style#0;n#img#0;n#ion-radio#0;n#ion-content#0;n#ion-popover-view#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="menu.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-1.9615384">
+              <caret line="3" column="44" selection-start-line="3" selection-start-column="44" selection-end-line="3" selection-end-column="44" />
+              <folding>
+                <element signature="n#style#0;n#img#0;n#a#0;n#ion-header-bar#0;n#div#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -71,52 +89,32 @@
         <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+              <caret line="11" column="28" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="28" />
               <folding>
-                <element signature="e#7925#8200#0" expanded="false" />
-                <element signature="e#8279#8954#0" expanded="false" />
-                <element signature="e#9612#9823#0" expanded="false" />
-                <element signature="e#9902#11068#0" expanded="false" />
+                <element signature="e#8521#8796#0" expanded="false" />
+                <element signature="e#8875#9550#0" expanded="false" />
+                <element signature="e#9625#10143#0" expanded="false" />
+                <element signature="e#10208#10419#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="general.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="general.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/utils/general.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.67009133">
-              <caret line="41" column="5" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
-          <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="52" column="63" selection-start-line="52" selection-start-column="63" selection-end-line="52" selection-end-column="63" />
+              <caret line="55" column="14" selection-start-line="55" selection-start-column="14" selection-end-line="55" selection-end-column="14" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/server.js">
+      <file leaf-file-name="register.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/register.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/templates/home.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6153846">
-              <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.58">
+              <caret line="35" column="76" selection-start-line="35" selection-start-column="76" selection-end-line="35" selection-end-column="76" />
               <folding />
             </state>
           </provider>
@@ -125,8 +123,8 @@
       <file leaf-file-name="en.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/www/languages/en.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.9615384">
-              <caret line="3" column="179" selection-start-line="3" selection-start-column="179" selection-end-line="3" selection-end-column="179" />
+            <state vertical-scroll-proportion="-6.5384617">
+              <caret line="10" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -135,8 +133,8 @@
       <file leaf-file-name="es.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.9615384">
-              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+            <state vertical-scroll-proportion="-6.5384617">
+              <caret line="10" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -145,11 +143,9 @@
       <file leaf-file-name="he.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.3076923">
-              <caret line="3" column="88" selection-start-line="3" selection-start-column="88" selection-end-line="3" selection-end-column="88" />
-              <folding>
-                <marker date="1438534030066" expanded="true" signature="549:553" placeholder="{&quot;PICK_A_SUBJECT&quot;: &quot;בחר נושא&quot;...}" />
-              </folding>
+            <state vertical-scroll-proportion="-6.5384617">
+              <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -157,8 +153,8 @@
       <file leaf-file-name="ru.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/www/languages/ru.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.9615384">
-              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+            <state vertical-scroll-proportion="-5.8846154">
+              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -204,32 +200,32 @@
         <option value="$PROJECT_DIR$/server/business_logic/random.js" />
         <option value="$PROJECT_DIR$/server/utils/random.js" />
         <option value="$PROJECT_DIR$/server/dal/myMongoDB.js" />
-        <option value="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
         <option value="$PROJECT_DIR$/client/www/templates/quizResult.html" />
         <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
         <option value="$PROJECT_DIR$/client/www/templates/test.html" />
-        <option value="$PROJECT_DIR$/client/www/templates/menu.html" />
         <option value="$PROJECT_DIR$/server/business_logic/credentials.js" />
         <option value="$PROJECT_DIR$/server/business_logic/quiz.js" />
         <option value="$PROJECT_DIR$/client/www/templates/login.html" />
-        <option value="$PROJECT_DIR$/client/www/templates/register.html" />
-        <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/client/www/templates/settings.html" />
         <option value="$PROJECT_DIR$/client/www/languages/enUS.json" />
         <option value="$PROJECT_DIR$/client/www/languages/heIL.json" />
-        <option value="$PROJECT_DIR$/client/www/css/style.css" />
         <option value="$PROJECT_DIR$/server/business_logic/session.js" />
         <option value="$PROJECT_DIR$/client/www/templates/play.html" />
         <option value="$PROJECT_DIR$/client/www/index.html" />
-        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
+        <option value="$PROJECT_DIR$/client/www/js/app.js" />
         <option value="$PROJECT_DIR$/client/www/templates/home.html" />
-        <option value="$PROJECT_DIR$/client/www/languages/he.json" />
-        <option value="$PROJECT_DIR$/client/www/languages/ru.json" />
+        <option value="$PROJECT_DIR$/server/server.js" />
+        <option value="$PROJECT_DIR$/client/www/css/style.css" />
+        <option value="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
+        <option value="$PROJECT_DIR$/client/www/templates/menu.html" />
+        <option value="$PROJECT_DIR$/server/utils/general.js" />
+        <option value="$PROJECT_DIR$/client/www/js/services.js" />
+        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
         <option value="$PROJECT_DIR$/client/www/languages/es.json" />
         <option value="$PROJECT_DIR$/client/www/languages/en.json" />
-        <option value="$PROJECT_DIR$/client/www/js/app.js" />
-        <option value="$PROJECT_DIR$/client/www/js/services.js" />
-        <option value="$PROJECT_DIR$/server/utils/general.js" />
+        <option value="$PROJECT_DIR$/client/www/languages/he.json" />
+        <option value="$PROJECT_DIR$/client/www/languages/ru.json" />
+        <option value="$PROJECT_DIR$/client/www/templates/register.html" />
       </list>
     </option>
   </component>
@@ -246,7 +242,6 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-9" />
-    <option name="y" value="-9" />
     <option name="width" value="1692" />
     <option name="height" value="1034" />
   </component>
@@ -398,6 +393,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="languages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="studyB4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="www" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -626,15 +643,22 @@
       <option name="project" value="LOCAL" />
       <updated>1438086845250</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Translation infrastructure working.&#10;TODO:&#10;1. Finish translating all texts &#10;2. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;">
+      <created>1438534895185</created>
+      <option name="number" value="00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1438534895185</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1692" height="1034" extended-state="0" />
+    <frame x="-9" y="0" width="1692" height="1034" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2037037" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -644,7 +668,6 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26125136" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39956093" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -707,7 +730,8 @@
     <MESSAGE value="Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Save settings to server (try avoiding apply/cancel - each change - store in local store + dirty flag, upon view leave - store in server and clear dirty from local)&#10;2. interface translation (Angular Translate)" />
     <MESSAGE value="***Restore loginRequired (401) error handling&#10;Started settings screen&#10;ToDo:&#10;1. Setting:&#10; - Save settings to server (try avoiding apply/cancel - each change - store in local store + dirty flag, upon view leave - store in server and clear dirty from local)&#10;2. interface translation (Angular Translate)" />
     <MESSAGE value="TODO:&#10;1. Interface translation (Angular Translate) &#10;2. After switching &quot;interfaceLanguage&quot; in settings - refresh page / translation lang.&#10;3. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="TODO:&#10;1. Interface translation (Angular Translate) &#10;2. After switching &quot;interfaceLanguage&quot; in settings - refresh page / translation lang.&#10;3. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;" />
+    <MESSAGE value="Translation infrastructure working.&#10;TODO:&#10;1. Finish translating all texts &#10;2. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Translation infrastructure working.&#10;TODO:&#10;1. Finish translating all texts &#10;2. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -869,13 +893,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1528777">
-          <caret line="5" column="47" selection-start-line="5" selection-start-column="47" selection-end-line="5" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/quizResult.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -887,14 +904,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
           <caret line="288" column="57" selection-start-line="288" selection-start-column="57" selection-end-line="288" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.346153">
-          <caret line="25" column="35" selection-start-line="25" selection-start-column="35" selection-end-line="25" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -931,14 +940,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/register.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="68" selection-start-line="4" selection-start-column="68" selection-end-line="4" selection-end-column="68" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/dal/myMongoDB.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -971,14 +972,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="58" column="23" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/lib/angular-translate/angular-translate.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -997,64 +990,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/play.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.230769">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/ru.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.9615384">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.9615384">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/en.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.9615384">
-          <caret line="3" column="179" selection-start-line="3" selection-start-column="179" selection-end-line="3" selection-end-column="179" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.3076923">
-          <caret line="3" column="88" selection-start-line="3" selection-start-column="88" selection-end-line="3" selection-end-column="88" />
-          <folding>
-            <marker date="1438534030066" expanded="true" signature="549:553" placeholder="{&quot;PICK_A_SUBJECT&quot;: &quot;בחר נושא&quot;...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="e#1364#3308#0" expanded="false" />
-            <element signature="e#3462#5210#0" expanded="false" />
-            <element signature="e#5279#5495#0" expanded="false" />
-            <element signature="e#5579#5987#0" expanded="false" />
-            <element signature="e#6112#9366#0" expanded="false" />
-            <element signature="e#9443#9811#0" expanded="false" />
-            <element signature="e#9938#10430#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1065,8 +1000,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6153846">
-          <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
+        <state vertical-scroll-proportion="-7.1923075">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1074,7 +1009,51 @@
     <entry file="file://$PROJECT_DIR$/server/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <caret line="58" column="41" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/play.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.153846">
+          <caret line="14" column="27" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="71" column="18" selection-start-line="71" selection-start-column="18" selection-end-line="71" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.8846154">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#ion-radio#0;n#ion-content#0;n#ion-popover-view#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.9615384">
+          <caret line="3" column="44" selection-start-line="3" selection-start-column="44" selection-end-line="3" selection-end-column="44" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#a#0;n#ion-header-bar#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/utils/general.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="55" column="14" selection-start-line="55" selection-start-column="14" selection-end-line="55" selection-end-column="14" />
           <folding />
         </state>
       </provider>
@@ -1082,20 +1061,68 @@
     <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <caret line="11" column="28" selection-start-line="11" selection-start-column="16" selection-end-line="11" selection-end-column="28" />
           <folding>
-            <element signature="e#7925#8200#0" expanded="false" />
-            <element signature="e#8279#8954#0" expanded="false" />
-            <element signature="e#9612#9823#0" expanded="false" />
-            <element signature="e#9902#11068#0" expanded="false" />
+            <element signature="e#8521#8796#0" expanded="false" />
+            <element signature="e#8875#9550#0" expanded="false" />
+            <element signature="e#9625#10143#0" expanded="false" />
+            <element signature="e#10208#10419#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/utils/general.js">
+    <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.67009133">
-          <caret line="41" column="5" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="59" selection-start-line="11" selection-start-column="59" selection-end-line="11" selection-end-column="59" />
+          <folding>
+            <element signature="e#1995#3939#0" expanded="false" />
+            <element signature="e#4093#5841#0" expanded="false" />
+            <element signature="e#5910#6126#0" expanded="false" />
+            <element signature="e#6210#6618#0" expanded="false" />
+            <element signature="e#6743#9997#0" expanded="false" />
+            <element signature="e#10074#10442#0" expanded="false" />
+            <element signature="e#10569#11061#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.5384617">
+          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.5384617">
+          <caret line="10" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/en.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.5384617">
+          <caret line="10" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/ru.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.8846154">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.58">
+          <caret line="35" column="76" selection-start-line="35" selection-start-column="76" selection-end-line="35" selection-end-column="76" />
           <folding />
         </state>
       </provider>

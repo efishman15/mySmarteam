@@ -57,6 +57,7 @@ app.post('/users/settings', sessionUtils.saveSettings);
 app.post('/users/login', credentials.login);
 app.post('/users/register', credentials.register);
 app.post('/info/geo', generalUtils.geoInfo);
+app.post('/info/languages', generalUtils.getLanguages);
 
 app.set('port', process.env.PORT || 7000);
 

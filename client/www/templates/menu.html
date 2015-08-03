@@ -1,3 +1,12 @@
+<div dir="{{$root.user.direction}}">
+    <ion-header-bar class="padding">
+        <a class="language padding" ng-repeat="language in $root.languages" class="padding"
+           ng-click="changeLanguage(language)">
+            <img style="border: 1px solid" ng-src="{{language.flag}}" width="20" height="12">
+            <span>{{language.displayNames[$root.user.settings.interfaceLanguage]}}</span>
+        </a>
+    </ion-header-bar>
+</div>
 <ion-side-menus enable-menu-with-back-views="true">
     <ion-side-menu-content>
         <ion-nav-bar class="bar-stable" ng-hide="!$root.isLoggedOn">

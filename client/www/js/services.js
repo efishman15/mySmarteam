@@ -1,7 +1,7 @@
 angular.module('studyB4.services', [])
 
     //User Service
-    .factory('UserService', function (store, GeoInfoService, ErrorService, $rootScope, ApiService) {
+    .factory('UserService', function (store, InfoService, ErrorService, $rootScope, ApiService) {
         var service = this;
         var path = 'users/';
 
@@ -20,7 +20,7 @@ angular.module('studyB4.services', [])
 
         service.initUser = function (callbackOnSuccess, callbackOnError) {
 
-            GeoInfoService.getGeoInfo(function (geoResult) {
+            InfoService.getGeoInfo(function (geoResult) {
                     $rootScope.user = {
                         "email": null,
                         "password": null,
@@ -50,14 +50,14 @@ angular.module('studyB4.services', [])
         return service;
     })
 
-    //geoInfo service
-    .factory('GeoInfoService', function ($http, ApiService, $rootScope) {
+    //Info service
+    .factory('InfoService', function ($http, ApiService, $rootScope) {
 
         var service = this;
         var path = 'info/';
 
         service.getGeoInfo = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.get("http://freegeoip.net/json/",
+            return ApiService.get("http://www.telize.com/geoip",
                 function (geoInfo) {
                     $rootScope.geoInfo = geoInfo;
                     return ApiService.post(path, "geo", geoInfo,
@@ -74,6 +74,20 @@ angular.module('studyB4.services', [])
                         })
                 },
                 callbackOnError)
+        }
+
+        service.getLanguages = function (callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "languages", null,
+                function (data) {
+                    if (callbackOnSuccess) {
+                        callbackOnSuccess(data);
+                    }
+                },
+                function (status, data) {
+                    if (callbackOnError) {
+                        callbackOnError(status, data);
+                    }
+                })
         }
 
         return service;
@@ -140,6 +154,8 @@ angular.module('studyB4.services', [])
                     UserService.initUser(function () {
                         deferred.resolve();
                         $translate.use($rootScope.user.settings.interfaceLanguage);
+                        //$translate.use('ru');
+                        //$rootScope.user.direction='ltr';
                     }, function () {
                         deferred.resolve()
                         $translate.use($rootScope.user.settings.interfaceLanguage);
@@ -301,17 +317,23 @@ angular.module('studyB4.services', [])
         service.post = function (path, action, postData, callbackOnSuccess, callbackOnError) {
             return $http.post(getActionUrl(path, action), postData)
                 .success(function (data, status, headers, config) {
-                    callbackOnSuccess(data, headers);
+                    if (callbackOnSuccess) {
+                        callbackOnSuccess(data, headers);
+                    }
                 })
                 .error(function (data, status, headers, config) {
-                    callbackOnError(status, data, headers);
+                    if (callbackOnError) {
+                        callbackOnError(status, data, headers);
+                    }
                 })
         };
 
         service.get = function (path, callbackOnSuccess, callbackOnError) {
             return $http.get(path)
                 .success(function (data, status, headers, config) {
-                    callbackOnSuccess(data);
+                    if (callbackOnSuccess) {
+                        callbackOnSuccess(data);
+                    }
                 })
                 .error(function (data, status, headers, config) {
                     if (callbackOnError) {
