@@ -1,4 +1,4 @@
-<ion-view view-title="Quiz">
+<ion-view view-title="{{ 'QUIZ' | translate}}">
     <ion-content padding="true" dir="{{quiz.currentQuestion.direction}}">
         <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
         <div class="list padding">
@@ -13,7 +13,7 @@
             </button>
         </div>
         <div class="bar bar-footer bar-light">
-            <span>Question # {{quiz.currentQuestionIndex}}</span>
+            <span>{{ 'QUESTION' | translate}} {{quiz.currentQuestionIndex}}</span>
         </div>
         <audio id="audioSound" autoplay src=""></audio>
     </ion-content>

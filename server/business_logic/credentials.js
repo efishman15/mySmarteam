@@ -104,23 +104,18 @@ module.exports.logout = function (req, res, next) {
 //Try to register the new admin
 function register(dbHelper, user, callback) {
     var adminsCollection = dbHelper.getCollection("Admins");
-    var language = generalUtils.getLanguageByCountryCode(user.geoInfo.country_code);
     var newAdmin = {
         "email": user.email,
         "password": md5(user.password + "|" + user.email),
         "geoInfo": user.geoInfo,
-        "settings" : {
-            "passwordProtected" : true,
-            "questionsLanguage": language,
-            "interfaceLanguage": language
-        }
+        "settings": user.settings
     };
 
     adminsCollection.insert(newAdmin
         , {}, function (err, result) {
             if (err) {
                 if (err.code == 11000) {
-                    callback(new excptions.FormValidationError(424, 'email', 'The email ' + user.email + ' is already taken'));
+                    callback(new excptions.FormValidationError(424, 'email', 'serverErrorEmailAlreadyTaken'));
                 }
                 else {
                     callback(new excptions.GeneralError(500));
@@ -129,7 +124,8 @@ function register(dbHelper, user, callback) {
             }
             callback(null, dbHelper, newAdmin);
         })
-};
+}
+;
 
 //Login and return the adminId if email/password match
 function login(dbHelper, user, callback) {
@@ -139,7 +135,7 @@ function login(dbHelper, user, callback) {
         "password": md5(user.password + "|" + user.email)
     }, {}, function (err, admin) {
         if (err || !admin) {
-            callback(new excptions.GeneralError(424, "Invalid Email or Password"));
+            callback(new excptions.GeneralError(424, "serverErrorInvalidEmailOrPassword"));
             return;
         }
 
@@ -157,12 +153,7 @@ function createOrUpdateSession(dbHelper, admin, callback) {
                 "adminId": ObjectId(admin._id),
                 "createdAt": new Date(),
                 "userToken": userToken,
-                "direction": generalUtils.getDirectionByLanguage(admin.settings.interfaceLanguage),
-                "settings" : {
-                    "passwordProtected": admin.settings.passwordProtected,
-                    "questionsLanguage": admin.settings.questionsLanguage,
-                    "interfaceLanguage": admin.settings.interfaceLanguage
-                }
+                "settings": admin.settings,
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -199,7 +190,6 @@ function logout(dbHelper, token, callback) {
 function getSessionResponse(session) {
     return {
         "token": session.userToken,
-        "direction": session.direction,
         "settings": session.settings
     };
 }

@@ -13,7 +13,8 @@ function GeneralError(status, message) {
         error.message = message;
     }
     else {
-        error.message = 'Oops, something went wrong. Please try again';
+        error.title = "GENERAL_APPLICATION_ERROR_TITLE";
+        error.message = "GENERAL_APPLICATION_ERROR_MESSAGE";
     }
 
     return error;

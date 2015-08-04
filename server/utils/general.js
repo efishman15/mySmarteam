@@ -1,18 +1,42 @@
-var supportedLanguages = [
-    {"value": "en", "flag": "/images/languages/unitedstates.jpg", "direction" : "ltr", "displayNames" : {"en" : "English", "he" : "אנגלית", "es" : "Inglés", "ru" : "Английский"}},
-    {"value": "he", "flag": "/images/languages/israel.jpg", "direction" : "rtl", "displayNames" : {"en" : "Hebrew", "he" : "עברית", "es" : "Hebreo", "ru" : "Иврит"}},
-    {"value": "ru", "flag": "/images/languages/russia.jpg", "direction" : "ltr", "displayNames" : {"en" : "Russian", "he" : "רוסית", "es" : "Ruso", "ru" : "Русский"}},
-    {"value": "es", "flag": "/images/languages/spain.jpg", "direction" : "ltr", "displayNames" : {"en" : "Spanish", "he" : "ספרדית", "es" : "Español", "ru" : "Испанский"}}
-]
+var supportedLanguages = {
+    "en": {
+        "value" : "en",
+        "flag": "/images/languages/unitedstates.jpg",
+        "direction": "ltr",
+        "align": "left",
+        "displayNames": {"en": "English", "he": "אנגלית", "es": "Inglés", "ru": "Английский"}
+    },
+    "he": {
+        "value" : "he",
+        "flag": "/images/languages/israel.jpg",
+        "direction": "rtl",
+        "align": "right",
+        "displayNames": {"en": "Hebrew", "he": "עברית", "es": "Hebreo", "ru": "Иврит"}
+    },
+    "ru": {
+        "value" : "ru",
+        "flag": "/images/languages/russia.jpg",
+        "direction": "ltr",
+        "align": "left",
+        "displayNames": {"en": "Russian", "he": "רוסית", "es": "Ruso", "ru": "Русский"}
+    },
+    "es": {
+        "value" : "es",
+        "flag": "/images/languages/spain.jpg",
+        "direction": "ltr",
+        "align": "left",
+        "displayNames": {"en": "Spanish", "he": "ספרדית", "es": "Español", "ru": "Испанский"}
+    }
+}
 
- function getDirectionByLanguage(languageCodeIso2) {
-     switch (languageCodeIso2) {
-         case "he":
-             return "rtl";
-         default:
-             return "ltr";
-     }
- }
+function getDirectionByLanguage(languageCodeIso2) {
+    switch (languageCodeIso2) {
+        case "he":
+            return "rtl";
+        default:
+            return "ltr";
+    }
+}
 
 function getLanguageByCountryCode(countryCode) {
 
@@ -53,11 +77,11 @@ module.exports.geoInfo = function (req, res, next) {
     var geoInformation = req.body;
     var language = getLanguageByCountryCode(geoInformation.country_code);
     var direction = getDirectionByLanguage(language);
-    res.json({"language" : language, "direction" : direction});
+    res.json({"language": language});
 }
 
 module.exports.getLanguages = function (req, res, next) {
     res.json(supportedLanguages);
 }
- module.exports.getDirectionByLanguage = getDirectionByLanguage;
- module.exports.getLanguageByCountryCode = getLanguageByCountryCode;
+module.exports.getDirectionByLanguage = getDirectionByLanguage;
+module.exports.getLanguageByCountryCode = getLanguageByCountryCode;

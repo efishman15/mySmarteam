@@ -1,12 +1,12 @@
-<ion-view view-title="Quiz Results">
+<ion-view view-title="{{ 'QUIZ_RESULTS' | translate}}" dir="{{$root.languages[$root.user.settings.questionsLanguage].direction}}">
     <ion-content padding="true">
         <div class="padding center">
-            <h2 class="center">Your score is: </h2>
+            <h2 class="center">{{ 'SCORE' | translate}}: </h2>
 
             <h1 class="center">{{score}}</h1>
 
             <div class="padding center">
-                <a class="button button-assertive" href="#/app/play">OK</a>
+                <a class="button button-assertive" href="#/app/play">{{ 'OK' | translate}}</a>
             </div>
         </div>
     </ion-content>

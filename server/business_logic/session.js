@@ -68,7 +68,6 @@ module.exports.saveSettings = function (req, res, next) {
         //Update the session in db
         function (dbHelper, session, callback) {
             session.settings = settings;
-            session.direction = generalUtils.getDirectionByLanguage(settings.interfaceLanguage);
             storeSession(dbHelper, session, callback);
         },
 
@@ -100,7 +99,7 @@ module.exports.saveSettings = function (req, res, next) {
 
     async.waterfall(operations, function (err, session) {
         if (!err) {
-            res.json({"direction" : session.direction});
+            res.send(200, "OK");
         }
         else {
             res.send(err.status, err);

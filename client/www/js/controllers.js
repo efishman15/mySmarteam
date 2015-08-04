@@ -5,23 +5,30 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         InfoService.getLanguages(
             function (data) {
                 $rootScope.languages = data;
+                $rootScope.languages.keys = Object.keys(data);
             },
             ErrorService.logErrorAndAlert)
 
-        $scope.changeLanguage = function(language) {
-            $rootScope.user.direction = language.direction;
+        $scope.changeLanguage = function (language) {
             $rootScope.user.settings.interfaceLanguage = language.value;
-
             UserService.setStoreUser($rootScope.user);
             $translate.use(language.value);
-
-            if ($rootScope.isLoggedOn == true) {
-                UserService.saveSettingsToServer($rootScope.user.settings);
-            }
         };
+
+        $scope.getSettingsView = function () {
+            if ($rootScope.user.settings.passwordProtected == true) {
+                return "#/app/settingsPassword";
+            }
+            else {
+                return "#/app/settings";
+            }
+        }
 
         $scope.updateSound = function () {
             UserService.setStoreUser($rootScope.user);
+            if ($rootScope.isLoggedOn == true) {
+                UserService.saveSettingsToServer($rootScope.user.settings);
+            }
         };
 
         $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
@@ -42,7 +49,6 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                         ErrorService.logError
                     )
                 }
-
             }
         );
     })
@@ -73,28 +79,27 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     $rootScope.user.password = null;
                     delete $rootScope.user["geoInfo"];
 
-                    registrationForm.serverError.innerHTML = error.message;
                     if (error.fieldName) {
                         //Error in a specific field
                         registrationForm[error.fieldName].$invalid = true;
                         if (!registrationForm[error.fieldName].$error) {
                             registrationForm[error.fieldName].$error = {};
                         }
-                        registrationForm[error.fieldName].$error.serverError = true;
+                        registrationForm[error.fieldName].$error[error.message] = true;
                     }
                     else {
                         //General Error in the server
                         if (!registrationForm.serverError.$error) {
                             registrationForm.serverError.$error = {};
                         }
-                        registrationForm.serverError.$error.serverError = true;
+                        registrationForm.serverError.$error[error.message] = true;
                         ErrorService.logError(status, error);
                     }
                 });
         }
     })
 
-    .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, $ionicHistory) {
+    .controller('LoginCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, $ionicHistory, $translate) {
 
         $scope.fieldChange = LoginService.fieldChange;
 
@@ -102,6 +107,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
             $rootScope.user.email = loginForm.email.$modelValue;
             $rootScope.user.password = loginForm.password.$modelValue;
+            var currentInterfaceLanguage = $rootScope.user.settings.interfaceLanguage;
 
             LoginService.login($rootScope.user,
                 function (data) {
@@ -110,6 +116,9 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                         disableBack: true,
                         historyRoot: true
                     });
+                    if ($rootScope.user.settings.interfaceLanguage != currentInterfaceLanguage) {
+                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                    }
                     $state.go('app.play', {}, {reload: false, inherit: true});
                 },
                 function (status, error) {
@@ -117,21 +126,20 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     $rootScope.user.email = null;
                     $rootScope.user.password = null;
 
-                    loginForm.serverError.innerHTML = error.message;
                     if (error.fieldName) {
                         //Error in a specific field
                         loginForm[error.fieldName].$invalid = true;
                         if (!loginForm[error.fieldName].$error) {
                             loginForm[error.fieldName].$error = {};
                         }
-                        loginForm[error.fieldName].$error.serverError = true;
+                        loginForm[error.fieldName].$error[error.message] = true;
                     }
                     else {
                         //General Error in the server
                         if (!loginForm.serverError.$error) {
                             loginForm.serverError.$error = {};
                         }
-                        loginForm.serverError.$error.serverError = true;
+                        loginForm.serverError.$error[error.message] = true;
                         ErrorService.logError(status, error);
                     }
                 });
@@ -146,9 +154,9 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
     })
 
-    .controller('PlayCtrl', function ($scope, $state, PlayService, ErrorService) {
+    .controller('PlayCtrl', function ($scope, $state, $rootScope, PlayService, ErrorService) {
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on('$ionicView.enter', function () {
             PlayService.getSubjects(
                 function (data) {
                     $scope.subjects = data;
@@ -161,7 +169,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         };
     })
 
-    .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, QuizService, ErrorService, $ionicHistory) {
+    .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, QuizService, ErrorService, $ionicHistory, $translate) {
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
@@ -169,6 +177,10 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 //Probably view is refreshed in browser - go back to pick a subject
                 $state.go('app.play', {}, {reload: false, inherit: true});
                 return;
+            }
+
+            if ($rootScope.user.settings.interfaceLanguage != $rootScope.user.settings.questionsLanguage) {
+                $translate.use($rootScope.user.settings.questionsLanguage)
             }
 
             QuizService.start($stateParams.subjectId,
@@ -243,7 +255,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         }
     })
 
-    .controller('QuizResultCtrl', function ($scope, $stateParams, $state) {
+    .controller('QuizResultCtrl', function ($scope, $rootScope, $stateParams, $state, $translate) {
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($stateParams.score == null) {
                 //Probably view is refreshed in browser - go back to pick a subject
@@ -252,9 +264,17 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             }
             $scope.score = $stateParams.score;
         });
+
+        $scope.$on('$ionicView.beforeLeave', function () {
+            if ($rootScope.user.settings.interfaceLanguage != $rootScope.user.settings.questionsLanguage) {
+                $translate.use($rootScope.user.settings.interfaceLanguage);
+            }
+        });
+
+
     })
 
-    .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory) {
+    .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory, $translate) {
         $scope.$on('$ionicView.beforeEnter', function () {
             LoginService.logout(
                 function () {
@@ -263,56 +283,79 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                         disableBack: true
                     });
 
+                    $translate.use($rootScope.user.settings.interfaceLanguage);
                     $state.go('app.home', {}, {reload: false, inherit: true});
                 },
                 ErrorService.logErrorAndAlert)
         });
     })
 
-    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate, $stateParams, $state) {
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
-
         $scope.$on('$ionicView.beforeEnter', function () {
+
+            if ($rootScope.user.settings.passwordProtected == true && !$stateParams.password) {
+                //Probably view is refreshed in browser - go back to the "play" view
+                $state.go('app.play', {}, {reload: false, inherit: true});
+                return;
+            }
+
             $scope.settings = JSON.parse(JSON.stringify($rootScope.user.settings));
-            $ionicSideMenuDelegate.toggleLeft();
+            if ($rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction == "rtl") {
+                $ionicSideMenuDelegate.toggleRight();
+            }
+            else {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
         });
 
-        $scope.$on('$ionicView.afterLeave', function () {
+        $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
+            scope: $scope
+        }).then(function (languagePopover) {
+            $scope.languagePopover = languagePopover;
+        });
+
+        $scope.openLanguagePopover = function (property, $event) {
+            $scope.languageProperty = property;
+            $scope.languagePopover.show($event);
+        };
+
+        $scope.closeLanguagePopover = function (item) {
+            $scope.languagePopover.hide();
+        };
+
+        $scope.$on('$ionicView.beforeLeave', function () {
+            if ($rootScope.user.settings.passwordProtected == true && !$stateParams.password) {
+                //Should not be here if no password
+                return;
+            }
+
             if (JSON.stringify($scope.settings) != JSON.stringify($rootScope.user.settings)) {
                 //Dirty settings - save to server
                 UserService.saveSettingsToServer($scope.settings,
                     function (data) {
                         if ($scope.settings.interfaceLanguage != $rootScope.user.settings.interfaceLanguage) {
                             $translate.use($scope.settings.interfaceLanguage);
-                            $rootScope.user.direction = data.direction;
                         }
                         $rootScope.user.settings = $scope.settings;
                     }, ErrorService.logError);
             }
         });
+    })
 
-        $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
-            scope: $scope
-        }).then(function (popover) {
-            $scope.popover = popover;
+    .controller('SettingsPasswordCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, $state) {
+        $scope.$on('$ionicView.beforeEnter', function () {
+            if ($rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction == "rtl") {
+                $ionicSideMenuDelegate.toggleRight();
+            }
+            else {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
         });
 
-        $scope.openPopover = function (property, $event) {
-            $scope.languageProperty = property;
-            $scope.popover.show($event);
+        $scope.continue = function (settingsPasswordForm) {
+            $state.go('app.settings', {password: settingsPasswordForm.password}, {reload: false, inherit: true})
         };
-
-        $scope.closePopover = function (item) {
-            $scope.popover.hide();
-        };
-
-        $scope.getLanguageDisplayName = function (languageProperty) {
-            for (var i = 0; i < $rootScope.languages.length; i++) {
-                if ($rootScope.languages[i].value == $scope.settings[languageProperty]) {
-                    return $rootScope.languages[i].name;
-                }
-            }
-        }
-    })
+    });

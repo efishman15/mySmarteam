@@ -179,6 +179,21 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                 }
             })
 
+            .state('app.settingsPassword', {
+                url: "/settingsPassword",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/settingsPassword.html",
+                        controller: "SettingsPasswordCtrl"
+                    }
+                }
+            })
+
             .state('app.settings', {
                 url: "/settings",
                 resolve: {
@@ -186,6 +201,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                         return LoginService.resolveAuthentication();
                     }
                 },
+                params: {password: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/settings.html",

@@ -24,10 +24,9 @@ angular.module('studyB4.services', [])
                     $rootScope.user = {
                         "email": null,
                         "password": null,
-                        "direction": geoResult.direction,
                         "settings": {
                             "sound": true,
-                            "protected": true,
+                            "passwordProtected": true,
                             "interfaceLanguage": geoResult.language,
                             "questionsLanguage": geoResult.language
                         }
@@ -94,7 +93,7 @@ angular.module('studyB4.services', [])
     })
 
     //Login Service
-    .factory('LoginService', function ($q, $rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService, $translate) {
+    .factory('LoginService', function ($q, $rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService, $translate, InfoService) {
 
         var service = this;
         var path = 'users/';
@@ -149,13 +148,20 @@ angular.module('studyB4.services', [])
 
             var deferred = $q.defer();
 
+            if (!$rootScope.languages) {
+                InfoService.getLanguages(
+                    function (data) {
+                        $rootScope.languages = data;
+                        $rootScope.languages.keys = Object.keys(data);
+                    },
+                    ErrorService.logErrorAndAlert)
+            }
+
             if (initUser && initUser == true) {
                 if (!$rootScope.user) {
                     UserService.initUser(function () {
                         deferred.resolve();
                         $translate.use($rootScope.user.settings.interfaceLanguage);
-                        //$translate.use('ru');
-                        //$rootScope.user.direction='ltr';
                     }, function () {
                         deferred.resolve()
                         $translate.use($rootScope.user.settings.interfaceLanguage);
@@ -205,7 +211,6 @@ angular.module('studyB4.services', [])
             $rootScope.isLoggedOn = true;
 
             $rootScope.user = user;
-            $rootScope.user.direction = serverData.direction;
             $rootScope.user.settings = serverData.settings;
             UserService.setStoreUser($rootScope.user);
         };
@@ -269,20 +274,24 @@ angular.module('studyB4.services', [])
     })
 
     //Error Service
-    .factory('ErrorService', function ($ionicPopup) {
+    .factory('ErrorService', function ($ionicPopup, $translate) {
 
         var service = this;
 
         service.logError = function (status, error) {
-            var errorMessage = "Error " + status + ": " + error.message;
+            var errorMessage = "Error " + status + ": " + $translate.instant(error.message);
             console.log(errorMessage);
             return errorMessage;
         };
 
         service.logErrorAndAlert = function (status, error) {
-            var errorMessage = service.logError(status, error);
-            $ionicPopup.alert({title: "Oops...", template: errorMessage});
-            return errorMessage;
+            if (error.title) {
+                $ionicPopup.alert({title:  $translate.instant(error.title), template:  $translate.instant(error.message)});
+            }
+            else {
+                $ionicPopup.alert({template: error.message});
+            }
+            return ;
         };
 
         return service;

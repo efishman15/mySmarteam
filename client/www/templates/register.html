@@ -1,15 +1,15 @@
-<div ng-controller="RegisterCtrl">
-    <ion-header-bar class="bar-stable">
-        <h1 class="title">Sign Up</h1>
-    </ion-header-bar>
-    <ion-content has-header="true" padding="true" dir="{{$root.user.direction}}">
-        <form name="registrationForm" novalidate="novalidate" ng-submit="registrationForm.$valid && register(registrationForm)">
+<ion-view>
+    <ion-content has-header="true" padding="true"
+                 dir="{{$root.languages[$root.user.settings.interfaceLanguage].direction}}">
+        <form name="registrationForm" novalidate="novalidate"
+              ng-submit="registrationForm.$valid && register(registrationForm)">
             <div class="list">
 
                 <label class="item item-input"
                        ng-class="{ 'has-error' : registrationForm.email.$invalid && registrationForm.email.$touched, 'valid-lr' : registrationForm.email.$valid}"
                        ng-messages-include="templates/register-error-list.html">
-                    <input type="email" placeholder="{{ 'EMAIL' | translate}}" name="email" ng-model="email" autofocus ng-change="fieldChange(registrationForm.email, registrationForm.serverError);"
+                    <input type="email" placeholder="{{ 'EMAIL' | translate}}" name="email" ng-model="email" autofocus
+                           ng-change="fieldChange(registrationForm.email, registrationForm.serverError);"
                            ng-minlength="5" ng-maxlength="50" required email>
                 </label>
 
@@ -21,7 +21,8 @@
 
                 <label class="item item-input"
                        ng-class="{ 'has-error' : registrationForm.password.$invalid  && registrationForm.$submitted, 'valid-lr' : registrationForm.password.$valid  && registrationForm.$submitted}">
-                    <input type="password" placeholder="{{ 'PASSWORD' | translate}}" name="password" ng-model="password" ng-change="fieldChange(registrationForm.password, registrationForm.serverError);"
+                    <input type="password" placeholder="{{ 'PASSWORD' | translate}}" name="password" ng-model="password"
+                           ng-change="fieldChange(registrationForm.password, registrationForm.serverError);"
                            ng-minlength="5" ng-maxlength="50" required>
                 </label>
 
@@ -34,7 +35,9 @@
                 <label class="item item-input"
                        ng-class="{ 'has-error' : registrationForm.retypedPassword.$invalid  && registrationForm.$submitted, 'valid-lr' : registrationForm.retypedPassword.$valid  && registrationForm.$submitted}">
                     <input type="password" placeholder="{{ 'CONFIRM_PASSWORD' | translate}}" name="retypedPassword"
-                           ng-model="retypedPassword" ng-change="fieldChange(registrationForm.retypedPassword, registrationForm.serverError);" ng-minlength="5" ng-maxlength="50" required my-compare-to="registrationForm.password">
+                           ng-model="retypedPassword"
+                           ng-change="fieldChange(registrationForm.retypedPassword, registrationForm.serverError);"
+                           ng-minlength="5" ng-maxlength="50" required my-compare-to="registrationForm.password">
                 </label>
 
                 <div class="error-container last-error-container form-errors"
@@ -44,6 +47,7 @@
                 </div>
 
                 <input type="hidden" name="serverError" ng-model="serverError" serverError>
+
                 <div class="error-container last-error-container form-errors"
                      ng-show="registrationForm.serverError.$error && registrationForm.$submitted"
                      ng-messages="registrationForm.serverError.$error"
@@ -62,4 +66,4 @@
 
         </form>
     </ion-content>
-</div>
+</ion-view>
