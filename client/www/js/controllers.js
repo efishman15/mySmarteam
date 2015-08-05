@@ -284,7 +284,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         }
     })
 
-    .controller('QuizResultCtrl', function ($scope, $rootScope, $stateParams, $state, $translate) {
+    .controller('QuizResultCtrl', function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($stateParams.score == null) {
                 //Probably view is refreshed in browser - go back to pick a subject
@@ -293,6 +293,15 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             }
             $scope.score = $stateParams.score;
         });
+
+        $scope.returnToPlay = function() {
+            $ionicHistory.clearHistory();
+            $ionicHistory.nextViewOptions({
+                disableBack: true,
+                historyRoot: true
+            });
+            $state.go('app.play', {}, {reload: false, inherit: true});
+        }
 
         $scope.$on('$ionicView.beforeLeave', function () {
             if ($rootScope.user.settings.interfaceLanguage != $rootScope.user.settings.questionsLanguage) {
