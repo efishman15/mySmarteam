@@ -8,10 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/quiz.js" afterPath="$PROJECT_DIR$/server/business_logic/quiz.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/app.js" afterPath="$PROJECT_DIR$/client/www/js/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" afterPath="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/credentials.js" afterPath="$PROJECT_DIR$/server/business_logic/credentials.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/menu.html" afterPath="$PROJECT_DIR$/client/www/templates/menu.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server.js" afterPath="$PROJECT_DIR$/server/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/services.js" afterPath="$PROJECT_DIR$/client/www/js/services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/css/style.css" afterPath="$PROJECT_DIR$/client/www/css/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/session.js" afterPath="$PROJECT_DIR$/server/business_logic/session.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/settingsPassword.html" afterPath="$PROJECT_DIR$/client/www/templates/settingsPassword.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ionic-tutorial.iws" />
@@ -37,23 +42,69 @@
         <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="156" column="93" selection-start-line="156" selection-start-column="93" selection-end-line="156" selection-end-column="93" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <element signature="e#4301#6277#0" expanded="false" />
-                <element signature="e#6346#6562#0" expanded="false" />
-                <element signature="e#6658#7060#0" expanded="false" />
-                <element signature="e#7197#10649#0" expanded="false" />
-                <element signature="e#10750#11390#0" expanded="false" />
-                <element signature="e#11529#12101#0" expanded="false" />
+                <element signature="e#262#3260#0" expanded="false" />
+                <element signature="e#3408#5282#0" expanded="false" />
+                <element signature="e#5448#7424#0" expanded="false" />
+                <element signature="e#7493#7709#0" expanded="false" />
+                <element signature="e#7805#8207#0" expanded="false" />
+                <element signature="e#8344#11796#0" expanded="false" />
+                <element signature="e#11897#12537#0" expanded="false" />
+                <element signature="e#12690#13428#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="quiz.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="182" column="0" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="menu.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-21.576923">
+              <caret line="59" column="113" selection-start-line="59" selection-start-column="113" selection-end-line="59" selection-end-column="113" />
+              <folding>
+                <element signature="n#style#0;n#img#0;n#a#0;n#ion-header-bar#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#ion-item#0;n#ion-list#0;n#ion-content#0;n#ion-side-menu#0;n#ion-side-menus#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#ion-item#0;n#ion-list#0;n#ion-content#0;n#ion-side-menu#1;n#ion-side-menus#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="chooseLanguage.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.14">
+              <caret line="7" column="43" selection-start-line="7" selection-start-column="43" selection-end-line="7" selection-end-column="43" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settingsPassword.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/settingsPassword.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.5384617">
+              <caret line="10" column="61" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="quiz.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.019406393">
+            <state vertical-scroll-proportion="0.0">
               <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding />
             </state>
@@ -64,32 +115,21 @@
         <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="291" column="119" selection-start-line="291" selection-start-column="119" selection-end-line="291" selection-end-column="119" />
+              <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
               <folding>
-                <element signature="e#8649#8924#0" expanded="false" />
+                <element signature="e#1731#3177#0" expanded="false" />
+                <element signature="e#9057#9332#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
+      <file leaf-file-name="session.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/business_logic/session.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="76" column="18" selection-start-line="76" selection-start-column="18" selection-end-line="76" selection-end-column="18" />
+              <caret line="112" column="0" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="angular-translate.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/lib/angular-translate/angular-translate.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="2904" column="0" selection-start-line="2904" selection-start-column="0" selection-end-line="2904" selection-end-column="0" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -98,27 +138,7 @@
         <entry file="file://$PROJECT_DIR$/server/server.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="es.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.538462">
-              <caret line="31" column="96" selection-start-line="31" selection-start-column="96" selection-end-line="31" selection-end-column="96" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ru.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/languages/ru.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.6538463">
-              <caret line="22" column="24" selection-start-line="22" selection-start-column="3" selection-end-line="22" selection-end-column="24" />
+              <caret line="44" column="32" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -128,17 +148,7 @@
         <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="general.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/utils/general.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+              <caret line="195" column="0" selection-start-line="183" selection-start-column="1" selection-end-line="195" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -183,33 +193,33 @@
         <option value="$PROJECT_DIR$/client/www/languages/heIL.json" />
         <option value="$PROJECT_DIR$/client/www/index.html" />
         <option value="$PROJECT_DIR$/client/www/templates/play.html" />
-        <option value="$PROJECT_DIR$/server/business_logic/session.js" />
-        <option value="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
         <option value="$PROJECT_DIR$/client/www/templates/register-error-list.html" />
         <option value="$PROJECT_DIR$/client/www/templates/login-error-list.html" />
         <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
         <option value="$PROJECT_DIR$/client/www/templates/quizResult.html" />
         <option value="$PROJECT_DIR$/client/www/templates/settings.html" />
         <option value="$PROJECT_DIR$/client/www/templates/settingPassword-error-list.html" />
-        <option value="$PROJECT_DIR$/client/www/templates/menu.html" />
         <option value="$PROJECT_DIR$/client/www/templates/home.html" />
         <option value="$PROJECT_DIR$/client/www/templates/login.html" />
         <option value="$PROJECT_DIR$/client/www/templates/register.html" />
         <option value="$PROJECT_DIR$/client/www/templates/settingsPassword-error-list.html" />
-        <option value="$PROJECT_DIR$/client/www/js/app.js" />
-        <option value="$PROJECT_DIR$/client/www/templates/settingsPassword.html" />
-        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
         <option value="$PROJECT_DIR$/server/utils/exceptions.js" />
         <option value="$PROJECT_DIR$/client/www/languages/en.json" />
         <option value="$PROJECT_DIR$/client/www/languages/he.json" />
         <option value="$PROJECT_DIR$/client/www/languages/es.json" />
         <option value="$PROJECT_DIR$/client/www/languages/ru.json" />
-        <option value="$PROJECT_DIR$/server/business_logic/credentials.js" />
         <option value="$PROJECT_DIR$/server/utils/general.js" />
-        <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/client/www/css/style.css" />
-        <option value="$PROJECT_DIR$/client/www/js/services.js" />
         <option value="$PROJECT_DIR$/server/business_logic/quiz.js" />
+        <option value="$PROJECT_DIR$/client/www/templates/settingsPassword.html" />
+        <option value="$PROJECT_DIR$/server/server.js" />
+        <option value="$PROJECT_DIR$/client/www/templates/menu.html" />
+        <option value="$PROJECT_DIR$/server/business_logic/credentials.js" />
+        <option value="$PROJECT_DIR$/client/www/js/app.js" />
+        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
+        <option value="$PROJECT_DIR$/client/www/js/services.js" />
+        <option value="$PROJECT_DIR$/server/business_logic/session.js" />
+        <option value="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
       </list>
     </option>
   </component>
@@ -372,33 +382,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="studyB4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="studyB4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="angular-translate" />
+              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -727,12 +711,18 @@
       <option name="project" value="LOCAL" />
       <updated>1438710511433</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="TODO:&#10;1. Finish &quot;Setting&quot; with password protection.&#10;2. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;, Sound, List of subjects - if empty - user will pick a subject as today.">
+      <created>1438767583759</created>
+      <option name="number" value="00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1438767583759</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="0" width="1692" height="1034" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2037037" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -973,24 +963,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/session.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="102" column="0" selection-start-line="102" selection-start-column="0" selection-end-line="102" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.3076923">
-          <caret line="2" column="57" selection-start-line="2" selection-start-column="57" selection-end-line="2" selection-end-column="57" />
-          <folding>
-            <element signature="n#style#0;n#img#0;n#ion-radio#0;n#ion-content#0;n#ion-popover-view#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/play.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.1153846">
@@ -1033,16 +1005,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.8846154">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#img#0;n#a#0;n#ion-header-bar#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1055,14 +1017,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.5384617">
           <caret line="10" column="118" selection-start-line="10" selection-start-column="109" selection-end-line="10" selection-end-column="118" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="203" column="33" selection-start-line="203" selection-start-column="33" selection-end-line="203" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -1087,14 +1041,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.08">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/settingsPassword.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.3076923">
-          <caret line="2" column="117" selection-start-line="2" selection-start-column="117" selection-end-line="2" selection-end-column="117" />
           <folding />
         </state>
       </provider>
@@ -1144,16 +1090,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="2904" column="0" selection-start-line="2904" selection-start-column="0" selection-end-line="2904" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="131" column="0" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1165,29 +1103,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="156" column="93" selection-start-line="156" selection-start-column="93" selection-end-line="156" selection-end-column="93" />
-          <folding>
-            <element signature="e#4301#6277#0" expanded="false" />
-            <element signature="e#6346#6562#0" expanded="false" />
-            <element signature="e#6658#7060#0" expanded="false" />
-            <element signature="e#7197#10649#0" expanded="false" />
-            <element signature="e#10750#11390#0" expanded="false" />
-            <element signature="e#11529#12101#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1196,20 +1111,98 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+    <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="291" column="119" selection-start-line="291" selection-start-column="119" selection-end-line="291" selection-end-column="119" />
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="32" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/settingsPassword.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.5384617">
+          <caret line="10" column="61" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-21.576923">
+          <caret line="59" column="113" selection-start-line="59" selection-start-column="113" selection-end-line="59" selection-end-column="113" />
           <folding>
-            <element signature="e#8649#8924#0" expanded="false" />
+            <element signature="n#style#0;n#img#0;n#a#0;n#ion-header-bar#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ion-item#0;n#ion-list#0;n#ion-content#0;n#ion-side-menu#0;n#ion-side-menus#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ion-item#0;n#ion-list#0;n#ion-content#0;n#ion-side-menu#1;n#ion-side-menus#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
+    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.019406393">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="182" column="0" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
+          <folding>
+            <element signature="e#1731#3177#0" expanded="false" />
+            <element signature="e#9057#9332#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="195" column="0" selection-start-line="183" selection-start-column="1" selection-end-line="195" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/business_logic/session.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="112" column="0" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#262#3260#0" expanded="false" />
+            <element signature="e#3408#5282#0" expanded="false" />
+            <element signature="e#5448#7424#0" expanded="false" />
+            <element signature="e#7493#7709#0" expanded="false" />
+            <element signature="e#7805#8207#0" expanded="false" />
+            <element signature="e#8344#11796#0" expanded="false" />
+            <element signature="e#11897#12537#0" expanded="false" />
+            <element signature="e#12690#13428#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14">
+          <caret line="7" column="43" selection-start-line="7" selection-start-column="43" selection-end-line="7" selection-end-column="43" />
           <folding />
         </state>
       </provider>

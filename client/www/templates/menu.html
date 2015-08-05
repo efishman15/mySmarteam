@@ -21,29 +21,28 @@
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
     </ion-side-menu-content>
-    <ion-side-menu side="left" ng-hide="$root.languages[$root.user.settings.interfaceLanguage].align=='right'"
-    ">
-    <ion-header-bar class="bar-stable">
-        <h1 class="title">{{$root.user.email}}</h1>
-    </ion-header-bar>
-    <ion-content>
-        <ion-list>
-            <ion-toggle
-                    ng-change="updateSound();"
-                    ng-model="$root.user.settings.sound"
-                    toggle-class="toggle-calm">
-                <i class="icon ion-music-note"></i>
-                {{ 'SOUND' | translate}}
-            </ion-toggle>
-            <ion-item nav-clear href="{{getSettingsView()}}">
-                <i class="icon ion-gear-a"></i>
-                {{ 'SETTINGS' | translate}}
-            </ion-item>
-            <ion-item nav-clear menu-close href="#/app/logout">
-                {{ 'SIGN_OUT' | translate}}
-            </ion-item>
-        </ion-list>
-    </ion-content>
+    <ion-side-menu side="left" ng-hide="$root.languages[$root.user.settings.interfaceLanguage].align=='right'">
+        <ion-header-bar class="bar-stable">
+            <h1 class="title">{{$root.user.email}}</h1>
+        </ion-header-bar>
+        <ion-content>
+            <ion-list>
+                <ion-toggle
+                        ng-change="updateSound();"
+                        ng-model="$root.user.settings.sound"
+                        toggle-class="toggle-calm">
+                    <i class="icon ion-music-note"></i>
+                    {{ 'SOUND' | translate}}
+                </ion-toggle>
+                <ion-item style="padding-right: 32px;" nav-clear menu-close ng-click="checkPassword('app.settings',$event)">
+                    <i class="icon ion-gear-a"></i>
+                    {{ 'SETTINGS' | translate}}
+                </ion-item>
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)">
+                    {{ 'SIGN_OUT' | translate}}
+                </ion-item>
+            </ion-list>
+        </ion-content>
     </ion-side-menu>
     <ion-side-menu side="right" ng-hide="$root.languages[$root.user.settings.interfaceLanguage].align=='left'">
         <ion-header-bar class="bar-stable">
@@ -58,11 +57,11 @@
                     <i class="icon ion-music-note"></i>
                     {{ 'SOUND' | translate}}
                 </ion-toggle>
-                <ion-item nav-clear href="{{getSettingsView()}}">
+                <ion-item style="padding-right: 32px;" nav-clear menu-close ng-click="checkPassword('app.settings',$event)">
                     <i class="icon ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/logout">
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)">
                     {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>

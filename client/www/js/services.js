@@ -42,8 +42,8 @@ angular.module('studyB4.services', [])
             )
         };
 
-        service.saveSettingsToServer = function (settings, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "settings", settings, callbackOnSuccess, callbackOnError);
+        service.saveSettingsToServer = function (serverData, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "settings", serverData, callbackOnSuccess, callbackOnError);
         }
 
         return service;
@@ -125,8 +125,8 @@ angular.module('studyB4.services', [])
                 })
         };
 
-        service.logout = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "logout", null,
+        service.logout = function (logoutData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "logout", logoutData,
                 function (data, headers) {
                     delete headers["Authorization"];
                     delete $http.defaults.headers.common["Authorization"];
@@ -234,7 +234,19 @@ angular.module('studyB4.services', [])
             }
         };
 
+        service.confirmPassword = function (password, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "confirmPassword", password,
+                function (data) {
+                    callbackOnSuccess(data);
+
+                },
+                function (status, data) {
+                    callbackOnError(status, data);
+                })
+        };
+
         return service;
+
     })
 
     //Play Service
@@ -286,12 +298,19 @@ angular.module('studyB4.services', [])
 
         service.logErrorAndAlert = function (status, error) {
             if (error.title) {
-                $ionicPopup.alert({cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction, title:  $translate.instant(error.title), template:  $translate.instant(error.message)});
+                $ionicPopup.alert({
+                    cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction,
+                    title: $translate.instant(error.title),
+                    template: $translate.instant(error.message)
+                });
             }
             else {
-                $ionicPopup.alert({cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction, template: error.message});
+                $ionicPopup.alert({
+                    cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction,
+                    template: error.message
+                });
             }
-            return ;
+            return;
         };
 
         return service;

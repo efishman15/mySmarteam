@@ -5,7 +5,6 @@ var async = require('async');
 var ObjectId = require('mongodb').ObjectID;
 var dal = require('../dal/myMongoDB');
 var excptions = require('../utils/exceptions');
-var generalUtils = require('../utils/general');
 
 module.exports.register = function (req, res, next) {
     var user = req.body;
@@ -37,7 +36,7 @@ module.exports.register = function (req, res, next) {
             res.send(err.status, err);
         }
     });
-}
+};
 
 module.exports.login = function (req, res, next) {
     var user = req.body;
@@ -69,10 +68,14 @@ module.exports.login = function (req, res, next) {
             res.send(err.status, err);
         }
     });
-}
+};
 
 module.exports.logout = function (req, res, next) {
     var token = req.headers.authorization;
+    var password = null;
+    if (req.body && req.body.password) {
+        password = req.body.password;
+    }
 
     var operations = [
 
@@ -81,7 +84,7 @@ module.exports.logout = function (req, res, next) {
 
         //Logout
         function (dbHelper, callback) {
-            logout(dbHelper, token, callback);
+            logout(dbHelper, token, password, callback);
         },
 
         //Close the db
@@ -125,7 +128,6 @@ function register(dbHelper, user, callback) {
             callback(null, dbHelper, newAdmin);
         })
 }
-;
 
 //Login and return the adminId if email/password match
 function login(dbHelper, user, callback) {
@@ -141,7 +143,7 @@ function login(dbHelper, user, callback) {
 
         callback(null, dbHelper, admin);
     })
-};
+}
 
 //Create the session
 function createOrUpdateSession(dbHelper, admin, callback) {
@@ -151,41 +153,65 @@ function createOrUpdateSession(dbHelper, admin, callback) {
         {
             $set: {
                 "adminId": ObjectId(admin._id),
+                "email": admin.email,
+                "password": admin.password,
                 "createdAt": new Date(),
                 "userToken": userToken,
-                "settings": admin.settings,
+                "settings": admin.settings
             }
         }, {upsert: true, new: true}, function (err, session) {
 
             if (err) {
-                console.log("Error finding session for admin Id: " + adminId + ", err: " + JSON.stringify(err));
+                console.log("Error finding session for admin Id: " + admin._id + ", err: " + JSON.stringify(err));
                 callback(new excptions.GeneralError(500));
                 return;
             }
             callback(null, dbHelper, session.value);
         })
-};
+}
 
 //Logout (remove session)
-function logout(dbHelper, token, callback) {
+function logout(dbHelper, token, password, callback) {
     var sessionsCollection = dbHelper.getCollection("Sessions");
-    sessionsCollection.remove(
-        {
-            "userToken": token
+    sessionsCollection.findOne({
+        "userToken": token
+    }, {}, function (err, session) {
+        if (err || !session) {
+            callback(new excptions.GeneralError(401));
+            return;
         }
-        , {w: 1, single: true},
-        function (err, numberOfRemovedDocs) {
-            if (err) {
-                //Session does not exist - stop the call chain
-                console.log("error finding session with token: " + token, "error: " + err);
-                callback(new excptions.GeneralError(500));
-                return;
+
+        var validToLogout = false;
+        if (session.settings.passwordProtected == false) {
+            validToLogout = true;
+        }
+        else if (session.settings.passwordProtected == true && password && session.password == md5(password + "|" + session.email)) {
+            validToLogout = true;
+        }
+
+        if (validToLogout == false) {
+            callback(new excptions.GeneralError(500)); //Client tries to hack with a wrong password
+            return;
+        }
+
+        //Actual logout - remove the session
+        sessionsCollection.remove(
+            {
+                "userToken": token
             }
-            ;
-            callback(null, dbHelper);
-        }
-    )
-};
+            , {w: 1, single: true},
+            function (err, numberOfRemovedDocs) {
+                if (err || numberOfRemovedDocs == 0) {
+                    //Session does not exist - stop the call chain
+                    callback(new excptions.GeneralError(401)); //Will cause the client to re-login
+                    return;
+                }
+
+                callback(null, dbHelper);
+            }
+        )
+    })
+}
 
 function getSessionResponse(session) {
     return {

@@ -1,6 +1,6 @@
 angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnimate'])
 
-    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, InfoService, $translate) {
+    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicPopover) {
 
         InfoService.getLanguages(
             function (data) {
@@ -15,12 +15,41 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $translate.use(language.value);
         };
 
-        $scope.getSettingsView = function () {
+        $ionicPopover.fromTemplateUrl('templates/settingsPassword.html', {
+            scope: $scope
+        }).then(function (passwordPopover) {
+            $scope.passwordPopover = passwordPopover;
+        });
+
+        $scope.openPasswordPopover = function ($event) {
+            $scope.passwordPopover.show($event);
+        };
+
+        $scope.closePasswordPopover = function (password) {
+            $scope.passwordPopover.hide();
+            //Check the password vs. the server
+            LoginService.confirmPassword({"password": password},
+                function (data) {
+                    if (data.confirmed == true) {
+                        $state.go($scope.nextStateAfterPassword, {password: password}, {reload: false, inherit: true});
+                    }
+                },
+                ErrorService.logErrorAndAlert
+            )
+        };
+
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.passwordPopover.remove();
+        });
+
+        $scope.checkPassword = function (nextState, $event) {
             if ($rootScope.user.settings.passwordProtected == true) {
-                return "#/app/settingsPassword";
+                $scope.nextStateAfterPassword = nextState;
+                $scope.openPasswordPopover($event);
             }
             else {
-                return "#/app/settings";
+                $state.go(nextState, {}, {reload: false, inherit: true});
             }
         }
 
@@ -274,9 +303,13 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
     })
 
-    .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory, $translate) {
+    .controller('LogoutCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, $ionicHistory, $translate, $stateParams) {
         $scope.$on('$ionicView.beforeEnter', function () {
-            LoginService.logout(
+            var logoutData = null;
+            if ($stateParams.password) {
+                logoutData = {"password": $stateParams.password}
+            }
+            LoginService.logout(logoutData,
                 function () {
                     // using the ionicViewService to hide the back button on next view
                     $ionicHistory.nextViewOptions({
@@ -290,25 +323,12 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
     })
 
-    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate, $stateParams, $state) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate, $stateParams) {
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
         $scope.$on('$ionicView.beforeEnter', function () {
-
-            if ($rootScope.user.settings.passwordProtected == true && !$stateParams.password) {
-                //Probably view is refreshed in browser - go back to the "play" view
-                $state.go('app.play', {}, {reload: false, inherit: true});
-                return;
-            }
-
             $scope.settings = JSON.parse(JSON.stringify($rootScope.user.settings));
-            if ($rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction == "rtl") {
-                $ionicSideMenuDelegate.toggleRight();
-            }
-            else {
-                $ionicSideMenuDelegate.toggleLeft();
-            }
         });
 
         $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
@@ -326,6 +346,11 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $scope.languagePopover.hide();
         };
 
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.languagePopover.remove();
+        });
+
         $scope.$on('$ionicView.beforeLeave', function () {
             if ($rootScope.user.settings.passwordProtected == true && !$stateParams.password) {
                 //Should not be here if no password
@@ -334,7 +359,11 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
             if (JSON.stringify($scope.settings) != JSON.stringify($rootScope.user.settings)) {
                 //Dirty settings - save to server
-                UserService.saveSettingsToServer($scope.settings,
+                var serverData = {"settings" : $scope.settings };
+                if ($stateParams.password) {
+                    serverData.password = $stateParams.password;
+                }
+                UserService.saveSettingsToServer(serverData,
                     function (data) {
                         if ($scope.settings.interfaceLanguage != $rootScope.user.settings.interfaceLanguage) {
                             $translate.use($scope.settings.interfaceLanguage);
@@ -344,18 +373,3 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             }
         });
     })
-
-    .controller('SettingsPasswordCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, $state) {
-        $scope.$on('$ionicView.beforeEnter', function () {
-            if ($rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction == "rtl") {
-                $ionicSideMenuDelegate.toggleRight();
-            }
-            else {
-                $ionicSideMenuDelegate.toggleLeft();
-            }
-        });
-
-        $scope.continue = function (settingsPasswordForm) {
-            $state.go('app.settings', {password: settingsPasswordForm.password}, {reload: false, inherit: true})
-        };
-    });

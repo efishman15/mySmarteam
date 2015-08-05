@@ -172,24 +172,10 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                         return LoginService.resolveAuthentication();
                     }
                 },
+                params: {password: null},
                 views: {
                     'menuContent': {
                         controller: "LogoutCtrl"
-                    }
-                }
-            })
-
-            .state('app.settingsPassword', {
-                url: "/settingsPassword",
-                resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
-                    }
-                },
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/settingsPassword.html",
-                        controller: "SettingsPasswordCtrl"
                     }
                 }
             })

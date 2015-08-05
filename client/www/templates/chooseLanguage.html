@@ -5,7 +5,7 @@
     <ion-content dir="{{$root.languages[$root.user.settings.interfaceLanguage].direction}}">
         <ion-radio ng-repeat="item in $root.languages.keys"
                    ng-model="settings[languageProperty]"
-                   ng-change="closePopover(item)"
+                   ng-change="closeLanguagePopover(item)"
                    ng-value="$root.languages[item].value">
             <img style="border: 1px solid" ng-src="{{$root.languages[item].flag}}" width="20" height="12">
             <span>{{$root.languages[item].displayNames[settings.interfaceLanguage]}}</span>

@@ -42,6 +42,7 @@ app.post('/quiz/start', isAuthenticated, quiz.start);
 app.post('/quiz/answer', isAuthenticated, quiz.answer);
 app.post('/quiz/nextQuestion', isAuthenticated, quiz.nextQuestion);
 app.post('/users/logout', isAuthenticated, credentials.logout);
+app.post('/users/confirmPassword', sessionUtils.confirmPassword);
 app.post('/users/settings', sessionUtils.saveSettings);
 
 //API's that do NOT require authentication
