@@ -274,7 +274,7 @@ angular.module('studyB4.services', [])
     })
 
     //Error Service
-    .factory('ErrorService', function ($ionicPopup, $translate) {
+    .factory('ErrorService', function ($ionicPopup, $translate, $rootScope) {
 
         var service = this;
 
@@ -286,10 +286,10 @@ angular.module('studyB4.services', [])
 
         service.logErrorAndAlert = function (status, error) {
             if (error.title) {
-                $ionicPopup.alert({title:  $translate.instant(error.title), template:  $translate.instant(error.message)});
+                $ionicPopup.alert({cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction, title:  $translate.instant(error.title), template:  $translate.instant(error.message)});
             }
             else {
-                $ionicPopup.alert({template: error.message});
+                $ionicPopup.alert({cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction, template: error.message});
             }
             return ;
         };

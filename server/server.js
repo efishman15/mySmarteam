@@ -3,10 +3,10 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var credentials = require('./business_logic/credentials')
 var quiz = require('./business_logic/quiz')
-var domain = require('domain');
 var GeneralError = require('./utils/exceptions').GeneralError;
 var generalUtils = require('./utils/general');
 var sessionUtils = require('./business_logic/session');
+var domain = require('domain');
 
 var app = express();
 
@@ -14,29 +14,20 @@ app.use(bodyParser());          // pull information from html in POST
 app.use(methodOverride());      // simulate DELETE and PUT
 app.use(express.static('../client/www'));
 
-function domainWrapper() {
-    return function (req, res, next) {
-        var reqDomain = domain.create();
-        reqDomain.add(req);
-        reqDomain.add(res);
+app.use(function runInsideDomain(req, res, next) {
+    var reqDomain = domain.create();
 
-        res.on('close', function () {
-            reqDomain.dispose();
-        });
+    res.on('close', function () {
+        reqDomain.dispose();
+    });
 
-        reqDomain.on('error', function (err) {
-            console.log("ooooooooooopsssss....");
-            console.log("Error: " + err.stack);
-            var status = 500;
-            res.status(status).send(new GeneralError(status));
-            next(err);
-            reqDomain.dispose();
-        });
+    reqDomain.on('error', function (err) {
+        reqDomain.dispose();
+        next(err);
+    });
 
-        reqDomain.run(next)
-    }
-}
-app.use(domainWrapper());
+    reqDomain.run(next);
+});
 
 // CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
 app.all('*', function (req, res, next) {
@@ -58,6 +49,13 @@ app.post('/users/login', credentials.login);
 app.post('/users/register', credentials.register);
 app.post('/info/geo', generalUtils.geoInfo);
 app.post('/info/languages', generalUtils.getLanguages);
+
+app.use(function (err, req, res, next) {
+    console.log('error on request %s %s: %s', req.method, req.url, err.stack);
+    var status = 500;
+    res.status(status).send(new GeneralError(status));
+    res.end();
+});
 
 app.set('port', process.env.PORT || 7000);
 

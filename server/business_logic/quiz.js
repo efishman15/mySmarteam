@@ -7,7 +7,7 @@ var dal = require('../dal/myMongoDB');
 var generalUtils = require('../utils/general');
 
 module.exports.subjects = function (req, res, next) {
-    sdfasdf;
+
     var token = req.headers.authorization;
     var operations = [
 
