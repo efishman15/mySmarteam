@@ -21,18 +21,15 @@ angular.module('studyB4.services', [])
         service.initUser = function (callbackOnSuccess, callbackOnError) {
 
             InfoService.getGeoInfo(function (geoResult) {
-                    $rootScope.user = {
+                    $rootScope.storedUser = {
                         "email": null,
                         "password": null,
                         "settings": {
-                            "sound": true,
-                            "passwordProtected": true,
-                            "interfaceLanguage": geoResult.language,
-                            "questionsLanguage": geoResult.language
+                            "interfaceLanguage": geoResult.language
                         }
                     };
-                    $rootScope.isLoggedOn = false;
-                    service.setStoreUser($rootScope.user);
+                    $rootScope.session = null;
+                    service.setStoreUser($rootScope.storedUser);
 
                     if (callbackOnSuccess) {
                         callbackOnSuccess();
@@ -100,11 +97,11 @@ angular.module('studyB4.services', [])
 
         service.register = function (user, callbackOnSuccess, callbackOnError) {
             return ApiService.post(path, "register", user,
-                function (data) {
+                function (session) {
                     //Was set just in order to pass it to the server - no need to save this in the Store
-                    delete $rootScope.user["geoInfo"];
+                    delete $rootScope.storedUser["geoInfo"];
 
-                    saveUser(user, data);
+                    saveSession(session);
                     callbackOnSuccess()
 
                 },
@@ -115,9 +112,9 @@ angular.module('studyB4.services', [])
 
         service.login = function (user, callbackOnSuccess, callbackOnError) {
             return ApiService.post(path, "login", user,
-                function (data) {
-                    saveUser(user, data);
-                    callbackOnSuccess(data);
+                function (session) {
+                    saveSession(session);
+                    callbackOnSuccess(session);
 
                 },
                 function (status, data) {
@@ -130,14 +127,14 @@ angular.module('studyB4.services', [])
                 function (data, headers) {
                     delete headers["Authorization"];
                     delete $http.defaults.headers.common["Authorization"];
-                    $rootScope.isLoggedOn == false;
+                    $rootScope.session = null;
                     UserService.clearStoreUser();
                     UserService.initUser(callbackOnSuccess, callbackOnError);
                 },
                 function (status, data, headers) {
                     delete headers["Authorization"];
                     delete $http.defaults.headers.common["Authorization"];
-                    $rootScope.isLoggedOn == false;
+                    $rootScope.session = null;
                     UserService.clearStoreUser();
                     UserService.initUser(callbackOnSuccess, callbackOnError);
                 }
@@ -158,13 +155,13 @@ angular.module('studyB4.services', [])
             }
 
             if (initUser && initUser == true) {
-                if (!$rootScope.user) {
+                if (!$rootScope.storedUser) {
                     UserService.initUser(function () {
                         deferred.resolve();
-                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
                     }, function () {
                         deferred.resolve()
-                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
                     });
                 }
                 else {
@@ -173,21 +170,21 @@ angular.module('studyB4.services', [])
                 return deferred.promise;
             }
 
-            if ($rootScope.isLoggedOn == true) {
+            if ($rootScope.session) {
                 deferred.resolve();
                 return deferred.promise;
             }
 
-            $rootScope.user = UserService.getStoreUser();
-            if ($rootScope.user && $rootScope.user.email) {
-                service.login($rootScope.user,
+            $rootScope.storedUser = UserService.getStoreUser();
+            if ($rootScope.storedUser && $rootScope.storedUser.email) {
+                service.login($rootScope.storedUser,
                     function (data) {
                         deferred.resolve();
-                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
                     },
                     function (status, error) {
                         deferred.resolve();
-                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
                         ErrorService.logError(status, error);
                         UserService.initUser();
                     }
@@ -196,23 +193,30 @@ angular.module('studyB4.services', [])
             else {
                 UserService.initUser(function () {
                     deferred.resolve()
-                    $translate.use($rootScope.user.settings.interfaceLanguage);
+                    $translate.use($rootScope.storedUser.settings.interfaceLanguage);
                 }, function () {
                     deferred.resolve();
-                    $translate.use($rootScope.user.settings.interfaceLanguage);
+                    $translate.use($rootScope.storedUser.settings.interfaceLanguage);
                 });
             }
             return deferred.promise;
         };
 
-        function saveUser(user, serverData) {
-            $http.defaults.headers.common.Authorization = serverData.token;
-
-            $rootScope.isLoggedOn = true;
-
-            $rootScope.user = user;
-            $rootScope.user.settings = serverData.settings;
-            UserService.setStoreUser($rootScope.user);
+        function saveSession(session) {
+            $http.defaults.headers.common.Authorization = session.userToken;
+            $rootScope.session = session;
+            var storeUser = false;
+            if (!$rootScope.storedUser.settings.profileId) {
+                $rootScope.storedUser.settings.profileId = session.settings.profileId;
+                storeUser = true;
+            }
+            if (!$rootScope.storedUser.settings.passwordProtected) {
+                $rootScope.storedUser.settings.passwordProtected = session.settings.passwordProtected;
+                storeUser = true;
+            }
+            if (storeUser == true) {
+                UserService.setStoreUser($rootScope.storedUser);
+            }
         };
 
         //Used for both login and register forms - clear last server error upon field change
@@ -299,14 +303,14 @@ angular.module('studyB4.services', [])
         service.logErrorAndAlert = function (status, error) {
             if (error.title) {
                 $ionicPopup.alert({
-                    cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction,
+                    cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
                     title: $translate.instant(error.title),
                     template: $translate.instant(error.message)
                 });
             }
             else {
                 $ionicPopup.alert({
-                    cssClass: $rootScope.languages[$rootScope.user.settings.interfaceLanguage].direction,
+                    cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
                     template: error.message
                 });
             }

@@ -2,13 +2,13 @@
     <ion-header-bar>
         <h1 class="title">{{'CHOOSE_LANGUAGE' | translate}}</h1>
     </ion-header-bar>
-    <ion-content dir="{{$root.languages[$root.user.settings.interfaceLanguage].direction}}">
-        <ion-radio ng-repeat="item in $root.languages.keys"
+    <ion-content dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
+        <ion-radio ng-repeat="languageKey in $root.languages.keys"
                    ng-model="settings[languageProperty]"
-                   ng-change="closeLanguagePopover(item)"
-                   ng-value="$root.languages[item].value">
-            <img style="border: 1px solid" ng-src="{{$root.languages[item].flag}}" width="20" height="12">
-            <span>{{$root.languages[item].displayNames[settings.interfaceLanguage]}}</span>
+                   ng-change="closeLanguagePopover(languageKey)"
+                   ng-value="$root.languages[languageKey].value">
+            <img style="border: 1px solid" ng-src="{{$root.languages[languageKey].flag}}" width="20" height="12">
+            <span>{{$root.languages[languageKey].displayNames[$root.storedUser.settings.interfaceLanguage]}}</span>
         </ion-radio>
     </ion-content>
 </ion-popover-view>

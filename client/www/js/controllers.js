@@ -10,8 +10,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             ErrorService.logErrorAndAlert)
 
         $scope.changeLanguage = function (language) {
-            $rootScope.user.settings.interfaceLanguage = language.value;
-            UserService.setStoreUser($rootScope.user);
+            $rootScope.storedUser.settings.interfaceLanguage = language.value;
+            UserService.setStoreUser($rootScope.storedUser);
             $translate.use(language.value);
         };
 
@@ -44,7 +44,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
 
         $scope.checkPassword = function (nextState, $event) {
-            if ($rootScope.user.settings.passwordProtected == true) {
+            if ($rootScope.session.settings.passwordProtected == true) {
                 $scope.nextStateAfterPassword = nextState;
                 $scope.openPasswordPopover($event);
             }
@@ -52,13 +52,6 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 $state.go(nextState, {}, {reload: false, inherit: true});
             }
         }
-
-        $scope.updateSound = function () {
-            UserService.setStoreUser($rootScope.user);
-            if ($rootScope.isLoggedOn == true) {
-                UserService.saveSettingsToServer($rootScope.user.settings);
-            }
-        };
 
         $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
                 var currentUser = UserService.getStoreUser();
@@ -88,11 +81,11 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
         $scope.register = function (registrationForm) {
 
-            $rootScope.user.email = registrationForm.email.$modelValue;
-            $rootScope.user.password = registrationForm.password.$modelValue;
-            $rootScope.user.geoInfo = $rootScope.geoInfo;
+            $rootScope.storedUser.email = registrationForm.email.$modelValue;
+            $rootScope.storedUser.password = registrationForm.password.$modelValue;
+            $rootScope.storedUser.geoInfo = $rootScope.geoInfo;
 
-            LoginService.register($rootScope.user,
+            LoginService.register($rootScope.storedUser,
                 function (data) {
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
@@ -103,10 +96,10 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 },
                 function (status, error) {
 
-                    //Reset $rootScope.user fields
-                    $rootScope.user.email = null;
-                    $rootScope.user.password = null;
-                    delete $rootScope.user["geoInfo"];
+                    //Reset $rootScope.storedUser fields
+                    $rootScope.storedUser.email = null;
+                    $rootScope.storedUser.password = null;
+                    delete $rootScope.storedUser["geoInfo"];
 
                     if (error.fieldName) {
                         //Error in a specific field
@@ -134,26 +127,26 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
         $scope.login = function (loginForm) {
 
-            $rootScope.user.email = loginForm.email.$modelValue;
-            $rootScope.user.password = loginForm.password.$modelValue;
-            var currentInterfaceLanguage = $rootScope.user.settings.interfaceLanguage;
+            $rootScope.storedUser.email = loginForm.email.$modelValue;
+            $rootScope.storedUser.password = loginForm.password.$modelValue;
+            var currentInterfaceLanguage = $rootScope.storedUser.settings.interfaceLanguage;
 
-            LoginService.login($rootScope.user,
+            LoginService.login($rootScope.storedUser,
                 function (data) {
                     $ionicHistory.clearHistory();
                     $ionicHistory.nextViewOptions({
                         disableBack: true,
                         historyRoot: true
                     });
-                    if ($rootScope.user.settings.interfaceLanguage != currentInterfaceLanguage) {
-                        $translate.use($rootScope.user.settings.interfaceLanguage);
+                    if ($rootScope.session.settings.interfaceLanguage != currentInterfaceLanguage) {
+                        $translate.use($rootScope.session.settings.interfaceLanguage);
                     }
                     $state.go('app.play', {}, {reload: false, inherit: true});
                 },
                 function (status, error) {
-                    //Reset $rootScope.user fields
-                    $rootScope.user.email = null;
-                    $rootScope.user.password = null;
+                    //Reset $rootScope.storedUser fields
+                    $rootScope.storedUser.email = null;
+                    $rootScope.storedUser.password = null;
 
                     if (error.fieldName) {
                         //Error in a specific field
@@ -177,7 +170,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
     .controller('HomeCtrl', function ($scope, $rootScope, $state) {
         $scope.$on('$ionicView.beforeEnter', function () {
-            if ($rootScope.isLoggedOn == true) {
+            if ($rootScope.session) {
                 $state.go('app.play', {}, {reload: false, inherit: true});
             }
         });
@@ -208,8 +201,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 return;
             }
 
-            if ($rootScope.user.settings.interfaceLanguage != $rootScope.user.settings.questionsLanguage) {
-                $translate.use($rootScope.user.settings.questionsLanguage)
+            if ($rootScope.session.settings.interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileIndex].questionsLanguage) {
+                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileIndex].questionsLanguage)
             }
 
             QuizService.start($stateParams.subjectId,
@@ -232,7 +225,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         $scope.buttonAnimationEnded = function (button, event) {
 
             if ($scope.correctButtonId == button.id) {
-                if ($rootScope.user.settings.sound == true) {
+                if ($rootScope.session.profiles[$rootScope.session.profileId].sound == true) {
                     document.getElementById("audioSound").src = "";
                 }
                 if ($scope.quiz.finished == true) {
@@ -258,7 +251,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     if (data.correct == true) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
-                        if ($rootScope.user.settings.sound == true) {
+                        if ($rootScope.session.profiles[$rootScope.session.settings.isPrototypeOf].sound == true) {
                             soundFile = "audio/correct.ogg";
                         }
                     }
@@ -274,7 +267,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     }
 
                     //Play sound if sound is on
-                    if ($rootScope.user.settings.sound == true) {
+                    if ($rootScope.session.profiles[$rootScope.sessions.settings.profileId].sound == true) {
                         document.getElementById("audioSound").src = soundFile;
                     }
 
@@ -304,8 +297,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         }
 
         $scope.$on('$ionicView.beforeLeave', function () {
-            if ($rootScope.user.settings.interfaceLanguage != $rootScope.user.settings.questionsLanguage) {
-                $translate.use($rootScope.user.settings.interfaceLanguage);
+            if ($rootScope.session.profiles[$rootScope.session.settings.profileId].interfaceLanguage != $rootScope.user.profiles[$rootScope.user.settings.profileId].questionsLanguage) {
+                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileId].questionsLanguage);
             }
         });
 
@@ -325,7 +318,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                         disableBack: true
                     });
 
-                    $translate.use($rootScope.user.settings.interfaceLanguage);
+                    $translate.use($rootScope.storedUser.settings.interfaceLanguage);
                     $state.go('app.home', {}, {reload: false, inherit: true});
                 },
                 ErrorService.logErrorAndAlert)
@@ -337,9 +330,12 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
         $scope.$on('$ionicView.beforeEnter', function () {
-            $scope.settings = JSON.parse(JSON.stringify($rootScope.user.settings));
+            $scope.settings = JSON.parse(JSON.stringify($rootScope.session.settings));
         });
 
+        //-------------------------------------------------------
+        // Choose Language Popover
+        //-------------------------------------------------------
         $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
             scope: $scope
         }).then(function (languagePopover) {
@@ -351,22 +347,40 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $scope.languagePopover.show($event);
         };
 
-        $scope.closeLanguagePopover = function (item) {
+        $scope.closeLanguagePopover = function (languageKey) {
             $scope.languagePopover.hide();
+        };
+
+        //-------------------------------------------------------
+        // Choose Profile Popover
+        //-------------------------------------------------------
+        $ionicPopover.fromTemplateUrl('templates/chooseProfile.html', {
+            scope: $scope
+        }).then(function (profilePopover) {
+            $scope.profilePopover = profilePopover;
+        });
+
+        $scope.openProfilePopover = function ($event) {
+            $scope.profilePopover.show($event);
+        };
+
+        $scope.closeProfilePopover = function (profile) {
+            $scope.profilePopover.hide();
         };
 
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
             $scope.languagePopover.remove();
+            $scope.profilePopover.remove();
         });
 
         $scope.$on('$ionicView.beforeLeave', function () {
-            if ($rootScope.user.settings.passwordProtected == true && !$stateParams.password) {
+            if ($rootScope.storedUser.settings.passwordProtected == true && !$stateParams.password) {
                 //Should not be here if no password
                 return;
             }
 
-            if (JSON.stringify($scope.settings) != JSON.stringify($rootScope.user.settings)) {
+            if (JSON.stringify($scope.settings) != JSON.stringify($rootScope.session.settings)) {
                 //Dirty settings - save to server
                 var serverData = {"settings" : $scope.settings };
                 if ($stateParams.password) {
@@ -374,10 +388,11 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 }
                 UserService.saveSettingsToServer(serverData,
                     function (data) {
-                        if ($scope.settings.interfaceLanguage != $rootScope.user.settings.interfaceLanguage) {
+                        if ($scope.settings.interfaceLanguage != $rootScope.session.settings.interfaceLanguage) {
                             $translate.use($scope.settings.interfaceLanguage);
                         }
-                        $rootScope.user.settings = $scope.settings;
+                        $rootScope.storedUser.settings = $scope.settings;
+                        UserService.setStoreUser($rootScope.storedUser);
                     }, ErrorService.logError);
             }
         });

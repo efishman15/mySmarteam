@@ -1,39 +1,32 @@
-<div dir="{{$root.languages[$root.user.settings.interfaceLanguage].direction}}">
-    <ion-header-bar class="padding" ng-hide="$root.isLoggedOn">
+<div dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
+    <ion-header-bar class="padding" ng-hide="$root.session">
         <a class="language padding" ng-repeat="language in $root.languages.keys" class="padding"
            ng-click="changeLanguage($root.languages[language])">
             <img style="border: 1px solid" ng-src="{{$root.languages[language].flag}}" width="20" height="12">
-            <span>{{$root.languages[language].displayNames[$root.user.settings.interfaceLanguage]}}</span>
+            <span>{{$root.languages[language].displayNames[$root.storedUser.settings.interfaceLanguage]}}</span>
         </a>
     </ion-header-bar>
 </div>
 <ion-side-menus enable-menu-with-back-views="true"
-                dir="{{$root.languages[$root.user.settings.interfaceLanguage].direction}}">
+                dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
     <ion-side-menu-content>
-        <ion-nav-bar class="bar-stable" ng-hide="!$root.isLoggedOn">
+        <ion-nav-bar class="bar-stable" ng-hide="!$root.session">
             <ion-nav-back-button>
             </ion-nav-back-button>
-            <ion-nav-buttons side="{{$root.languages[$root.user.settings.interfaceLanguage].align}}">
+            <ion-nav-buttons side="{{$root.languages[$root.storedUser.settings.interfaceLanguage].align}}">
                 <button class="button button-icon button-clear ion-navicon"
-                        menu-toggle="{{$root.languages[$root.user.settings.interfaceLanguage].align}}">
+                        menu-toggle="{{$root.languages[$root.storedUser.settings.interfaceLanguage].align}}">
                 </button>
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
     </ion-side-menu-content>
-    <ion-side-menu side="left" ng-hide="$root.languages[$root.user.settings.interfaceLanguage].align=='right'">
+    <ion-side-menu side="left" ng-hide="$root.languages[$root.storedUser.settings.interfaceLanguage].align=='right'">
         <ion-header-bar class="bar-stable">
-            <h1 class="title">{{$root.user.email}}</h1>
+            <h1 class="title">{{$root.storedUser.email}}</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-toggle
-                        ng-change="updateSound();"
-                        ng-model="$root.user.settings.sound"
-                        toggle-class="toggle-calm">
-                    <i class="icon ion-music-note"></i>
-                    {{ 'SOUND' | translate}}
-                </ion-toggle>
                 <ion-item style="padding-right: 32px;" nav-clear menu-close ng-click="checkPassword('app.settings',$event)">
                     <i class="icon ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
@@ -44,19 +37,12 @@
             </ion-list>
         </ion-content>
     </ion-side-menu>
-    <ion-side-menu side="right" ng-hide="$root.languages[$root.user.settings.interfaceLanguage].align=='left'">
+    <ion-side-menu side="right" ng-hide="$root.languages[$root.storedUser.settings.interfaceLanguage].align=='left'">
         <ion-header-bar class="bar-stable">
-            <h1 class="title">{{$root.user.email}}</h1>
+            <h1 class="title">{{$root.storedUser.email}}</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-toggle
-                        ng-change="updateSound();"
-                        ng-model="$root.user.settings.sound"
-                        toggle-class="toggle-calm">
-                    <i class="icon ion-music-note"></i>
-                    {{ 'SOUND' | translate}}
-                </ion-toggle>
                 <ion-item style="padding-right: 32px;" nav-clear menu-close ng-click="checkPassword('app.settings',$event)">
                     <i class="icon ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}

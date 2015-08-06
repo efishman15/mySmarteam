@@ -80,3 +80,7 @@ button.item.quiz-answer {
 .rtl {
     direction: rtl;
 }
+
+.item-radio input[type="radio"] {
+    display: none;
+}

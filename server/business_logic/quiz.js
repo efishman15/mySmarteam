@@ -18,7 +18,7 @@ module.exports.subjects = function (req, res, next) {
 
         //get subjects
         function (dbHelper, session, callback) {
-            dal.getSubjects(dbHelper, session.settings.questionsLanguage, false, callback);
+            dal.getSubjects(dbHelper, session.profiles[session.settings.profileId].questionsLanguage, false, callback);
         },
 
         //Close the db
@@ -60,7 +60,7 @@ module.exports.start = function (req, res, next) {
             quiz.subjectId = quizPostData.subjectId;
 
             //Attach the selected subject to the quiz
-            dal.getSubjects(dbHelper, session.settings.questionsLanguage, true, function (err, dbHelper, subjects) {
+            dal.getSubjects(dbHelper, session.profiles[session.settings.profileIndex].questionsLanguage, true, function (err, dbHelper, subjects) {
                 if (err) {
                     callback(new excptions.GeneralError(424, "Error retrieving subjects"));
                     return;
@@ -298,7 +298,7 @@ function setQuestionDirection(dbHelper, session, callback) {
             session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
         }
         else {
-            session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(session.settings.questionsLanguage);
+            session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(session.profiles[session.settings.profileIndex].questionsLanguage);
         }
 
         callback(null, dbHelper, session);

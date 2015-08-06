@@ -1,6 +1,6 @@
 <ion-view>
     <ion-content has-header="true" padding="true"
-                 dir="{{$root.languages[$root.user.settings.interfaceLanguage].direction}}">
+                 dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
         <form name="registrationForm" novalidate="novalidate"
               ng-submit="registrationForm.$valid && register(registrationForm)">
             <div class="list">

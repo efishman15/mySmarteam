@@ -1,4 +1,4 @@
-<ion-nav-bar class="bar-stable" ng-hide="!$root.isLoggedOn">
+<ion-nav-bar class="bar-stable" ng-hide="!$root.session">
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="left">
@@ -7,12 +7,12 @@
     </ion-nav-buttons>
 </ion-nav-bar>
 <ion-view class="padding" view-title="{{ 'PICK_A_SUBJECT' | translate }}"
-<ion-content class="padding" dir="{{$root.languages[$root.user.settings.interfaceLanguage].direction}}">
+<ion-content class="padding" dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
     <div class="list card">
         <a
                 ng-repeat="subject in subjects" class="item item-icon-left"
                 ng-click="play(subject.subjectId)"
-                ng-bind-html="subject.displayNames[$root.user.settings.interfaceLanguage]">
+                ng-bind-html="subject.displayNames[$root.storedUser.settings.interfaceLanguage]">
         </a>
     </div>
 </ion-content>

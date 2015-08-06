@@ -107,12 +107,22 @@ module.exports.logout = function (req, res, next) {
 //Try to register the new admin
 function register(dbHelper, user, callback) {
     var adminsCollection = dbHelper.getCollection("Admins");
+    user.settings.profileId = uuid.v1(); //Pointer to the current (one and only) profile
+    user.profiles = {};
+    user.profiles[user.settings.profileId] = {
+        "id": user.settings.profileId,
+        "name": user.email.substring(0, user.email.indexOf('@')).replace('.', ' '),
+        "sound": true,
+        "questionsLanguage": user.settings.interfaceLanguage
+    }
     var newAdmin = {
-        "email": user.email,
-        "password": md5(user.password + "|" + user.email),
-        "geoInfo": user.geoInfo,
-        "settings": user.settings
-    };
+            "email": user.email,
+            "password": md5(user.password + "|" + user.email),
+            "geoInfo": user.geoInfo,
+            "profiles": user.profiles,
+            "settings": user.settings
+        }
+        ;
 
     adminsCollection.insert(newAdmin
         , {}, function (err, result) {
@@ -157,7 +167,8 @@ function createOrUpdateSession(dbHelper, admin, callback) {
                 "password": admin.password,
                 "createdAt": new Date(),
                 "userToken": userToken,
-                "settings": admin.settings
+                "settings": admin.settings,
+                "profiles": admin.profiles
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -216,6 +227,7 @@ function logout(dbHelper, token, password, callback) {
 function getSessionResponse(session) {
     return {
         "token": session.userToken,
-        "settings": session.settings
+        "settings": session.settings,
+        "profiles": session.profiles
     };
 }

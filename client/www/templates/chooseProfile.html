@@ -1,0 +1,13 @@
+<ion-popover-view>
+    <ion-header-bar>
+        <h1 class="title">{{'CHOOSE_PROFILE' | translate}}</h1>
+    </ion-header-bar>
+    <ion-content dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
+        <ion-radio ng-repeat="profile in $root.session.profiles"
+                   ng-model="profileId"
+                   ng-change="closeProfilesPopover(profile)"
+                   ng-value="profile.id">
+            <span>{{profile.name}}</span>
+        </ion-radio>
+    </ion-content>
+</ion-popover-view>
