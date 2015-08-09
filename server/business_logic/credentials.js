@@ -107,22 +107,21 @@ module.exports.logout = function (req, res, next) {
 //Try to register the new admin
 function register(dbHelper, user, callback) {
     var adminsCollection = dbHelper.getCollection("Admins");
-    user.settings.profileId = uuid.v1(); //Pointer to the current (one and only) profile
+    var newProfileId = uuid.v1(); //Pointer to the current (one and only) profile
     user.profiles = {};
-    user.profiles[user.settings.profileId] = {
-        "id": user.settings.profileId,
+    user.profiles[newProfileId] = {
+        "id": newProfileId,
         "name": user.email.substring(0, user.email.indexOf('@')).replace('.', ' '),
         "sound": true,
         "questionsLanguage": user.settings.interfaceLanguage
     }
     var newAdmin = {
-            "email": user.email,
-            "password": md5(user.password + "|" + user.email),
-            "geoInfo": user.geoInfo,
-            "profiles": user.profiles,
-            "settings": user.settings
-        }
-        ;
+        "email": user.email,
+        "password": md5(user.password + "|" + user.email),
+        "geoInfo": user.geoInfo,
+        "profiles": user.profiles,
+        "settings": user.settings
+    };
 
     adminsCollection.insert(newAdmin
         , {}, function (err, result) {
@@ -135,6 +134,10 @@ function register(dbHelper, user, callback) {
                 }
                 return;
             }
+
+            //Carry the current profile Id on the newAdmin object - but no need to save the profileId in the Admins collection in db
+            newAdmin.settings.profileId = newProfileId;
+
             callback(null, dbHelper, newAdmin);
         })
 }
@@ -149,6 +152,15 @@ function login(dbHelper, user, callback) {
         if (err || !admin) {
             callback(new excptions.GeneralError(424, "serverErrorInvalidEmailOrPassword"));
             return;
+        }
+
+        //Copy the current profile id pointer to the admin object so it can be saved into the session
+        if (admin.profiles[user.settings.profileId]) {
+            admin.settings.profileId = user.settings.profileId;
+        }
+        else {
+            //Client sent a profile Id which was probably deleted in another device - point to the first profile
+            admin.settings.profileId = admin.profiles[Object.keys(admin.profiles)[0]].id;
         }
 
         callback(null, dbHelper, admin);

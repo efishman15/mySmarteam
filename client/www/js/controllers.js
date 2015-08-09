@@ -5,7 +5,6 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         InfoService.getLanguages(
             function (data) {
                 $rootScope.languages = data;
-                $rootScope.languages.keys = Object.keys(data);
             },
             ErrorService.logErrorAndAlert)
 
@@ -225,7 +224,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         $scope.buttonAnimationEnded = function (button, event) {
 
             if ($scope.correctButtonId == button.id) {
-                if ($rootScope.session.profiles[$rootScope.session.profileId].sound == true) {
+                if ($rootScope.session.profiles[$rootScope.session.settings.profileId].sound == true) {
                     document.getElementById("audioSound").src = "";
                 }
                 if ($scope.quiz.finished == true) {
@@ -297,7 +296,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         }
 
         $scope.$on('$ionicView.beforeLeave', function () {
-            if ($rootScope.session.profiles[$rootScope.session.settings.profileId].interfaceLanguage != $rootScope.user.profiles[$rootScope.user.settings.profileId].questionsLanguage) {
+            if ($rootScope.session.profiles[$rootScope.session.settings.profileId].interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileId].questionsLanguage) {
                 $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileId].questionsLanguage);
             }
         });
@@ -347,7 +346,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $scope.languagePopover.show($event);
         };
 
-        $scope.closeLanguagePopover = function (languageKey) {
+        $scope.closeLanguagePopover = function (language) {
             $scope.languagePopover.hide();
         };
 
@@ -392,6 +391,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                             $translate.use($scope.settings.interfaceLanguage);
                         }
                         $rootScope.storedUser.settings = $scope.settings;
+                        $rootScope.session.settings = $scope.settings;
                         UserService.setStoreUser($rootScope.storedUser);
                     }, ErrorService.logError);
             }

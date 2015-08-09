@@ -149,7 +149,6 @@ angular.module('studyB4.services', [])
                 InfoService.getLanguages(
                     function (data) {
                         $rootScope.languages = data;
-                        $rootScope.languages.keys = Object.keys(data);
                     },
                     ErrorService.logErrorAndAlert)
             }
@@ -203,18 +202,10 @@ angular.module('studyB4.services', [])
         };
 
         function saveSession(session) {
-            $http.defaults.headers.common.Authorization = session.userToken;
+            $http.defaults.headers.common.Authorization = session.token;
             $rootScope.session = session;
-            var storeUser = false;
-            if (!$rootScope.storedUser.settings.profileId) {
-                $rootScope.storedUser.settings.profileId = session.settings.profileId;
-                storeUser = true;
-            }
             if (!$rootScope.storedUser.settings.passwordProtected) {
                 $rootScope.storedUser.settings.passwordProtected = session.settings.passwordProtected;
-                storeUser = true;
-            }
-            if (storeUser == true) {
                 UserService.setStoreUser($rootScope.storedUser);
             }
         };
