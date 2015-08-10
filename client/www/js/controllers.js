@@ -6,7 +6,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             function (data) {
                 $rootScope.languages = data;
             },
-            ErrorService.logErrorAndAlert)
+            ErrorService.logErrorAndAlert);
 
         $scope.changeLanguage = function (language) {
             $rootScope.storedUser.settings.interfaceLanguage = language.value;
@@ -50,7 +50,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             else {
                 $state.go(nextState, {}, {reload: false, inherit: true});
             }
-        }
+        };
 
         $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
                 var currentUser = UserService.getStoreUser();
@@ -200,8 +200,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 return;
             }
 
-            if ($rootScope.session.settings.interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileIndex].questionsLanguage) {
-                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileIndex].questionsLanguage)
+            if ($rootScope.session.settings.interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileIndex].quizLanguage) {
+                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileIndex].quizLanguage)
             }
 
             QuizService.start($stateParams.subjectId,
@@ -286,7 +286,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $scope.score = $stateParams.score;
         });
 
-        $scope.returnToPlay = function() {
+        $scope.returnToPlay = function () {
             $ionicHistory.clearHistory();
             $ionicHistory.nextViewOptions({
                 disableBack: true,
@@ -296,8 +296,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         }
 
         $scope.$on('$ionicView.beforeLeave', function () {
-            if ($rootScope.session.profiles[$rootScope.session.settings.profileId].interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileId].questionsLanguage) {
-                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileId].questionsLanguage);
+            if ($rootScope.session.profiles[$rootScope.session.settings.profileId].interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileId].quizLanguage) {
+                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileId].quizLanguage);
             }
         });
 
@@ -329,7 +329,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
         $scope.$on('$ionicView.beforeEnter', function () {
-            $scope.settings = JSON.parse(JSON.stringify($rootScope.session.settings));
+            $scope.localViewData = JSON.parse(JSON.stringify($rootScope.session.settings));
         });
 
         //-------------------------------------------------------
@@ -379,21 +379,173 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 return;
             }
 
-            if (JSON.stringify($scope.settings) != JSON.stringify($rootScope.session.settings)) {
+            if (JSON.stringify($scope.localViewData) != JSON.stringify($rootScope.session.settings)) {
                 //Dirty settings - save to server
-                var serverData = {"settings" : $scope.settings };
+                var serverData = {"settings": $scope.localViewData};
                 if ($stateParams.password) {
                     serverData.password = $stateParams.password;
                 }
                 UserService.saveSettingsToServer(serverData,
                     function (data) {
-                        if ($scope.settings.interfaceLanguage != $rootScope.session.settings.interfaceLanguage) {
-                            $translate.use($scope.settings.interfaceLanguage);
+                        if ($scope.localViewData.interfaceLanguage != $rootScope.session.settings.interfaceLanguage) {
+                            $translate.use($scope.localViewData.interfaceLanguage);
                         }
-                        $rootScope.storedUser.settings = $scope.settings;
-                        $rootScope.session.settings = $scope.settings;
+                        $rootScope.storedUser.settings = $scope.localViewData;
+                        $rootScope.session.settings = $scope.localViewData;
                         UserService.setStoreUser($rootScope.storedUser);
                     }, ErrorService.logError);
             }
         });
     })
+
+    .controller('ProfilesCtrl', function ($scope, $rootScope, $state, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate, $stateParams) {
+
+        $scope.addProfile = function () {
+            $state.go('app.profile', {password: $stateParams.password, mode: "add"}, {reload: false, inherit: true});
+        }
+        $scope.editProfile = function (profile) {
+            $state.go('app.profile', {password: $stateParams.password, mode: "edit", profile: profile}, {
+                reload: false,
+                inherit: true
+            });
+        }
+    })
+
+    .controller('ProfileCtrl', function ($scope, $state, $rootScope, $ionicPopover, $translate, $stateParams, $ionicHistory, UserService, ErrorService, $ionicPopup) {
+
+        //Clone the user settings from the root object - all screen changes will work on the local cloned object
+        //only "Apply" button will send the changes to the server
+        $scope.$on('$ionicView.beforeEnter', function () {
+            if ($stateParams.mode) {
+                $scope.mode = $stateParams.mode;
+                if ($stateParams.mode == "edit") {
+                    if ($stateParams.profile) {
+                        $scope.localViewData = JSON.parse(JSON.stringify($stateParams.profile));
+                    }
+                    else {
+                        $state.go('app.profiles', {}, {reload: false, inherit: true});
+                    }
+                }
+                else {
+                    //Copy data from first profile, and then clear the
+                    $scope.localViewData = {
+                        "name": null,
+                        "quizLanguage": $rootScope.storedUser.settings.interfaceLanguage,
+                        "subjects": null,
+                        "sound": true
+                    }
+                }
+            }
+            else {
+                $state.go('app.profiles', {}, {reload: false, inherit: true});
+            }
+        });
+
+        $scope.getTitle = function () {
+            if ($stateParams.mode == "add") {
+                return "ADD_PROFILE";
+            }
+            else if ($stateParams.mode == "edit") {
+                return "EDIT_PROFILE"
+            }
+            else {
+                return null;
+            }
+        }
+
+        //-------------------------------------------------------
+        // Choose Language Popover
+        //-------------------------------------------------------
+        $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
+            scope: $scope
+        }).then(function (languagePopover) {
+            $scope.languagePopover = languagePopover;
+        });
+
+        $scope.openLanguagePopover = function (property, $event) {
+            $scope.languageProperty = property;
+            $scope.languagePopover.show($event);
+        };
+
+        $scope.closeLanguagePopover = function (language) {
+            $scope.languagePopover.hide();
+        };
+
+        $scope.goBack = function () {
+            $ionicHistory.goBack();
+        }
+
+        $scope.subjectList = function () {
+            return "No Subjects...";
+        }
+
+        //Fill the years combo
+        $scope.years = [];
+        var currentYear = new Date().getFullYear();
+        for (var i = currentYear; i > currentYear - 120; i--) {
+            $scope.years.push(i);
+        }
+
+        $scope.submitProfile = function () {
+            if ($stateParams.mode == "add" || ($stateParams.mode == "edit" && JSON.stringify($stateParams.profile) != JSON.stringify($scope.localViewData))) {
+                var serverData = {"profile": $scope.localViewData};
+                if ($stateParams.password) {
+                    serverData.password = $stateParams.password;
+                }
+                //Add/update the new/updated profile to the server and in the local $rootScope
+                UserService.setProfile(serverData,
+                    function (profile) {
+                        $rootScope.session.profiles[profile.id] = profile;
+                        $scope.goBack();
+                    }, ErrorService.logErrorAndAlert);
+            }
+            else {
+                $scope.goBack();
+            }
+        };
+
+        $scope.removeProfile = function () {
+
+            var confirmPopup = $ionicPopup.confirm({
+                title: $translate.instant("CONFIRM_REMOVE_PROFILE_TITLE", {name: $scope.localViewData.name}),
+                template: $translate.instant("CONFIRM_REMOVE_PROFILE_TEMPLATE", {name: $scope.localViewData.name}),
+                cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
+                okText: $translate.instant("OK"),
+                cancelText: $translate.instant("CANCEL")
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    var serverData = {"profileId": $scope.localViewData.id};
+                    if ($stateParams.password) {
+                        serverData.password = $stateParams.password;
+                    }
+                    UserService.removeProfile(serverData,
+                        function (data) {
+                            delete $rootScope.session.profiles[$scope.localViewData.id];
+                            //If deleting the current session's profile - point to the first profile left
+                            if ($rootScope.session.settings.profileId == serverData.profileId) {
+                                $rootScope.session.settings.profileId = Object.keys($rootScope.session.profiles)[0];
+                                $ionicPopup.alert({
+                                    cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
+                                    title: $translate.instant("PROFILE_AUTOMATICALLY_CHANGED_TITLE"),
+                                    template: $translate.instant("PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE",{name: $rootScope.session.profiles[$rootScope.session.settings.profileId].name}),
+                                    okText: $translate.instant("OK")
+                                });
+                            }
+
+                            $scope.goBack();
+                        }, ErrorService.logErrorAndAlert)
+                }
+            })
+        };
+
+        $scope.hideRemoveProfile = function () {
+            if ($stateParams.mode == 'add' || Object.keys($rootScope.session.profiles).length == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    });

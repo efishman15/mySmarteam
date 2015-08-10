@@ -2,6 +2,7 @@ var async = require('async');
 var dal = require('../dal/myMongoDB');
 var exceptions = require('../utils/exceptions');
 var ObjectId = require('mongodb').ObjectID;
+var uuid = require('node-uuid');
 var md5 = require("MD5");
 
 //----------------------------------------------------
@@ -96,21 +97,8 @@ module.exports.saveSettings = function (req, res, next) {
         },
 
         //Validate that settings can be saved - if are password protected
-        function(dbHelper, session, callback) {
-            var validToSave = false;
-            if (session.settings.passwordProtected == false) {
-                validToSave = true;
-            }
-            else if (session.settings.passwordProtected == true && serverData.password && session.password == md5(serverData.password + "|" + session.email)) {
-                validToSave = true;
-            }
-
-            if (validToSave == false) {
-                callback(new excptions.GeneralError(500)); //Client tries to hack with a wrong password
-                return;
-            }
-
-            callback(null, dbHelper, session);
+        function (dbHelper, session, callback) {
+            checkPassword(dbHelper, session, serverData.password, callback);
         },
 
         //Update the session in db
@@ -156,10 +144,10 @@ module.exports.saveSettings = function (req, res, next) {
 };
 
 //----------------------------------------------------
-// confirmPassword
+// setProfile
 //----------------------------------------------------
-module.exports.confirmPassword = function (req, res, next) {
-    var password = req.body.password;
+module.exports.setProfile = function (req, res, next) {
+    var serverData = req.body;
     var token = req.headers.authorization;
 
     var operations = [
@@ -172,21 +160,131 @@ module.exports.confirmPassword = function (req, res, next) {
             retrieveSession(dbHelper, token, callback);
         },
 
-        //get the adminId from session and compare his password
-
+        //Validate that settings can be saved - if are password protected
         function (dbHelper, session, callback) {
-            var adminsCollection = dbHelper.getCollection("Admins");
-            adminsCollection.findOne({
-                "email": session.email,
-                "password": md5(password + "|" + session.email)
-            }, {}, function (err, admin) {
-                if (err || !admin) {
-                    callback(null, dbHelper, false);
-                    return;
-                }
+            checkPassword(dbHelper, session, serverData.password, callback);
+        },
 
-                callback(null, dbHelper, true);
-            })
+        //Update the session with the new profile
+        function (dbHelper, session, callback) {
+            if (!serverData.profile.id) {
+                //mode=add
+                serverData.profile.id = uuid.v1();
+            }
+            session.profiles[serverData.profile.id] = serverData.profile;
+            storeSession(dbHelper, session, callback);
+        },
+
+        setAdminProfiles,
+
+        //Close the db
+        function (dbHelper, callback) {
+            dbHelper.close();
+            callback(null);
+        }
+    ];
+
+    async.waterfall(operations, function (err) {
+        if (!err) {
+            res.json(serverData.profile);
+        }
+        else {
+            res.send(err.status, err);
+        }
+    });
+};
+
+//----------------------------------------------------
+// removeProfile
+//----------------------------------------------------
+module.exports.removeProfile = function (req, res, next) {
+    var serverData = req.body;
+    var token = req.headers.authorization;
+
+    var operations = [
+
+        //Connect to the database
+        dal.connect,
+
+        //Retrieve the session
+        function (dbHelper, callback) {
+            retrieveSession(dbHelper, token, callback);
+        },
+
+        //Validate that settings can be saved - if are password protected
+        function (dbHelper, session, callback) {
+            checkPassword(dbHelper, session, serverData.password, callback);
+        },
+
+        //Remove this profile from session
+        function (dbHelper, session, callback) {
+            if (Object.keys(session.profiles).length == 1) {
+                console.log("trying to delete the last profile of admin: " + session.adminId + ", profile Id: " + serverData.profileId);
+                callback(new exceptions.GeneralError(500));
+                return;
+            }
+            if (!session.profiles[serverData.profileId]) {
+                console.log("trying to delete a non existing profile of admin: " + session.adminId + ", profile Id: " + serverData.profileId);
+                callback(new exceptions.GeneralError(500));
+                return;
+            }
+            else {
+                delete session.profiles[serverData.profileId];
+                //If deleting the current session's profile - point to the first profile left
+                if (session.settings.profileId == serverData.profileId) {
+                    session.settings.profileId = Object.keys(session.profiles)[0];
+                }
+            }
+            storeSession(dbHelper, session, callback);
+        },
+
+        setAdminProfiles,
+
+        //Close the db
+        function (dbHelper, callback) {
+            dbHelper.close();
+            callback(null);
+        }
+    ];
+
+    async.waterfall(operations, function (err) {
+        if (!err) {
+            res.json(serverData.profile);
+        }
+        else {
+            res.send(err.status, err);
+        }
+    });
+};
+
+//----------------------------------------------------
+// confirmPassword
+//----------------------------------------------------
+module.exports.confirmPassword = function (req, res, next) {
+    var password = req.body.password;
+    if (!password) {
+        res.send(new exceptions.GeneralError(424));
+    }
+
+    var token = req.headers.authorization;
+
+    var operations = [
+
+        //Connect to the database
+        dal.connect,
+
+        //Retrieve the session
+        function (dbHelper, callback) {
+            retrieveSession(dbHelper, token, callback);
+        },
+
+        //Compare the password to the session
+        function (dbHelper, session, callback) {
+            if (session.password != md5(password + "|" + session.email)) {
+                callback(null, dbHelper, false);
+                return;
+            }
+            callback(null, dbHelper, true);
         },
 
         //Close the db
@@ -205,3 +303,39 @@ module.exports.confirmPassword = function (req, res, next) {
         }
     });
 };
+
+function checkPassword(dbHelper, session, password, callback) {
+    var validToSave = false;
+    if (session.settings.passwordProtected == false) {
+        validToSave = true;
+    }
+    else if (session.settings.passwordProtected == true && password && session.password == md5(password + "|" + session.email)) {
+        validToSave = true;
+    }
+
+    if (validToSave == false) {
+        callback(new exceptions.GeneralError(500)); //Client tries to hack with a wrong password
+        return;
+    }
+
+    callback(null, dbHelper, session);
+}
+
+
+function setAdminProfiles(dbHelper, session, callback) {
+    var adminsCollection = dbHelper.getCollection('Admins');
+    adminsCollection.findAndModify({"_id": ObjectId(session.adminId)}, {},
+        {
+            $set: {
+                "profiles": session.profiles
+            }
+        }, {}, function (err, admin) {
+
+            if (err) {
+                console.log("Error finding admin with Id: " + session.adminId + ", err: " + JSON.stringify(err));
+                callback(new exceptions.GeneralError(500));
+                return;
+            }
+            callback(null, dbHelper);
+        })
+}

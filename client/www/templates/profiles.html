@@ -1,0 +1,15 @@
+<ion-view class="padding" view-title="{{ 'CHOOSE_PROFILE' | translate }}"
+<ion-content class="padding" dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
+    <div class="list card">
+        <a
+                ng-repeat="profile in $root.session.profiles | orderObjectBy:'name':false" class="item item-icon-left"
+                ng-click="editProfile(profile)"
+                ng-bind-html="profile.name">
+        </a>
+    </div>
+</ion-content>
+<ion-footer-bar>
+    <button class="button button-full button-calm padding" translate="ADD_PROFILE" ng-click="addProfile()">
+    </button>
+</ion-footer-bar>
+</ion-view>

@@ -43,6 +43,14 @@ angular.module('studyB4.services', [])
             ApiService.post(path, "settings", serverData, callbackOnSuccess, callbackOnError);
         }
 
+        service.setProfile = function (serverData, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "setProfile", serverData, callbackOnSuccess, callbackOnError);
+        }
+
+        service.removeProfile = function (serverData, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "removeProfile", serverData, callbackOnSuccess, callbackOnError);
+        }
+
         return service;
     })
 
@@ -296,13 +304,15 @@ angular.module('studyB4.services', [])
                 $ionicPopup.alert({
                     cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
                     title: $translate.instant(error.title),
-                    template: $translate.instant(error.message)
+                    template: $translate.instant(error.message),
+                    okText: $translate.instant("OK")
                 });
             }
             else {
                 $ionicPopup.alert({
                     cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
-                    template: error.message
+                    template: error.message,
+                    okText: $translate.instant("OK")
                 });
             }
             return;

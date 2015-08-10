@@ -113,8 +113,9 @@ function register(dbHelper, user, callback) {
         "id": newProfileId,
         "name": user.email.substring(0, user.email.indexOf('@')).replace('.', ' '),
         "sound": true,
-        "questionsLanguage": user.settings.interfaceLanguage
+        "quizLanguage": user.settings.interfaceLanguage
     }
+    user.settings.passwordProtected = true;
     var newAdmin = {
         "email": user.email,
         "password": md5(user.password + "|" + user.email),

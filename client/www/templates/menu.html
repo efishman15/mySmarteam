@@ -1,9 +1,9 @@
 <div dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
     <ion-header-bar class="padding" ng-hide="$root.session">
-        <a class="language padding" ng-repeat="language in $root.languages.keys" class="padding"
-           ng-click="changeLanguage($root.languages[language])">
-            <img style="border: 1px solid" ng-src="{{$root.languages[language].flag}}" width="20" height="12">
-            <span>{{$root.languages[language].displayNames[$root.storedUser.settings.interfaceLanguage]}}</span>
+        <a class="language padding" ng-repeat="language in $root.languages track by language.value" class="padding"
+           ng-click="changeLanguage(language)">
+            <img style="border: 1px solid" ng-src="{{language.flag}}" width="20" height="12">
+            <span>{{language.displayNames[$root.storedUser.settings.interfaceLanguage]}}</span>
         </a>
     </ion-header-bar>
 </div>
@@ -27,11 +27,13 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item style="padding-right: 32px;" nav-clear menu-close ng-click="checkPassword('app.settings',$event)">
-                    <i class="icon ion-gear-a"></i>
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.settings',$event)" class="ion-gear-a">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)">
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.profiles',$event)" class="ion-person">
+                    {{ 'PROFILES' | translate}}
+                </ion-item>
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)" class="ion-log-out">
                     {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>
@@ -43,11 +45,13 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item style="padding-right: 32px;" nav-clear menu-close ng-click="checkPassword('app.settings',$event)">
-                    <i class="icon ion-gear-a"></i>
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.settings',$event)" class="ion-gear-a">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)">
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.profiles',$event)" class="ion-person">
+                    {{ 'PROFILES' | translate}}
+                </ion-item>
+                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)" class="ion-log-out">
                     {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>

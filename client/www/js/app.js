@@ -58,8 +58,10 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
 
         var lang = navigator.language || navigator.userLanguage;
         if (lang && lang.length >= 2) {
-            var shortLangKey = lang.substring(0,2);
-            $translateProvider.determinePreferredLanguage(function() {return shortLangKey});
+            var shortLangKey = lang.substring(0, 2);
+            $translateProvider.determinePreferredLanguage(function () {
+                return shortLangKey
+            });
         }
     })
 
@@ -196,6 +198,38 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                 }
             })
 
+            .state('app.profiles', {
+                url: "/profiles",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
+                params: {password: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/profiles.html",
+                        controller: "ProfilesCtrl"
+                    }
+                }
+            })
+
+            .state('app.profile', {
+                url: "/profile",
+                resolve: {
+                    auth: function resolveAuthentication(LoginService) {
+                        return LoginService.resolveAuthentication();
+                    }
+                },
+                params: {password: null, mode: null, profile: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/profile.html",
+                        controller: "ProfileCtrl"
+                    }
+                }
+            })
+
             .state('app.otherwise', {
                 url: "/otherwise",
                 views: {
@@ -256,5 +290,19 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                     callback.call(element[0], element[0], event);
                 });
             }
+        };
+    })
+
+    .filter('orderObjectBy', function () {
+        return function (items, field, reverse) {
+            var filtered = [];
+            angular.forEach(items, function (item) {
+                filtered.push(item);
+            });
+            filtered.sort(function (a, b) {
+                return (a[field] > b[field] ? 1 : -1);
+            });
+            if (reverse) filtered.reverse();
+            return filtered;
         };
     });

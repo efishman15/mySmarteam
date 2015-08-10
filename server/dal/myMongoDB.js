@@ -31,13 +31,13 @@ DbHelper.prototype.close = function () {
     return this.db.close();
 };
 
-module.exports.getSubjects = function (dbHelper, questionsLanguage, serverSide, callback) {
+module.exports.getSubjects = function (dbHelper, quizLanguage, serverSide, callback) {
     var subjects;
     if (serverSide) {
-        subjects = serverSubjectsPerLanguages[questionsLanguage];
+        subjects = serverSubjectsPerLanguages[quizLanguage];
     }
     else {
-        subjects = clientSubjectsPerLanguages[questionsLanguage];
+        subjects = clientSubjectsPerLanguages[quizLanguage];
     }
 
     if (subjects) {
@@ -46,14 +46,14 @@ module.exports.getSubjects = function (dbHelper, questionsLanguage, serverSide, 
     else {
         var subjectsCollection = dbHelper.getCollection("Subjects");
         subjectsCollection.find({
-            "questionsLanguage": questionsLanguage
+            "quizLanguage": quizLanguage
         }, {}, function (err, subjectsCursor) {
             if (err || !subjectsCursor) {
                 callback(new exceptions.GeneralError(500, "Error retrieving subjects for language: " + language + " from the database"));
                 return;
             }
             subjectsCursor.toArray(function (err, serverSubjects) {
-                serverSubjectsPerLanguages[questionsLanguage] = serverSubjects;
+                serverSubjectsPerLanguages[quizLanguage] = serverSubjects;
                 var clientSubjects = [];
                 for(var i=0; i<serverSubjects.length; i++) {
                     clientSubject = {};
@@ -61,7 +61,7 @@ module.exports.getSubjects = function (dbHelper, questionsLanguage, serverSide, 
                     clientSubject.displayNames = serverSubjects[i].displayNames;
                     clientSubjects.push(clientSubject);
                 }
-                clientSubjectsPerLanguages[questionsLanguage] = clientSubjects;
+                clientSubjectsPerLanguages[quizLanguage] = clientSubjects;
                 if (serverSide) {
                     callback(null, dbHelper, serverSubjects);
                 }
