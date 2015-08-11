@@ -1,4 +1,5 @@
 {
+  "LOADING" : "Loading...",
   "PICK_A_SUBJECT" : "Pick a Subject",
   "HOME_WELCOME_TEXT1" : "studyB4 was built as an educational private project with a vision that enables you the parent to take advantage of the time our children spend in front of their computer or mobile device and apply it also to educational purposes.",
   "HOME_WELCOME_TEXT2" : "We believe that combining educational activities together with fun increases children's sense of achievement and helps them do better in their studies.",
@@ -44,5 +45,6 @@
   "CONFIRM_REMOVE_PROFILE_TITLE" : "Remove '{{name}}'?",
   "CONFIRM_REMOVE_PROFILE_TEMPLATE" : "Are you sure you want to remove '{{name}}'?",
   "PROFILE_AUTOMATICALLY_CHANGED_TITLE" : "Profile Changed",
-  "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "Please note, profile in this device has changed to: '{{name}}'"
+  "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "Please note, profile in this device has changed to: '{{name}}'",
+  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "None (chosen by user on each quiz)"
 }

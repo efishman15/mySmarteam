@@ -1,9 +1,19 @@
 <ion-view class="padding" view-title="{{ 'PICK_A_SUBJECT' | translate }}"
 <ion-content class="padding" dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
-    <div class="list card">
+    <ion-checkbox ng-hide="subjects"
+                    style="padding-left: 60px;"
+                  ng-repeat="subject in availableSubjects.subjects track by subject.subjectId"
+                  class="padding"
+                  ng-class="{'item-checkbox-left' : $root.languages[$root.storedUser.settings.interfaceLanguage].direction == 'ltr', 'item-checkbox-right' : $root.languages[$root.storedUser.settings.interfaceLanguage].direction == 'rtl'}"
+                  ng-model="subject.checked"
+                  ng-checked="subject.checked">
+        <span>{{subject.displayNames[$root.storedUser.settings.interfaceLanguage]}}</span>
+    </ion-checkbox>
+
+    <div class="padding list card" ng-hide="!subjects">
+        <label>Subjects in this quiz:</label>
         <a
-                ng-repeat="subject in subjects" class="item item-icon-left"
-                ng-click="play(subject.subjectId)"
+                ng-repeat="subject in availableSubjects.subjects track by subject.subjectId | filter: {checked : true}" class="item item-icon-left"
                 ng-bind-html="subject.displayNames[$root.storedUser.settings.interfaceLanguage]">
         </a>
     </div>

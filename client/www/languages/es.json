@@ -1,4 +1,5 @@
 {
+  "LOADING" : "Cargando...",
   "PICK_A_SUBJECT": "Elija un Tema",
   "HOME_WELCOME_TEXT1" : "StudyB4 - un proyecto educacional con la visión que lo los padres aprovecharan del tiempo que sus hijos pasan usando la computadora y aplicarlo a metas educacionales.",
   "HOME_WELCOME_TEXT2" : "Creemos que combinando actividad educacional con juegos aumenta la sensación de logro en los chicos y les ayuda en sus estudios.",
@@ -44,5 +45,6 @@
   "CONFIRM_REMOVE_PROFILE_TITLE" : "¿Eliminar '{{name}}'",
   "CONFIRM_REMOVE_PROFILE_TEMPLATE" : "¿Seguro que desea eliminar '{{name}}'",
   "PROFILE_AUTOMATICALLY_CHANGED_TITLE" : "Perfil cambiado",
-  "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "Tenga en cuenta , el perfil de este dispositivo ha cambiado a: '{{name}}'"
+  "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "Tenga en cuenta , el perfil de este dispositivo ha cambiado a: '{{name}}'",
+  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "Ninguno (elegido por usuario en cada prueba)"
 }

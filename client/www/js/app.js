@@ -20,14 +20,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
         });
     })
 
-    .run(function ($rootScope, $ionicLoading) {
-        $rootScope.$on('loading:show', function () {
-            $ionicLoading.show({template: 'Loading...'})
-        })
-
-        $rootScope.$on('loading:hide', function () {
-            $ionicLoading.hide()
-        })
+    .run(function ($rootScope, $ionicLoading, $translate) {
     })
 
     .config(function ($httpProvider) {
@@ -142,7 +135,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
                         return LoginService.resolveAuthentication();
                     }
                 },
-                params: {subjectId: null},
+                params: {subjects: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quiz.html",

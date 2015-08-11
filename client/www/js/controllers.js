@@ -1,6 +1,6 @@
 angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnimate'])
 
-    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicPopover) {
+    .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, $ionicLoading, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicPopover) {
 
         InfoService.getLanguages(
             function (data) {
@@ -13,6 +13,19 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             UserService.setStoreUser($rootScope.storedUser);
             $translate.use(language.value);
         };
+
+        $rootScope.$on('loading:show', function () {
+            $ionicLoading.show({
+                    template: $translate.instant('LOADING'),
+                    cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction
+                }
+            )
+        })
+
+        $rootScope.$on('loading:hide', function () {
+            $ionicLoading.hide()
+        })
+
 
         $ionicPopover.fromTemplateUrl('templates/settingsPassword.html', {
             scope: $scope
@@ -178,15 +191,35 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
     .controller('PlayCtrl', function ($scope, $state, $rootScope, PlayService, ErrorService) {
 
         $scope.$on('$ionicView.enter', function () {
-            PlayService.getSubjects(
-                function (data) {
-                    $scope.subjects = data;
-                },
-                ErrorService.logErrorAndAlert)
+            PlayService.getSubjectsChooser($rootScope.session.profiles[$rootScope.session.settings.profileId],
+                function (result) {
+                    $scope.availableSubjects = result.availableSubjects;
+                    $scope.subjects = result.localSubjects;
+                }, ErrorService.logErrorAndAlert);
         });
 
-        $scope.play = function (subjectId) {
-            $state.go('app.quiz', {subjectId: subjectId}, {reload: false, inherit: true});
+        $scope.subjectChange = function (subject) {
+            if (subject.checked == true) {
+                $scope.availableSubjects.checked++;
+            }
+            else {
+                $scope.availableSubjects.checked--;
+            }
+            if ($scope.availableSubjects.checked == 0) {
+                $scope.subjects = null;
+            }
+            else {
+                $scope.subjects = [];
+                for (var i = 0; i < $scope.availableSubjects.subjects.length; i++) {
+                    if ($scope.availableSubjects.subjects[i].checked == true) {
+                        $scope.subjects.push($scope.availableSubjects.subjects[i].subjectId);
+                    }
+                }
+            }
+        }
+
+        $scope.play = function () {
+            $state.go('app.quiz', {subjects: $scope.subjects}, {reload: false, inherit: true});
         };
     })
 
@@ -194,17 +227,11 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
-            if (!$stateParams.subjectId) {
-                //Probably view is refreshed in browser - go back to pick a subject
-                $state.go('app.play', {}, {reload: false, inherit: true});
-                return;
-            }
-
             if ($rootScope.session.settings.interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileIndex].quizLanguage) {
                 $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileIndex].quizLanguage)
             }
 
-            QuizService.start($stateParams.subjectId,
+            QuizService.start($stateParams.subjects,
                 function (data) {
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
@@ -381,11 +408,11 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
             if (JSON.stringify($scope.localViewData) != JSON.stringify($rootScope.session.settings)) {
                 //Dirty settings - save to server
-                var serverData = {"settings": $scope.localViewData};
+                var postData = {"settings": $scope.localViewData};
                 if ($stateParams.password) {
-                    serverData.password = $stateParams.password;
+                    postData.password = $stateParams.password;
                 }
-                UserService.saveSettingsToServer(serverData,
+                UserService.saveSettingsToServer(postData,
                     function (data) {
                         if ($scope.localViewData.interfaceLanguage != $rootScope.session.settings.interfaceLanguage) {
                             $translate.use($scope.localViewData.interfaceLanguage);
@@ -411,7 +438,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         }
     })
 
-    .controller('ProfileCtrl', function ($scope, $state, $rootScope, $ionicPopover, $translate, $stateParams, $ionicHistory, UserService, ErrorService, $ionicPopup) {
+    .controller('ProfileCtrl', function ($scope, $state, $rootScope, $ionicPopover, $translate, $stateParams, $ionicHistory, UserService, ErrorService, $ionicPopup, PlayService) {
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
@@ -421,9 +448,11 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 if ($stateParams.mode == "edit") {
                     if ($stateParams.profile) {
                         $scope.localViewData = JSON.parse(JSON.stringify($stateParams.profile));
+                        retrieveAvailableSubjects();
                     }
                     else {
                         $state.go('app.profiles', {}, {reload: false, inherit: true});
+                        return;
                     }
                 }
                 else {
@@ -434,11 +463,63 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                         "subjects": null,
                         "sound": true
                     }
+                    retrieveAvailableSubjects();
                 }
             }
             else {
                 $state.go('app.profiles', {}, {reload: false, inherit: true});
             }
+        });
+
+        $scope.subjectList = function () {
+            if (!$scope.availableSubjects || $scope.availableSubjects.checked == 0) {
+                $scope.subjectChosenBeforeQuiz = true;
+                return $translate.instant("SUBJECTS_CHOSEN_BEFORE_QUIZ");
+            }
+            else {
+                $scope.subjectChosenBeforeQuiz = false;
+                var listOfSubjectNames = "";
+                for (var i = 0; i < $scope.availableSubjects.subjects.length; i++) {
+                    if ($scope.availableSubjects.subjects[i].checked == true) {
+                        listOfSubjectNames += $scope.availableSubjects.subjects[i].displayNames[$rootScope.storedUser.settings.interfaceLanguage] + ","
+                    }
+                }
+                return listOfSubjectNames.substring(0, listOfSubjectNames.length - 1);
+            }
+        }
+
+        function retrieveAvailableSubjects() {
+            PlayService.getSubjectsChooser($scope.localViewData,
+                function (result) {
+                    $scope.availableSubjects = result.availableSubjects;
+                    $scope.localViewData.subjects = result.localSubjects;
+                }, ErrorService.logErrorAndAlert);
+        }
+
+        $scope.subjectChange = function (subject) {
+            if (subject.checked == true) {
+                $scope.availableSubjects.checked++;
+            }
+            else {
+                $scope.availableSubjects.checked--;
+            }
+            if ($scope.availableSubjects.checked == 0) {
+                $scope.localViewData.subjects = null;
+            }
+            else {
+                $scope.localViewData.subjects = [];
+                for (var i = 0; i < $scope.availableSubjects.subjects.length; i++) {
+                    if ($scope.availableSubjects.subjects[i].checked == true) {
+                        $scope.localViewData.subjects.push($scope.availableSubjects.subjects[i].subjectId);
+                    }
+                }
+            }
+        }
+
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.languagePopover.remove();
+            $scope.subjectsPopover.remove();
         });
 
         $scope.getTitle = function () {
@@ -469,14 +550,32 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
         $scope.closeLanguagePopover = function (language) {
             $scope.languagePopover.hide();
+            retrieveAvailableSubjects();
         };
 
         $scope.goBack = function () {
             $ionicHistory.goBack();
         }
 
-        $scope.subjectList = function () {
-            return "No Subjects...";
+        //-------------------------------------------------------
+        // Choose Subjects Popover
+        //-------------------------------------------------------
+        $ionicPopover.fromTemplateUrl('templates/chooseSubjects.html', {
+            scope: $scope
+        }).then(function (subjectsPopover) {
+            $scope.subjectsPopover = subjectsPopover;
+        });
+
+        $scope.openSubjectsPopover = function ($event) {
+            $scope.subjectsPopover.show($event);
+        };
+
+        $scope.closeSubjectsPopover = function () {
+            $scope.subjectsPopover.hide();
+        };
+
+        $scope.goBack = function () {
+            $ionicHistory.goBack();
         }
 
         //Fill the years combo
@@ -486,14 +585,14 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             $scope.years.push(i);
         }
 
-        $scope.submitProfile = function () {
+        $scope.setProfile = function () {
             if ($stateParams.mode == "add" || ($stateParams.mode == "edit" && JSON.stringify($stateParams.profile) != JSON.stringify($scope.localViewData))) {
-                var serverData = {"profile": $scope.localViewData};
+                var postData = {"profile": $scope.localViewData};
                 if ($stateParams.password) {
-                    serverData.password = $stateParams.password;
+                    postData.password = $stateParams.password;
                 }
                 //Add/update the new/updated profile to the server and in the local $rootScope
-                UserService.setProfile(serverData,
+                UserService.setProfile(postData,
                     function (profile) {
                         $rootScope.session.profiles[profile.id] = profile;
                         $scope.goBack();
@@ -516,20 +615,20 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
             confirmPopup.then(function (res) {
                 if (res) {
-                    var serverData = {"profileId": $scope.localViewData.id};
+                    var postData = {"profileId": $scope.localViewData.id};
                     if ($stateParams.password) {
-                        serverData.password = $stateParams.password;
+                        postData.password = $stateParams.password;
                     }
-                    UserService.removeProfile(serverData,
+                    UserService.removeProfile(postData,
                         function (data) {
                             delete $rootScope.session.profiles[$scope.localViewData.id];
                             //If deleting the current session's profile - point to the first profile left
-                            if ($rootScope.session.settings.profileId == serverData.profileId) {
+                            if ($rootScope.session.settings.profileId == postData.profileId) {
                                 $rootScope.session.settings.profileId = Object.keys($rootScope.session.profiles)[0];
                                 $ionicPopup.alert({
                                     cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
                                     title: $translate.instant("PROFILE_AUTOMATICALLY_CHANGED_TITLE"),
-                                    template: $translate.instant("PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE",{name: $rootScope.session.profiles[$rootScope.session.settings.profileId].name}),
+                                    template: $translate.instant("PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE", {name: $rootScope.session.profiles[$rootScope.session.settings.profileId].name}),
                                     okText: $translate.instant("OK")
                                 });
                             }
@@ -548,4 +647,6 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 return false;
             }
         }
-    });
+    }
+)
+;

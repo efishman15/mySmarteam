@@ -39,16 +39,16 @@ angular.module('studyB4.services', [])
             )
         };
 
-        service.saveSettingsToServer = function (serverData, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "settings", serverData, callbackOnSuccess, callbackOnError);
+        service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError);
         }
 
-        service.setProfile = function (serverData, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "setProfile", serverData, callbackOnSuccess, callbackOnError);
+        service.setProfile = function (postData, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "setProfile", postData, callbackOnSuccess, callbackOnError);
         }
 
-        service.removeProfile = function (serverData, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "removeProfile", serverData, callbackOnSuccess, callbackOnError);
+        service.removeProfile = function (postData, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "removeProfile", postData, callbackOnSuccess, callbackOnError);
         }
 
         return service;
@@ -259,9 +259,35 @@ angular.module('studyB4.services', [])
 
         var path = 'quiz/';
 
-        service.getSubjects = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "subjects", null, callbackOnSuccess, callbackOnError)
+        service.getSubjects = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "subjects", postData, callbackOnSuccess, callbackOnError)
         };
+
+        service.getSubjectsChooser = function(profile, callbackOnSuccess, callbackOnError) {
+            this.getSubjects({"quizLanguage": profile.quizLanguage},
+                function (subjects) {
+                    var availableSubjects = {"checked": 0, "subjects": subjects};
+                    var localSubjects = [];
+                    if (profile.subjects && profile.subjects.length > 0) {
+                        for (var i = 0; i < availableSubjects.subjects.length; i++) {
+                            availableSubjects.subjects[i].checked = false;
+                            for (var j = 0; j < profile.subjects.length; j++) {
+                                if (availableSubjects.subjects[i].subjectId == profile.subjects[j]) {
+                                    availableSubjects.subjects[i].checked = true;
+                                    availableSubjects.checked++;
+                                    localSubjects.push(availableSubjects.subjects[i].subjectId);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (callbackOnSuccess) {
+                        callbackOnSuccess({"availableSubjects" : availableSubjects, "localSubjects" : localSubjects})
+                    }
+                }
+                , callbackOnError
+            );
+        }
 
         return service;
     })

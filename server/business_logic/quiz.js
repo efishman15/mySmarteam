@@ -9,6 +9,8 @@ var generalUtils = require('../utils/general');
 module.exports.subjects = function (req, res, next) {
 
     var token = req.headers.authorization;
+    var postData = req.body;
+
     var operations = [
 
         //Connect
@@ -18,7 +20,7 @@ module.exports.subjects = function (req, res, next) {
 
         //get subjects
         function (dbHelper, session, callback) {
-            dal.getSubjects(dbHelper, session.profiles[session.settings.profileId].quizLanguage, false, callback);
+            dal.getSubjects(dbHelper, postData.quizLanguage, false, callback);
         },
 
         //Close the db
@@ -40,62 +42,93 @@ module.exports.subjects = function (req, res, next) {
 
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
-    var quizPostData = req.body;
+    var postData = req.body;
 
     var operations = [
 
-        //Connect
-        function (callback) {
-            sessionUtils.getSession(token, callback);
-        },
+            //Connect
+            function (callback) {
+                sessionUtils.getSession(token, callback);
+            },
 
-        //Init quiz
-        function (dbHelper, session, callback) {
-            var quiz = {serverData: {previousQuestions: []}, clientData: {}};
+            //Init quiz
+            function (dbHelper, session, callback) {
+                var quiz = {serverData: {previousQuestions: []}, clientData: {}};
 
-            quiz.clientData.totalQuestions = 5;
-            quiz.clientData.currentQuestionIndex = 0;
-            quiz.clientData.finished = false;
-            quiz.serverData.score = 0;
-            quiz.subjectId = quizPostData.subjectId;
+                quiz.clientData.totalQuestions = 5;
+                quiz.clientData.currentQuestionIndex = 0;
+                quiz.clientData.finished = false;
+                quiz.serverData.score = 0;
 
-            //Attach the selected subject to the quiz
-            dal.getSubjects(dbHelper, session.profiles[session.settings.profileIndex].quizLanguage, true, function (err, dbHelper, subjects) {
-                if (err) {
-                    callback(new excptions.GeneralError(424, "Error retrieving subjects"));
+                var quizSubjects;
+                if (postData.subjects) {
+                    quizSubjects = postData.subjects;
+                }
+                else if (session.profiles[session.settings.profileId].subjects && session.profiles[session.settings.profileId].subjects.length > 0) {
+                    quizSubjects = session.profiles[session.settings.profileId].subjects
+                }
+
+                if (!quizSubjects || quizSubjects.length == 0) {
+                    callback(new excptions.GeneralError(424, "No subjects sent and current profile does not have subjects, admin: " + session.adminId + ", profile: " + session.profiles[session.settings.profileId].name));
                     return;
                 }
-                for(var i=0; i<subjects.length; i++) {
-                    if (subjects[i].subjectId == quizPostData.subjectId) {
-                        quiz.subject = subjects[i];
-                        break;
+
+                //Attach the selected subject to the quiz
+                dal.getSubjects(dbHelper, session.profiles[session.settings.profileIndex].quizLanguage, true, function (err, dbHelper, subjects) {
+                    if (err) {
+                        callback(new excptions.GeneralError(424, "Error retrieving subjects for quiz language: " + session.profiles[session.settings.profileIndex].quizLanguage));
+                        return;
                     }
-                }
-            });
 
-            session.quiz = quiz;
+                    quizTopics = {};
+                    quiz.subjects = [];
+                    for (var i = 0; i < subjects.length; i++) {
+                        for (var j = 0; j < quizSubjects.length; j++) {
+                            if (subjects[i].subjectId == quizSubjects[j]) {
+                                for(var k=0; k<subjects[i].topics.length; k++) {
+                                    quizTopics["" + subjects[i].topics[k] + ""] = subjects[i].topics[k];
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    var topicsArray = [];
+                    for (var key in quizTopics) {
+                        topicsArray .push(quizTopics[key]);
+                    }
 
-            callback(null, dbHelper, session)
-        },
+                    if (topicsArray == 0) {
+                        callback(new excptions.GeneralError(424, "The subjects sent: " + JSON.stringify(quizSubjects) + " do not match subjects in the quiz language, admin: " + session.adminId + ", profile: " + session.profiles[session.settings.profileId].name));
+                        return;
+                    }
 
-        //Count number of questions excluding the previous questions
-        getQuestionsCount,
+                    quiz.topics = topicsArray;
+                    session.quiz = quiz;
 
-        //Get the next question for the quiz
-        getNextQuestion,
+                    callback(null, dbHelper, session)
 
-        //Sets the direction of the question
-        setQuestionDirection,
+                })
+            },
 
-        //Stores the session with the quiz in the db
-        sessionUtils.storeSession,
+            //Count number of questions excluding the previous questions
+            getQuestionsCount,
 
-        //Close the db
-        function (dbHelper, session, callback) {
-            dbHelper.close();
-            callback(null, session.quiz.clientData);
-        }
-    ];
+            //Get the next question for the quiz
+            getNextQuestion,
+
+            //Sets the direction of the question
+            setQuestionDirection,
+
+            //Stores the session with the quiz in the db
+            sessionUtils.storeSession,
+
+            //Close the db
+            function (dbHelper, session, callback) {
+                dbHelper.close();
+                callback(null, session.quiz.clientData);
+            }
+        ]
+        ;
 
     async.waterfall(operations, function (err, quizClientData) {
         if (!err) {
@@ -105,7 +138,8 @@ module.exports.start = function (req, res, next) {
             res.send(err.status, err);
         }
     })
-};
+}
+;
 
 module.exports.answer = function (req, res, next) {
     var token = req.headers.authorization;
@@ -213,8 +247,9 @@ module.exports.nextQuestion = function (req, res, next) {
 //Count questions collection in the selected subject (its topics)
 function getQuestionsCount(dbHelper, session, callback) {
     var questionsCollection = dbHelper.getCollection("Questions");
-    questionsCollection.count({"_id": {"$nin": session.quiz.serverData.previousQuestions}, "topicId": {"$in": session.quiz.subject.topics}
-}, function (err, count) {
+    questionsCollection.count({
+        "_id": {"$nin": session.quiz.serverData.previousQuestions}, "topicId": {"$in": session.quiz.topics}
+    }, function (err, count) {
         if (err) {
             callback(new excptions.GeneralError(500, "Error retrieving number of questions from database"));
             return;
@@ -230,7 +265,7 @@ function getNextQuestion(dbHelper, session, count, callback) {
     var questionsCollection = dbHelper.getCollection("Questions");
     questionsCollection.findOne({
         "_id": {"$nin": session.quiz.serverData.previousQuestions},
-        "topicId": {"$in": session.quiz.subject.topics}
+        "topicId": {"$in": session.quiz.topics}
     }, {skip: skip}, function (err, question) {
         if (err || !question) {
             callback(new excptions.GeneralError(500, "Error retrieving next question from database"));

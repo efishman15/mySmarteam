@@ -1,4 +1,5 @@
 {
+  "LOADING" : "אנא המתן...",
   "PICK_A_SUBJECT": "בחר נושא",
   "HOME_WELCOME_TEXT1" : "פרוייקט studyB4 הוקם כמיזם חינוכי פרטי בראייה המאפשרת לך ההורה לנצל את זמן המחשב של הילד גם לפעילויות חינוכיות.",
   "HOME_WELCOME_TEXT2" : "אנו מאמינים ששילוב פעילות חינוכית כחלק מהזמן הניכר שילדים מבלים כיום מול המחשב או הסלולרי יאפשר לשפר את הישגי הילד בחיים בכלל ובלימודים בפרט.",
@@ -44,5 +45,6 @@
   "CONFIRM_REMOVE_PROFILE_TITLE" : "הסר את '{{name}}'?",
   "CONFIRM_REMOVE_PROFILE_TEMPLATE" : "האם אתה בטוח שברצונך להסיר את '{{name}}'?",
   "PROFILE_AUTOMATICALLY_CHANGED_TITLE" : "פרופיל השתנה",
-  "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "שים לב, הפרופיל במכשיר זה השתנה ל- '{{name}}'"
+  "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "שים לב, הפרופיל במכשיר זה השתנה ל- '{{name}}'",
+  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "אין (נבחר על ידי משתמש בכל חידון)"
 }

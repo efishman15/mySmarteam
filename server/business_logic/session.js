@@ -83,7 +83,7 @@ module.exports.storeSession = storeSession;
 // saveSettings
 //----------------------------------------------------
 module.exports.saveSettings = function (req, res, next) {
-    var serverData = req.body;
+    var postData = req.body;
     var token = req.headers.authorization;
 
     var operations = [
@@ -98,12 +98,12 @@ module.exports.saveSettings = function (req, res, next) {
 
         //Validate that settings can be saved - if are password protected
         function (dbHelper, session, callback) {
-            checkPassword(dbHelper, session, serverData.password, callback);
+            checkPassword(dbHelper, session, postData.password, callback);
         },
 
         //Update the session in db
         function (dbHelper, session, callback) {
-            session.settings = serverData.settings;
+            session.settings = postData.settings;
             storeSession(dbHelper, session, callback);
         },
 
@@ -113,7 +113,7 @@ module.exports.saveSettings = function (req, res, next) {
             adminsCollection.findAndModify({"_id": ObjectId(session.adminId)}, {},
                 {
                     $set: {
-                        "settings": serverData.settings
+                        "settings": postData.settings
                     }
                 }, {}, function (err, admin) {
 
@@ -147,7 +147,7 @@ module.exports.saveSettings = function (req, res, next) {
 // setProfile
 //----------------------------------------------------
 module.exports.setProfile = function (req, res, next) {
-    var serverData = req.body;
+    var postData = req.body;
     var token = req.headers.authorization;
 
     var operations = [
@@ -162,16 +162,16 @@ module.exports.setProfile = function (req, res, next) {
 
         //Validate that settings can be saved - if are password protected
         function (dbHelper, session, callback) {
-            checkPassword(dbHelper, session, serverData.password, callback);
+            checkPassword(dbHelper, session, postData.password, callback);
         },
 
         //Update the session with the new profile
         function (dbHelper, session, callback) {
-            if (!serverData.profile.id) {
+            if (!postData.profile.id) {
                 //mode=add
-                serverData.profile.id = uuid.v1();
+                postData.profile.id = uuid.v1();
             }
-            session.profiles[serverData.profile.id] = serverData.profile;
+            session.profiles[postData.profile.id] = postData.profile;
             storeSession(dbHelper, session, callback);
         },
 
@@ -186,7 +186,7 @@ module.exports.setProfile = function (req, res, next) {
 
     async.waterfall(operations, function (err) {
         if (!err) {
-            res.json(serverData.profile);
+            res.json(postData.profile);
         }
         else {
             res.send(err.status, err);
@@ -198,7 +198,7 @@ module.exports.setProfile = function (req, res, next) {
 // removeProfile
 //----------------------------------------------------
 module.exports.removeProfile = function (req, res, next) {
-    var serverData = req.body;
+    var postData = req.body;
     var token = req.headers.authorization;
 
     var operations = [
@@ -213,25 +213,25 @@ module.exports.removeProfile = function (req, res, next) {
 
         //Validate that settings can be saved - if are password protected
         function (dbHelper, session, callback) {
-            checkPassword(dbHelper, session, serverData.password, callback);
+            checkPassword(dbHelper, session, postData.password, callback);
         },
 
         //Remove this profile from session
         function (dbHelper, session, callback) {
             if (Object.keys(session.profiles).length == 1) {
-                console.log("trying to delete the last profile of admin: " + session.adminId + ", profile Id: " + serverData.profileId);
+                console.log("trying to delete the last profile of admin: " + session.adminId + ", profile Id: " + postData.profileId);
                 callback(new exceptions.GeneralError(500));
                 return;
             }
-            if (!session.profiles[serverData.profileId]) {
-                console.log("trying to delete a non existing profile of admin: " + session.adminId + ", profile Id: " + serverData.profileId);
+            if (!session.profiles[postData.profileId]) {
+                console.log("trying to delete a non existing profile of admin: " + session.adminId + ", profile Id: " + postData.profileId);
                 callback(new exceptions.GeneralError(500));
                 return;
             }
             else {
-                delete session.profiles[serverData.profileId];
+                delete session.profiles[postData.profileId];
                 //If deleting the current session's profile - point to the first profile left
-                if (session.settings.profileId == serverData.profileId) {
+                if (session.settings.profileId == postData.profileId) {
                     session.settings.profileId = Object.keys(session.profiles)[0];
                 }
             }
@@ -249,7 +249,7 @@ module.exports.removeProfile = function (req, res, next) {
 
     async.waterfall(operations, function (err) {
         if (!err) {
-            res.json(serverData.profile);
+            res.json(postData.profile);
         }
         else {
             res.send(err.status, err);
