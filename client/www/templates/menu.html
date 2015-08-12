@@ -10,7 +10,7 @@
 <ion-side-menus enable-menu-with-back-views="true"
                 dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
     <ion-side-menu-content>
-        <ion-nav-bar class="bar-stable" ng-hide="!$root.session">
+        <ion-nav-bar class="bar-stable" align-title="center" ng-hide="!$root.session">
             <ion-nav-back-button>
             </ion-nav-back-button>
             <ion-nav-buttons side="{{$root.languages[$root.storedUser.settings.interfaceLanguage].align}}">

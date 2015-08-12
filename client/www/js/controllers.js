@@ -190,9 +190,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
     .controller('PlayCtrl', function ($scope, $state, $rootScope, PlayService, ErrorService) {
 
-        $scope.welcomeData = {"name": $rootScope.session.profiles[$rootScope.session.settings.profileId].name};
-
         $scope.$on('$ionicView.enter', function () {
+            $scope.welcomeData = {"name": $rootScope.session.profiles[$rootScope.session.settings.profileId].name};
             PlayService.getSubjectsChooser($rootScope.session.profiles[$rootScope.session.settings.profileId],
                 function (result) {
                     $scope.availableSubjects = result.availableSubjects;

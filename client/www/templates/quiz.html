@@ -19,7 +19,7 @@
                     animationend="buttonAnimationEnded">
             </button>
         </div>
-        <div class="bar bar-footer bar-light">
+        <div class="bar bar-footer bar-light" dir="{{$root.languages[$root.session.profiles[$root.session.settings.profileId].quizLanguage].direction}}">
             <span>{{ 'QUESTION' | translate}} {{quiz.currentQuestionIndex}}</span>
         </div>
         <audio id="audioSound" autoplay src=""></audio>

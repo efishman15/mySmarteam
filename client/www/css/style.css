@@ -60,8 +60,9 @@ button.item.quiz-answer {
 }
 
 .question-text {
-    padding-top: 40px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 20px;
 }
 
 .translate-cloak {

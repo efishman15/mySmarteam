@@ -68,7 +68,7 @@ function storeSession(dbHelper, session, callback) {
         function (err, updated) {
             if (err) {
                 //Session does not exist - stop the call chain
-                console.log("error finding session with token: " + token, "error: " + err);
+                console.log("error finding session with token: " + session._id, "error: " + err);
                 callback(new exceptions.GeneralError(401, "Session expired"));
                 return;
             }

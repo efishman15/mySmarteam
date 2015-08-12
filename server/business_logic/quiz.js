@@ -73,42 +73,32 @@ module.exports.start = function (req, res, next) {
                     return;
                 }
 
-                //Attach the selected subject to the quiz
+                //Attach the selected subjects to the quiz
                 dal.getSubjects(dbHelper, session.profiles[session.settings.profileId].quizLanguage, true, function (err, dbHelper, subjects) {
                     if (err) {
                         callback(new excptions.GeneralError(424, "Error retrieving subjects for quiz language: " + session.profiles[session.settings.profileId].quizLanguage));
                         return;
                     }
 
-                    quizTopics = {};
                     quiz.subjects = [];
                     for (var i = 0; i < subjects.length; i++) {
                         for (var j = 0; j < quizSubjects.length; j++) {
                             if (subjects[i].subjectId == quizSubjects[j]) {
-                                for(var k=0; k<subjects[i].topics.length; k++) {
-                                    quizTopics["" + subjects[i].topics[k] + ""] = subjects[i].topics[k];
-                                }
+                                quiz.subjects.push({"subjectId": subjects[i].subjectId, "topics": subjects[i].topics})
                                 break;
                             }
                         }
                     }
-                    var topicsArray = [];
-                    for (var key in quizTopics) {
-                        topicsArray .push(quizTopics[key]);
-                    }
 
-                    if (topicsArray == 0) {
-                        callback(new excptions.GeneralError(424, "The subjects sent: " + JSON.stringify(quizSubjects) + " do not match subjects in the quiz language, admin: " + session.adminId + ", profile: " + session.profiles[session.settings.profileId].name));
-                        return;
-                    }
-
-                    quiz.topics = topicsArray;
                     session.quiz = quiz;
 
                     callback(null, dbHelper, session)
 
                 })
             },
+
+            //Pick a random subject from the avilable subjects in this quiz and prepare the query
+            prepareQuestionCriteria,
 
             //Count number of questions excluding the previous questions
             getQuestionsCount,
@@ -238,6 +228,9 @@ module.exports.nextQuestion = function (req, res, next) {
             sessionUtils.getSession(token, callback);
         },
 
+        //Pick a random subject from the avilable subjects in this quiz and prepare the query
+        prepareQuestionCriteria,
+
         //Count number of questions excluding the previous questions
         getQuestionsCount,
 
@@ -268,28 +261,24 @@ module.exports.nextQuestion = function (req, res, next) {
 };
 
 //Count questions collection in the selected subject (its topics)
-function getQuestionsCount(dbHelper, session, callback) {
+function getQuestionsCount(dbHelper, session, questionCriteria, callback) {
+
     var questionsCollection = dbHelper.getCollection("Questions");
-    questionsCollection.count({
-        "_id": {"$nin": session.quiz.serverData.previousQuestions}, "topicId": {"$in": session.quiz.topics}
-    }, function (err, count) {
+    questionsCollection.count(questionCriteria, function (err, count) {
         if (err) {
             callback(new excptions.GeneralError(500, "Error retrieving number of questions from database"));
             return;
         }
 
-        callback(null, dbHelper, session, count);
+        callback(null, dbHelper, session, questionCriteria, count);
     })
 };
 
 //Get the next question
-function getNextQuestion(dbHelper, session, count, callback) {
+function getNextQuestion(dbHelper, session, questionCriteria, count, callback) {
     var skip = random.rnd(0, count - 1);
     var questionsCollection = dbHelper.getCollection("Questions");
-    questionsCollection.findOne({
-        "_id": {"$nin": session.quiz.serverData.previousQuestions},
-        "topicId": {"$in": session.quiz.topics}
-    }, {skip: skip}, function (err, question) {
+    questionsCollection.findOne(questionCriteria, {skip: skip}, function (err, question) {
         if (err || !question) {
             callback(new excptions.GeneralError(500, "Error retrieving next question from database"));
             return;
@@ -363,3 +352,26 @@ function setQuestionDirection(dbHelper, session, callback) {
 
     })
 };
+
+function prepareQuestionCriteria(dbHelper, session, callback) {
+    var randomSubject = random.rnd(0, session.quiz.subjects.length - 1);
+
+    var questionCriteria = {
+        "_id": {"$nin": session.quiz.serverData.previousQuestions},
+        "topicId": {
+            "$in": session.quiz.subjects[randomSubject].topics
+        }
+    };
+
+    if (session.profiles[session.settings.profileId].yearOfBirth) {
+        var currentYear = new Date().getFullYear();
+        var age = currentYear - session.profiles[session.settings.profileId].yearOfBirth;
+        if (age > 0) {
+            questionCriteria.minAge = {$lte : age}
+            questionCriteria.maxAge = {$gte : age}
+        }
+    }
+
+    console.log(JSON.stringify(questionCriteria));
+    callback(null, dbHelper, session, questionCriteria);
+}
