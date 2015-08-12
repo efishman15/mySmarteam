@@ -4,6 +4,7 @@ var supportedLanguages = {
         "flag": "/images/languages/unitedstates.jpg",
         "direction": "ltr",
         "align": "left",
+        "oppositeAlign": "right",
         "displayNames": {"en": "English", "he": "אנגלית", "es": "Inglés", "ru": "Английский"}
     },
     "he": {
@@ -11,6 +12,7 @@ var supportedLanguages = {
         "flag": "/images/languages/israel.jpg",
         "direction": "rtl",
         "align": "right",
+        "oppositeAlign": "left",
         "displayNames": {"en": "Hebrew", "he": "עברית", "es": "Hebreo", "ru": "Иврит"}
     },
     "ru": {
@@ -18,6 +20,7 @@ var supportedLanguages = {
         "flag": "/images/languages/russia.jpg",
         "direction": "ltr",
         "align": "left",
+        "oppositeAlign": "right",
         "displayNames": {"en": "Russian", "he": "רוסית", "es": "Ruso", "ru": "Русский"}
     },
     "es": {
@@ -25,6 +28,7 @@ var supportedLanguages = {
         "flag": "/images/languages/spain.jpg",
         "direction": "ltr",
         "align": "left",
+        "oppositeAlign": "right",
         "displayNames": {"en": "Spanish", "he": "ספרדית", "es": "Español", "ru": "Испанский"}
     }
 }

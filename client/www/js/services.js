@@ -47,6 +47,10 @@ angular.module('studyB4.services', [])
             ApiService.post(path, "setProfile", postData, callbackOnSuccess, callbackOnError);
         }
 
+        service.toggleSound = function (callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "toggleSound", null, callbackOnSuccess, callbackOnError);
+        }
+
         service.removeProfile = function (postData, callbackOnSuccess, callbackOnError) {
             ApiService.post(path, "removeProfile", postData, callbackOnSuccess, callbackOnError);
         }
@@ -253,7 +257,7 @@ angular.module('studyB4.services', [])
     })
 
     //Play Service
-    .factory('PlayService', function ($http, ApiService) {
+    .factory('PlayService', function ($http, $rootScope, ApiService, $translate) {
 
         var service = this;
 
@@ -263,6 +267,20 @@ angular.module('studyB4.services', [])
             return ApiService.post(path, "subjects", postData, callbackOnSuccess, callbackOnError)
         };
 
+        service.subjectList = function (availableSubjects) {
+            if (!availableSubjects || availableSubjects.checked == 0) {
+                return $translate.instant("SUBJECTS_CHOSEN_BEFORE_QUIZ");
+            }
+            else {
+                var listOfSubjectNames = "";
+                for (var i = 0; i < availableSubjects.subjects.length; i++) {
+                    if (availableSubjects.subjects[i].checked == true) {
+                        listOfSubjectNames += availableSubjects.subjects[i].displayNames[$rootScope.storedUser.settings.interfaceLanguage] + ","
+                    }
+                }
+                return listOfSubjectNames.substring(0, listOfSubjectNames.length - 1);
+            }
+        }
         service.getSubjectsChooser = function(profile, callbackOnSuccess, callbackOnError) {
             this.getSubjects({"quizLanguage": profile.quizLanguage},
                 function (subjects) {
@@ -299,8 +317,8 @@ angular.module('studyB4.services', [])
 
         var path = 'quiz/';
 
-        service.start = function (subjectId, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "start", {"subjectId": subjectId}, callbackOnSuccess, callbackOnError)
+        service.start = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "start", postData, callbackOnSuccess, callbackOnError)
         };
 
         service.answer = function (answer, callbackOnSuccess, callbackOnError) {

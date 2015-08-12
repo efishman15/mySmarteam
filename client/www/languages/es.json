@@ -23,7 +23,7 @@
   "MAXIMUM_CHARACTERS" : "Este campo está limitado a {{maximum}} caracteres de longitud",
   "PASSWORDS_DO_NOT_MATCH" : "Las contraseñas no coinciden",
   "INVALID_EMAIL_OR_PASSWORD" : "Correo electrónico o contraseña no válidos",
-  "SCORE" : "Puntuación",
+  "SCORE" : "Estrellas",
   "QUESTION" : "Pregunta",
   "OK" : "OK",
   "CANCEL" : "Cancelar",
@@ -46,5 +46,8 @@
   "CONFIRM_REMOVE_PROFILE_TEMPLATE" : "¿Seguro que desea eliminar '{{name}}'",
   "PROFILE_AUTOMATICALLY_CHANGED_TITLE" : "Perfil cambiado",
   "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "Tenga en cuenta , el perfil de este dispositivo ha cambiado a: '{{name}}'",
-  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "Ninguno (elegido por usuario en cada prueba)"
+  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "Ninguno (elegido por usuario en cada prueba)",
+  "WELCOME_NAME" : "Bienvenida {{name}}",
+  "SUBJECTS_IN_THIS_QUIZ" : "Los sujetos en esta prueba",
+  "START" : "Empezar"
 }

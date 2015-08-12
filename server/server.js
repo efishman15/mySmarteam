@@ -45,6 +45,7 @@ app.post('/users/logout', isAuthenticated, credentials.logout);
 app.post('/users/confirmPassword', sessionUtils.confirmPassword);
 app.post('/users/settings', sessionUtils.saveSettings);
 app.post('/users/setProfile', sessionUtils.setProfile);
+app.post('/users/toggleSound', sessionUtils.toggleSound);
 app.post('/users/removeProfile', sessionUtils.removeProfile);
 
 //API's that do NOT require authentication

@@ -23,7 +23,7 @@
   "MAXIMUM_CHARACTERS" : "This field is limited to {{maximum}} characters long",
   "PASSWORDS_DO_NOT_MATCH" : "Passwords do not match",
   "INVALID_EMAIL_OR_PASSWORD" : "Invalid email or password",
-  "SCORE" : "Score",
+  "SCORE" : "Stars",
   "QUESTION" : "Question",
   "OK" : "OK",
   "CANCEL" : "Cancel",
@@ -46,5 +46,8 @@
   "CONFIRM_REMOVE_PROFILE_TEMPLATE" : "Are you sure you want to remove '{{name}}'?",
   "PROFILE_AUTOMATICALLY_CHANGED_TITLE" : "Profile Changed",
   "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "Please note, profile in this device has changed to: '{{name}}'",
-  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "None (chosen by user on each quiz)"
+  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "None (chosen by user on each quiz)",
+  "WELCOME_NAME" : "Welcome {{name}}",
+  "SUBJECTS_IN_THIS_QUIZ" : "Subjects in this quiz",
+  "START" : "Start"
 }

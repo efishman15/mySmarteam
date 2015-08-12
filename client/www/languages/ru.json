@@ -24,7 +24,7 @@
   "MAXIMUM_CHARACTERS" : "Это поле ограничено длиной {{maximum}} символов",
   "PASSWORDS_DO_NOT_MATCH" : "Пароли не совпадают",
   "INVALID_EMAIL_OR_PASSWORD" : "Неправильный адрес электронной почты или пароль",
-  "SCORE" : "Гол",
+  "SCORE" : "Звезды",
   "QUESTION" : "Вопрос",
   "OK" : "OK",
   "CANCEL" : "Отменить",
@@ -47,5 +47,8 @@
   "CONFIRM_REMOVE_PROFILE_TEMPLATE" : "Вы уверены, что хотите удалить '{{name}}'?",
   "PROFILE_AUTOMATICALLY_CHANGED_TITLE" : "Профиль Изменено",
   "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "Пожалуйста, обратите внимание, что профиль данного устройства была изменена на : '{{name}}'",
-  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "Нет (выбранные пользователем на каждой викторине)"
+  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "Нет (выбранные пользователем на каждой викторине)",
+  "WELCOME_NAME" : "Добро пожаловать {{name}}",
+  "SUBJECTS_IN_THIS_QUIZ" : "Предметы в этой викторине",
+  "START" : "Начните"
 }

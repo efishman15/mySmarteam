@@ -74,9 +74,9 @@ module.exports.start = function (req, res, next) {
                 }
 
                 //Attach the selected subject to the quiz
-                dal.getSubjects(dbHelper, session.profiles[session.settings.profileIndex].quizLanguage, true, function (err, dbHelper, subjects) {
+                dal.getSubjects(dbHelper, session.profiles[session.settings.profileId].quizLanguage, true, function (err, dbHelper, subjects) {
                     if (err) {
-                        callback(new excptions.GeneralError(424, "Error retrieving subjects for quiz language: " + session.profiles[session.settings.profileIndex].quizLanguage));
+                        callback(new excptions.GeneralError(424, "Error retrieving subjects for quiz language: " + session.profiles[session.settings.profileId].quizLanguage));
                         return;
                     }
 
@@ -181,7 +181,19 @@ module.exports.answer = function (req, res, next) {
         },
 
         function (dbHelper, session, callback) {
-            if (result.correct) {
+
+            var store = false;
+            if (session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
+                //Update total score in profile
+                session.profiles[session.settings.profileId].score += session.quiz.serverData.score;
+                store = true;
+            }
+            else if (result.correct == true) {
+                //store temporary score of quiz
+                store = true;
+            }
+
+            if (store == true) {
                 sessionUtils.storeSession(dbHelper, session, callback);
             }
             else {
@@ -189,11 +201,22 @@ module.exports.answer = function (req, res, next) {
             }
         },
 
-        //Close the db
+        //Check to save the profiles into the Admin as well - when quiz is finished
         function (dbHelper, session, callback) {
+            if (session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
+                sessionUtils.setAdminProfiles(dbHelper, session, callback);
+            }
+            else {
+                callback(null, dbHelper);
+            }
+        },
+
+        //Close the db
+        function (dbHelper, callback) {
             dbHelper.close();
             callback(null, result);
         }
+
     ];
 
     async.waterfall(operations, function (err, result) {
@@ -254,7 +277,7 @@ function getQuestionsCount(dbHelper, session, callback) {
             callback(new excptions.GeneralError(500, "Error retrieving number of questions from database"));
             return;
         }
-        ;
+
         callback(null, dbHelper, session, count);
     })
 };
@@ -333,7 +356,7 @@ function setQuestionDirection(dbHelper, session, callback) {
             session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
         }
         else {
-            session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(session.profiles[session.settings.profileIndex].quizLanguage);
+            session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(session.profiles[session.settings.profileId].quizLanguage);
         }
 
         callback(null, dbHelper, session);

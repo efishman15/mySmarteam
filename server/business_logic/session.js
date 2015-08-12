@@ -195,6 +195,48 @@ module.exports.setProfile = function (req, res, next) {
 };
 
 //----------------------------------------------------
+// setProfile
+//----------------------------------------------------
+module.exports.toggleSound = function (req, res, next) {
+    var token = req.headers.authorization;
+
+    var operations = [
+
+        //Connect to the database
+        dal.connect,
+
+        //Retrieve the session
+        function (dbHelper, callback) {
+            retrieveSession(dbHelper, token, callback);
+        },
+
+        //Update the session after toggle sound
+        function (dbHelper, session, callback) {
+            session.profiles[session.settings.profileId].sound = !session.profiles[session.settings.profileId].sound
+            storeSession(dbHelper, session, callback);
+        },
+
+        setAdminProfiles,
+
+        //Close the db
+        function (dbHelper, callback) {
+            dbHelper.close();
+            callback(null);
+        }
+    ];
+
+    async.waterfall(operations, function (err) {
+        if (!err) {
+            res.send(200, "OK");
+        }
+        else {
+            res.send(err.status, err);
+        }
+    });
+};
+
+
+//----------------------------------------------------
 // removeProfile
 //----------------------------------------------------
 module.exports.removeProfile = function (req, res, next) {
@@ -339,3 +381,4 @@ function setAdminProfiles(dbHelper, session, callback) {
             callback(null, dbHelper);
         })
 }
+module.exports.setAdminProfiles = setAdminProfiles;

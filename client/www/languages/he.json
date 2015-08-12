@@ -23,7 +23,7 @@
   "MAXIMUM_CHARACTERS" : "שדה זה מוגבל ל- {{maximum}} תווים בלבד",
   "PASSWORDS_DO_NOT_MATCH" : "הסיסמאות אינן תואמות",
   "INVALID_EMAIL_OR_PASSWORD" : "דואר אלקטרוני או סיסמא שגויה",
-  "SCORE" : "ציון",
+  "SCORE" : "כוכבים",
   "QUESTION" : "שאלה",
   "OK" : "אישור",
   "CANCEL" : "ביטול",
@@ -46,5 +46,8 @@
   "CONFIRM_REMOVE_PROFILE_TEMPLATE" : "האם אתה בטוח שברצונך להסיר את '{{name}}'?",
   "PROFILE_AUTOMATICALLY_CHANGED_TITLE" : "פרופיל השתנה",
   "PROFILE_AUTOMATICALLY_CHANGED_TEMPLATE" : "שים לב, הפרופיל במכשיר זה השתנה ל- '{{name}}'",
-  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "אין (נבחר על ידי משתמש בכל חידון)"
+  "SUBJECTS_CHOSEN_BEFORE_QUIZ" : "אין (נבחר על ידי משתמש בכל חידון)",
+  "WELCOME_NAME" : "ברוך הבא {{name}}",
+  "SUBJECTS_IN_THIS_QUIZ" : "נושאים בחידון זה",
+  "START" : "התחל"
 }

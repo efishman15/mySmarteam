@@ -190,6 +190,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
     .controller('PlayCtrl', function ($scope, $state, $rootScope, PlayService, ErrorService) {
 
+        $scope.welcomeData = {"name": $rootScope.session.profiles[$rootScope.session.settings.profileId].name};
+
         $scope.$on('$ionicView.enter', function () {
             PlayService.getSubjectsChooser($rootScope.session.profiles[$rootScope.session.settings.profileId],
                 function (result) {
@@ -198,6 +200,10 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 }, ErrorService.logErrorAndAlert);
         });
 
+        $scope.subjectList = function () {
+            return PlayService.subjectList($scope.availableSubjects);
+        }
+
         $scope.subjectChange = function (subject) {
             if (subject.checked == true) {
                 $scope.availableSubjects.checked++;
@@ -205,33 +211,35 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
             else {
                 $scope.availableSubjects.checked--;
             }
-            if ($scope.availableSubjects.checked == 0) {
-                $scope.subjects = null;
-            }
-            else {
-                $scope.subjects = [];
-                for (var i = 0; i < $scope.availableSubjects.subjects.length; i++) {
-                    if ($scope.availableSubjects.subjects[i].checked == true) {
-                        $scope.subjects.push($scope.availableSubjects.subjects[i].subjectId);
-                    }
-                }
-            }
         }
 
         $scope.play = function () {
-            $state.go('app.quiz', {subjects: $scope.subjects}, {reload: false, inherit: true});
+            var subjects
+            if ($scope.availableSubjects.checked == 0) {
+                subjects = null;
+            }
+            else {
+                subjects = [];
+                for (var i = 0; i < $scope.availableSubjects.subjects.length; i++) {
+                    if ($scope.availableSubjects.subjects[i].checked == true) {
+                        subjects.push($scope.availableSubjects.subjects[i].subjectId);
+                    }
+                }
+            }
+
+            $state.go('app.quiz', {subjects: subjects}, {reload: false, inherit: true});
         };
     })
 
-    .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, QuizService, ErrorService, $ionicHistory, $translate) {
+    .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate) {
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
-            if ($rootScope.session.settings.interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileIndex].quizLanguage) {
-                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileIndex].quizLanguage)
+            if ($rootScope.session.settings.interfaceLanguage != $rootScope.session.profiles[$rootScope.session.settings.profileId].quizLanguage) {
+                $translate.use($rootScope.session.profiles[$rootScope.session.settings.profileId].quizLanguage)
             }
 
-            QuizService.start($stateParams.subjects,
+            QuizService.start({"subjects": $stateParams.subjects},
                 function (data) {
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
@@ -259,6 +267,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
+                    $rootScope.session.profiles[$rootScope.session.settings.profileId].score += $scope.quiz.score;
                     $state.go('app.quizResult', {score: $scope.quiz.score}, {reload: false, inherit: true});
                 }
                 else {
@@ -266,6 +275,14 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                 }
             }
         };
+
+        $scope.toggleSound = function () {
+            UserService.toggleSound(
+                function () {
+                    $rootScope.session.profiles[$rootScope.session.settings.profileId].sound = !$rootScope.session.profiles[$rootScope.session.settings.profileId].sound;
+                },
+                ErrorService.logError);
+        }
 
         $scope.submitAnswer = function (answerId) {
             $scope.quiz.currentQuestion.answered = true;
@@ -277,7 +294,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     if (data.correct == true) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
-                        if ($rootScope.session.profiles[$rootScope.session.settings.isPrototypeOf].sound == true) {
+                        if ($rootScope.session.profiles[$rootScope.session.settings.profileId].sound == true) {
                             soundFile = "audio/correct.ogg";
                         }
                     }
@@ -293,13 +310,16 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                     }
 
                     //Play sound if sound is on
-                    if ($rootScope.session.profiles[$rootScope.sessions.settings.profileId].sound == true) {
+                    if ($rootScope.session.profiles[$rootScope.session.settings.profileId].sound == true) {
                         document.getElementById("audioSound").src = soundFile;
                     }
 
                     $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
                 },
-                ErrorService.logErrorAndAlert)
+                function (status, error) {
+                    ErrorService.logErrorAndAlert(status, error);
+                    $ionicHistory.goBack();
+                })
         }
     })
 
@@ -461,7 +481,8 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
                         "name": null,
                         "quizLanguage": $rootScope.storedUser.settings.interfaceLanguage,
                         "subjects": null,
-                        "sound": true
+                        "sound": true,
+                        "score": 0
                     }
                     retrieveAvailableSubjects();
                 }
@@ -472,20 +493,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
         });
 
         $scope.subjectList = function () {
-            if (!$scope.availableSubjects || $scope.availableSubjects.checked == 0) {
-                $scope.subjectChosenBeforeQuiz = true;
-                return $translate.instant("SUBJECTS_CHOSEN_BEFORE_QUIZ");
-            }
-            else {
-                $scope.subjectChosenBeforeQuiz = false;
-                var listOfSubjectNames = "";
-                for (var i = 0; i < $scope.availableSubjects.subjects.length; i++) {
-                    if ($scope.availableSubjects.subjects[i].checked == true) {
-                        listOfSubjectNames += $scope.availableSubjects.subjects[i].displayNames[$rootScope.storedUser.settings.interfaceLanguage] + ","
-                    }
-                }
-                return listOfSubjectNames.substring(0, listOfSubjectNames.length - 1);
-            }
+            return PlayService.subjectList($scope.availableSubjects);
         }
 
         function retrieveAvailableSubjects() {
