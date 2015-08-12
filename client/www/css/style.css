@@ -76,10 +76,12 @@ button.item.quiz-answer {
 
 .ltr {
     direction: ltr;
+    text-align: left;
 }
 
 .rtl {
     direction: rtl;
+    text-align: right;
 }
 
 .item-radio input[type="radio"] {

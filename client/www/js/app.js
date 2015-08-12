@@ -45,7 +45,7 @@ angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angul
     .config(function ($translateProvider) {
         $translateProvider.useSanitizeValueStrategy('escaped');
         $translateProvider.useStaticFilesLoader({
-            prefix: '/languages/',
+            prefix: 'languages/',
             suffix: '.json'
         });
 

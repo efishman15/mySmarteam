@@ -16,8 +16,7 @@ angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnim
 
         $rootScope.$on('loading:show', function () {
             $ionicLoading.show({
-                    template: $translate.instant('LOADING'),
-                    cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction
+                    template: "<span dir='" + $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction + "'>" + $translate.instant('LOADING') + "</span>"
                 }
             )
         })

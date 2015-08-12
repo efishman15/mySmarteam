@@ -289,8 +289,6 @@ function getNextQuestion(dbHelper, session, questionCriteria, count, callback) {
             session.quiz.clientData.finished = true;
         }
 
-        console.log("question: " + question.questionId);
-
         //Session is dynamic - perform some evals...
         if (question.vars) {
 
@@ -371,7 +369,5 @@ function prepareQuestionCriteria(dbHelper, session, callback) {
             questionCriteria.maxAge = {$gte : age}
         }
     }
-
-    console.log(JSON.stringify(questionCriteria));
     callback(null, dbHelper, session, questionCriteria);
 }

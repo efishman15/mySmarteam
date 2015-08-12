@@ -1,7 +1,7 @@
 var supportedLanguages = {
     "en": {
         "value" : "en",
-        "flag": "/images/languages/unitedstates.jpg",
+        "flag": "images/languages/unitedstates.jpg",
         "direction": "ltr",
         "align": "left",
         "oppositeAlign": "right",
@@ -9,7 +9,7 @@ var supportedLanguages = {
     },
     "he": {
         "value" : "he",
-        "flag": "/images/languages/israel.jpg",
+        "flag": "images/languages/israel.jpg",
         "direction": "rtl",
         "align": "right",
         "oppositeAlign": "left",
@@ -17,7 +17,7 @@ var supportedLanguages = {
     },
     "ru": {
         "value" : "ru",
-        "flag": "/images/languages/russia.jpg",
+        "flag": "images/languages/russia.jpg",
         "direction": "ltr",
         "align": "left",
         "oppositeAlign": "right",
@@ -25,7 +25,7 @@ var supportedLanguages = {
     },
     "es": {
         "value" : "es",
-        "flag": "/images/languages/spain.jpg",
+        "flag": "images/languages/spain.jpg",
         "direction": "ltr",
         "align": "left",
         "oppositeAlign": "right",
