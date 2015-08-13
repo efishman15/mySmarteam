@@ -1,4 +1,4 @@
-angular.module('studyB4.controllers', ['studyB4.services', 'ngResource', 'ngAnimate'])
+angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngResource', 'ngAnimate'])
 
     .controller('AppCtrl', function ($scope, $rootScope, $state, LoginService, $ionicLoading, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicPopover) {
 

@@ -1,4 +1,4 @@
-angular.module('studyB4.services', [])
+angular.module('mySmarteam.services', [])
 
     //User Service
     .factory('UserService', function (store, InfoService, ErrorService, $rootScope, ApiService) {

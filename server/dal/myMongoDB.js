@@ -1,5 +1,5 @@
 var mongoClient = require('mongodb').MongoClient;
-var CONNECTION_STRING = "mongodb://localhost:27017/studyB4";
+var CONNECTION_STRING = "mongodb://localhost:27017/mySmarteam";
 var exceptions = require('../utils/exceptions');
 var topics = {};
 var serverSubjectsPerLanguages = {};

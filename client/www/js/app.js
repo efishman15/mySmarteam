@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('studyB4.app', ['studyB4.services', 'studyB4.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate'])
+angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate'])
     .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {

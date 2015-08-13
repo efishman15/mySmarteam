@@ -1,1 +1,1 @@
-# studyB4 server
+# mySmarteam server
