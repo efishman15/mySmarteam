@@ -1,12 +1,13 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var credentials = require('./business_logic/credentials')
-var quiz = require('./business_logic/quiz')
-var GeneralError = require('./utils/exceptions').GeneralError;
-var generalUtils = require('./utils/general');
-var sessionUtils = require('./business_logic/session');
-var domain = require('domain');
+var express = require("express");
+var bodyParser = require("body-parser");
+var methodOverride = require("method-override");
+var credentials = require("./business_logic/credentials")
+var quiz = require("./business_logic/quiz")
+var contests = require("./business_logic/contests");
+var GeneralError = require("./utils/exceptions").GeneralError;
+var generalUtils = require("./utils/general");
+var sessionUtils = require("./business_logic/session");
+var domain = require("domain");
 
 var app = express();
 
@@ -37,20 +38,18 @@ app.all('*', function (req, res, next) {
 });
 
 //API's require authentication
+app.post('/users/logout', isAuthenticated, credentials.logout);
+app.post('/users/settings', sessionUtils.saveSettings);
+app.post('/users/toggleSound', sessionUtils.toggleSound);
 app.post('/quiz/subjects', isAuthenticated, quiz.subjects);
 app.post('/quiz/start', isAuthenticated, quiz.start);
 app.post('/quiz/answer', isAuthenticated, quiz.answer);
 app.post('/quiz/nextQuestion', isAuthenticated, quiz.nextQuestion);
-app.post('/users/logout', isAuthenticated, credentials.logout);
-app.post('/users/confirmPassword', sessionUtils.confirmPassword);
-app.post('/users/settings', sessionUtils.saveSettings);
-app.post('/users/setProfile', sessionUtils.setProfile);
-app.post('/users/toggleSound', sessionUtils.toggleSound);
-app.post('/users/removeProfile', sessionUtils.removeProfile);
+app.post('/quiz/nextQuestion', isAuthenticated, quiz.nextQuestion);
+app.post('/contests/add', isAuthenticated, contests.addContest);
 
 //API's that do NOT require authentication
-app.post('/users/login', credentials.login);
-app.post('/users/register', credentials.register);
+app.post('/users/facebookConnect', credentials.login);
 app.post('/info/geo', generalUtils.geoInfo);
 app.post('/info/languages', generalUtils.getLanguages);
 
