@@ -3,6 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/client/platforms" />
+      <excludeFolder url="file://$MODULE_DIR$/client/plugins/com.phonegap.plugins.facebookconnect/platforms" />
       <excludeFolder url="file://$MODULE_DIR$/conference/platforms" />
     </content>
     <orderEntry type="inheritedJdk" />

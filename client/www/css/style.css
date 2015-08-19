@@ -86,3 +86,8 @@ button.item.quiz-answer {
 .item-radio input[type="radio"] {
     display: none;
 }
+
+.button-facebook{color:#fff;background-color:#3b5998;border-color:rgba(0,0,0,0.2)}.button-facebook:hover,.button-facebook:focus,.button-facebook:active,.button-facebook.active,.open>.dropdown-toggle.button-facebook{color:#fff;background-color:#2d4373;border-color:rgba(0,0,0,0.2)}
+.button-facebook:active,.button-facebook.active,.open>.dropdown-toggle.button-facebook{background-image:none}
+.button-facebook.disabled,.button-facebook[disabled],fieldset[disabled] .button-facebook,.button-facebook.disabled:hover,.button-facebook[disabled]:hover,fieldset[disabled] .button-facebook:hover,.button-facebook.disabled:focus,.button-facebook[disabled]:focus,fieldset[disabled] .button-facebook:focus,.button-facebook.disabled:active,.button-facebook[disabled]:active,fieldset[disabled] .button-facebook:active,.button-facebook.disabled.active,.button-facebook[disabled].active,fieldset[disabled] .button-facebook.active{background-color:#3b5998;border-color:rgba(0,0,0,0.2)}
+.button-facebook .badge{color:#3b5998;background-color:#fff}

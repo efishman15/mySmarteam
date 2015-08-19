@@ -1,35 +1,20 @@
 angular.module('mySmarteam.services', [])
 
     //User Service
-    .factory('UserService', function (store, InfoService, ErrorService, $rootScope, ApiService) {
+    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, ErrorService, $translate, InfoService) {
+
         var service = this;
-        var path = 'users/';
-
-        service.getStoreUser = function () {
-            return store.get("user");
-        };
-
-        service.setStoreUser = function (user) {
-            store.set('user', user);
-            return user;
-        };
-
-        service.clearStoreUser = function () {
-            store.set('user', null);
-        };
+        var path = 'user/';
 
         service.initUser = function (callbackOnSuccess, callbackOnError) {
 
             InfoService.getGeoInfo(function (geoResult) {
-                    $rootScope.storedUser = {
-                        "email": null,
-                        "password": null,
+                    $rootScope.user = {
                         "settings": {
-                            "interfaceLanguage": geoResult.language
+                            "language": geoResult.language
                         }
                     };
                     $rootScope.session = null;
-                    service.setStoreUser($rootScope.storedUser);
 
                     if (callbackOnSuccess) {
                         callbackOnSuccess();
@@ -39,20 +24,176 @@ angular.module('mySmarteam.services', [])
             )
         };
 
-        service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError);
+        service.getMyFacebookProfile = function (success, callbackOnSuccess, callbackOnError) {
+            facebookConnectPlugin.api("/me", [],
+                function (user) {
+                    $rootScope.user.name = user.name;
+                    $rootScope.user.image = "http://graph.facebook.com/" + user.id + "picture?type=square";
+                    $rootScope.user.facebookAccessToken = success.authResponse.accessToken;
+
+                    if (callbackOnSuccess) {
+                        callbackOnSuccess(success);
+                    }
+                },
+                function (error) {
+                    if (callbackOnError) {
+                        callbackOnError("Error getting facebook profile info");
+                    }
+                });
+        };
+
+        service.getLoginStatus = function (callbackOnSuccess, callbackOnError) {
+            facebookConnectPlugin.getLoginStatus(function (success) {
+                    if (success.authResponse && success.status && success.status == "connected") {
+                        if (!$rootScope.user || !$rootScope.user.facebookAccessToken) {
+                            service.initUser(function () {
+                                service.getMyFacebookProfile(success, callbackOnSuccess, callbackOnError);
+                            },
+                                function() {
+                                    if (callbackOnSuccess) {
+                                        callbackOnSuccess(success);
+                                    }
+                                })
+                        }
+                        else {
+                            if (callbackOnSuccess) {
+                                callbackOnSuccess(success);
+                            }
+                        }
+                    }
+                    else {
+                        if (callbackOnError) {
+                            callbackOnError("not connected");
+                        }
+                    }
+                },
+                function (error) {
+                    if (callbackOnError) {
+                        callbackOnError(error)
+                    }
+                });
         }
 
-        service.setProfile = function (postData, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "setProfile", postData, callbackOnSuccess, callbackOnError);
+        service.facebookServerConnect = function (callbackOnSuccess, callbackOnError) {
+            callbackOnSuccess();
+            return;
+            return ApiService.post(path, "facebookConnect", {"accessToken": $rootScope.user.facebookAccessToken},
+                function (session) {
+                    $http.defaults.headers.common.Authorization = session.token;
+                    $rootScope.session = session;
+                    callbackOnSuccess(session);
+                },
+                function (status, data) {
+                    callbackOnError(status, data);
+                })
+        };
+
+        service.facebookClientConnect = function (callbackOnSuccess, callbackOnError) {
+            facebookConnectPlugin.login(["public_profile", "email", "user_friends"],
+                function (success) {
+                    service.getMyFacebookProfile(success, function (success) {
+                            service.facebookServerConnect(callbackOnSuccess, callbackOnError);
+                        },
+                        function (error) {
+                            if (callbackOnError) {
+                                callbackOnError(error);
+                            }
+                        })
+                });
+        };
+
+        service.logout = function (callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "logout", null,
+                function (data, headers) {
+                    clearDataAfterLogout(callbackOnSuccess, callbackOnError);
+                },
+                function (status, data, headers) {
+                    clearDataAfterLogout(callbackOnSuccess, callbackOnError);
+                }
+            )
+        };
+
+        service.resolveAuthentication = function (initUser) {
+
+            var deferred = $q.defer();
+
+            //----------------------------------------------------
+            //-- Load languages from server - first time
+            //----------------------------------------------------
+            if (!$rootScope.languages) {
+                InfoService.getLanguages(
+                    function (data) {
+                        $rootScope.languages = data;
+                    },
+                    ErrorService.logErrorAndAlert)
+            }
+
+            //-------------------------------------------------------------------------
+            //-- Init mode requested - for home screen, in un-Authenticated mode
+            //-------------------------------------------------------------------------
+            if (initUser && initUser == true) {
+                if (!$rootScope.user) {
+                    doInit(deferred);
+                }
+                else {
+                    deferred.resolve();
+                }
+                return deferred.promise;
+            }
+
+            if ($rootScope.session || ($rootScope.user && $rootScope.user.facebookAccessToken)) {
+                deferred.resolve();
+                return deferred.promise;
+            }
+
+            //-------------------------------------------------------------------------
+            //-- Normal flow - try performing auto login
+            //-------------------------------------------------------------------------
+            service.getLoginStatus(function (success) {
+                    service.facebookServerConnect(function (data) {
+                            deferred.resolve();
+                            $translate.use($rootScope.user.settings.language);
+                        },
+                        function (status, error) {
+                            ErrorService.logError(status, error);
+                            doInit(deferred);
+                        }
+                    )
+                },
+                function (error) {
+                    doInit(deferred);
+                });
+
+            return deferred.promise;
+        };
+
+        service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError) {
+            ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError);
         }
 
         service.toggleSound = function (callbackOnSuccess, callbackOnError) {
             ApiService.post(path, "toggleSound", null, callbackOnSuccess, callbackOnError);
         }
 
-        service.removeProfile = function (postData, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "removeProfile", postData, callbackOnSuccess, callbackOnError);
+        function clearDataAfterLogout(callbackOnSuccess, callbackOnError) {
+            delete headers["Authorization"];
+            delete $http.defaults.headers.common["Authorization"];
+            $rootScope.session = null;
+            UserService.initUser(callbackOnSuccess, callbackOnError);
+        }
+
+        function doInit(deferred) {
+            service.initUser(function () {
+                if (deferred) {
+                    deferred.resolve()
+                }
+                $translate.use($rootScope.user.settings.language);
+            }, function () {
+                if (deferred) {
+                    deferred.resolve();
+                }
+                $translate.use($rootScope.user.settings.language);
+            });
         }
 
         return service;
@@ -101,215 +242,6 @@ angular.module('mySmarteam.services', [])
         return service;
     })
 
-    //Login Service
-    .factory('LoginService', function ($q, $rootScope, $http, $state, ApiService, UserService, MyAuthService, authService, ErrorService, $translate, InfoService) {
-
-        var service = this;
-        var path = 'users/';
-
-        service.register = function (user, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "register", user,
-                function (session) {
-                    //Was set just in order to pass it to the server - no need to save this in the Store
-                    delete $rootScope.storedUser["geoInfo"];
-
-                    saveSession(session);
-                    callbackOnSuccess()
-
-                },
-                function (status, data) {
-                    callbackOnError(status, data);
-                })
-        };
-
-        service.login = function (user, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "login", user,
-                function (session) {
-                    saveSession(session);
-                    callbackOnSuccess(session);
-
-                },
-                function (status, data) {
-                    callbackOnError(status, data);
-                })
-        };
-
-        service.logout = function (logoutData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "logout", logoutData,
-                function (data, headers) {
-                    delete headers["Authorization"];
-                    delete $http.defaults.headers.common["Authorization"];
-                    $rootScope.session = null;
-                    UserService.clearStoreUser();
-                    UserService.initUser(callbackOnSuccess, callbackOnError);
-                },
-                function (status, data, headers) {
-                    delete headers["Authorization"];
-                    delete $http.defaults.headers.common["Authorization"];
-                    $rootScope.session = null;
-                    UserService.clearStoreUser();
-                    UserService.initUser(callbackOnSuccess, callbackOnError);
-                }
-            )
-        };
-
-        service.resolveAuthentication = function (initUser) {
-
-            var deferred = $q.defer();
-
-            if (!$rootScope.languages) {
-                InfoService.getLanguages(
-                    function (data) {
-                        $rootScope.languages = data;
-                    },
-                    ErrorService.logErrorAndAlert)
-            }
-
-            if (initUser && initUser == true) {
-                if (!$rootScope.storedUser) {
-                    UserService.initUser(function () {
-                        deferred.resolve();
-                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
-                    }, function () {
-                        deferred.resolve()
-                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
-                    });
-                }
-                else {
-                    deferred.resolve();
-                }
-                return deferred.promise;
-            }
-
-            if ($rootScope.session) {
-                deferred.resolve();
-                return deferred.promise;
-            }
-
-            $rootScope.storedUser = UserService.getStoreUser();
-            if ($rootScope.storedUser && $rootScope.storedUser.email) {
-                service.login($rootScope.storedUser,
-                    function (data) {
-                        deferred.resolve();
-                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
-                    },
-                    function (status, error) {
-                        deferred.resolve();
-                        $translate.use($rootScope.storedUser.settings.interfaceLanguage);
-                        ErrorService.logError(status, error);
-                        UserService.initUser();
-                    }
-                )
-            }
-            else {
-                UserService.initUser(function () {
-                    deferred.resolve()
-                    $translate.use($rootScope.storedUser.settings.interfaceLanguage);
-                }, function () {
-                    deferred.resolve();
-                    $translate.use($rootScope.storedUser.settings.interfaceLanguage);
-                });
-            }
-            return deferred.promise;
-        };
-
-        function saveSession(session) {
-            $http.defaults.headers.common.Authorization = session.token;
-            $rootScope.session = session;
-            if (!$rootScope.storedUser.settings.passwordProtected) {
-                $rootScope.storedUser.settings.passwordProtected = session.settings.passwordProtected;
-                UserService.setStoreUser($rootScope.storedUser);
-            }
-        };
-
-        //Used for both login and register forms - clear last server error upon field change
-        service.fieldChange = function (currentField, serverErrorField) {
-
-            if (serverErrorField) {
-                if (!serverErrorField.$error) {
-                    serverErrorField.$error = {};
-                }
-
-                serverErrorField.$error.serverError = false;
-            }
-
-            if (currentField) {
-                if (!currentField.$error) {
-                    currentField.$error = {};
-                }
-                currentField.$error.serverError = false;
-            }
-        };
-
-        service.confirmPassword = function (password, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "confirmPassword", password,
-                function (data) {
-                    callbackOnSuccess(data);
-
-                },
-                function (status, data) {
-                    callbackOnError(status, data);
-                })
-        };
-
-        return service;
-
-    })
-
-    //Play Service
-    .factory('PlayService', function ($http, $rootScope, ApiService, $translate) {
-
-        var service = this;
-
-        var path = 'quiz/';
-
-        service.getSubjects = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "subjects", postData, callbackOnSuccess, callbackOnError)
-        };
-
-        service.subjectList = function (availableSubjects) {
-            if (!availableSubjects || availableSubjects.checked == 0) {
-                return $translate.instant("SUBJECTS_CHOSEN_BEFORE_QUIZ");
-            }
-            else {
-                var listOfSubjectNames = "";
-                for (var i = 0; i < availableSubjects.subjects.length; i++) {
-                    if (availableSubjects.subjects[i].checked == true) {
-                        listOfSubjectNames += availableSubjects.subjects[i].displayNames[$rootScope.storedUser.settings.interfaceLanguage] + ","
-                    }
-                }
-                return listOfSubjectNames.substring(0, listOfSubjectNames.length - 1);
-            }
-        }
-        service.getSubjectsChooser = function(profile, callbackOnSuccess, callbackOnError) {
-            this.getSubjects({"quizLanguage": profile.quizLanguage},
-                function (subjects) {
-                    var availableSubjects = {"checked": 0, "subjects": subjects};
-                    var localSubjects = [];
-                    if (profile.subjects && profile.subjects.length > 0) {
-                        for (var i = 0; i < availableSubjects.subjects.length; i++) {
-                            availableSubjects.subjects[i].checked = false;
-                            for (var j = 0; j < profile.subjects.length; j++) {
-                                if (availableSubjects.subjects[i].subjectId == profile.subjects[j]) {
-                                    availableSubjects.subjects[i].checked = true;
-                                    availableSubjects.checked++;
-                                    localSubjects.push(availableSubjects.subjects[i].subjectId);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if (callbackOnSuccess) {
-                        callbackOnSuccess({"availableSubjects" : availableSubjects, "localSubjects" : localSubjects})
-                    }
-                }
-                , callbackOnError
-            );
-        }
-
-        return service;
-    })
-
     //Quiz Service
     .factory('QuizService', function ($http, ApiService) {
 
@@ -346,7 +278,7 @@ angular.module('mySmarteam.services', [])
         service.logErrorAndAlert = function (status, error) {
             if (error.title) {
                 $ionicPopup.alert({
-                    cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
+                    cssClass: $rootScope.languages[$rootScope.user.settings.language].direction,
                     title: $translate.instant(error.title),
                     template: $translate.instant(error.message),
                     okText: $translate.instant("OK")
@@ -354,7 +286,7 @@ angular.module('mySmarteam.services', [])
             }
             else {
                 $ionicPopup.alert({
-                    cssClass: $rootScope.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
+                    cssClass: $rootScope.languages[$rootScope.user.settings.language].direction,
                     template: error.message,
                     okText: $translate.instant("OK")
                 });
@@ -365,7 +297,7 @@ angular.module('mySmarteam.services', [])
         return service;
     })
 
-    //Error Service
+    //MyAuthService Service
     .factory('MyAuthService', function () {
 
         var service = this;

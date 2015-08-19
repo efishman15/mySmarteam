@@ -1,13 +1,18 @@
 <ion-view>
-    <ion-content class="padding" dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
-        <p class="padding" translate="HOME_WELCOME_TEXT1"><p>
-        <p class="padding" translate="HOME_WELCOME_TEXT2"><p>
-        <div class="padding">
-            <a class="button button-block button-stable button-assertive" href="#/app/register" translate="SIGN_UP"></a>
-        </div>
-        <div class="padding">
-            <span translate="ALREADY_HAVE_AN_ACCOUNT"></span>
-            <a class="link1" href="#/app/login" translate="SIGN_IN"></a>
-        </div>
-    </ion-content>
+    <ion-pane ion-side-menu-content drag-content="false">
+        <ion-content class="padding" dir="{{$root.languages[$root.user.settings.language].direction}}">
+            <p class="padding" translate="HOME_WELCOME_TEXT1">
+
+            <p>
+
+            <p class="padding" translate="HOME_WELCOME_TEXT2">
+
+            <p>
+
+            <div class="padding">
+                <button class="button button-facebook button-full" ng-click="facebookConnect()">
+                    Login with Facebook
+                </button>
+            </div>
+        </ion-content>
 </ion-view>

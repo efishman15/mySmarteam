@@ -1,4 +1,4 @@
-<ion-view view-title="{{ 'QUIZ_RESULTS' | translate}}" dir="{{$root.languages[$root.session.profiles[$root.session.settings.profileId].quizLanguage].direction}}">
+<ion-view view-title="{{ 'QUIZ_RESULTS' | translate}}" dir="{{$root.languages[$root.session.settings.language].direction}}">
     <ion-content padding="true">
         <div class="padding center">
 
@@ -8,7 +8,7 @@
             </div>
 
             <div class="padding center">
-                <a class="button button-assertive" ng-click="returnToPlay()">{{ 'OK' | translate}}</a>
+                <a class="button button-assertive" ng-click="returnToContests()">{{ 'OK' | translate}}</a>
             </div>
         </div>
     </ion-content>

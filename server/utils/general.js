@@ -5,34 +5,35 @@ var supportedLanguages = {
         "direction": "ltr",
         "align": "left",
         "oppositeAlign": "right",
-        "displayNames": {"en": "English", "he": "אנגלית", "es": "Inglés", "ru": "Английский"}
+        "displayNames": {"en": "English", "he": "אנגלית", "es": "Inglés"}
     },
     "he": {
         "value" : "he",
         "flag": "images/languages/israel.jpg",
         "direction": "rtl",
+        "triviaTopics" : [5,270],
         "align": "right",
         "oppositeAlign": "left",
-        "displayNames": {"en": "Hebrew", "he": "עברית", "es": "Hebreo", "ru": "Иврит"}
-    },
-    "ru": {
-        "value" : "ru",
-        "flag": "images/languages/russia.jpg",
-        "direction": "ltr",
-        "align": "left",
-        "oppositeAlign": "right",
-        "displayNames": {"en": "Russian", "he": "רוסית", "es": "Ruso", "ru": "Русский"}
+        "displayNames": {"en": "Hebrew", "he": "עברית", "es": "Hebreo"}
     },
     "es": {
         "value" : "es",
         "flag": "images/languages/spain.jpg",
         "direction": "ltr",
+        "triviaSubjectId" : 210,
         "align": "left",
         "oppositeAlign": "right",
-        "displayNames": {"en": "Spanish", "he": "ספרדית", "es": "Español", "ru": "Испанский"}
+        "displayNames": {"en": "Spanish", "he": "ספרדית", "es": "Español"}
     }
 }
 
+var triviaTopisPerLangage = {
+    "en" : [10],
+    "he" : [5,270],
+    "es" : [465]
+}
+
+module.exports.getDirectionByLanguage = getDirectionByLanguage;
 function getDirectionByLanguage(languageCodeIso2) {
     switch (languageCodeIso2) {
         case "he":
@@ -42,14 +43,12 @@ function getDirectionByLanguage(languageCodeIso2) {
     }
 }
 
+module.exports.getLanguageByCountryCode = getLanguageByCountryCode;
 function getLanguageByCountryCode(countryCode) {
 
     switch (countryCode) {
         case "IL":
             return "he";
-
-        case "RU":
-            return "ru";
 
         case "AR":  //Argentina
         case "BO":  //Bolivia
@@ -87,5 +86,7 @@ module.exports.geoInfo = function (req, res, next) {
 module.exports.getLanguages = function (req, res, next) {
     res.json(supportedLanguages);
 }
-module.exports.getDirectionByLanguage = getDirectionByLanguage;
-module.exports.getLanguageByCountryCode = getLanguageByCountryCode;
+
+module.exports.getLanguageTriviaTopics = function (language) {
+    return triviaTopisPerLangage[language];
+}

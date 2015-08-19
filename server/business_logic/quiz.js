@@ -1,124 +1,134 @@
-// Retrieve
 var sessionUtils = require("../business_logic/session");
 var async = require('async');
-var excptions = require('../utils/exceptions');
+var exceptions = require('../utils/exceptions');
 var random = require('../utils/random');
-var dal = require('../dal/myMongoDB');
+var dalDb = require('../dal/dalDb');
 var generalUtils = require('../utils/general');
 
+//--------------------------------------------------------------------------
+//Private functions
+//--------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------
+// setQuestionDirection
+//
+// data: session
+//--------------------------------------------------------------------------
+function setQuestionDirection(data, callback) {
+
+    data.topicId = data.session.quiz.serverData.currentQuestion.topicId;
+    dalDb.getTopic(data, function (err, topic) {
+        if (err) {
+            callback(err);
+            return;
+        }
+        if (topic.forceDirection) {
+            data.session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
+        }
+        else {
+            data.session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(data.session.settings.language);
+        }
+
+        callback(null, data);
+
+    })
+}
+
+//--------------------------------------------------------------------------
+// subjects
+//
+// data: language
+//--------------------------------------------------------------------------
 module.exports.subjects = function (req, res, next) {
 
     var token = req.headers.authorization;
-    var postData = req.body;
+    var data = req.body;
 
     var operations = [
 
-        //Connect
-        function (callback) {
-            sessionUtils.getSession(token, callback);
-        },
+        dalDb.connect,
 
         //get subjects
-        function (dbHelper, session, callback) {
-            dal.getSubjects(dbHelper, postData.quizLanguage, false, callback);
-        },
-
-        //Close the db
-        function (dbHelper, subjects, callback) {
-            dbHelper.close();
-            callback(null, subjects);
+        function (connectData, callback) {
+            data.dbHelper = connectData.dbHelper;
+            data.isServerSide = false;
+            data.closeConnection = true;
+            dalDb.getSubjects(data, callback);
         }
     ];
 
-    async.waterfall(operations, function (err, subjects) {
+    async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.json(subjects);
+            res.json(data.subjects);
         }
         else {
             res.send(err.status, err);
         }
     })
-}
+};
 
+//--------------------------------------------------------------------------
+// start
+//
+// data: contestId
+//--------------------------------------------------------------------------
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
-    var postData = req.body;
+    var data = req.body;
 
     var operations = [
 
-            //Connect
-            function (callback) {
-                sessionUtils.getSession(token, callback);
-            },
+        //getSession
+        function (callback) {
+            data.token = token;
+            sessionUtils.getSession(data, callback);
+        },
 
-            //Init quiz
-            function (dbHelper, session, callback) {
-                var quiz = {serverData: {previousQuestions: []}, clientData: {}};
-
-                quiz.clientData.totalQuestions = 5;
-                quiz.clientData.currentQuestionIndex = 0;
-                quiz.clientData.finished = false;
-                quiz.serverData.score = 0;
-
-                var quizSubjects;
-                if (postData.subjects) {
-                    quizSubjects = postData.subjects;
-                }
-                else if (session.profiles[session.settings.profileId].subjects && session.profiles[session.settings.profileId].subjects.length > 0) {
-                    quizSubjects = session.profiles[session.settings.profileId].subjects
-                }
-
-                if (!quizSubjects || quizSubjects.length == 0) {
-                    callback(new excptions.GeneralError(424, "No subjects sent and current profile does not have subjects, admin: " + session.adminId + ", profile: " + session.profiles[session.settings.profileId].name));
-                    return;
-                }
-
-                //Attach the selected subjects to the quiz
-                dal.getSubjects(dbHelper, session.profiles[session.settings.profileId].quizLanguage, true, function (err, dbHelper, subjects) {
-                    if (err) {
-                        callback(new excptions.GeneralError(424, "Error retrieving subjects for quiz language: " + session.profiles[session.settings.profileId].quizLanguage));
-                        return;
-                    }
-
-                    quiz.subjects = [];
-                    for (var i = 0; i < subjects.length; i++) {
-                        for (var j = 0; j < quizSubjects.length; j++) {
-                            if (subjects[i].subjectId == quizSubjects[j]) {
-                                quiz.subjects.push({"subjectId": subjects[i].subjectId, "topics": subjects[i].topics})
-                                break;
-                            }
-                        }
-                    }
-
-                    session.quiz = quiz;
-
-                    callback(null, dbHelper, session)
-
-                })
-            },
-
-            //Pick a random subject from the avilable subjects in this quiz and prepare the query
-            prepareQuestionCriteria,
-
-            //Count number of questions excluding the previous questions
-            getQuestionsCount,
-
-            //Get the next question for the quiz
-            getNextQuestion,
-
-            //Sets the direction of the question
-            setQuestionDirection,
-
-            //Stores the session with the quiz in the db
-            sessionUtils.storeSession,
-
-            //Close the db
-            function (dbHelper, session, callback) {
-                dbHelper.close();
-                callback(null, session.quiz.clientData);
+        //Init quiz
+        function (data, callback) {
+            if (!data.session.contests[data.contestId]) {
+                data.dbHelper.close();
+                callback(new exceptions.GeneralError(424, "ErrorNotJoinedToContest"));
             }
-        ]
-        ;
+
+            var quiz = {
+                "serverData": {
+                    "previousQuestions": [],
+                    "topics": generalUtils.getLanguageTriviaTopics(data.session.settings.language),
+                    "contestId": data.contestId,
+                    "score": 0
+                },
+                "clientData": {
+                    "totalQuestions": 5,
+                    "currentQuestionIndex": 0,
+                    "finished": false
+                }
+            };
+
+            data.session.quiz = quiz;
+
+            callback(null, data);
+
+        },
+
+        //Pick a random subject from the avilable subjects in this quiz and prepare the query
+        dalDb.prepareQuestionCriteria,
+
+        //Count number of questions excluding the previous questions
+        dalDb.getQuestionsCount,
+
+        //Get the next question for the quiz
+        dalDb.getNextQuestion,
+
+        //Sets the direction of the question
+        setQuestionDirection,
+
+        //Stores the session with the quiz in the db
+        function (data, callback) {
+            data.closeConnection = true;
+            sessionUtils.storeSession(data, callback);
+        }
+    ];
 
     async.waterfall(operations, function (err, quizClientData) {
         if (!err) {
@@ -128,54 +138,62 @@ module.exports.start = function (req, res, next) {
             res.send(err.status, err);
         }
     })
-}
-;
+};
 
+//--------------------------------------------------------------------------
+// answer
+//
+// data: id (answerId)
+//--------------------------------------------------------------------------
 module.exports.answer = function (req, res, next) {
     var token = req.headers.authorization;
-    var answer = req.body;
-    var result = {};
+    var data = req.body;
 
     var operations = [
 
-        //Connect
+        //getSession
         function (callback) {
-            sessionUtils.getSession(token, callback);
+            data.token = token;
+            sessionUtils.getSession(data, callback);
         },
 
         //Check answer
-        function (dbHelper, session, callback) {
-            var answers = session.quiz.serverData.currentQuestion.answers;
-            var answerId = parseInt(answer.id, 10);
+        function (data, callback) {
+            var answers = data.session.quiz.serverData.currentQuestion.answers;
+            var answerId = parseInt(data.id, 10);
             if (answerId < 1 || answerId > answers.length) {
-                callback(new excptions.GeneralError(424, "Invalid answer id: " + answer.id));
+                callback(new excptions.GeneralError(424, "Invalid answer id: " + data.id));
             }
 
-            result.answerId = answerId;
+            data.result = {};
+
+            data.result.answerId = answerId;
             if (answers[answerId - 1].correct) {
-                result.correct = true;
-                session.quiz.serverData.score += Math.ceil(100 / session.quiz.clientData.totalQuestions);
+                data.result.correct = true;
+                data.session.quiz.serverData.score += 10; //Question score
             }
             else {
-                result.correct = false;
+                data.result.correct = false;
                 for (i = 0; i < answers.length; i++) {
                     if (answers[i].correct && answers[i].correct == true) {
-                        result.correctAnswerId = i + 1;
+                        data.result.correctAnswerId = i + 1;
                         break;
                     }
                 }
             }
 
-            result.score = session.quiz.serverData.score;
-            callback(null, dbHelper, session);
+            data.result.score = data.session.quiz.serverData.score;
+            callback(null, data);
         },
 
-        function (dbHelper, session, callback) {
+        //Store session
+        function (data, callback) {
 
             var store = false;
-            if (session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
+
                 //Update total score in profile
-                session.profiles[session.settings.profileId].score += session.quiz.serverData.score;
+                data.session.score += session.quiz.serverData.score;
                 store = true;
             }
             else if (result.correct == true) {
@@ -184,190 +202,77 @@ module.exports.answer = function (req, res, next) {
             }
 
             if (store == true) {
-                sessionUtils.storeSession(dbHelper, session, callback);
+                sessionUtils.storeSession(data, callback);
             }
             else {
-                callback(null, dbHelper, session);
+                callback(null, Data);
             }
         },
 
         //Check to save the profiles into the Admin as well - when quiz is finished
-        function (dbHelper, session, callback) {
+        function (data, callback) {
             if (session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
-                sessionUtils.setAdminProfiles(dbHelper, session, callback);
+                data.setData = {"score" : data.session.score};
+                data.closeConnection = true;
+                dalDb.setUser(data, callback);
             }
             else {
-                callback(null, dbHelper);
+                dalDb.closeDb();
             }
-        },
-
-        //Close the db
-        function (dbHelper, callback) {
-            dbHelper.close();
-            callback(null, result);
+            callback(null, data);
         }
-
     ];
 
-    async.waterfall(operations, function (err, result) {
+    async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.send(200, result);
+            res.send(200, data.result);
         }
         else {
             res.send(err.status, err);
         }
     })
-}
+};
 
+//--------------------------------------------------------------------------
+// nextQuestion
+//
+// data: <NA>
+//--------------------------------------------------------------------------
 module.exports.nextQuestion = function (req, res, next) {
     var token = req.headers.authorization;
     var operations = [
 
-        //Connect
+        //getSession
         function (callback) {
-            sessionUtils.getSession(token, callback);
+            data.token = token;
+            sessionUtils.getSession(data, callback);
         },
 
-        //Pick a random subject from the avilable subjects in this quiz and prepare the query
-        prepareQuestionCriteria,
+        //Will pick a random topic from the trivia topics for the current language and prepare the query
+        dalDb.prepareQuestionCriteria,
 
         //Count number of questions excluding the previous questions
-        getQuestionsCount,
+        dalDb.getQuestionsCount,
 
         //Get the next question for the quiz
-        getNextQuestion,
+        dalDb.getNextQuestion,
 
         //Sets the direction of the question
         setQuestionDirection,
 
         //Stores the session with the quiz in the db
-        sessionUtils.storeSession,
-
-        //Close the db
-        function (dbHelper, session, callback) {
-            dbHelper.close();
-            callback(null, session.quiz.clientData);
+        function (data, callback) {
+            data.closeConnection = true;
+            sessionUtils.storeSession(data, callback);
         }
     ];
 
-    async.waterfall(operations, function (err, quizClientData) {
+    async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.send(200, quizClientData);
+            res.send(200, data.session.quiz.clientData);
         }
         else {
             res.send(err.status, err);
         }
     })
 };
-
-//Count questions collection in the selected subject (its topics)
-function getQuestionsCount(dbHelper, session, questionCriteria, callback) {
-
-    var questionsCollection = dbHelper.getCollection("Questions");
-    questionsCollection.count(questionCriteria, function (err, count) {
-        if (err) {
-            callback(new excptions.GeneralError(500, "Error retrieving number of questions from database"));
-            return;
-        }
-
-        callback(null, dbHelper, session, questionCriteria, count);
-    })
-};
-
-//Get the next question
-function getNextQuestion(dbHelper, session, questionCriteria, count, callback) {
-    var skip = random.rnd(0, count - 1);
-    var questionsCollection = dbHelper.getCollection("Questions");
-    questionsCollection.findOne(questionCriteria, {skip: skip}, function (err, question) {
-        if (err || !question) {
-            callback(new excptions.GeneralError(500, "Error retrieving next question from database"));
-            return;
-        }
-
-        session.quiz.clientData.currentQuestionIndex++;
-        if (session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
-            session.quiz.clientData.finished = true;
-        }
-
-        //Session is dynamic - perform some evals...
-        if (question.vars) {
-
-            //define the vars as "global" vars so they can be referenced by further evals
-            for (var key in question.vars) {
-                global[key] = eval(question.vars[key]);
-            }
-
-            //The question.text can include expressions like these: {{xp1}} {{xp2}} which need to be "evaled"
-            question.text = question.text.replace(/\{\{(.*?)\}\}/g, function (match) {
-                return eval(match.substring(2, match.length - 2));
-            });
-
-            //The answer.answer can include expressions like these: {{xp1}} {{xp2}} which need to be "evaled"
-            question.answers.forEach(function (element, index, array) {
-                element["text"] = element["text"].replace(/\{\{(.*?)\}\}/g, function (match) {
-                    return eval(match.substring(2, match.length - 2));
-                });
-            })
-
-            //delete global vars used for the evaluation
-            for (var key in question.vars) {
-                delete global[key];
-            }
-        }
-
-        //Shuffle the answers
-        question.answers = random.shuffle(question.answers);
-
-        session.quiz.serverData.currentQuestion = question;
-
-        session.quiz.clientData.currentQuestion = {"text": question.text, "answers": []};
-        for (var i = 0; i < question.answers.length; i++) {
-            session.quiz.clientData.currentQuestion.answers.push({"id": i + 1, "text": question.answers[i].text})
-        }
-
-        //Add this question id to the list of questions already asked during this quiz
-        session.quiz.serverData.previousQuestions.push(question._id);
-
-        callback(null, dbHelper, session);
-    })
-};
-
-function setQuestionDirection(dbHelper, session, callback) {
-
-    dal.getTopic(session.quiz.serverData.currentQuestion.topicId, function (err, topic) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        if (topic.forceDirection) {
-            session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
-        }
-        else {
-            session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(session.profiles[session.settings.profileId].quizLanguage);
-        }
-
-        callback(null, dbHelper, session);
-
-    })
-};
-
-function prepareQuestionCriteria(dbHelper, session, callback) {
-    var randomSubject = random.rnd(0, session.quiz.subjects.length - 1);
-
-    var questionCriteria = {
-        "_id": {"$nin": session.quiz.serverData.previousQuestions},
-        "topicId": {
-            "$in": session.quiz.subjects[randomSubject].topics
-        }
-    };
-
-    if (session.profiles[session.settings.profileId].yearOfBirth) {
-        var currentYear = new Date().getFullYear();
-        var age = currentYear - session.profiles[session.settings.profileId].yearOfBirth;
-        if (age > 0) {
-            questionCriteria.minAge = {$lte : age}
-            questionCriteria.maxAge = {$gte : age}
-        }
-    }
-    callback(null, dbHelper, session, questionCriteria);
-}

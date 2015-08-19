@@ -1,13 +1,13 @@
 <ion-view view-title="{{'SETTINGS' | translate}}" hide-back-button="false">
-    <ion-content dir="{{$root.languages[$root.storedUser.settings.interfaceLanguage].direction}}">
+    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}">
         <ion-list class="card">
             <ion-toggle ng-model="localViewData.passwordProtected" toggle-class="toggle-calm">
                 <span>{{'SETTINGS_PASSWORD_PROTECTED' | translate}}</span>
             </ion-toggle>
-            <ion-item ng-click="openLanguagePopover('interfaceLanguage', $event)">
+            <ion-item ng-click="openLanguagePopover('language', $event)">
                 <span translate="INTERFACE_LANGUAGE"></span>
                 <br/>
-                <strong>{{$root.languages[localViewData.interfaceLanguage].displayNames[$root.storedUser.settings.interfaceLanguage]}}</strong>
+                <strong>{{$root.languages[localViewData.language].displayNames[$root.user.settings.language]}}</strong>
             </ion-item>
             <ion-item ng-click="openProfilePopover($event)">
                 <span translate="PROFILE_IN_THIS_DEVICE"></span>

@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate'])
+angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts'])
     .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -18,9 +18,6 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 StatusBar.styleDefault();
             }
         });
-    })
-
-    .run(function ($rootScope, $ionicLoading, $translate) {
     })
 
     .config(function ($httpProvider) {
@@ -58,21 +55,26 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         }
     })
 
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
         $stateProvider
             .state('app', {
                 url: "/app",
                 abstract: true,
                 templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
+                controller: 'AppCtrl',
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication();
+                    }
+                },
             })
 
             .state('app.home', {
                 url: "/home",
                 resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication(true);
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(true);
                     }
                 },
                 views: {
@@ -83,47 +85,17 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 }
             })
 
-            .state('app.register', {
-                url: '/register',
+            .state('app.contests', {
+                url: "/contests",
                 resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication(true);
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication();
                     }
                 },
                 views: {
                     'menuContent': {
-                        controller: "RegisterCtrl",
-                        templateUrl: "templates/register.html"
-                    }
-                }
-            })
-
-            .state('app.login', {
-                url: '/login',
-                resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication(true);
-                    }
-                },
-                views: {
-                    'menuContent': {
-                        controller: "LoginCtrl",
-                        templateUrl: "templates/login.html"
-                    }
-                }
-            })
-
-            .state('app.play', {
-                url: "/play",
-                resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
-                    }
-                },
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/play.html",
-                        controller: 'PlayCtrl'
+                        templateUrl: "templates/contests.html",
+                        controller: 'ContestsCtrl'
                     }
                 }
             })
@@ -131,11 +103,11 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
             .state('app.quiz', {
                 url: "/quiz",
                 resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication();
                     }
                 },
-                params: {subjects: null},
+                params: {contestId: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quiz.html",
@@ -147,11 +119,11 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
             .state('app.quizResult', {
                 url: "/quizResult",
                 resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication();
                     }
                 },
-                params: {score: null},
+                params: {score: null, contest: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quizResult.html",
@@ -163,11 +135,10 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
             .state('app.logout', {
                 url: "/logout",
                 resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication();
                     }
                 },
-                params: {password: null},
                 views: {
                     'menuContent': {
                         controller: "LogoutCtrl"
@@ -178,11 +149,10 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
             .state('app.settings', {
                 url: "/settings",
                 resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication();
                     }
                 },
-                params: {password: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/settings.html",
@@ -191,61 +161,22 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 }
             })
 
-            .state('app.profiles', {
-                url: "/profiles",
-                resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
-                    }
-                },
-                params: {password: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/profiles.html",
-                        controller: "ProfilesCtrl"
-                    }
-                }
-            })
-
-            .state('app.profile', {
-                url: "/profile",
-                resolve: {
-                    auth: function resolveAuthentication(LoginService) {
-                        return LoginService.resolveAuthentication();
-                    }
-                },
-                params: {password: null, mode: null, profile: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/profile.html",
-                        controller: "ProfileCtrl"
-                    }
-                }
-            })
-
             .state('app.otherwise', {
                 url: "/otherwise",
+                auth: function resolveAuthentication(UserService) {
+                    return UserService.resolveAuthentication();
+                },
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/play.html",
-                        controller: 'OtherwiseCtrl'
+                        controller: "OtherwiseCtrl"
                     }
                 }
             });
 
 
-        $urlRouterProvider.otherwise(function ($injector, $location) {
-            var $state = $injector.get('$state');
-            var UserService = $injector.get('UserService');
-            var user = UserService.getStoreUser();
-            if (user && user.email) {
+        $urlRouterProvider.otherwise("/app/otherwise");
 
-                return 'app/play';
-            }
-            else {
-                return 'app/home';
-            }
-        })
+        //$locationProvider.html5Mode(true);
 
     })
 

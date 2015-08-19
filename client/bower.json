@@ -2,10 +2,12 @@
   "name": "mysmarteam",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0-rc.4",
-    "platform": "~1.3.0"
+    "ionic": "driftyco/ionic-bower#1.0.0-rc.4"
   },
   "resolutions": {
-    "angular": "1.3.13"
+    "angular": ">=1.2.26 <=1.5"
+  },
+  "dependencies": {
+    "facebook-connect-plugin": "https://cdn.rawgit.com/Wizcorp/phonegap-facebook-plugin/master/facebookConnectPlugin.js"
   }
 }

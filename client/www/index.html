@@ -1,10 +1,12 @@
 ﻿<!DOCTYPE html>
 <html>
-  <head>
+<head>
+    <base href="/"/>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-	<!-- Enable all requests, inline styles, and eval() -->
-	<meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <!-- Enable all requests, inline styles, and eval() -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net http://connect.facebook.net https://graph.facebook.com;">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -16,24 +18,38 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
-	<script src="lib/ionic/js/angular/angular-resource.min.js"></script>
-	<script src="lib/angular-route/angular-route.js"></script>
-	<script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
-	<script src="lib/angular-storage/angular-storage.js"></script>
+    <script src="lib/ionic/js/angular/angular-resource.min.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script>
+    <script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="lib/angular-storage/angular-storage.js"></script>
     <script src="lib/angular-messages/angular-messages.min.js"></script>
     <script src="lib/angular-http-auth/src/http-auth-interceptor.js"></script>
     <script src="lib/angular-translate/angular-translate.js"></script>
     <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+    <script src="lib/fusioncharts/js/fusioncharts.js"></script>
+    <script src="lib/angular-fusioncharts-3.1/src/angular-fusioncharts.js"></script>
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            if (!window.cordova) {
+                facebookConnectPlugin.browserInit("344342552056", "v2.3");
+            }
+        };
+    </script>
+    <script src="lib/facebook-connect-plugin/index.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
     <script src="js/app.js"></script>
-	<script src="js/services.js"></script>	
+    <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
-  </head>
 
-   <body ng-app="mySmarteam.app" animation="slide-left-right-ios7" translate-cloak>
-        <ion-nav-view></ion-nav-view>
-  </body>
+
+</head>
+
+<body ng-app="mySmarteam.app" animation="slide-left-right-ios7" translate-cloak>
+<ion-nav-view></ion-nav-view>
+</body>
+
 </html>
