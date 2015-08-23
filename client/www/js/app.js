@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts'])
+angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'angular-storage', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb'])
     .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -17,6 +17,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
+
         });
     })
 
@@ -39,6 +40,63 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         })
     })
 
+    .config(function (ezfbProvider) {
+        if (!window.cordova) {
+            ezfbProvider.setInitParams({
+                // This is my FB app id for plunker demo app
+                appId: '344342552056',
+
+                // Module default is `v2.0`.
+                // If you want to use Facebook platform `v2.3`, you'll have to add the following parameter.
+                // https://developers.facebook.com/docs/javascript/reference/FB.init
+                version: 'v2.4'
+            });
+        }
+    })
+
+/*
+    .config(function (AnalyticsProvider) {
+        // Set analytics account
+        AnalyticsProvider.setAccount('UA-66555929-1');
+
+        // Track all routes (or not)
+        AnalyticsProvider.trackPages(true);
+
+        // Track all URL query params (default is false)
+        AnalyticsProvider.trackUrlParams(true);
+
+        // Use display features plugin
+        AnalyticsProvider.useDisplayFeatures(true);
+
+        // Use analytics.js instead of ga.js
+        AnalyticsProvider.useAnalytics(true);
+
+        // Ignore first page view... helpful when using hashes and whenever your bounce rate looks obscenely low.
+        AnalyticsProvider.ignoreFirstPageLoad(true);
+
+        // Enable enhanced link attribution
+        AnalyticsProvider.useEnhancedLinkAttribution(true);
+
+        // Set custom cookie parameters for analytics.js
+        AnalyticsProvider.setCookieConfig({
+            cookieDomain: 'studyb4.ddns.net',
+            cookieName: 'mySmarteamAnalytics',
+            cookieExpires: 20000
+        });
+
+        // Change page event name
+        AnalyticsProvider.setPageEvent('$stateChangeSuccess');
+
+        // Delay script tag creation
+        // must manually call Analytics.createScriptTag(cookieConfig) or Analytics.createAnalyticsScriptTag(cookieConfig)
+        AnalyticsProvider.delayScriptTag(true);
+    })
+
+    .run(function (Analytics) {
+        // In case you are relying on automatic page tracking, you need to inject Analytics
+        // at least once in your application (for example in the main run() block)
+    })
+*/
     .config(function ($translateProvider) {
         $translateProvider.useSanitizeValueStrategy('escaped');
         $translateProvider.useStaticFilesLoader({
@@ -65,18 +123,13 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 controller: 'AppCtrl',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication();
+                        return UserService.resolveAuthentication("menu");
                     }
                 },
             })
 
             .state('app.home', {
                 url: "/home",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication(true);
-                    }
-                },
                 views: {
                     'menuContent': {
                         controller: "HomeCtrl",
@@ -89,7 +142,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 url: "/contests",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication();
+                        return UserService.resolveAuthentication("contests");
                     }
                 },
                 views: {
@@ -161,23 +214,24 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 }
             })
 
-            .state('app.otherwise', {
+            .state("app.otherwise", {
                 url: "/otherwise",
-                auth: function resolveAuthentication(UserService) {
-                    return UserService.resolveAuthentication();
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("otherwise");
+                    }
                 },
                 views: {
                     'menuContent': {
                         controller: "OtherwiseCtrl"
                     }
                 }
-            });
+            })
 
-
-        $urlRouterProvider.otherwise("/app/otherwise");
-
-        //$locationProvider.html5Mode(true);
-
+        $urlRouterProvider.otherwise( function($injector, $location) {
+            var $state = $injector.get("$state");
+            $state.go("app.otherwise");
+        });
     })
 
     .directive('myCompareTo', function () {

@@ -1,7 +1,7 @@
 angular.module('mySmarteam.services', [])
 
     //User Service
-    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, ErrorService, $translate, InfoService) {
+    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService) {
 
         var service = this;
         var path = 'user/';
@@ -16,6 +16,8 @@ angular.module('mySmarteam.services', [])
                     };
                     $rootScope.session = null;
 
+                    $translate.use($rootScope.user.settings.language);
+
                     if (callbackOnSuccess) {
                         callbackOnSuccess();
                     }
@@ -24,60 +26,43 @@ angular.module('mySmarteam.services', [])
             )
         };
 
-        service.getMyFacebookProfile = function (success, callbackOnSuccess, callbackOnError) {
-            facebookConnectPlugin.api("/me", [],
-                function (user) {
-                    $rootScope.user.name = user.name;
-                    $rootScope.user.image = "http://graph.facebook.com/" + user.id + "picture?type=square";
-                    $rootScope.user.facebookAccessToken = success.authResponse.accessToken;
-
-                    if (callbackOnSuccess) {
-                        callbackOnSuccess(success);
-                    }
-                },
-                function (error) {
-                    if (callbackOnError) {
-                        callbackOnError("Error getting facebook profile info");
-                    }
-                });
+        service.setFacebookCredentials = function (facebookAuthResponse) {
+            if (!$rootScope.user.thirdParty) {
+                $rootScope.user.thirdParty = {};
+            }
+            $rootScope.user.thirdParty.type = "facebook";
+            $rootScope.user.thirdParty.id = parseInt(facebookAuthResponse.userID, 10);
+            $rootScope.user.thirdParty.accessToken = facebookAuthResponse.accessToken;
+            console.log("FB Email: " + $rootScope.user.email)
         };
 
         service.getLoginStatus = function (callbackOnSuccess, callbackOnError) {
-            facebookConnectPlugin.getLoginStatus(function (success) {
-                    if (success.authResponse && success.status && success.status == "connected") {
-                        if (!$rootScope.user || !$rootScope.user.facebookAccessToken) {
-                            service.initUser(function () {
-                                service.getMyFacebookProfile(success, callbackOnSuccess, callbackOnError);
-                            },
-                                function() {
-                                    if (callbackOnSuccess) {
-                                        callbackOnSuccess(success);
-                                    }
-                                })
-                        }
-                        else {
-                            if (callbackOnSuccess) {
-                                callbackOnSuccess(success);
-                            }
-                        }
+
+            FacebookService.getLoginStatus(function (response) {
+                if (response.authResponse && response.status && response.status == "connected") {
+                    if (!$rootScope.user || !$rootScope.user.thirdPary) {
+                        service.setFacebookCredentials(response.authResponse);
+                        service.facebookServerConnect(function () {
+                            callbackOnSuccess(response);
+                        }, callbackOnError);
                     }
                     else {
-                        if (callbackOnError) {
-                            callbackOnError("not connected");
+                        service.setFacebookCredentials(response.authResponse);
+                        if (callbackOnSuccess) {
+                            callbackOnSuccess(response);
                         }
                     }
-                },
-                function (error) {
+                }
+                else {
                     if (callbackOnError) {
-                        callbackOnError(error)
+                        callbackOnError(response.status);
                     }
-                });
-        }
+                }
+            }, callbackOnError);
+        };
 
         service.facebookServerConnect = function (callbackOnSuccess, callbackOnError) {
-            callbackOnSuccess();
-            return;
-            return ApiService.post(path, "facebookConnect", {"accessToken": $rootScope.user.facebookAccessToken},
+            return ApiService.post(path, "facebookConnect", $rootScope.user,
                 function (session) {
                     $http.defaults.headers.common.Authorization = session.token;
                     $rootScope.session = session;
@@ -89,80 +74,67 @@ angular.module('mySmarteam.services', [])
         };
 
         service.facebookClientConnect = function (callbackOnSuccess, callbackOnError) {
-            facebookConnectPlugin.login(["public_profile", "email", "user_friends"],
-                function (success) {
-                    service.getMyFacebookProfile(success, function (success) {
-                            service.facebookServerConnect(callbackOnSuccess, callbackOnError);
-                        },
-                        function (error) {
-                            if (callbackOnError) {
-                                callbackOnError(error);
-                            }
-                        })
-                });
+            FacebookService.login(function(response) {
+                service.setFacebookCredentials(response.authResponse)
+                service.facebookServerConnect(callbackOnSuccess, callbackOnError);
+            }, callbackOnError, ["public_profile", "email"]);
+
         };
 
         service.logout = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "logout", null,
-                function (data, headers) {
-                    clearDataAfterLogout(callbackOnSuccess, callbackOnError);
-                },
-                function (status, data, headers) {
-                    clearDataAfterLogout(callbackOnSuccess, callbackOnError);
-                }
-            )
+            FacebookService.logout(function (response) {
+                return ApiService.post(path, "logout", null,
+                    function (data, headers) {
+                        clearDataAfterLogout(headers, callbackOnSuccess, callbackOnError);
+                    },
+                    function (status, data, headers) {
+                        clearDataAfterLogout(headers, callbackOnSuccess, callbackOnError);
+                    }
+                ), ErrorService.logError
+            });
         };
 
-        service.resolveAuthentication = function (initUser) {
+        var resolveRequests = [];
+
+        function resolveQueue() {
+            while (resolveRequests.length > 0) {
+                var item = resolveRequests.pop();
+                item.resolve();
+            }
+        }
+
+        service.resolveAuthentication = function (source) {
 
             var deferred = $q.defer();
+            resolveRequests.push(deferred);
 
-            //----------------------------------------------------
-            //-- Load languages from server - first time
-            //----------------------------------------------------
-            if (!$rootScope.languages) {
-                InfoService.getLanguages(
-                    function (data) {
-                        $rootScope.languages = data;
-                    },
-                    ErrorService.logErrorAndAlert)
+            if (resolveRequests.length > 1) {
+                return resolveRequests[resolveRequests.length - 1].promise;
             }
 
-            //-------------------------------------------------------------------------
-            //-- Init mode requested - for home screen, in un-Authenticated mode
-            //-------------------------------------------------------------------------
-            if (initUser && initUser == true) {
-                if (!$rootScope.user) {
-                    doInit(deferred);
-                }
-                else {
-                    deferred.resolve();
-                }
+            if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
+                resolveQueue();
                 return deferred.promise;
             }
+            else {
+                //-------------------------------------------------------------------------
+                //-- Normal flow - try performing auto login
+                //-------------------------------------------------------------------------
+                service.initUser(function () {
 
-            if ($rootScope.session || ($rootScope.user && $rootScope.user.facebookAccessToken)) {
-                deferred.resolve();
-                return deferred.promise;
-            }
-
-            //-------------------------------------------------------------------------
-            //-- Normal flow - try performing auto login
-            //-------------------------------------------------------------------------
-            service.getLoginStatus(function (success) {
-                    service.facebookServerConnect(function (data) {
-                            deferred.resolve();
-                            $translate.use($rootScope.user.settings.language);
-                        },
-                        function (status, error) {
-                            ErrorService.logError(status, error);
-                            doInit(deferred);
-                        }
-                    )
-                },
-                function (error) {
-                    doInit(deferred);
+                    //----------------------------------------------------
+                    //-- Load languages from server - can be done without waiting for result
+                    //----------------------------------------------------
+                    if (!$rootScope.languages) {
+                        InfoService.getLanguages(
+                            function (data) {
+                                $rootScope.languages = data;
+                                service.getLoginStatus(resolveQueue, resolveQueue);
+                            },
+                            ErrorService.logErrorAndAlert)
+                    }
                 });
+            }
 
             return deferred.promise;
         };
@@ -175,25 +147,10 @@ angular.module('mySmarteam.services', [])
             ApiService.post(path, "toggleSound", null, callbackOnSuccess, callbackOnError);
         }
 
-        function clearDataAfterLogout(callbackOnSuccess, callbackOnError) {
+        function clearDataAfterLogout(headers, callbackOnSuccess, callbackOnError) {
             delete headers["Authorization"];
             delete $http.defaults.headers.common["Authorization"];
-            $rootScope.session = null;
-            UserService.initUser(callbackOnSuccess, callbackOnError);
-        }
-
-        function doInit(deferred) {
-            service.initUser(function () {
-                if (deferred) {
-                    deferred.resolve()
-                }
-                $translate.use($rootScope.user.settings.language);
-            }, function () {
-                if (deferred) {
-                    deferred.resolve();
-                }
-                $translate.use($rootScope.user.settings.language);
-            });
+            service.initUser(callbackOnSuccess, callbackOnError);
         }
 
         return service;
@@ -205,8 +162,16 @@ angular.module('mySmarteam.services', [])
         var service = this;
         var path = 'info/';
 
-        service.getGeoInfo = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.get("http://www.telize.com/geoip",
+        var geoProviders = ["http://www.telize.com/geoip", "https://freegeoip.net/json"];
+
+        service.getGeoInfo = function (callbackOnSuccess, callbackOnError, geoProviderId) {
+            var config = {"timeout": 2000}
+            if (!geoProviderId) {
+                geoProviderId = 0;
+            }
+
+            console.log("trying with geo ip:" + geoProviders[geoProviderId]);
+            ApiService.get(geoProviders[geoProviderId], config,
                 function (geoInfo) {
                     $rootScope.geoInfo = geoInfo;
                     return ApiService.post(path, "geo", geoInfo,
@@ -216,14 +181,21 @@ angular.module('mySmarteam.services', [])
                                 callbackOnSuccess(geoResult);
                             }
                         },
-                        function (status, data) {
-                            if (callbackOnError) {
-                                callbackOnError(status, geoInfo);
-                            }
-                        })
+                        callbackOnError);
                 },
-                callbackOnError)
-        }
+                function (status, data) {
+                    if (geoProviderId < geoProviders.length - 1) {
+                        //Try another provider
+                        return service.getGeoInfo(callbackOnSuccess, callbackOnError, geoProviderId + 1);
+                    }
+                    else {
+                        if (callbackOnError) {
+                            callbackOnError(status, data);
+                        }
+                    }
+                });
+        };
+
 
         service.getLanguages = function (callbackOnSuccess, callbackOnError) {
             return ApiService.post(path, "languages", null,
@@ -237,12 +209,13 @@ angular.module('mySmarteam.services', [])
                         callbackOnError(status, data);
                     }
                 })
-        }
+        };
 
         return service;
+
     })
 
-    //Quiz Service
+    //Quiz Service.
     .factory('QuizService', function ($http, ApiService) {
 
         var service = this;
@@ -337,8 +310,8 @@ angular.module('mySmarteam.services', [])
                 })
         };
 
-        service.get = function (path, callbackOnSuccess, callbackOnError) {
-            return $http.get(path)
+        service.get = function (path, config, callbackOnSuccess, callbackOnError) {
+            return $http.get(path, config)
                 .success(function (data, status, headers, config) {
                     if (callbackOnSuccess) {
                         callbackOnSuccess(data);
@@ -353,3 +326,69 @@ angular.module('mySmarteam.services', [])
 
         return service;
     })
+
+    //Facebook Service
+    .factory('FacebookService', function (ezfb) {
+
+        var service = this;
+
+        service.login = function (callbackOnSuccess, callbackOnError, permissions) {
+            if (window.cordova) {
+                window.cordova.exec(callbackOnSuccess, callbackOnError, "FacebookConnectPlugin", "login", permissions);
+            }
+            else {
+                var permissionObject = {};
+                if (permissions && permissions.length > 0) {
+                    permissionObject.scope = permissions.toString();
+                }
+                ezfb.login(function (response) {
+                    if (response.authResponse) {
+                        callbackOnSuccess(response);
+                    }
+                    else if (callbackOnError) {
+                        callbackOnError(response.status);
+                    }
+                }, permissionObject)
+            }
+        };
+
+        service.getLoginStatus = function (callbackOnSuccess, callbackOnError) {
+            if (window.cordova) {
+                window.cordova.exec(callbackOnSuccess, callbackOnError, "FacebookConnectPlugin", "getLoginStatus", []);
+            }
+            else {
+                try {
+                    ezfb.getLoginStatus(function (response) {
+                        callbackOnSuccess(response);
+                    });
+                } catch (error) {
+                    if (!callbackOnError) {
+                        console.error(error.message);
+                    } else {
+                        callbackOnError(error.message);
+                    }
+                }
+            }
+        };
+
+        service.logout = function (callbackOnSuccess, callbackOnError) {
+            if (window.cordova) {
+                window.cordova.exec(callbackOnSuccess, callbackOnError, "FacebookConnectPlugin", "logout", []);
+            }
+            else {
+                try {
+                    ezfb.logout(function (response) {
+                        callbackOnSuccess(response);
+                    });
+                } catch (error) {
+                    if (!callbackOnError) {
+                        console.error(error.message);
+                    } else {
+                        callbackOnError(error.message);
+                    }
+                }
+            }
+        }
+
+        return service;
+    });

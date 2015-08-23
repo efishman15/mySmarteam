@@ -50,7 +50,7 @@ module.exports.subjects = function (req, res, next) {
 
         //get subjects
         function (connectData, callback) {
-            data.dbHelper = connectData.dbHelper;
+            data.DbHelper = connectData.DbHelper;
             data.isServerSide = false;
             data.closeConnection = true;
             dalDb.getSubjects(data, callback);
@@ -87,7 +87,7 @@ module.exports.start = function (req, res, next) {
         //Init quiz
         function (data, callback) {
             if (!data.session.contests[data.contestId]) {
-                data.dbHelper.close();
+                data.DbHelper.close();
                 callback(new exceptions.GeneralError(424, "ErrorNotJoinedToContest"));
             }
 

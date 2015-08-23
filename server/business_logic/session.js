@@ -19,7 +19,7 @@ module.exports.getSession = function (data, callback) {
         dalDb.connect,
 
         function(connectData, callback) {
-            data.dbHelper = connectData.dbHelper;
+            data.DbHelper = connectData.DbHelper;
             dalDb.retrieveSession(data, callback);
         }
     ];
@@ -51,7 +51,7 @@ module.exports.saveSettings = function (req, res, next) {
 
         //Retrieve the session
         function(connectData, callback) {
-            data.dbHelper = connectData.dbHelper;
+            data.DbHelper = connectData.DbHelper;
             data.token = token;
             dalDb.retrieveSession(data, callback);
         },

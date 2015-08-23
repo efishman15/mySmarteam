@@ -1,4 +1,5 @@
-<ion-view class="padding" view-title="לחצו על שם הקבוצה להצטרפות"
+<ion-view class="padding bubble-background" view-title="לחץ על הקבוצה להצטרפות"
+
 <ion-content class="padding" overflow-scroll="true"
              dir="{{$root.languages[$root.user.settings.language].direction}}">
     <ion-scroll style="height:100%">
@@ -12,7 +13,8 @@
                  events="fcEvents">
             </div>
             <div class="center padding">
-                <button class="item button button-stable button-small button-assertive" style="overflow: visible" ng-click="playContest(dataSource.contestId)">
+                <button class="item button button-stable button-small button-assertive" style="overflow: visible"
+                        ng-click="playContest(dataSource.contestId)">
                     שחק בתחרות
                 </button>
             </div>

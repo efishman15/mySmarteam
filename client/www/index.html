@@ -1,12 +1,11 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <base href="/"/>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <!-- Enable all requests, inline styles, and eval() -->
     <meta http-equiv="Content-Security-Policy"
-          content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net http://connect.facebook.net https://graph.facebook.com;">
+          content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://www.google-analytics.com https://connect.facebook.net http://connect.facebook.net https://graph.facebook.com;">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -28,15 +27,8 @@
     <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
     <script src="lib/fusioncharts/js/fusioncharts.js"></script>
     <script src="lib/angular-fusioncharts-3.1/src/angular-fusioncharts.js"></script>
-    <div id="fb-root"></div>
-    <script>
-        window.fbAsyncInit = function () {
-            if (!window.cordova) {
-                facebookConnectPlugin.browserInit("344342552056", "v2.3");
-            }
-        };
-    </script>
-    <script src="lib/facebook-connect-plugin/index.js"></script>
+    <script src="lib/angular-google-analytics/dist/angular-google-analytics.js"></script>
+    <script src="lib/angular-easyfb/angular-easyfb.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -44,7 +36,6 @@
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
-
 
 </head>
 

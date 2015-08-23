@@ -9,7 +9,7 @@ var exceptions = require('../utils/exceptions');
 function getSessionResponse(session) {
     return {
         "token": session.userToken,
-        "facebookAccessToken": session.facebookAccessToken,
+        "thirdParty" : {"id" : session.facebookUserId, "accessToken" : session.facebookAccessToken, "type" : "facebook"},
         "avatar": session.avatar,
         "name": session.name,
         "settings": session.settings
@@ -19,7 +19,7 @@ function getSessionResponse(session) {
 //--------------------------------------------------------------------------
 // facebookConnect
 //
-// data: facebookAccessToken, facebookUserId, settings (optional)
+// data: user (should containt user.thirdParty (id, type, accessToken)
 //--------------------------------------------------------------------------
 module.exports.facebookConnect = function (req, res, next) {
     var data = req.body;
@@ -30,7 +30,16 @@ module.exports.facebookConnect = function (req, res, next) {
             dalFacebook.getUserInfo(data, callback);
         },
 
-        dalDb.facebookLogin,
+        //Open db connection
+        function (data, callback) {
+            dalDb.connect(callback);
+        },
+
+        //Try to login (or register) with the facebook info supplied
+        function (connectData, callback) {
+            data.DbHelper = connectData.DbHelper;
+            dalDb.facebookLogin(data, callback)
+        },
 
         //Create/Update session
         function (data, callback) {

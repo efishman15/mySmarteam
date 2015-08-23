@@ -26,51 +26,57 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngResource', '
 
         $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
                 UserService.getLoginStatus(function (success) {
-                        service.facebookConnect(sucess.authResponse.accessToken,
+                        UserService.facebookServerConnect(
                             function (data) {
                                 authService.loginConfirmed(null, function (config) {
                                     return MyAuthService.confirmLogin(data.token, config);
                                 });
                             },
                             function (status, error) {
-                                UserService.initUser();
                                 $state.go('app.home', {}, {reload: false, inherit: true});
                             }
                         )
                     },
                     function (error) {
-                        UserService.initUser();
                         $state.go('app.home', {}, {reload: false, inherit: true});
                     });
             }
         );
     })
 
-    .controller('HomeCtrl', function ($scope, $rootScope, $state, UserService, ErrorService) {
+    .controller('HomeCtrl', function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($rootScope.session) {
+                $ionicHistory.nextViewOptions({
+                    disableBack: true
+                });
                 $state.go('app.contests', {}, {reload: false, inherit: true});
-                return;
+            }
+            else if (!$rootScope.user) {
+                UserService.initUser();
             }
         });
 
         $scope.facebookConnect = function () {
-            if (!$rootScope.user || !$rootScope.user.facebookAccessToken) {
-                UserService.getLoginStatus(function (success) {
-                    UserService.facebookClientConnect(function (session) {
-                        $state.go('app.contests', {}, {reload: false, inherit: true})
-                    })
-                })
-            }
-            else {
-                UserService.facebookClientConnect(function (session) {
-                    $state.go('app.contests', {}, {reload: false, inherit: true});
-                }, ErrorService.logError)
-            }
+            UserService.facebookClientConnect(function (session) {
+                $ionicHistory.nextViewOptions({
+                    disableBack: true
+                });
+                $state.go('app.contests', {}, {reload: false, inherit: true});
+            })
         }
     })
 
-    .controller('ContestsCtrl', function ($scope, $state, $rootScope, ErrorService) {
+    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory) {
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+            if (!$rootScope.session) {
+                $ionicHistory.nextViewOptions({
+                    disableBack: true
+                });
+                $state.go('app.home', {}, {reload: false, inherit: true});
+            }
+        });
 
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
@@ -265,7 +271,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngResource', '
                     $ionicHistory.nextViewOptions({
                         disableBack: true
                     });
-                    $rootScope.session.profiles[$rootScope.session.settings.profileId].score += $scope.quiz.score;
+                    $rootScope.session.score += $scope.quiz.score;
                     $state.go('app.quizResult', {
                         score: $scope.quiz.score,
                         contest: $scope.quiz.contest
@@ -410,9 +416,12 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngResource', '
         });
     })
 
-    .controller('OtherwiseCtrl', function ($scope, $rootScope, $state) {
+    .controller('OtherwiseCtrl', function ($scope, $rootScope, $state, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function () {
-            if ($rootScope.session || ($rootScope.user && $rootScope.user.facebookAccessToken)) {
+            $ionicHistory.nextViewOptions({
+                disableBack: true
+            });
+            if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
                 $state.go('app.contests', {}, {reload: false, inherit: true});
             }
             else {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.mysmarteam.contest" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>mysmarteam</name>
+  <name>mySmarteam</name>
   <description>
-        An Ionic Framework and Cordova project.
+        Choose your team out of many contests and play for your team to win.
     </description>
   <author email="eddy.fishman@gmail.com" href="http://www.mysmarteam.com/">
       mySmarteam Staff
@@ -17,6 +17,8 @@
   <preference name="BackupWebStorage" value="none"/>
   <preference name="SplashScreen" value="screen"/>
   <preference name="SplashScreenDelay" value="3000"/>
+  <preference name="loadUrlTimeoutValue" value="60000" />
+  <preference name="InAppBrowserStorageEnabled" value="true"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>

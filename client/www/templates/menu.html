@@ -7,6 +7,7 @@
         </a>
     </ion-header-bar>
 </div>
+
 <ion-side-menus enable-menu-with-back-views="true"
                 dir="{{$root.languages[$root.user.settings.language].direction}}">
     <ion-side-menu-content>
@@ -21,19 +22,16 @@
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
     </ion-side-menu-content>
-    <ion-side-menu side="left" ng-hide="$root.languages[$root.user.settings.language].align=='right'">
+        <ion-side-menu side="left" ng-hide="$root.languages[$root.user.settings.language].align=='right'">
         <ion-header-bar class="bar-stable">
             <h1 class="title">{{$root.user.email}}</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.settings',$event)" class="ion-gear-a">
+                <ion-item nav-clear menu-close href="#app/settings" class="ion-gear-a">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.profiles',$event)" class="ion-person">
-                    {{ 'PROFILES' | translate}}
-                </ion-item>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)" class="ion-log-out">
+                <ion-item nav-clear menu-close href="#app/logout" class="ion-log-out">
                     {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>
@@ -41,18 +39,13 @@
     </ion-side-menu>
     <ion-side-menu side="right" ng-hide="$root.languages[$root.user.settings.language].align=='left'">
         <ion-header-bar class="bar-stable">
-            <img class="item-avatar" src="{{$root.user.image}}">
-            <h1 class="title">{{$root.user.name}}</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.settings',$event)" class="ion-gear-a">
+                <ion-item nav-clear menu-close href="#app/settings" class="ion-gear-a">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.profiles',$event)" class="ion-person">
-                    {{ 'PROFILES' | translate}}
-                </ion-item>
-                <ion-item nav-clear menu-close ng-click="checkPassword('app.logout',$event)" class="ion-log-out">
+                <ion-item nav-clear menu-close href="#app/logout" class="ion-log-out">
                     {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>

@@ -10,7 +10,11 @@
             <p>
 
             <div class="padding">
-                <button class="button button-facebook button-full" ng-click="facebookConnect()">
+
+                <button class="button button-facebook button-full"
+                        analytics-on="click"
+                        analytics-event="FacebookLogin"
+                        analytics-properties="{ category: 'Login' }" ng-click="facebookConnect()">
                     Login with Facebook
                 </button>
             </div>
