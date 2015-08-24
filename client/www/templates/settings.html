@@ -3,7 +3,7 @@
         <ion-nav-back-button class="back-button">
         </ion-nav-back-button>
     </ion-nav-bar>
-    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}" drag-content="false">
+    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}">
         <ion-list class="card">
             <ion-item ng-click="openLanguagePopover($event)">
                 <span translate="LANGUAGE"></span>

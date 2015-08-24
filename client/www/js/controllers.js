@@ -382,6 +382,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             else {
                 $ionicSideMenuDelegate.toggleRight();
             }
+            $ionicSideMenuDelegate.canDragContent(false);
         });
 
         //-------------------------------------------------------
