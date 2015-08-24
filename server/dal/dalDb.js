@@ -289,9 +289,9 @@ module.exports.storeSession = function (data, callback) {
     var sessionsCollection = data.DbHelper.getCollection("Sessions");
     sessionsCollection.update(
         {
-            "_id": session._id
+            "_id": data.session._id
         },
-        session,
+        data.session,
         function (err, updated) {
             if (err) {
 

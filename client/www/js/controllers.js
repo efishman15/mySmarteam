@@ -1,4 +1,4 @@
-angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngResource', 'ngAnimate'])
+angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
     .controller('AppCtrl', function ($scope, $rootScope, $state, $ionicLoading, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicPopover) {
 
@@ -369,12 +369,19 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngResource', '
         });
     })
 
-    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate, $stateParams) {
+    .controller('SettingsCtrl', function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate, $ionicHistory) {
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
         $scope.$on('$ionicView.beforeEnter', function () {
             $scope.localViewData = JSON.parse(JSON.stringify($rootScope.session.settings));
+            //A bug - if putting "menu-close" in menu.html - back button won't show - have to close the menu programatically
+            if ($rootScope.languages[$rootScope.session.settings.language].direction == "ltr") {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
+            else {
+                $ionicSideMenuDelegate.toggleRight();
+            }
         });
 
         //-------------------------------------------------------
@@ -400,7 +407,6 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngResource', '
         });
 
         $scope.$on('$ionicView.beforeLeave', function () {
-
             if (JSON.stringify($scope.localViewData) != JSON.stringify($rootScope.session.settings)) {
                 //Dirty settings - save to server
                 var postData = {"settings": $scope.localViewData};
