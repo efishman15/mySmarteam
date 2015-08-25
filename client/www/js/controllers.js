@@ -11,20 +11,25 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         $scope.changeLanguage = function (language) {
             $rootScope.user.settings.language = language.value;
             $translate.use(language.value);
+
         };
 
-        $rootScope.$on('loading:show', function () {
+        $rootScope.$on('$translateChangeEnd', function(data) {
+            $rootScope.$broadcast("mySmarteam-languageChanged");
+        });
+
+        $rootScope.$on("loading:show", function () {
             $ionicLoading.show({
-                    template: "<span dir='" + $rootScope.languages[$rootScope.user.settings.language].direction + "'>" + $translate.instant('LOADING') + "</span>"
+                    template: "<span dir='" + $rootScope.languages[$rootScope.user.settings.language].direction + "'>" + $translate.instant("LOADING") + "</span>"
                 }
             )
         });
 
-        $rootScope.$on('loading:hide', function () {
+        $rootScope.$on("loading:hide", function () {
             $ionicLoading.hide()
         })
 
-        $rootScope.$on('event:auth-loginRequired', function (e, rejection) {
+        $rootScope.$on("event:auth-loginRequired", function (e, rejection) {
                 UserService.getLoginStatus(function (success) {
                         UserService.facebookServerConnect(
                             function (data) {
@@ -33,18 +38,128 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                                 });
                             },
                             function (status, error) {
-                                $state.go('app.home', {}, {reload: false, inherit: true});
+                                $state.go("app.home", {}, {reload: false, inherit: true});
                             }
                         )
                     },
                     function (error) {
-                        $state.go('app.home', {}, {reload: false, inherit: true});
+                        $state.go("app.home", {}, {reload: false, inherit: true});
                     });
             }
         );
     })
 
-    .controller('HomeCtrl', function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory) {
+    .controller('HomeCtrl', function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory, $ionicPopup, $translate) {
+
+        function getDemoContestAnnotations() {
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            ctx.font = "10px Arial";
+
+            var contestEndsText = $translate.instant("CONTEST_ENDS_IN", {
+                "number": 3,
+                "units": $translate.instant("DEMO_CONTEST_ENDS_IN_UNITS")
+            });
+            var contestEndsWidth = ctx.measureText(contestEndsText).width;
+            var contestParticipantsText = $translate.instant("CONTEST_PARTICIPANTS", {"participants": 45});
+            var contestParticipantsWidth = ctx.measureText(contestParticipantsText).width;
+            ctx.font = "12px Arial";
+
+            return {
+                "contestEndsText": contestEndsText,
+                "contestEndsWidth": contestEndsWidth,
+                "contestParticipantsText": contestParticipantsText,
+                "contestParticipantsWidth": contestParticipantsWidth
+            }
+        }
+
+        $rootScope.$on('mySmarteam-languageChanged', function (e, rejection) {
+            refreshDemoContest();
+        });
+
+        var contestAnnotations = getDemoContestAnnotations();
+        $scope.demoContest =
+        {
+            chart: {
+                "baseFont": "Arial",
+                "showBorder": 1,
+                "showCanvasBorder": 1,
+                "yAxisMinValue": 0.0,
+                "yAxisMaxValue": 1.0,
+                "numDivLines": 0,
+                "numberScaleValue": ".01",
+                "numberScaleUnit": "%",
+                "showYAxisValues": 0,
+                "showCanvasBg": 0,
+                "showCanvasBase": 0,
+                "valueFontSize": 12,
+                "labelFontSize": 14,
+                "chartBottomMargin": 30,
+                "showToolTip": 0
+            },
+            data: [
+                {
+                    "value": "0.45"
+
+                },
+                {
+                    "value": "0.55"
+                }
+            ],
+            "annotations": {
+                "groups": [
+                    {
+                        "id": "infobar",
+                        "items": [
+                            {
+                                "id": "label",
+                                "type": "text",
+                                "y": "$chartendy - 8",
+                                "fontSize": 10,
+                                "font": "Arial",
+                                "fontColor": "#FF0000"
+                            },
+                            {
+                                "id": "label",
+                                "type": "text",
+                                "y": "$chartendy - 8",
+                                "fontSize": 10,
+                                "font": "Arial",
+                                "fontColor": "#FF0000"
+                            }
+                        ]
+                    }
+                ]
+            },
+        };
+        refreshDemoContest();
+
+        function refreshDemoContest() {
+            var contestAnnotations = getDemoContestAnnotations();
+            $scope.demoContest.chart.caption = $translate.instant("WHO_IS_SMARTER");
+            $scope.demoContest.chart.subCaption = $translate.instant("CONTEST_NAME", {
+                "team0": $translate.instant("DEMO_TEAM0"),
+                "team1": $translate.instant("DEMO_TEAM1")
+            });
+
+            $scope.demoContest.data[0].label = $translate.instant("DEMO_TEAM0");;
+            $scope.demoContest.data[1].label = $translate.instant("DEMO_TEAM1");
+
+            $scope.demoContest.annotations.groups[0].items[0].text = contestAnnotations.contestEndsText;
+            $scope.demoContest.annotations.groups[0].items[1].text = contestAnnotations.contestParticipantsText;
+
+            if ($rootScope.languages[$rootScope.user.settings.language].direction == "ltr") {
+                //ltr
+                $scope.demoContest.annotations.groups[0].items[0].x = "$chartstartx + " + (contestAnnotations.contestEndsWidth / 2 + 3);
+                $scope.demoContest.annotations.groups[0].items[1].x = "$chartendx - " + (contestAnnotations.contestParticipantsWidth / 2 + 3);
+            }
+            else {
+                //rtl
+                $scope.demoContest.annotations.groups[0].items[0].x = "$chartendx - " + (contestAnnotations.contestEndsWidth / 2 + 3);
+                $scope.demoContest.annotations.groups[0].items[1].x = "$chartstartx + " + (contestAnnotations.contestParticipantsWidth / 2 + 3);
+            }
+        }
+
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($rootScope.session) {
                 $ionicHistory.nextViewOptions({
@@ -64,7 +179,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 });
                 $state.go('app.contests', {}, {reload: false, inherit: true});
             })
-        }
+        };
     })
 
     .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory) {
@@ -77,7 +192,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 $state.go('app.home', {}, {reload: false, inherit: true});
             }
         });
-
+return;
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         ctx.font = "10px Arial";

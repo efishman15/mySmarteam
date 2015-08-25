@@ -1,22 +1,32 @@
 <ion-view>
-    <ion-pane ion-side-menu-content drag-content="false">
-        <ion-content class="padding" dir="{{$root.languages[$root.user.settings.language].direction}}">
-            <p class="padding" translate="HOME_WELCOME_TEXT1">
+        <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}">
 
-            <p>
+            <h3 class="padding-top center" translate="WHO_IS_SMARTER_QUESTION"></h3>
+            <h4 class="center" translate="HOME_WELCOME_PLAY_TRIVIA"></h4>
 
-            <p class="padding" translate="HOME_WELCOME_TEXT2">
-
-            <p>
-
-            <div class="padding">
-
-                <button class="button button-facebook button-full"
-                        analytics-on="click"
-                        analytics-event="FacebookLogin"
-                        analytics-properties="{ category: 'Login' }" ng-click="facebookConnect()">
-                    Login with Facebook
-                </button>
+            <div class="center padding-top">
+                <h5 translate="LEADING_CONTEST"></h5>
             </div>
+            <div id="fusionChart" class="center"
+                 fusioncharts
+                 width="260"
+                 height="180"
+                 type="column3d"
+                 dataSource="{{demoContest}}">
+            </div>
+
+            <div class="row">
+                <div class="col text-center">
+                    <button class="center button button-block button-facebook"
+                            analytics-on="click"
+                            analytics-event="FacebookLogin"
+                            analytics-properties="{ category: 'Login' }" ng-click="facebookConnect()">
+                        {{'FACEBOOK_CONNECT' | translate}}
+                    </button>
+                </div>
+            </div>
+
+            <canvas id="myCanvas" width="0" height="0"></canvas>
         </ion-content>
+
 </ion-view>

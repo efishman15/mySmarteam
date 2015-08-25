@@ -10,7 +10,7 @@
 
 <ion-side-menus enable-menu-with-back-views="true"
                 dir="{{$root.languages[$root.user.settings.language].direction}}">
-    <ion-side-menu-content>
+    <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-stable" align-title="center" ng-hide="!$root.session">
             <ion-nav-back-button class="nav-button">
             </ion-nav-back-button>
@@ -23,29 +23,34 @@
         <ion-nav-view name="menuContent"></ion-nav-view>
     </ion-side-menu-content>
     <ion-side-menu side="left" ng-hide="$root.languages[$root.user.settings.language].align=='right'">
-        <ion-header-bar class="bar-stable">
-            <h1 class="title">{{$root.user.email}}</h1>
+        <ion-header-bar class="bar-assertive">
+            <h1 class="title">{{'TOOLS' | translate}}</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item href="#app/settings" class="ion-gear-a">
+                <ion-item href="#app/settings">
+                    <i class="ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close href="#app/logout" class="ion-log-out">
+                <ion-item nav-clear menu-close href="#app/logout">
+                    <i class="ion-log-out"></i>
                     {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>
     <ion-side-menu side="right" ng-hide="$root.languages[$root.user.settings.language].align=='left'">
-        <ion-header-bar class="bar-stable">
+        <ion-header-bar class="bar-assertive">
+            <h1 class="title">{{'TOOLS' | translate}}</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item href="#/app/settings" class="ion-gear-a">
+                <ion-item href="#app/settings">
+                    <i class="ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/logout" class="ion-log-out">
+                <ion-item nav-clear menu-close href="#app/logout">
+                    <i class="ion-log-out"></i>
                     {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>

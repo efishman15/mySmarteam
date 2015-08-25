@@ -92,6 +92,10 @@ angular.module('mySmarteam.services', [])
             return ApiService.post(path, "facebookConnect", $rootScope.user,
                 function (session) {
                     $http.defaults.headers.common.Authorization = session.token;
+                    if ($rootScope.user.settings.language != session.settings.language) {
+                        $translate.use(session.settings.language);
+                    }
+                    $rootScope.user.settings = session.settings;
                     $rootScope.session = session;
                     callbackOnSuccess(session);
                 },
@@ -196,7 +200,7 @@ angular.module('mySmarteam.services', [])
             if (!language) {
                 language = "en";
             }
-            if (languge.length > 2) {
+            if (language.length > 2) {
                 language = language.toLowerCase().substring(0,2);
             }
 
