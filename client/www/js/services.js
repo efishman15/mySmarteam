@@ -32,7 +32,7 @@ angular.module('mySmarteam.services', [])
 
 
         //Init user
-        service.initUser = function (callbackOnSuccess, callbackOnError) {
+        service.initUser = function (callbackOnSuccess) {
 
             InfoService.getGeoInfo(function (geoResult) {
                     $rootScope.user = {
@@ -151,10 +151,10 @@ angular.module('mySmarteam.services', [])
                     //----------------------------------------------------
                     //-- Load languages from server - can be done without waiting for result
                     //----------------------------------------------------
-                    if (!$rootScope.languages) {
-                        InfoService.getLanguages(
+                    if (!$rootScope.settings) {
+                        InfoService.getSettings(
                             function (data) {
-                                $rootScope.languages = data;
+                                $rootScope.settings = data;
                                 service.getLoginStatus(resolveQueue, resolveQueue);
                             },
                             ErrorService.logErrorAndAlert)
@@ -241,9 +241,9 @@ angular.module('mySmarteam.services', [])
         };
 
 
-        //Get languages from server
-        service.getLanguages = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "languages", null,
+        //Get settings from server
+        service.getSettings = function (callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "settings", null,
                 function (data) {
                     if (callbackOnSuccess) {
                         callbackOnSuccess(data);
@@ -261,6 +261,38 @@ angular.module('mySmarteam.services', [])
     })
 
     //Quiz Service.
+    .factory('ContestsService', function ($http, ApiService) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+        var path = 'contests/';
+
+        //add contest
+        service.addContest = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "add", postData, callbackOnSuccess, callbackOnError)
+        };
+
+        //Set Contest
+        service.setContest = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "set", postData, callbackOnSuccess, callbackOnError)
+        };
+
+        //Remove Contest
+        service.removeContest = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "remove", postData, callbackOnSuccess, callbackOnError)
+        };
+
+        //Get Contests
+        service.getContests = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "get", postData, callbackOnSuccess, callbackOnError)
+        };
+
+        return service;
+    })
+
+    //Quiz Service.
     .factory('QuizService', function ($http, ApiService) {
 
         //----------------------------------------------
@@ -275,8 +307,8 @@ angular.module('mySmarteam.services', [])
         };
 
         //Answer a quiz question
-        service.answer = function (answer, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "answer", answer, callbackOnSuccess, callbackOnError)
+        service.answer = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "answer", postData, callbackOnSuccess, callbackOnError)
         };
 
         //Get next question
@@ -306,7 +338,7 @@ angular.module('mySmarteam.services', [])
         service.logErrorAndAlert = function (status, error) {
             if (error && error.title) {
                 $ionicPopup.alert({
-                    cssClass: $rootScope.languages[$rootScope.user.settings.language].direction,
+                    cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
                     title: $translate.instant(error.title),
                     template: $translate.instant(error.message),
                     okText: $translate.instant("OK")
@@ -314,7 +346,7 @@ angular.module('mySmarteam.services', [])
             }
             else {
                 $ionicPopup.alert({
-                    cssClass: $rootScope.languages[$rootScope.user.settings.language].direction,
+                    cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
                     template: error.message ? error.message : error,
                     okText: $translate.instant("OK")
                 });

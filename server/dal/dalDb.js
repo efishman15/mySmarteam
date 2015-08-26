@@ -660,7 +660,7 @@ function getNextQuestion(data, callback) {
 //------------------------------------------------------------------------------------------------
 module.exports.addContest = addContest;
 function addContest(data, callback) {
-    var contestsCollection = data.DbHelper.getCollection("Users");
+    var contestsCollection = data.DbHelper.getCollection("Contests");
 
     contestsCollection.insert(data.contest
         , {}, function (err, contest) {
@@ -688,10 +688,10 @@ function addContest(data, callback) {
 // input: DbHelper, session, contest
 // output: contest (most updated object in db)
 //------------------------------------------------------------------------------------------------
-module.exports.setContest = addContest;
-function addContest(data, callback) {
+module.exports.setContest = setContest;
+function setContest(data, callback) {
     var contestsCollection = data.DbHelper.getCollection('Contests');
-    usersCollection.findAndModify({"_id": ObjectId(data.contest._id)}, {},
+    contestsCollection.findAndModify({"_id": ObjectId(data.contest._id)}, {},
         {
             $set: data.contest
         }, {}, function (err, contest) {
@@ -727,8 +727,8 @@ function addContest(data, callback) {
 module.exports.removeContest = removeContest;
 function removeContest(data, callback) {
 
-    var contestsCollection = data.DbHelper.getCollection('Contest');
-    sessionsCollection.remove(
+    var contestsCollection = data.DbHelper.getCollection('Contests');
+    contestsCollection.remove(
         {
             "_id": data.contest.id
         }
@@ -747,4 +747,39 @@ function removeContest(data, callback) {
 
             callback(null, data);
         });
+}
+
+
+//------------------------------------------------------------------------------------------------
+// getContests
+//
+// Get all contests.
+// TODO: retrieve by filters of tabs/paging etc...
+//
+// data:
+// -----
+// input: DbHelper, session, contest
+// output: <NA>
+//------------------------------------------------------------------------------------------------
+module.exports.getContests = getContests;
+function getContests(data, callback) {
+
+    var contestsCollection = data.DbHelper.getCollection('Contests');
+    contestsCollection.find({}, {}, function (err, contestsCursor) {
+        if (err || !contestsCursor) {
+            callback(new exceptions.GeneralError(500, "Error retrieving from the database"));
+            return;
+        }
+        contestsCursor.toArray(function (err, contests) {
+            for (var i = 0; i < contests.length; i++) {
+                contests[i].participants += contests[i].manualParticipants;
+
+                //TODO: real calculations of those 2 lines
+                contests[i].endsInNumber = 3;
+                contests[i].endsInUnits = "DAYS";
+            }
+            data.contests = contests;
+            callback(null, data);
+        })
+    })
 }

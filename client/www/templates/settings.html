@@ -3,12 +3,12 @@
         <ion-nav-back-button class="back-button">
         </ion-nav-back-button>
     </ion-nav-bar>
-    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}">
+    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <ion-list class="card">
             <ion-item ng-click="openLanguagePopover($event)">
                 <span translate="LANGUAGE"></span>
                 <br/>
-                <strong>{{$root.languages[localViewData.language].displayNames[$root.user.settings.language]}}</strong>
+                <strong>{{$root.settings.languages[localViewData.language].displayNames[$root.user.settings.language]}}</strong>
             </ion-item>
             <ion-toggle
                     ng-model="localViewData.sound"

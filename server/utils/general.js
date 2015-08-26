@@ -1,6 +1,6 @@
 var supportedLanguages = {
     "en": {
-        "value" : "en",
+        "value": "en",
         "flag": "images/languages/unitedstates.jpg",
         "direction": "ltr",
         "align": "left",
@@ -8,19 +8,19 @@ var supportedLanguages = {
         "displayNames": {"en": "English", "he": "אנגלית", "es": "Inglés"}
     },
     "he": {
-        "value" : "he",
+        "value": "he",
         "flag": "images/languages/israel.jpg",
         "direction": "rtl",
-        "triviaTopics" : [5,270],
+        "triviaTopics": [5, 270],
         "align": "right",
         "oppositeAlign": "left",
         "displayNames": {"en": "Hebrew", "he": "עברית", "es": "Hebreo"}
     },
     "es": {
-        "value" : "es",
+        "value": "es",
         "flag": "images/languages/spain.jpg",
         "direction": "ltr",
-        "triviaSubjectId" : 210,
+        "triviaSubjectId": 210,
         "align": "left",
         "oppositeAlign": "right",
         "displayNames": {"en": "Spanish", "he": "ספרדית", "es": "Español"}
@@ -28,9 +28,61 @@ var supportedLanguages = {
 }
 
 var triviaTopisPerLangage = {
-    "en" : [10],
-    "he" : [5,270],
-    "es" : [465]
+    "en": [10],
+    "he": [5, 270],
+    "es": [465]
+}
+
+var chartSettings = {
+    "generalData": {"annotationsFont": "10px Arial", "annotationHorizontalMagicNumber" : 3},
+    "chartObject": {
+        "chart": {
+            "plotBorderAlpha": 0,
+            "baseFont": "Arial",
+            "baseFontSize": 12,
+            "showBorder": 1,
+            "showCanvasBorder": 1,
+            "yAxisMinValue": 0.0,
+            "yAxisMaxValue": 1.0,
+            "numDivLines": 0,
+            "numberScaleValue": ".01",
+            "numberScaleUnit": "%",
+            "showYAxisValues": 0,
+            "showCanvasBg": 0,
+            "showCanvasBase": 0,
+            "valueFontSize": 12,
+            "labelFontSize": 16,
+            "chartBottomMargin": 25,
+            "valuePadding": 0,
+            "useroundedges": "1",
+            "showToolTip": 0
+        },
+        "annotations": {
+            "groups": [
+                {
+                    "id": "infobar",
+                    "items": [
+                        {
+                            "id": "label",
+                            "type": "text",
+                            "y": "$chartendy - 8",
+                            "fontSize": 10,
+                            "font": "Arial",
+                            "fontColor": "#FF0000"
+                        },
+                        {
+                            "id": "label",
+                            "type": "text",
+                            "y": "$chartendy - 8",
+                            "fontSize": 10,
+                            "font": "Arial",
+                            "fontColor": "#FF0000"
+                        }
+                    ]
+                }
+            ]
+        },
+    },
 }
 
 module.exports.getDirectionByLanguage = getDirectionByLanguage;
@@ -83,8 +135,8 @@ module.exports.geoInfo = function (req, res, next) {
     res.json({"language": language});
 }
 
-module.exports.getLanguages = function (req, res, next) {
-    res.json(supportedLanguages);
+module.exports.getSettings = function (req, res, next) {
+    res.json({"languages": supportedLanguages, "chartSettings": chartSettings});
 }
 
 module.exports.getLanguageTriviaTopics = function (language) {

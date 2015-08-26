@@ -1,6 +1,6 @@
-<div dir="{{$root.languages[$root.user.settings.language].direction}}">
+<div dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
     <ion-header-bar class="padding" ng-hide="$root.session">
-        <a class="language padding" ng-repeat="language in $root.languages track by language.value" class="padding" title="{{language.displayNames[$root.user.settings.language]}}"
+        <a class="language padding" ng-repeat="language in $root.settings.languages track by language.value" class="padding" title="{{language.displayNames[$root.user.settings.language]}}"
            ng-click="changeLanguage(language)">
             <img style="border: 1px solid" ng-src="{{language.flag}}" width="20" height="12" alt="{{language.displayNames[$root.user.settings.language]}}">
         </a>
@@ -8,20 +8,20 @@
 </div>
 
 <ion-side-menus enable-menu-with-back-views="true"
-                dir="{{$root.languages[$root.user.settings.language].direction}}">
+                dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
     <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-stable" align-title="center" ng-hide="!$root.session">
             <ion-nav-back-button class="nav-button">
             </ion-nav-back-button>
-            <ion-nav-buttons side="{{$root.languages[$root.user.settings.language].align}}">
+            <ion-nav-buttons side="{{$root.settings.languages[$root.user.settings.language].align}}">
                 <button class="button button-icon button-clear ion-navicon"
-                        menu-toggle="{{$root.languages[$root.user.settings.language].align}}">
+                        menu-toggle="{{$root.settings.languages[$root.user.settings.language].align}}">
                 </button>
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
     </ion-side-menu-content>
-    <ion-side-menu side="left" ng-hide="$root.languages[$root.user.settings.language].align=='right'">
+    <ion-side-menu side="left" ng-hide="$root.settings.languages[$root.user.settings.language].align=='right'">
         <ion-header-bar align-title="center" class="bar-assertive center">
             <h1 class="title">{{'TOOLS' | translate}}</h1>
         </ion-header-bar>
@@ -42,7 +42,7 @@
             </ion-list>
         </ion-content>
     </ion-side-menu>
-    <ion-side-menu side="right" ng-hide="$root.languages[$root.user.settings.language].align=='left'">
+    <ion-side-menu side="right" ng-hide="$root.settings.languages[$root.user.settings.language].align=='left'">
         <ion-header-bar align-title="center" class="bar-assertive">
             <h1 class="title">{{'TOOLS' | translate}}</h1>
         </ion-header-bar>

@@ -14,7 +14,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
         $rootScope.$on("loading:show", function () {
             $ionicLoading.show({
-                    template: "<span dir='" + $rootScope.languages[$rootScope.user.settings.language].direction + "'>" + $translate.instant("LOADING") + "</span>"
+                    template: "<span dir='" + $rootScope.settings.languages[$rootScope.user.settings.language].direction + "'>" + $translate.instant("LOADING") + "</span>"
                 }
             )
         });
@@ -150,7 +150,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             $scope.demoContest.annotations.groups[0].items[0].text = contestAnnotations.contestEndsText;
             $scope.demoContest.annotations.groups[0].items[1].text = contestAnnotations.contestParticipantsText;
 
-            if ($rootScope.languages[$rootScope.user.settings.language].direction == "ltr") {
+            if ($rootScope.settings.languages[$rootScope.user.settings.language].direction == "ltr") {
                 //ltr
                 $scope.demoContest.annotations.groups[0].items[0].x = "$chartstartx + " + (contestAnnotations.contestEndsWidth / 2 + 3);
                 $scope.demoContest.annotations.groups[0].items[1].x = "$chartendx - " + (contestAnnotations.contestParticipantsWidth / 2 + 3);
@@ -184,7 +184,22 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         };
     })
 
-    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory) {
+    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService) {
+
+        var contestCaption = $translate.instant("WHO_IS_SMARTER");
+        var canvas = document.getElementById("myCanvas");
+        var canvasContext = canvas.getContext("2d");
+        canvasContext.font = $rootScope.settings.chartSettings.generalData.annotationsFont;
+
+        $scope.hasMoreContests = false;
+        $scope.loadMoreContests = function() {
+            console.log("load more contests...");
+        }
+
+        $scope.doRefresh = function() {
+            console.log("do refresh...");
+            $scope.$broadcast('scroll.refreshComplete');
+        }
 
         $scope.$on('$ionicView.beforeEnter', function () {
             if (!$rootScope.session) {
@@ -194,148 +209,6 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 $state.go('app.home', {}, {reload: false, inherit: true});
             }
         });
-
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
-        ctx.font = "10px Arial";
-
-        var contestEndsWidth = ctx.measureText("מסתיימת בעוד 3 ימים").width;
-        var contestParticipantsWidth = ctx.measureText("משתתפים: 30").width;
-
-        $scope.dataSources =
-            [
-                {
-                    "contestId": 1,
-                    chart: {
-                        caption: "מי יותר חכם",
-                        subCaption: "הבנים או הבנות",
-                        "baseFont": "Arial",
-                        "showBorder": 1,
-                        "showCanvasBorder": 1,
-                        "yAxisMinValue": 0.0,
-                        "yAxisMaxValue": 1.0,
-                        "numDivLines": 0,
-                        "numberScaleValue": ".01",
-                        "numberScaleUnit": "%",
-                        "showYAxisValues": 0,
-                        "showCanvasBg": 0,
-                        "showCanvasBase": 0,
-                        "valueFontSize": 12,
-                        "labelFontSize": 14,
-                        "chartBottomMargin": 30,
-                        "useroundedges": "1",
-                        "showToolTip": 0
-                    },
-                    data: [
-                        {
-                            label: "הבנים",
-                            value: "0.55",
-                            "toolText": "הצטרפו לקבוצת הבנים"
-                        },
-                        {
-                            label: "הבנות",
-                            value: "0.45",
-                            "toolText": "הצטרפו לקבוצת הבנות"
-                        }
-                    ],
-                    "annotations": {
-                        "groups": [
-                            {
-                                "id": "infobar",
-                                "items": [
-                                    {
-                                        "id": "label",
-                                        "type": "text",
-                                        "text": "מסתיימת בעוד 3 ימים",
-                                        "x": "$chartendx - " + (contestEndsWidth / 2 + 3),
-                                        "y": "$chartendy - 8",
-                                        "fontSize": 10,
-                                        "font": "Arial",
-                                        "fontColor": "#FF0000"
-                                    },
-                                    {
-                                        "id": "label",
-                                        "type": "text",
-                                        "text": "משתתפים: 30",
-                                        "x": "$chartstartx + " + (contestParticipantsWidth / 2 + 3),
-                                        "y": "$chartendy - 8",
-                                        "fontSize": 10,
-                                        "font": "Arial",
-                                        "fontColor": "#FF0000"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                },
-                {
-                    "contestId": 2,
-                    "chart": {
-                        "plotBorderAlpha": 0,
-                        "caption": "מי יותר חכם",
-                        "subCaption": "אוהדי מכבי או אוהדי הפועל",
-                        "baseFont": "Arial",
-                        "baseFontSize": 12,
-                        "showBorder": 1,
-                        "showCanvasBorder": 1,
-                        "yAxisMinValue": 0.0,
-                        "yAxisMaxValue": 1.0,
-                        "numDivLines": 0,
-                        "numberScaleValue": ".01",
-                        "numberScaleUnit": "%",
-                        "showYAxisValues": 0,
-                        "showCanvasBg": 0,
-                        "showCanvasBase": 0,
-                        "valueFontSize": 12,
-                        "labelFontSize": 16,
-                        "chartBottomMargin": 25,
-                        "valuePadding": 0,
-                        "useroundedges": "1",
-                        "showToolTip": 0
-                    },
-                    "data": [
-                        {
-                            "label": "אוהדי מכבי",
-                            "value": "0.2",
-                            "toolText": "הצטרפו לקבוצת אוהדי מכבי"
-                        },
-                        {
-                            "label": "אוהדי הפועל",
-                            "value": "0.8",
-                            "toolText": "הצטרפו לקבוצת אוהדי הפועל"
-                        }
-                    ],
-                    "annotations": {
-                        "groups": [
-                            {
-                                "id": "infobar",
-                                "items": [
-                                    {
-                                        "id": "label",
-                                        "type": "text",
-                                        "text": "מסתיימת בעוד 4 שעות",
-                                        "x": "$chartendx - " + (contestEndsWidth / 2 + 3),
-                                        "y": "$chartendy - 8",
-                                        "fontSize": 10,
-                                        "font": "Arial",
-                                        "fontColor": "#FF0000"
-                                    },
-                                    {
-                                        "id": "label",
-                                        "type": "text",
-                                        "text": "משתתפים: 45",
-                                        "x": "$chartstartx + " + (contestParticipantsWidth / 2 + 3),
-                                        "y": "$chartendy - 8",
-                                        "fontSize": 10,
-                                        "font": "Arial",
-                                        "fontColor": "#FF0000"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                }
-            ];
 
         $scope.playContest = function (contestId) {
             $state.go('app.quiz', {contestId: contestId}, {reload: false, inherit: true});
@@ -358,7 +231,35 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         }
 
         $scope.$on('$ionicView.beforeEnter', function () {
-            // TODO: Retrieve contests
+            ContestsService.getContests(null, function(contests) {
+                    var contestCharts = [];
+                    for(var i=0; i<contests.length; i++) {
+                        var contestChart = JSON.parse(JSON.stringify($rootScope.settings.chartSettings.chartObject));
+
+                        contestChart.data = [];
+                        contestChart.data.push({"label" : contests[i].teams[0].name, "value" : contests[i].teams[0].chartValue});
+                        contestChart.data.push({"label" : contests[i].teams[1].name, "value" : contests[i].teams[1].chartValue});
+
+                        contestChart.chart.caption = contestCaption;
+                        contestChart.chart.subCaption = $translate.instant("CONTEST_NAME", {team0 : contests[i].teams[0].name, team1: contests[i].teams[1].name});
+
+                        var contestEndsString = $translate.instant("CONTEST_ENDS_IN",{number : contests[i].endsInNumber, units: $translate.instant(contests[i].endsInUnits)});
+                        var contestEndsWidth = canvasContext.measureText(contestEndsString).width;
+                        var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS",{participants : contests[i].participants});
+                        var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
+
+                        contestChart.annotations.groups[0].items[0].text = contestEndsString;
+                        contestChart.annotations.groups[0].items[0].x = "$chartendx - " + (contestEndsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
+
+                        contestChart.annotations.groups[0].items[1].text = contestParticipantsString;
+                        contestChart.annotations.groups[0].items[1].x = "$chartendx + " + (contestParticipantsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
+
+                        contestCharts.push(contestChart);
+                    }
+
+                    $scope.contests = contestCharts;
+
+            }, ErrorService.logErrorAndAlert)
         });
     })
 
@@ -499,7 +400,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         $scope.$on('$ionicView.beforeEnter', function () {
             $scope.localViewData = JSON.parse(JSON.stringify($rootScope.session.settings));
             //A bug - if putting "menu-close" in menu.html - back button won't show - have to close the menu programatically
-            if ($rootScope.languages[$rootScope.session.settings.language].direction == "ltr") {
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
                 $ionicSideMenuDelegate.toggleLeft();
             }
             else {
@@ -560,7 +461,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         });
     })
 
-    .controller('ContestCtrl', function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams) {
+    .controller('ContestCtrl', function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService) {
 
         var startDate = new Date();
         var endDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
@@ -625,7 +526,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     $scope.localViewData = {
                         "startDate": startDate,
                         "endDate": endDate,
-                        "participants" : 22,
+                        "participants" : 0,
                         "manualParticipants": 0,
                         "manualRating": 0,
                         "teams": [{"name": null, "score": 0}, {"name": null, "score": 0}]
@@ -652,7 +553,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         };
 
         $scope.getAdminArrowSign = function () {
-            if ($rootScope.languages[$rootScope.session.settings.language].direction == "ltr") {
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
                 if ($scope.showAdminInfo == false) {
                     return "►";
                 }
@@ -700,6 +601,62 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 $scope.localViewData.endDate = val;
             }
         }
+
+        $scope.setContest = function () {
+
+            //Tweak the manual participants
+            if ($scope.localViewData.totalParticipants > $scope.localViewData.participants + $scope.localViewData.manualParticipants) {
+                $scope.localViewData.manualParticipants += $scope.localViewData.totalParticipants - ($scope.localViewData.participants + $scope.localViewData.manualParticipants)
+            }
+            delete $scope.localViewData["totalParticipants"];
+
+            if ($stateParams.mode == "add" || ($stateParams.mode == "edit" && JSON.stringify($stateParams.contest) != JSON.stringify($scope.localViewData))) {
+
+                $scope.localViewData.startDate = $scope.localViewData.startDate.getTime();
+                $scope.localViewData.endDate = $scope.localViewData.endDate.getTime();
+
+                var postData = {"contest": $scope.localViewData, "mode" : $stateParams.mode};
+
+                //Add/update the new/updated contest to the server and in the local $rootScope
+                ContestsService.setContest(postData,
+                    function (contest) {
+                        //Raise event - so the contest graph can be refreshed without going to the server again
+                        $rootScope.$broadcast("mySmarteam-contestUpdated", contest);
+                        $scope.goBack();
+                    }, function(status, error) {
+                        console.log(error);
+                    });
+            }
+            else {
+                $scope.goBack();
+            }
+        };
+
+        $scope.removeContest = function () {
+
+            var contestName = $translate.instant("CONTEST_NAME",{team0: $scope.localViewData.teams[0].name, team1: $scope.localViewData.teams[1].name});
+            var confirmPopup = $ionicPopup.confirm({
+                title: $translate.instant("CONFIRM_REMOVE_TITLE", {name: contestName}),
+                template: $translate.instant("CONFIRM_REMOVE_TEMPLATE", {name: contestName}),
+                cssClass: $rootScope.settings.languages[$rootScope.storedUser.settings.interfaceLanguage].direction,
+                okText: $translate.instant("OK"),
+                cancelText: $translate.instant("CANCEL")
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    var postData = {"contestId": $scope.localViewData.id};
+                    if ($stateParams.password) {
+                        postData.password = $stateParams.password;
+                    }
+                    UserService.removeProfile(postData,
+                        function (data) {
+                            $rootScope.$broadcast("mySmarteam-contestRemoved");
+                            $scope.goBack();
+                        }, ErrorService.logErrorAndAlert)
+                }
+            })
+        };
 
         $scope.hideRemoveContest = function () {
             if ($stateParams.mode == 'add' || !$rootScope.session.isAdmin || $rootScope.session.isAdmin == false) {

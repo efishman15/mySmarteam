@@ -1,6 +1,6 @@
 <ion-view view-title="{{ 'QUIZ' | translate}}">
     <ion-content padding="true" dir="{{quiz.currentQuestion.direction}}">
-        <div align="{{$root.languages[$root.session.settings.language].oppositeAlign}}">
+        <div align="{{$root.settings.languages[$root.session.settings.language].oppositeAlign}}">
             <button
                     ng-class="{'ion-volume-high' :  $root.session.profiles[$root.session.settings.profileId].sound == true,
                                 'ion-volume-mute' : $root.session.profiles[$root.session.settings.profileId].sound == false}"
@@ -19,7 +19,7 @@
                     animationend="buttonAnimationEnded">
             </button>
         </div>
-        <div class="bar bar-footer bar-light" dir="{{$root.languages[$root.session.settings.language].direction}}">
+        <div class="bar bar-footer bar-light" dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
             <span>{{ 'QUESTION' | translate}} {{quiz.currentQuestionIndex}}</span>
         </div>
         <audio id="audioSound" autoplay src=""></audio>

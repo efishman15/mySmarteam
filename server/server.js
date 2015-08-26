@@ -46,16 +46,15 @@ app.post("/quiz/start", isAuthenticated, quiz.start);
 app.post("/quiz/answer", isAuthenticated, quiz.answer);
 app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
 app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
-app.post("/contests/add", isAuthenticated, contests.addContest);
 app.post("/contests/set", isAuthenticated, contests.setContest);
 app.post("/contests/remove", isAuthenticated, contests.removeContest);
+app.post("/contests/get", isAuthenticated, contests.getContests);
 //TODO: app.post("/contests/selectTeam", isAuthenticated, contests.selectTeam);
-//TODO: app.post("/contests/get", isAuthenticated, contests.removeContest);
 
 //API's that do NOT require authentication
 app.post("/user/facebookConnect", credentials.facebookConnect);
 app.post("/info/geo", generalUtils.geoInfo);
-app.post("/info/languages", generalUtils.getLanguages);
+app.post("/info/settings", generalUtils.getSettings);
 
 app.use(function (err, req, res, next) {
     console.log("error on request %s %s: %s", req.method, req.url, err.stack);

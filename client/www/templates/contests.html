@@ -1,25 +1,34 @@
 <ion-view class="padding bubble-background" view-title="לחץ על הקבוצה להצטרפות"
-<ion-content class="padding" overflow-scroll="true"
-             dir="{{$root.languages[$root.user.settings.language].direction}}">
-    <ion-scroll style="height:100%">
-        <div class="padding card" ng-repeat="dataSource in dataSources">
+<ion-content class="padding" dir="{{$root.languages[$root.user.settings.language].direction}}" overflow-scroll="true">
+
+    <ion-scroll class="padding" style="height: 100%">
+        <ion-refresher
+                pulling-text="Pull to refresh..." pulling-icon="on-android-arrow-down"
+                on-refresh="doRefresh()">
+        </ion-refresher>
+        <ion-list class="padding card" ng-repeat="contest in contests track by contest._id">
             <div class="padding item center item-divider item-text-wrap"
                  fusioncharts
                  width="260"
                  height="180"
                  type="column3d"
-                 dataSource="{{dataSource}}"
+                 dataSource="{{contest}}"
                  events="fcEvents">
             </div>
             <div class="center padding">
                 <button class="item button button-stable button-small button-assertive" style="overflow: visible"
-                        ng-click="playContest(dataSource.contestId)">
+                        ng-click="playContest(contest._id)">
                     שחק בתחרות
                 </button>
             </div>
-        </div>
+        </ion-list>
     </ion-scroll>
-    <canvas id="myCanvas"></canvas>
-
+    <ion-infinite-scroll
+            on-infinite="loadMoreContests()"
+            distance="1%"
+            ng-if="hasMoreContests==true"
+            icon="ion-loading-c">
+    </ion-infinite-scroll>
 </ion-content>
+<canvas id="myCanvas" width="0" height="0"></canvas>
 </ion-view>
