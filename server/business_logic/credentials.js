@@ -10,6 +10,7 @@ function getSessionResponse(session) {
     return {
         "token": session.userToken,
         "thirdParty" : {"id" : session.facebookUserId, "accessToken" : session.facebookAccessToken, "type" : "facebook"},
+        "isAdmin" : session.isAdmin,
         "avatar": session.avatar,
         "name": session.name,
         "settings": session.settings

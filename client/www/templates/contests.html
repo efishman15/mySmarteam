@@ -1,4 +1,25 @@
-<ion-view class="padding" view-title="לחץ על הקבוצה להצטרפות">
-        <ion-content class="padding" dir="{{$root.languages[$root.user.settings.language].direction}}">
-        </ion-content>
+<ion-view class="padding bubble-background" view-title="לחץ על הקבוצה להצטרפות"
+<ion-content class="padding" overflow-scroll="true"
+             dir="{{$root.languages[$root.user.settings.language].direction}}">
+    <ion-scroll style="height:100%">
+        <div class="padding card" ng-repeat="dataSource in dataSources">
+            <div class="padding item center item-divider item-text-wrap"
+                 fusioncharts
+                 width="260"
+                 height="180"
+                 type="column3d"
+                 dataSource="{{dataSource}}"
+                 events="fcEvents">
+            </div>
+            <div class="center padding">
+                <button class="item button button-stable button-small button-assertive" style="overflow: visible"
+                        ng-click="playContest(dataSource.contestId)">
+                    שחק בתחרות
+                </button>
+            </div>
+        </div>
+    </ion-scroll>
+    <canvas id="myCanvas"></canvas>
+
+</ion-content>
 </ion-view>

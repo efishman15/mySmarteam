@@ -214,6 +214,22 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 }
             })
 
+            .state('app.contest', {
+                url: "/contest",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication();
+                    }
+                },
+                params: {mode: null, contest: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/contest.html",
+                        controller: "ContestCtrl"
+                    }
+                }
+            })
+
             .state("app.otherwise", {
                 url: "/otherwise",
                 resolve: {

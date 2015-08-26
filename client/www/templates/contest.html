@@ -1,0 +1,142 @@
+<ion-view view-title="{{getTitle()}}" hide-back-button="true">
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-buttons side="primary">
+            <button class="button" ng-click="removeContest()" ng-hide="hideRemoveContest()">{{ 'REMOVE_CONTEST' |
+                translate}}
+            </button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+    <ion-content has-header="true" padding="true"
+                 dir="{{$root.languages[$root.user.settings.language].direction}}" drag-content="false">
+        <form name="contestForm" novalidate="novalidate" ng-submit="contestForm.$valid && setContest()">
+            <ion-list>
+
+                <ion-item class="padding row">
+                    <div style="width: 45%">
+                        <label class="item item-input"
+                               ng-class="{ 'has-error' : contestForm.team0.$invalid && contestForm.team0.$touched, 'valid-lr' : contestForm.team0.$valid}"
+                               ng-messages-include="templates/contest-error-list.html">
+                            <input type="text" placeholder="{{ 'TEAM0' | translate }}" name="team0"
+                                   ng-model="localViewData.teams[0].name" autofocus
+                                   ng-minlength="2" ng-maxlength="50" required>
+                        </label>
+
+                        <div class="error-container last-error-container form-errors"
+                             ng-show="contestForm.team0.$error && contestForm.$submitted"
+                             ng-messages="contestForm.team0.$error"
+                             ng-messages-include="templates/contest-error-list.html">
+                        </div>
+                    </div>
+                    <div class="center col-10 padding-vertical">
+                        <h4>{{'OR' | translate}}</h4>
+                    </div>
+                    <div style="width: 45%">
+                        <label class="item item-input"
+                               ng-class="{ 'has-error' : contestForm.team1.$invalid && contestForm.team1.$touched, 'valid-lr' : contestForm.team1.$valid}"
+                               ng-messages-include="templates/contest-error-list.html">
+                            <input type="text" placeholder="{{ 'TEAM1' | translate }}" name="team1"
+                                   ng-model="localViewData.teams[1].name"
+                                   ng-minlength="2" ng-maxlength="50" required>
+                        </label>
+
+                        <div class="error-container last-error-container form-errors"
+                             ng-show="contestForm.team1.$error && contestForm.$submitted"
+                             ng-messages="contestForm.team1.$error"
+                             ng-messages-include="templates/contest-error-list.html">
+                        </div>
+                    </div>
+                </ion-item>
+
+                <ion-item class="padding">
+                    <span>{{'CONTEST_START' | translate}}</span>
+                    <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
+                        <button class="button button-block button-positive">{{localViewData.startDate |
+                            date:'dd-MM-yyyy'}}
+                        </button>
+                    </ionic-datepicker>
+                </ion-item>
+
+                <ion-item class="padding">
+                    <span>{{'CONTEST_END' | translate}}</span>
+                    <ionic-datepicker input-obj="contestEndDatePicker" dir="ltr">
+                        <button class="button button-block button-positive">{{localViewData.endDate |
+                            date:'dd-MM-yyyy'}}
+                        </button>
+                    </ionic-datepicker>
+                </ion-item>
+
+                <ion-item class="padding" ng-hide="!$root.session.isAdmin || $root.session.isAdmin == false">
+                    <span ng-click="toggleAdminInfo()">{{'CONTEST_ADMIN_INFO' | translate}} {{getAdminArrowSign()}}</span>
+
+                    <div ng-hide="showAdminInfo==false && contestForm.team0 && contestForm.team1">
+                        <div class="row">
+                            <div class="padding" style="width: 45%">
+                                <span class="padding">{{'TEAM_SCORE' | translate:{team : localViewData.teams[0].name} }}</span>
+                                <label class="item item-input"
+                                       ng-class="{ 'has-error' : contestForm.score0.$invalid && contestForm.score0.$touched, 'valid-lr' : contestForm.score0.$valid}"
+                                       ng-messages-include="templates/contest-error-list.html">
+                                    <input type="number" placeholder="{{ 'SCORE' | translate }}" name="score0"
+                                           ng-model="localViewData.teams[0].score"
+                                           ng-minlength="1" min="0" ng-maxlength="50" required>
+                                </label>
+
+                                <div class="error-container last-error-container form-errors"
+                                     ng-show="contestForm.score0.$error && contestForm.$submitted"
+                                     ng-messages="contestForm.score0.$error"
+                                     ng-messages-include="templates/contest-error-list.html">
+                                </div>
+                            </div>
+                            <div class="center col-10 padding-vertical">
+                            </div>
+                            <div class="padding" style="width: 45%">
+                                <span class="padding">{{'TEAM_SCORE' | translate:{team : localViewData.teams[1].name} }}</span>
+                                <label class="item item-input"
+                                       ng-class="{ 'has-error' : contestForm.score1.$invalid && contestForm.score1.$touched, 'valid-lr' : contestForm.score1.$valid}"
+                                       ng-messages-include="templates/contest-error-list.html">
+                                    <input type="number" placeholder="{{ 'SCORE' | translate }}" name="score1"
+                                           ng-model="localViewData.teams[1].score"
+                                           ng-minlength="1" min="0" ng-maxlength="50" required>
+                                </label>
+
+                                <div class="error-container last-error-container form-errors"
+                                     ng-show="contestForm.score1.$error && contestForm.$submitted"
+                                     ng-messages="contestForm.score1.$error"
+                                     ng-messages-include="templates/contest-error-list.html">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="padding">
+                            <span>{{'RATING' | translate}}: {{localViewData.manualRating}}</span>
+                            <div class="padding item range">
+                                0
+                                <input type="range" name="manualRating" min="0" max="100" ng-model="localViewData.manualRating" value="{{localViewData.manualRating}}">
+                                100
+                            </div>
+                        </div>
+                        <div class="padding">
+                            <span>{{'PARTICIPANTS' | translate}}: {{localViewData.totalParticipants}}</span>
+                            <div class="padding item range">
+                                <input type="range" name="manualParticipants" min="{{localViewData.participants}}" max="10000" ng-model="localViewData.totalParticipants" value="{{localViewData.totalParticipants}}">
+                            </div>
+                        </div>
+
+                    </div>
+                </ion-item>
+
+                <ion-item class="button-bar">
+                    <button class="button button-bar button-positive button-calm" translate="OK" type="submit">
+                    </button>
+                    <button class="button button-bar" translate="CANCEL" ng-click="goBack()">
+                    </button>
+                </ion-item>
+
+            </ion-list>
+
+
+        </form>
+    </ion-content>
+
+
+</ion-view>
+                                                        

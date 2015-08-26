@@ -2,19 +2,13 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
     .controller('AppCtrl', function ($scope, $rootScope, $state, $ionicLoading, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicPopover) {
 
-        InfoService.getLanguages(
-            function (data) {
-                $rootScope.languages = data;
-            },
-            ErrorService.logErrorAndAlert);
-
         $scope.changeLanguage = function (language) {
             $rootScope.user.settings.language = language.value;
             $translate.use(language.value);
 
         };
 
-        $rootScope.$on('$translateChangeEnd', function(data) {
+        $rootScope.$on('$translateChangeEnd', function (data) {
             $rootScope.$broadcast("mySmarteam-languageChanged");
         });
 
@@ -47,6 +41,13 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     });
             }
         );
+
+        $rootScope.gotoView = function(viewName, params) {
+            if (!params) {
+                params = {};
+            }
+            $state.go(viewName, params, {reload: false, inherit: true});
+        }
     })
 
     .controller('HomeCtrl', function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory, $ionicPopup, $translate) {
@@ -142,7 +143,8 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 "team1": $translate.instant("DEMO_TEAM1")
             });
 
-            $scope.demoContest.data[0].label = $translate.instant("DEMO_TEAM0");;
+            $scope.demoContest.data[0].label = $translate.instant("DEMO_TEAM0");
+            ;
             $scope.demoContest.data[1].label = $translate.instant("DEMO_TEAM1");
 
             $scope.demoContest.annotations.groups[0].items[0].text = contestAnnotations.contestEndsText;
@@ -192,7 +194,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 $state.go('app.home', {}, {reload: false, inherit: true});
             }
         });
-return;
+
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         ctx.font = "10px Arial";
@@ -220,7 +222,9 @@ return;
                         "showCanvasBase": 0,
                         "valueFontSize": 12,
                         "labelFontSize": 14,
-                        "chartBottomMargin": 30
+                        "chartBottomMargin": 30,
+                        "useroundedges": "1",
+                        "showToolTip": 0
                     },
                     data: [
                         {
@@ -286,7 +290,8 @@ return;
                         "labelFontSize": 16,
                         "chartBottomMargin": 25,
                         "valuePadding": 0,
-                        "useroundedges": "1"
+                        "useroundedges": "1",
+                        "showToolTip": 0
                     },
                     "data": [
                         {
@@ -342,6 +347,9 @@ return;
             },
             "dataLabelClick": function (eventObj, dataObj) {
                 teamClicked(dataObj.text);
+            },
+            "annotationClick": function (eventObj, dataObj) {
+                console.log("Annotation Click");
             }
         }
 
@@ -552,3 +560,154 @@ return;
         });
     })
 
+    .controller('ContestCtrl', function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams) {
+
+        var startDate = new Date();
+        var endDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+        var datePickerToday  = $translate.instant("DATE_PICKER_TODAY");
+        var datePickerClose = $translate.instant("DATE_PICKER_CLOSE");
+        var datePickerSet = $translate.instant("DATE_PICKER_SET");
+        var datePickerErrorMessage = $translate.instant("DATE_PICKER_ERROR_MESSAGE");
+        var datePickerWeekDays = $translate.instant("DATE_PICKER_WEEK_DAYS").split(",");
+        var datePickerMonths = $translate.instant("DATE_PICKER_MONTHS").split(",");
+
+        $scope.contestStartDatePicker = {
+            titleLabel: $translate.instant("CONTEST_START"),
+            todayLabel: datePickerToday,
+            closeLabel: datePickerClose,
+            setLabel: datePickerSet,
+            errorMsgLabel: datePickerErrorMessage,
+            setButtonType: 'button-assertive',
+            mondayFirst: false,
+            weekDaysList: datePickerWeekDays,
+            monthList: datePickerMonths,
+            templateType: 'popup',
+            modalHeaderColor: 'bar-positive',
+            modalFooterColor: 'bar-positive',
+            from: new Date(), //do not allow past dates
+            callback: startDateCallback
+        };
+
+        $scope.contestEndDatePicker = {
+            titleLabel: $translate.instant("CONTEST_END"),
+            todayLabel: datePickerToday,
+            closeLabel: datePickerClose,
+            setLabel: datePickerSet,
+            errorMsgLabel: datePickerErrorMessage,
+            setButtonType: 'button-assertive',
+            mondayFirst: false,
+            weekDaysList: datePickerWeekDays,
+            monthList: datePickerMonths,
+            templateType: 'popup',
+            modalHeaderColor: 'bar-positive',
+            modalFooterColor: 'bar-positive',
+            from: new Date(), //do not allow past dates
+            callback: endDateCallback
+        };
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+            if ($stateParams.mode) {
+                $scope.mode = $stateParams.mode;
+                if ($stateParams.mode == "edit") {
+                    if ($stateParams.contest) {
+                        $scope.localViewData = JSON.parse(JSON.stringify($stateParams.contest));
+                    }
+                    else {
+                        $scope.goBack();
+                        return;
+                    }
+                }
+                else {
+                    //Copy data from first profile, and then clear the
+                    var startDate = new Date();
+                    var endDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
+                    $scope.localViewData = {
+                        "startDate": startDate,
+                        "endDate": endDate,
+                        "participants" : 22,
+                        "manualParticipants": 0,
+                        "manualRating": 0,
+                        "teams": [{"name": null, "score": 0}, {"name": null, "score": 0}]
+                    };
+                    $scope.localViewData.totalParticipants = $scope.localViewData.participants + $scope.localViewData.manualParticipants;
+                }
+            }
+            else {
+                $scope.goBack();
+                return;
+            }
+
+            $scope.showAdminInfo = false;
+
+            //Bug - currently not working - issue opened
+            $scope.contestStartDatePicker.inputDate = startDate;
+            $scope.contestStartDatePicker.inputDate = endDate;
+        });
+
+        $scope.toggleAdminInfo = function() {
+            if ($scope.localViewData.teams[0].name && $scope.localViewData.teams[1].name) {
+                $scope.showAdminInfo = !$scope.showAdminInfo;
+            }
+        };
+
+        $scope.getAdminArrowSign = function () {
+            if ($rootScope.languages[$rootScope.session.settings.language].direction == "ltr") {
+                if ($scope.showAdminInfo == false) {
+                    return "►";
+                }
+                else {
+                    return "▼";
+                }
+            }
+            else {
+                if ($scope.showAdminInfo == false) {
+                    return "◄";
+                }
+                else {
+                    return "▼";
+                }
+            }
+        };
+
+        $scope.goBack = function () {
+            $ionicHistory.goBack();
+        }
+
+        $scope.getTitle = function () {
+            if ($stateParams.mode == "add") {
+                return $translate.instant("NEW_CONTEST") + " - " + $translate.instant("WHO_IS_SMARTER");
+            }
+            else if ($stateParams.mode == "edit") {
+                return $translate.instant("WHO_IS_SMARTER") + ": " + $translate.instant("CONTEST_NAME", {
+                        "team0": $stateParams.contest.teams[0].name,
+                        "team1": $stateParams.contest.teams[1].name
+                    });
+            }
+            else {
+                return null;
+            }
+        };
+
+        function startDateCallback(val) {
+            if (val) {
+                $scope.localViewData.startDate = val;
+            }
+        }
+
+        function endDateCallback(val) {
+            if (val) {
+                $scope.localViewData.endDate = val;
+            }
+        }
+
+        $scope.hideRemoveContest = function () {
+            if ($stateParams.mode == 'add' || !$rootScope.session.isAdmin || $rootScope.session.isAdmin == false) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+    })
