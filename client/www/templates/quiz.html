@@ -2,8 +2,8 @@
     <ion-content padding="true" dir="{{quiz.currentQuestion.direction}}">
         <div align="{{$root.settings.languages[$root.session.settings.language].oppositeAlign}}">
             <button
-                    ng-class="{'ion-volume-high' :  $root.session.profiles[$root.session.settings.profileId].sound == true,
-                                'ion-volume-mute' : $root.session.profiles[$root.session.settings.profileId].sound == false}"
+                    ng-class="{'ion-volume-high' :  $root.session.settings.sound == true,
+                                'ion-volume-mute' : $root.session.settings.sound == false}"
                     ng-click="toggleSound()">
             </button>
         </div>

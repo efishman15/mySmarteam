@@ -214,7 +214,7 @@ module.exports.answer = function (req, res, next) {
         //Check to save the score into the users object as well - when quiz is finished
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
-                data.setData = {"score" : data.session.score};
+                data.setData = {"score": data.session.score};
                 dalDb.setUser(data, callback);
             }
             else {
@@ -236,14 +236,16 @@ module.exports.answer = function (req, res, next) {
         //Check to save the quiz score into the contest object - when quiz is finished
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
-                data.setData = { "users" : {}};
-                data.setData.users[data.session.userId] = {"score" : data.contest.users[data.session.userId].score + data.session.score};
+                data.setData = {};
+                data.setData["users." + data.session.userId + ".score"] = data.contest.users[data.session.userId].score + data.session.quiz.serverData.score;
+                data.setData.score = data.contest.score + data.session.quiz.serverData.score;
+                console.log("setData: " + JSON.stringify(data.setData));
                 data.closeConnection = true;
                 dalDb.setContest(data, callback);
             }
             else {
                 dalDb.closeDb(data);
-                callback (null, data);
+                callback(null, data);
             }
         },
     ];
@@ -270,7 +272,7 @@ module.exports.nextQuestion = function (req, res, next) {
 
         //getSession
         function (callback) {
-            data .token = token;
+            data.token = token;
             sessionUtils.getSession(data, callback);
         },
 

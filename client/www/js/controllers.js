@@ -644,10 +644,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 return $translate.instant("NEW_CONTEST") + " - " + $translate.instant("WHO_IS_SMARTER");
             }
             else if ($stateParams.mode == "edit") {
-                return $translate.instant("WHO_IS_SMARTER") + ": " + $translate.instant("CONTEST_NAME", {
-                        "team0": $stateParams.contest.teams[0].name,
-                        "team1": $stateParams.contest.teams[1].name
-                    });
+                return $translate.instant("WHO_IS_SMARTER");
             }
             else {
                 return null;

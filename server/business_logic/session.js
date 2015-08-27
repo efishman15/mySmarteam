@@ -106,9 +106,9 @@ module.exports.toggleSound = function (req, res, next) {
 
         //Save the settings to the user object
         function(data, callback) {
-            data.setData = {"settings" : data.session.settings};
+            data.setData = {"settings.sound" : data.session.settings.sound};
             data.closeConnection = true;
-            dalDb.saveUserSettings(data, callback);
+            dalDb.setUser(data, callback);
         }
 
     ];
