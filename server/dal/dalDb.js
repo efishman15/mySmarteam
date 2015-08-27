@@ -4,7 +4,7 @@ var mongoClient = require("mongodb").MongoClient;
 var uuid = require('node-uuid');
 var exceptions = require("../utils/exceptions");
 var ObjectId = require("mongodb").ObjectID;
-var generalUtils = require('../utils/general');
+var random = require('../utils/random');
 
 //---------------------------------------------------------------------
 // Cache variables
@@ -363,7 +363,7 @@ module.exports.facebookLogin = function (data, callback) {
         {
             $set: {
                 "lastLogin": new Date(),
-                "settings.timezoneOffset" : data.settings.timezoneOffset,
+                "settings.timezoneOffset": data.settings.timezoneOffset,
                 "name": data.name,  //keep sync with Facebook changes
                 "email": data.email,  //keep sync with Facebook changes - might be null if user removed email permission
                 "ageRange": data.ageRange //keep sync with Facebook changes
@@ -407,8 +407,7 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "avatar": data.avatar,
                 "createdAt": new Date(),
                 "userToken": userToken,
-                "settings": data.user.settings,
-                "contests": data.user.contests
+                "settings": data.user.settings
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -531,23 +530,21 @@ function logAction(data, callback) {
 module.exports.prepareQuestionCriteria = prepareQuestionCriteria;
 function prepareQuestionCriteria(data, callback) {
 
-    var randomTopic = random.rnd(0, data.session.quiz.topics.length - 1);
+    var randomTopic = random.rnd(0, data.session.quiz.serverData.topics.length - 1);
 
     var questionCriteria = {
         "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        "topicId": {
-            "$in": data.session.quiz.topics[randomTopic]
-        }
+        "topicId": data.session.quiz.serverData.topics[randomTopic]
     };
 
     //Filter by age if available
-    if (session.ageRange) {
-        if (session.ageRange.min) {
-            questionCriteria.minAge = {$gte: data.session.ageRange.min}
+    if (data.session.ageRange) {
+        if (data.session.ageRange.min) {
+            questionCriteria.minAge = {$lte: data.session.ageRange.min}
         }
 
-        if (session.ageRange.max) {
-            questionCriteria.maxAge = {$lte: data.session.ageRange.max}
+        if (data.session.ageRange.max) {
+            questionCriteria.maxAge = {$gte: data.session.ageRange.max}
         }
     }
 
@@ -568,7 +565,6 @@ function prepareQuestionCriteria(data, callback) {
 //---------------------------------------------------------------------
 module.exports.getQuestionsCount = getQuestionsCount;
 function getQuestionsCount(data, callback) {
-
     var questionsCollection = data.DbHelper.getCollection("Questions");
     questionsCollection.count(data.questionCriteria, function (err, count) {
         if (err) {
@@ -598,7 +594,7 @@ function getNextQuestion(data, callback) {
     var questionsCollection = data.DbHelper.getCollection("Questions");
     questionsCollection.findOne(data.questionCriteria, {skip: skip}, function (err, question) {
         if (err || !question) {
-            callback(new excptions.GeneralError(500, "Error retrieving next question from database"));
+            callback(new exceptions.GeneralError(500, "Error retrieving next question from database"));
             return;
         }
 
@@ -697,7 +693,7 @@ function setContest(data, callback) {
     delete data.contest["_id"];
     contestsCollection.findAndModify({"_id": contestId}, {},
         {
-            $set: data.contest
+            $set: data.setData
         }, {}, function (err, contest) {
 
             if (err) {
@@ -753,6 +749,36 @@ function removeContest(data, callback) {
         });
 }
 
+//------------------------------------------------------------------------------------------------
+// getContest
+//
+// Get a contest by id
+// //
+// data:
+// -----
+// input: DbHelper, session, contestId
+// output: <NA>
+//------------------------------------------------------------------------------------------------
+module.exports.getContest = getContest;
+function getContest(data, callback) {
+
+    var contestsCollection = data.DbHelper.getCollection('Contests');
+    contestsCollection.findOne({
+        "_id": ObjectId(data.contestId)
+    }, {}, function (err, contest) {
+        if (err || !contest) {
+
+            closeDb(data);
+
+            callback(new exceptions.GeneralError(500, "Error retrieving contest, Id " + data.contestId + " from the database"));
+            return;
+        }
+
+        data.contest = contest;
+
+        callback(null, data);
+    })
+}
 
 //------------------------------------------------------------------------------------------------
 // getContests
@@ -767,7 +793,7 @@ function removeContest(data, callback) {
 //------------------------------------------------------------------------------------------------
 module.exports.getContests = getContests;
 function getContests(data, callback) {
-
+    console.log(data.setContestStatusCallback);
     var contestsCollection = data.DbHelper.getCollection('Contests');
     contestsCollection.find({}, {}, function (err, contestsCursor) {
         if (err || !contestsCursor) {
@@ -775,27 +801,6 @@ function getContests(data, callback) {
             return;
         }
         contestsCursor.toArray(function (err, contests) {
-            for (var i = 0; i < contests.length; i++) {
-
-                var minutesToEnd = (contests[i].endDate - now) / 1000 / 60;
-
-                var result;
-                if (minutesToEnd >= 60 * 24) {
-                    result = minutesToEnd / 24 / 60;
-                    contests[i].endsInUnits = "DAYS";
-                }
-                else if (minutesToEnd >= 60) {
-                    result = minutesToEnd / 60;
-                    contests[i].endsInUnits = "HOURS";
-                }
-                else {
-                    result = minutesToEnd;
-                    contests[i].endsInUnits = "MINUTES";
-                }
-
-                contests[i].endsInNumber = Math.ceil(result);
-
-            }
 
             data.contests = contests;
             callback(null, data);

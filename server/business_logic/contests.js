@@ -3,11 +3,51 @@ var dalDb = require("../dal/dalDb");
 var exceptions = require("../utils/exceptions");
 var generalUtils = require('../utils/general');
 
+//---------------------------------------------------------------------
+// private functions
+//---------------------------------------------------------------------
+
+//---------------------------------------------------------------------
+// setContestStatus
+//---------------------------------------------------------------------
+function setContestStatus(contest) {
+
+    var now = (new Date()).getTime();
+
+    if (contest.endDate < now) {
+        contest.status = "finished";
+    }
+    else if (contest.startDate > now) {
+        contest.status = "starting";
+    }
+    else {
+        contest.status = "running";
+    }
+
+    var minutesToEnd = (contest.endDate - now) / 1000 / 60;
+
+    var result;
+    if (minutesToEnd >= 60 * 24) {
+        result = minutesToEnd / 24 / 60;
+        contest.endsInUnits = "DAYS";
+    }
+    else if (minutesToEnd >= 60) {
+        result = minutesToEnd / 60;
+        contest.endsInUnits = "HOURS";
+    }
+    else {
+        result = minutesToEnd;
+        contest.endsInUnits = "MINUTES";
+    }
+
+    contest.endsInNumber = Math.ceil(result);
+}
+
 //----------------------------------------------------
 // validateContestData
 
 // data:
-// input: contest, mode (add, edit), session
+// input: DbHelper, contest, mode (add, edit), session
 // output: modified contest with server logic
 //----------------------------------------------------
 function validateContestData(data, callback) {
@@ -52,6 +92,7 @@ function validateContestData(data, callback) {
     if (data.mode == "add") {
         data.contest.language = data.session.settings.language;
         data.contest.participants = 0;
+        data.contest.score = 0; //The total score gained for this contest
         data.contest.userIdCreated = data.session.userId;
         data.contest.lastParticipantJoined = null;
         if (!data.contest.teams[0].score) {
@@ -72,6 +113,11 @@ function validateContestData(data, callback) {
         var sum = data.contest.teams[0].score + data.contest.teams[1].score;
         data.contest.teams[0].chartValue = Math.round(data.contest.teams[0].score * 100 / sum) / 100;
         data.contest.teams[1].chartValue = 1 - data.contest.teams[0].chartValue;
+    }
+
+    //Do not count on status from the client
+    if (data.contest.status) {
+        delete data.contest.status;
     }
 
     if (data.contest.manualParticipants) {
@@ -102,6 +148,37 @@ function validateContestData(data, callback) {
 }
 
 //----------------------------------------------------
+// validateJoinContest
+
+// data:
+// input: DbHelper, contest, session, teamId, contestId
+// output: modified contest with server logic
+//----------------------------------------------------
+function validateJoinContest(data, callback) {
+
+    //Cannot join a contest that ended
+    if (data.contest.status == "finished") {
+        callback(new exceptions.GeneralError(424, "Contest: " + data.contestId + " has already been finished"));
+    }
+
+    //Already joined the contest to that same team
+    if (data.contest.users &&
+        data.contest.users[data.session.userId] &&
+        data.contest.users[data.session.userId].team == data.teamId) {
+        callback(new exceptions.GeneralError(424, "You have already joined contest: " + data.contestId + ", to the same team: " + data.contest.teams[data.teamId].name));
+    }
+
+    //Already joined the contest, cannot switch teams if score>0
+    if (data.contest.users &&
+        data.contest.users[data.session.userId] &&
+        data.contest.users[data.session.userId].team != data.teamId && data.contest.users[data.session.userId].score > 0) {
+        callback(new exceptions.GeneralError(424, "Contest: " + data.contestId + ", cannot switch to the " + data.contest.teams[data.teamId].name + " if you already played for the " + data.contest.teams[1-data.teamId].name));
+    }
+
+    callback(null, data);
+}
+
+//----------------------------------------------------
 // setContest
 
 // data:
@@ -126,9 +203,7 @@ module.exports.setContest = function (req, res, next) {
         },
 
         //Check contest fields and extend from with server side data
-        function (data, callback) {
-            validateContestData(data, callback);
-        },
+        validateContestData,
 
         //Add/set the contest
         function (data, callback) {
@@ -137,6 +212,7 @@ module.exports.setContest = function (req, res, next) {
                 dalDb.addContest(data, callback);
             }
             else {
+                data.setData = data.contest;
                 dalDb.setContest(data, callback);
             }
         }
@@ -164,7 +240,7 @@ module.exports.removeContest = function (req, res, next) {
     var data = req.body;
 
     if (!data.contestId) {
-        res.send(500, "ContestId not supplied");
+        res.send(424, "contestId not supplied");
         return;
     }
 
@@ -188,8 +264,7 @@ module.exports.removeContest = function (req, res, next) {
             }
             data.closeConnection = true;
             dalDb.removeContest(data, callback);
-        },
-
+        }
     ];
 
     async.waterfall(operations, function (err, data) {
@@ -202,13 +277,13 @@ module.exports.removeContest = function (req, res, next) {
     });
 }
 
-//---------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 // getContests
 
 // data:
 // input: TODO: In the future - tab: 0=myContest, 1=openContests, 2=closedContests
 // output: <NA>
-//---------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 module.exports.getContests = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
@@ -225,16 +300,122 @@ module.exports.getContests = function (req, res, next) {
             dalDb.retrieveSession(data, callback);
         },
 
-        //Check that only admins are allowed to remove a contest
+        //Get contests from db
         function (data, callback) {
             data.closeConnection = true;
+            data.setContestStatusCallBack = setContestStatus;
             dalDb.getContests(data, callback);
         },
+
+        //Set contest status for each contest
+        function(data, callback) {
+            data.contestsHash = {};
+            for (var i = 0; i < data.contests.length; i++) {
+
+                if (data.contests[i].users && data.contests[i].users[data.session.userId]) {
+                    data.contests[i].myTeam = data.contests[i].users[data.session.userId].team;
+                }
+
+                setContestStatus(data.contests[i]);
+
+                data.contestsHash[data.contests[i]._id] = data.contests[i];
+            }
+
+            callback(null, data);
+        }
     ];
 
     async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.json(data.contests)
+            res.json(data.contestsHash)
+        }
+        else {
+            res.send(err.status, err);
+        }
+    });
+}
+
+///--------------------------------------------------------------
+// validateContestData
+//
+// data:
+// input: contestId, teamId
+// output: <NA>
+//---------------------------------------------------------------
+module.exports.joinContest = function (req, res, next) {
+    var token = req.headers.authorization;
+    var data = req.body;
+
+    if (!data.contestId) {
+        res.send(424, "contestId not supplied");
+        return;
+    }
+
+    if (data.teamId != 0 && data.teamId != 1) {
+        res.send(424, "teamId can be either 0 or 1");
+        return;
+    }
+
+    var now = (new Date).getTime();
+
+    var operations = [
+
+        //Connect to the database (so connection will stay open until we decide to close it)
+        dalDb.connect,
+
+        //Retrieve the session
+        function (connectData, callback) {
+            data.DbHelper = connectData.DbHelper;
+            data.token = token;
+            dalDb.retrieveSession(data, callback);
+        },
+
+        //Get the contest object - to make sure this contest exists
+        function (data, callback) {
+            dalDb.getContest(data, callback);
+        },
+
+        //Check that I can join this contest
+        validateJoinContest,
+
+        //Join to the contest in the contest object
+        function (data, callback) {
+
+            if (!data.contest.users) {
+                data.contest.users = {};
+            }
+
+            data.setData = {};
+
+            //Increment participants only if I did not join this contest yet
+            if (!data.contest.users[data.session.userId]) {
+                data.contest.participants++;
+                data.setData.participants = data.contest.participants;
+            }
+
+            //Actual join
+            data.contest.users[data.session.userId] = {
+                "userId": data.session.userId,
+                "joinDate": now,
+                "team" : data.teamId,
+                "score": 0,
+            }
+            data.setData.users = data.contest.users;
+
+            data.contest.lastParticipantJoinDate = now;
+            data.setData.lastParticipantJoinDate = now;
+
+            data.closeConnection = true;
+
+            dalDb.setContest(data, callback);
+        }
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            data.contest.myTeam = data.teamId; //Only needed for the client
+            setContestStatus(data.contest);
+            res.json(data.contest)
         }
         else {
             res.send(err.status, err);

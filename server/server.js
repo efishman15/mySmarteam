@@ -74,7 +74,7 @@ app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
 app.post("/contests/set", isAuthenticated, contests.setContest);
 app.post("/contests/remove", isAuthenticated, contests.removeContest);
 app.post("/contests/get", isAuthenticated, contests.getContests);
-//TODO: app.post("/contests/selectTeam", isAuthenticated, contests.selectTeam);
+app.post("/contests/join", isAuthenticated, contests.joinContest);
 
 //----------------------------------------------------
 // API's that do NOT require authentication

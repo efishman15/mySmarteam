@@ -48,7 +48,14 @@
                     </div>
                 </ion-item>
 
-                <ion-item class="padding">
+                <ion-item class="padding" ng-show="showStartDate==false">
+                    <span>{{'CONTEST_START' | translate}}</span>
+                        <button class="button button-block button-stable">{{localViewData.startDate | date:'dd-MM-yyyy'}}
+                        </button>
+                    </ionic-datepicker>
+                </ion-item>
+
+                <ion-item class="padding" ng-show="showStartDate==true">
                     <span>{{'CONTEST_START' | translate}}</span>
                     <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
                         <button class="button button-block button-positive">{{localViewData.startDate |
@@ -56,6 +63,7 @@
                         </button>
                     </ionic-datepicker>
                 </ion-item>
+
 
                 <ion-item class="padding">
                     <span>{{'CONTEST_END' | translate}}</span>

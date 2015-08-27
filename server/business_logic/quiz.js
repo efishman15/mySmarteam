@@ -31,7 +31,7 @@ function setQuestionDirection(data, callback) {
 
         callback(null, data);
 
-    })
+    });
 }
 
 //--------------------------------------------------------------------------
@@ -84,9 +84,11 @@ module.exports.start = function (req, res, next) {
             sessionUtils.getSession(data, callback);
         },
 
+        dalDb.getContest,
+
         //Init quiz
         function (data, callback) {
-            if (!data.session.contests[data.contestId]) {
+            if (!data.contest.users || !data.contest.users[data.session.userId]) {
                 data.DbHelper.close();
                 callback(new exceptions.GeneralError(424, "ErrorNotJoinedToContest"));
             }
@@ -126,13 +128,13 @@ module.exports.start = function (req, res, next) {
         //Stores the session with the quiz in the db
         function (data, callback) {
             data.closeConnection = true;
-            sessionUtils.storeSession(data, callback);
+            dalDb.storeSession(data, callback);
         }
     ];
 
-    async.waterfall(operations, function (err, quizClientData) {
+    async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.send(200, quizClientData);
+            res.send(200, data.session.quiz.clientData);
         }
         else {
             res.send(err.status, err);
@@ -190,37 +192,60 @@ module.exports.answer = function (req, res, next) {
         function (data, callback) {
 
             var store = false;
-            if (data.session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
 
                 //Update total score in profile
-                data.session.score += session.quiz.serverData.score;
+                data.session.score += data.session.quiz.serverData.score;
                 store = true;
             }
-            else if (result.correct == true) {
+            else if (data.result.correct == true) {
                 //store temporary score of quiz
                 store = true;
             }
 
             if (store == true) {
-                sessionUtils.storeSession(data, callback);
+                dalDb.storeSession(data, callback);
             }
             else {
-                callback(null, Data);
+                callback(null, data);
             }
         },
 
-        //Check to save the profiles into the Admin as well - when quiz is finished
+        //Check to save the score into the users object as well - when quiz is finished
         function (data, callback) {
-            if (session.quiz.clientData.totalQuestions == session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
                 data.setData = {"score" : data.session.score};
-                data.closeConnection = true;
                 dalDb.setUser(data, callback);
             }
             else {
-                dalDb.closeDb();
+                callback(null, data);
             }
-            callback(null, data);
-        }
+        },
+
+        //Retrieve the contest object - when quiz is finished
+        function (data, callback) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+                data.contestId = data.session.quiz.serverData.contestId;
+                dalDb.getContest(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
+        //Check to save the quiz score into the contest object - when quiz is finished
+        function (data, callback) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+                data.setData = { "users" : {}};
+                data.setData.users[data.session.userId] = {"score" : data.contest.users[data.session.userId].score + data.session.score};
+                data.closeConnection = true;
+                dalDb.setContest(data, callback);
+            }
+            else {
+                dalDb.closeDb(data);
+                callback (null, data);
+            }
+        },
     ];
 
     async.waterfall(operations, function (err, data) {
@@ -240,11 +265,12 @@ module.exports.answer = function (req, res, next) {
 //--------------------------------------------------------------------------
 module.exports.nextQuestion = function (req, res, next) {
     var token = req.headers.authorization;
+    var data = {};
     var operations = [
 
         //getSession
         function (callback) {
-            data.token = token;
+            data .token = token;
             sessionUtils.getSession(data, callback);
         },
 
@@ -263,7 +289,7 @@ module.exports.nextQuestion = function (req, res, next) {
         //Stores the session with the quiz in the db
         function (data, callback) {
             data.closeConnection = true;
-            sessionUtils.storeSession(data, callback);
+            dalDb.storeSession(data, callback);
         }
     ];
 

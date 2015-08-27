@@ -290,6 +290,11 @@ angular.module('mySmarteam.services', [])
             return ApiService.post(path, "get", postData, callbackOnSuccess, callbackOnError)
         };
 
+        //Join Contest
+        service.joinContest = function (postData, callbackOnSuccess, callbackOnError) {
+            return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError)
+        };
+
         return service;
     })
 
@@ -337,7 +342,7 @@ angular.module('mySmarteam.services', [])
 
         service.logErrorAndAlert = function (status, error) {
             service.logError(status, error);
-            service.alert(error);
+            return service.alert(error);
         }
 
         //ionic alert popup

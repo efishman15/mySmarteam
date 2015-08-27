@@ -37,7 +37,12 @@ var triviaTopisPerLangage = {
 }
 
 var chartSettings = {
-    "generalData": {"annotationsFont": "10px Arial", "annotationHorizontalMagicNumber" : 7},
+    "generalData": {
+        "annotationsFont": "10px Arial",
+        "annotationHorizontalMagicNumber": 7,
+        "defaultPaletteColors" : "#CCCCCC,#CCCCCC",
+        "teamPaletteColors": ["#0000DD,#CCCCCC","#CCCCCC,#0000DD"],
+    },
     "chartObject": {
         "chart": {
             "plotBorderAlpha": 0,
@@ -59,9 +64,9 @@ var chartSettings = {
             "valuePadding": 0,
             "useroundedges": "1",
             "showToolTip": 0,
-            "labelDisplay" : "auto",
-            "useEllipsesWhenOverflow" : 1,
-            "maxLabelWidthPercent" : 50
+            "labelDisplay": "auto",
+            "useEllipsesWhenOverflow": 1,
+            "maxLabelWidthPercent": 50
         },
         "annotations": {
             "groups": [

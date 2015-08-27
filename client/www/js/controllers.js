@@ -144,7 +144,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             });
 
             $scope.demoContest.data[0].label = $translate.instant("DEMO_TEAM0");
-            ;
+
             $scope.demoContest.data[1].label = $translate.instant("DEMO_TEAM1");
 
             $scope.demoContest.annotations.groups[0].items[0].text = contestAnnotations.contestEndsText;
@@ -184,7 +184,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         };
     })
 
-    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService) {
+    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $ionicGesture) {
 
         var contestCaption = $translate.instant("WHO_IS_SMARTER");
         var canvas = document.getElementById("myCanvas");
@@ -199,49 +199,12 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         $scope.doRefresh = function () {
 
             ContestsService.getContests(null, function (contests) {
-                    var contestCharts = [];
-                    for (var i = 0; i < contests.length; i++) {
-                        var contestChart = JSON.parse(JSON.stringify($rootScope.settings.chartSettings.chartObject));
-                        contestChart.contest = contests[i];
-
-                        contestChart.data = [];
-                        var teamsOrder;
-                        if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
-                            teamsOrder = [0, 1];
+                    var contestCharts = {};
+                    for (var key in contests) {
+                        if (contests.hasOwnProperty(key)) {
+                            var contestChart = prepareContestChart(contests[key]);
+                            contestCharts[key] = contestChart;
                         }
-                        else {
-                            teamsOrder = [1, 0];
-                        }
-                        contestChart.data.push({
-                            "label": contests[i].teams[teamsOrder[0]].name,
-                            "value": contests[i].teams[teamsOrder[0]].chartValue
-                        });
-                        contestChart.data.push({
-                            "label": contests[i].teams[teamsOrder[1]].name,
-                            "value": contests[i].teams[teamsOrder[1]].chartValue
-                        });
-
-                        contestChart.chart.caption = contestCaption;
-                        contestChart.chart.subCaption = $translate.instant("CONTEST_NAME", {
-                            team0: contests[i].teams[0].name,
-                            team1: contests[i].teams[1].name
-                        });
-
-                        var contestEndsString = $translate.instant("CONTEST_ENDS_IN", {
-                            number: contests[i].endsInNumber,
-                            units: $translate.instant(contests[i].endsInUnits)
-                        });
-                        var contestEndsWidth = canvasContext.measureText(contestEndsString).width;
-                        var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS", {participants: contests[i].participants + contests[i].manualParticipants});
-                        var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
-
-                        contestChart.annotations.groups[0].items[0].text = contestEndsString;
-                        contestChart.annotations.groups[0].items[0].x = "$chartendx - " + (contestEndsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
-
-                        contestChart.annotations.groups[0].items[1].text = contestParticipantsString;
-                        contestChart.annotations.groups[0].items[1].x = "$chartstartx + " + (contestParticipantsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
-
-                        contestCharts.push(contestChart);
                     }
 
                     $scope.contestCharts = contestCharts;
@@ -266,10 +229,10 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
         $scope.fcEvents = {
             "dataplotClick": function (eventObj, dataObj) {
-                teamClicked(dataObj.categoryLabel);
+                teamClicked(eventObj.sender.args.dataSource, dataObj.dataIndex);
             },
             "dataLabelClick": function (eventObj, dataObj) {
-                teamClicked(dataObj.text);
+                teamClicked(eventObj.sender.args.dataSource, dataObj.dataIndex);
             },
             "annotationClick": function (eventObj, dataObj) {
                 $state.go('app.contest', {mode: "edit", contest: eventObj.sender.args.dataSource.contest}, {
@@ -279,8 +242,70 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
         }
 
-        function teamClicked(team) {
-            alert("הצטרפתם לקבוצת " + team);
+        function prepareContestChart(contest) {
+            var contestChart = JSON.parse(JSON.stringify($rootScope.settings.chartSettings.chartObject));
+            contestChart.contest = contest;
+
+            contestChart.data = [];
+            var teamsOrder;
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
+                teamsOrder = [0, 1];
+            }
+            else {
+                teamsOrder = [1, 0];
+            }
+            contestChart.data.push({
+                "label": contest.teams[teamsOrder[0]].name,
+                "value": contest.teams[teamsOrder[0]].chartValue
+            });
+            contestChart.data.push({
+                "label": contest.teams[teamsOrder[1]].name,
+                "value": contest.teams[teamsOrder[1]].chartValue
+            });
+
+            if (typeof(contest.myTeam) == "undefined") {
+                contestChart.chart.paletteColors = $rootScope.settings.chartSettings.generalData.defaultPaletteColors;
+            }
+            else {
+                contestChart.chart.paletteColors = $rootScope.settings.chartSettings.generalData.teamPaletteColors[teamsOrder[contest.myTeam]];
+            }
+
+            contestChart.chart.caption = contestCaption;
+            contestChart.chart.subCaption = $translate.instant("CONTEST_NAME", {
+                team0: contest.teams[0].name,
+                team1: contest.teams[1].name
+            });
+
+            var contestEndsString = $translate.instant("CONTEST_ENDS_IN", {
+                number: contest.endsInNumber,
+                units: $translate.instant(contest.endsInUnits)
+            });
+
+            var contestEndsWidth = canvasContext.measureText(contestEndsString).width;
+            var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS", {participants: contest.participants + contest.manualParticipants});
+            var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
+
+            contestChart.annotations.groups[0].items[0].text = contestEndsString;
+            contestChart.annotations.groups[0].items[0].x = "$chartendx - " + (contestEndsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
+
+            contestChart.annotations.groups[0].items[1].text = contestParticipantsString;
+            contestChart.annotations.groups[0].items[1].x = "$chartstartx + " + (contestParticipantsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
+
+            return contestChart;
+        }
+
+        function teamClicked(dataSource, teamId) {
+            var serverTeamId = teamId;
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "rtl") {
+                serverTeamId = 1 - teamId; //In RTL - the teams are presented backwards
+            }
+
+            var postData = {"contestId": dataSource.contest._id, "teamId": serverTeamId};
+            ContestsService.joinContest(postData,
+                function (contest) {
+                    $scope.contestCharts[contest._id] = prepareContestChart(contest);
+                    $scope.contestCharts[contest._id].contest = contest;
+                }, ErrorService.logErrorAndAlert)
         }
 
         $scope.$on('$ionicView.beforeEnter', function () {
@@ -288,8 +313,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         });
     })
 
-    .
-    controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate) {
+    .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate) {
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
@@ -298,7 +322,9 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
                 },
-                ErrorService.logErrorAndAlert)
+                function (status, error) {
+                    ErrorService.logErrorAndAlert(status, error).then($ionicHistory.goBack());
+                });
         });
 
         function getNextQuestion() {
@@ -542,6 +568,13 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                         //Server stores in epoch - client uses real DATE objects
                         $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
                         $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
+
+                        if ($scope.localViewData.status == "running" && $scope.localViewData.participants > 0) {
+                            $scope.showStartDate = false;
+                        }
+                        else {
+                            $scope.showStartDate = true;
+                        }
                     }
                     else {
                         $scope.goBack();
@@ -558,6 +591,8 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                         "manualRating": 0,
                         "teams": [{"name": null, "score": 0}, {"name": null, "score": 0}]
                     };
+
+                    $scope.showStartDate = true;
                 }
             }
             else {
@@ -565,6 +600,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 return;
             }
 
+            console.log($scope.showStartDate);
             $scope.localViewData.totalParticipants = $scope.localViewData.participants + $scope.localViewData.manualParticipants;
             $scope.showAdminInfo = false;
 
@@ -644,6 +680,8 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
 
             delete $scope.localViewData["totalParticipants"];
+
+            delete $scope.localViewData["status"];
 
             //Server stores in epoch - client uses real DATE objects
             //Convert back to epoch before storing to server
