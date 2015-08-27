@@ -1,3 +1,6 @@
+//----------------------------------------------------
+// Globals
+//----------------------------------------------------
 var express = require("express");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
@@ -15,6 +18,10 @@ app.use(bodyParser());          // pull information from html in POST
 app.use(methodOverride());      // simulate DELETE and PUT
 app.use(express.static("../client/www"));
 
+//----------------------------------------------------
+// Main request processor function
+// Wraps requests in a domain to catch errors
+//----------------------------------------------------
 app.use(function runInsideDomain(req, res, next) {
     var reqDomain = domain.create();
 
@@ -30,14 +37,32 @@ app.use(function runInsideDomain(req, res, next) {
     reqDomain.run(next);
 });
 
-// CORS (Cross-Origin Resource Sharing) headers to support Cross-site HTTP requests
+//----------------------------------------------------
+// Headers
+//----------------------------------------------------
 app.all("*", function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     next();
 });
 
-//API's require authentication
+//----------------------------------------------------
+// isAuthenticated
+//
+// Checks if request contains authorization token
+//----------------------------------------------------
+function isAuthenticated(req, res, next) {
+    if (req.headers.authorization) {
+        next();
+    }
+    else {
+        res.send(401, "Not Authenticated.")
+    }
+}
+
+//----------------------------------------------------
+// API's that require authentication
+//----------------------------------------------------
 app.post("/user/logout", isAuthenticated, credentials.logout);
 app.post("/user/settings", sessionUtils.saveSettings);
 app.post("/user/toggleSound", sessionUtils.toggleSound);
@@ -51,11 +76,16 @@ app.post("/contests/remove", isAuthenticated, contests.removeContest);
 app.post("/contests/get", isAuthenticated, contests.getContests);
 //TODO: app.post("/contests/selectTeam", isAuthenticated, contests.selectTeam);
 
-//API's that do NOT require authentication
+//----------------------------------------------------
+// API's that do NOT require authentication
+//----------------------------------------------------
 app.post("/user/facebookConnect", credentials.facebookConnect);
 app.post("/info/geo", generalUtils.geoInfo);
 app.post("/info/settings", generalUtils.getSettings);
 
+//----------------------------------------------------
+// Start server listener
+//----------------------------------------------------
 app.use(function (err, req, res, next) {
     console.log("error on request %s %s: %s", req.method, req.url, err.stack);
     var status = 500;
@@ -68,12 +98,3 @@ app.set("port", process.env.PORT || 7000);
 app.listen(app.get("port"), function () {
     console.log("Express server listening on port " + app.get("port"));
 });
-
-function isAuthenticated(req, res, next) {
-    if (req.headers.authorization) {
-        next();
-    }
-    else {
-        res.send(401, "Not Authenticated.")
-    }
-}

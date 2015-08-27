@@ -1,11 +1,8 @@
-///Class FormValidationError
-function FormValidationError(status, fieldName, message) {
-    var error = GeneralError(status, message);
-    error.fieldName = fieldName;
-    return error;
-}
-
-///Class ServerError
+//-----------------------------------------------------------------------
+// Class GeneralError
+//
+// can hold: status, message and title
+//-----------------------------------------------------------------------
 function GeneralError(status, message) {
     var error = {};
     error.status = status;
@@ -20,5 +17,4 @@ function GeneralError(status, message) {
     return error;
 }
 
-module.exports.FormValidationError = FormValidationError;
 module.exports.GeneralError = GeneralError;

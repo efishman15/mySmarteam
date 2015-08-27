@@ -9,7 +9,7 @@
 
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
-        <form name="contestForm" novalidate="novalidate" ng-submit="contestForm.$valid && setContest()">
+        <form name="contestForm" novalidate="novalidate">
             <ion-list>
 
                 <ion-item class="padding row">
@@ -19,7 +19,7 @@
                                ng-messages-include="templates/contest-error-list.html">
                             <input type="text" placeholder="{{ 'TEAM0' | translate }}" name="team0"
                                    ng-model="localViewData.teams[0].name" autofocus
-                                   ng-minlength="2" ng-maxlength="50" required>
+                                   ng-minlength="2" ng-maxlength="15" maxlength="15" required>
                         </label>
 
                         <div class="error-container last-error-container form-errors"
@@ -37,7 +37,7 @@
                                ng-messages-include="templates/contest-error-list.html">
                             <input type="text" placeholder="{{ 'TEAM1' | translate }}" name="team1"
                                    ng-model="localViewData.teams[1].name"
-                                   ng-minlength="2" ng-maxlength="50" required>
+                                   ng-minlength="2" ng-maxlength="15" maxlength="15" required>
                         </label>
 
                         <div class="error-container last-error-container form-errors"
@@ -78,7 +78,7 @@
                                        ng-messages-include="templates/contest-error-list.html">
                                     <input type="number" placeholder="{{ 'SCORE' | translate }}" name="score0"
                                            ng-model="localViewData.teams[0].score"
-                                           ng-minlength="1" min="0" ng-maxlength="50" required>
+                                           ng-minlength="1" min="0" ng-maxlength="15" required>
                                 </label>
 
                                 <div class="error-container last-error-container form-errors"
@@ -96,7 +96,7 @@
                                        ng-messages-include="templates/contest-error-list.html">
                                     <input type="number" placeholder="{{ 'SCORE' | translate }}" name="score1"
                                            ng-model="localViewData.teams[1].score"
-                                           ng-minlength="1" min="0" ng-maxlength="50" required>
+                                           ng-minlength="1" min="0" ng-maxlength="10" required>
                                 </label>
 
                                 <div class="error-container last-error-container form-errors"
@@ -125,7 +125,7 @@
                 </ion-item>
 
                 <ion-item class="button-bar">
-                    <button class="button button-bar button-positive button-calm" translate="OK" type="submit">
+                    <button class="button button-bar button-positive button-calm" translate="OK" ng-click="contestForm.$valid && setContest()">
                     </button>
                     <button class="button button-bar" translate="CANCEL" ng-click="goBack()">
                     </button>

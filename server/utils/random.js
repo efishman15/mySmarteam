@@ -1,15 +1,33 @@
+//-----------------------------------------------------------------------
+// Globals
+//-----------------------------------------------------------------------
 var seedrandom = require('seedrandom');
 var uuid = require('node-uuid');
 var rng = seedrandom(uuid.v1());
 
+//-----------------------------------------------------------------------
+// rnd
+//
+// returns a random number for a given range
+//-----------------------------------------------------------------------
 module.exports.rnd = function (minInclussive, maxInclussive) {
     return minInclussive + Math.floor(rng() * (maxInclussive - minInclussive + 1));
 };
 
+//-----------------------------------------------------------------------
+// pick
+//
+// picks and returns a random item from a given array
+//-----------------------------------------------------------------------
 module.exports.pick = function(array) {
     return array[this.rnd(0,array.length-1)];
 };
 
+//-----------------------------------------------------------------------
+// shuffle
+//
+// Shuffles an array based on the //Fisher-Yates Shuffle
+//-----------------------------------------------------------------------
 module.exports.shuffle = function(array) {
 
     //Fisher-Yates Shuffle

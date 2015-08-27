@@ -37,7 +37,8 @@ angular.module('mySmarteam.services', [])
             InfoService.getGeoInfo(function (geoResult) {
                     $rootScope.user = {
                         "settings": {
-                            "language": geoResult.language
+                            "language": geoResult.language,
+                            "timezoneOffset" : (new Date).getTimezoneOffset()
                         }
                     };
                     $rootScope.session = null;
@@ -106,7 +107,7 @@ angular.module('mySmarteam.services', [])
 
         //Invoke Facebook Client UI and then connect to the server
         service.facebookClientConnect = function (callbackOnSuccess, callbackOnError) {
-            FacebookService.login(function(response) {
+            FacebookService.login(function (response) {
                 service.setFacebookCredentials(response.authResponse)
                 service.facebookServerConnect(callbackOnSuccess, callbackOnError);
             }, callbackOnError, ["public_profile", "email"]);
@@ -196,15 +197,15 @@ angular.module('mySmarteam.services', [])
         //Get Default language
         function getDefaultLanguage() {
             //Always return a language - get the browser's language
-            var language = navigator.languages? navigator.languages[0] : (navigator.language || navigator.userLanguage)
+            var language = navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage)
             if (!language) {
                 language = "en";
             }
             if (language.length > 2) {
-                language = language.toLowerCase().substring(0,2);
+                language = language.toLowerCase().substring(0, 2);
             }
 
-            return {"language" : language};
+            return {"language": language};
 
         }
 
@@ -225,7 +226,7 @@ angular.module('mySmarteam.services', [])
                                 callbackOnSuccess(geoResult);
                             }
                         },
-                        function() {
+                        function () {
                             callbackOnSuccess(getDefaultLanguage());
                         });
                 },
@@ -329,29 +330,35 @@ angular.module('mySmarteam.services', [])
 
         //Log Error
         service.logError = function (status, error) {
-            var errorMessage = "Error " + status + ": " + $translate.instant(error.message);
+            var errorMessage = "Error " + status + ": " + $translate.instant(error.message ? error.message : error);
             console.log(errorMessage);
             return errorMessage;
         };
 
-        //Log Error with ionic alert
         service.logErrorAndAlert = function (status, error) {
-            if (error && error.title) {
-                $ionicPopup.alert({
-                    cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
-                    title: $translate.instant(error.title),
-                    template: $translate.instant(error.message),
-                    okText: $translate.instant("OK")
-                });
+            service.logError(status, error);
+            service.alert(error);
+        }
+
+        //ionic alert popup
+        service.alert = function (error) {
+            if (error) {
+                if (error.title) {
+                    return $ionicPopup.alert({
+                        cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
+                        title: $translate.instant(error.title),
+                        template: $translate.instant(error.message),
+                        okText: $translate.instant("OK")
+                    });
+                }
+                else {
+                    return $ionicPopup.alert({
+                        cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
+                        template: error.message ? error.message : error,
+                        okText: $translate.instant("OK")
+                    });
+                }
             }
-            else {
-                $ionicPopup.alert({
-                    cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
-                    template: error.message ? error.message : error,
-                    okText: $translate.instant("OK")
-                });
-            }
-            return;
         };
 
         return service;

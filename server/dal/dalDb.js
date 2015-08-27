@@ -4,6 +4,7 @@ var mongoClient = require("mongodb").MongoClient;
 var uuid = require('node-uuid');
 var exceptions = require("../utils/exceptions");
 var ObjectId = require("mongodb").ObjectID;
+var generalUtils = require('../utils/general');
 
 //---------------------------------------------------------------------
 // Cache variables
@@ -362,6 +363,7 @@ module.exports.facebookLogin = function (data, callback) {
         {
             $set: {
                 "lastLogin": new Date(),
+                "settings.timezoneOffset" : data.settings.timezoneOffset,
                 "name": data.name,  //keep sync with Facebook changes
                 "email": data.email,  //keep sync with Facebook changes - might be null if user removed email permission
                 "ageRange": data.ageRange //keep sync with Facebook changes
@@ -460,7 +462,7 @@ module.exports.logout = function (data, callback) {
             }
             , {w: 1, single: true},
             function (err, numberOfRemovedDocs) {
-                if (err || numberOfRemovedDocs == 0) {
+                if (err || numberOfRemovedDocs.ok == 0) {
                     //Session does not exist - stop the call chain
 
                     closeDb(data);
@@ -691,7 +693,9 @@ function addContest(data, callback) {
 module.exports.setContest = setContest;
 function setContest(data, callback) {
     var contestsCollection = data.DbHelper.getCollection('Contests');
-    contestsCollection.findAndModify({"_id": ObjectId(data.contest._id)}, {},
+    var contestId = ObjectId(data.contest._id);
+    delete data.contest["_id"];
+    contestsCollection.findAndModify({"_id": contestId}, {},
         {
             $set: data.contest
         }, {}, function (err, contest) {
@@ -730,16 +734,16 @@ function removeContest(data, callback) {
     var contestsCollection = data.DbHelper.getCollection('Contests');
     contestsCollection.remove(
         {
-            "_id": data.contest.id
+            "_id": ObjectId(data.contestId)
         }
         , {w: 1, single: true},
         function (err, numberOfRemovedDocs) {
-            if (err || numberOfRemovedDocs == 0) {
-                //Session does not exist - stop the call chain
+            if (err || numberOfRemovedDocs.ok == 0) {
 
+                //Contest does not exist - stop the call chain
                 closeDb(data);
 
-                callback(new excptions.GeneralError(401)); //Will cause the client to re-login
+                callback(new excptions.GeneralError(424));
                 return;
             }
 
@@ -772,12 +776,27 @@ function getContests(data, callback) {
         }
         contestsCursor.toArray(function (err, contests) {
             for (var i = 0; i < contests.length; i++) {
-                contests[i].participants += contests[i].manualParticipants;
 
-                //TODO: real calculations of those 2 lines
-                contests[i].endsInNumber = 3;
-                contests[i].endsInUnits = "DAYS";
+                var minutesToEnd = (contests[i].endDate - now) / 1000 / 60;
+
+                var result;
+                if (minutesToEnd >= 60 * 24) {
+                    result = minutesToEnd / 24 / 60;
+                    contests[i].endsInUnits = "DAYS";
+                }
+                else if (minutesToEnd >= 60) {
+                    result = minutesToEnd / 60;
+                    contests[i].endsInUnits = "HOURS";
+                }
+                else {
+                    result = minutesToEnd;
+                    contests[i].endsInUnits = "MINUTES";
+                }
+
+                contests[i].endsInNumber = Math.ceil(result);
+
             }
+
             data.contests = contests;
             callback(null, data);
         })

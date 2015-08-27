@@ -6,18 +6,20 @@
                 pulling-text="Pull to refresh..." pulling-icon="on-android-arrow-down"
                 on-refresh="doRefresh()">
         </ion-refresher>
-        <ion-list class="padding card" ng-repeat="contest in contests track by contest._id">
+        <ion-list class="padding card" ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
             <div class="padding item center item-divider item-text-wrap"
                  fusioncharts
                  width="260"
                  height="180"
                  type="column3d"
-                 dataSource="{{contest}}"
-                 events="fcEvents">
+                 dataSource="{{contestChart}}"
+                 events="fcEvents"
+                 dataLoadStartMessage="{{'LOADING' | translate}}"
+                 loadMessage="{{'LOADING' | translate}}">
             </div>
             <div class="center padding">
                 <button class="item button button-stable button-small button-assertive" style="overflow: visible"
-                        ng-click="playContest(contest._id)">
+                        ng-click="playContest(contestChart.contest._id)">
                     שחק בתחרות
                 </button>
             </div>

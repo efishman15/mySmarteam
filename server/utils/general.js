@@ -1,3 +1,6 @@
+//-----------------------------------------------------------------------
+// global variables
+//-----------------------------------------------------------------------
 var supportedLanguages = {
     "en": {
         "value": "en",
@@ -34,7 +37,7 @@ var triviaTopisPerLangage = {
 }
 
 var chartSettings = {
-    "generalData": {"annotationsFont": "10px Arial", "annotationHorizontalMagicNumber" : 3},
+    "generalData": {"annotationsFont": "10px Arial", "annotationHorizontalMagicNumber" : 7},
     "chartObject": {
         "chart": {
             "plotBorderAlpha": 0,
@@ -55,7 +58,10 @@ var chartSettings = {
             "chartBottomMargin": 25,
             "valuePadding": 0,
             "useroundedges": "1",
-            "showToolTip": 0
+            "showToolTip": 0,
+            "labelDisplay" : "auto",
+            "useEllipsesWhenOverflow" : 1,
+            "maxLabelWidthPercent" : 50
         },
         "annotations": {
             "groups": [
@@ -85,6 +91,11 @@ var chartSettings = {
     },
 }
 
+//-----------------------------------------------------------------------
+// getDirectionByLanguage
+//
+// returns the direction (ltr/rtl) based on language
+//-----------------------------------------------------------------------
 module.exports.getDirectionByLanguage = getDirectionByLanguage;
 function getDirectionByLanguage(languageCodeIso2) {
     switch (languageCodeIso2) {
@@ -95,6 +106,11 @@ function getDirectionByLanguage(languageCodeIso2) {
     }
 }
 
+//-----------------------------------------------------------------------
+// getLanguageByCountryCode
+//
+// returns the default language based on country ISO2 code
+//-----------------------------------------------------------------------
 module.exports.getLanguageByCountryCode = getLanguageByCountryCode;
 function getLanguageByCountryCode(countryCode) {
 
@@ -128,17 +144,51 @@ function getLanguageByCountryCode(countryCode) {
     }
 }
 
+//-----------------------------------------------------------------------
+// fromClientToUTC
+//
+// returns the client epoch date together with the offset from UTC
+//-----------------------------------------------------------------------
+module.exports.fromClientToUTC = fromClientToUTC;
+function fromClientToUTC(clientEpochDate, clientTimezoneOffset) {
+    return clientEpochDate + clientTimezoneOffset * 60 * 1000;
+}
+
+//-----------------------------------------------------------------------
+// fromUTCToClient
+//
+// returns the client epoch date together with the offset from UTC
+//-----------------------------------------------------------------------
+module.exports.fromUTCToClient = fromUTCToClient;
+function fromUTCToClient(clientEpochDate, clientTimezoneOffset) {
+    return clientEpochDate - clientTimezoneOffset * 60 * 1000;
+}
+
+//-----------------------------------------------------------------------
+// geoInfo
+//
+// returns language based on country
+//-----------------------------------------------------------------------
 module.exports.geoInfo = function (req, res, next) {
     var geoInformation = req.body;
     var language = getLanguageByCountryCode(geoInformation.country_code);
-    var direction = getDirectionByLanguage(language);
     res.json({"language": language});
 }
 
+//-----------------------------------------------------------------------
+// getSettings
+//
+// returns general server settings for each client
+//-----------------------------------------------------------------------
 module.exports.getSettings = function (req, res, next) {
     res.json({"languages": supportedLanguages, "chartSettings": chartSettings});
 }
 
+//-----------------------------------------------------------------------
+// getLanguageTriviaTopics
+//
+// returns trivia topic list for each language
+//-----------------------------------------------------------------------
 module.exports.getLanguageTriviaTopics = function (language) {
     return triviaTopisPerLangage[language];
 }

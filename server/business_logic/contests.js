@@ -1,7 +1,15 @@
 var async = require("async");
 var dalDb = require("../dal/dalDb");
 var exceptions = require("../utils/exceptions");
+var generalUtils = require('../utils/general');
 
+//----------------------------------------------------
+// validateContestData
+
+// data:
+// input: contest, mode (add, edit), session
+// output: modified contest with server logic
+//----------------------------------------------------
 function validateContestData(data, callback) {
 
     //Data validations
@@ -12,6 +20,11 @@ function validateContestData(data, callback) {
 
     if (!data.contest.startDate || !data.contest.endDate || !data.contest.teams) {
         callback(new exceptions.GeneralError(424, "One of the required fields not supplied: startDate, endDate, teams"));
+        return;
+    }
+
+    if (data.contest.startDate > data.contest.endDate) {
+        callback(new exceptions.GeneralError(424, "Contest end date must be later than contest start date"));
         return;
     }
 
@@ -47,16 +60,18 @@ function validateContestData(data, callback) {
         if (!data.contest.teams[1].score) {
             data.contest.teams[1].score = 0;
         }
-        if (data.contest.teams[0].score == 0 && data.contest.teams[1].score == 0) {
-            data.contest.teams[0].chartValue = 0.5;
-            data.contest.teams[1].chartValue = 0.5;
-        }
-        else {
-            //Do relational compute
-            var sum = data.contest.teams[0].score + data.contest.teams[1].score;
-            data.contest.teams[0].chartValue = Math.round(data.contest.teams[0].score * 100 / sum) / 100;
-            data.contest.teams[1].chartValue = 1 - data.contest.teams[0].chartValue;
-        }
+    }
+
+    //Set chart values based on team scores
+    if (data.contest.teams[0].score == 0 && data.contest.teams[1].score == 0) {
+        data.contest.teams[0].chartValue = 0.5;
+        data.contest.teams[1].chartValue = 0.5;
+    }
+    else {
+        //Do relational compute
+        var sum = data.contest.teams[0].score + data.contest.teams[1].score;
+        data.contest.teams[0].chartValue = Math.round(data.contest.teams[0].score * 100 / sum) / 100;
+        data.contest.teams[1].chartValue = 1 - data.contest.teams[0].chartValue;
     }
 
     if (data.contest.manualParticipants) {
@@ -82,11 +97,6 @@ function validateContestData(data, callback) {
             data.contest.manualRating = 0;
         }
     }
-
-
-    //Convert the start/end date back from epoch to normal dates
-    data.contest.startDate = new Date(data.contest.startDate);
-    data.contest.endDate = new Date(data.contest.endDate);
 
     callback(null, data);
 }

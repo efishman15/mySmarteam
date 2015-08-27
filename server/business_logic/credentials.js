@@ -20,7 +20,7 @@ function getSessionResponse(session) {
 //--------------------------------------------------------------------------
 // facebookConnect
 //
-// data: user (should containt user.thirdParty (id, type, accessToken)
+// data: user (should contain user.thirdParty (id, type, accessToken)
 //--------------------------------------------------------------------------
 module.exports.facebookConnect = function (req, res, next) {
     var data = req.body;
