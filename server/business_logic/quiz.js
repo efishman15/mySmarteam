@@ -102,7 +102,7 @@ module.exports.start = function (req, res, next) {
                     "score": 0
                 },
                 "clientData": {
-                    "totalQuestions": 2,
+                    "totalQuestions": 5,
                     "currentQuestionIndex": 0,
                     "finished": false
                 }

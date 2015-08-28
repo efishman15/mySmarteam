@@ -90,7 +90,7 @@ angular.module('mySmarteam.services', [])
 
         //Connect to the server with the Facebook credentials
         service.facebookServerConnect = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "facebookConnect", $rootScope.user,
+            return ApiService.post(path, "facebookConnect", {"user" : $rootScope.user},
                 function (session) {
                     $http.defaults.headers.common.Authorization = session.token;
                     if ($rootScope.user.settings.language != session.settings.language) {

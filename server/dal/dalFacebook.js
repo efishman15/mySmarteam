@@ -14,7 +14,7 @@ var exceptions = require('../utils/exceptions');
 //-------------------------------------------------------------------------------------
 module.exports.getUserInfo = function(data, callback) {
 
-    https.get(FACEBOOK_GRAPH_URL + "/me?fields=id,name,email,age_range&access_token=" + data.thirdParty.accessToken, function (res) {
+    https.get(FACEBOOK_GRAPH_URL + "/me?fields=id,name,email,age_range&access_token=" + data.user.thirdParty.accessToken, function (res) {
 
         res.setEncoding('utf8');
 
@@ -22,15 +22,15 @@ module.exports.getUserInfo = function(data, callback) {
 
             var facebookData = JSON.parse(responseData);
             if (facebookData && facebookData.id) {
-                if (facebookData.id == data.thirdParty.id) {
-                    data.avatar = getUserAvatar(data.thirdParty.id);
-                    data.name = facebookData.name;
-                    data.email = facebookData.email; //might be null if user removed
-                    data.ageRange = facebookData.age_range
+                if (facebookData.id == data.user.thirdParty.id) {
+                    data.user.avatar = getUserAvatar(data.user.thirdParty.id);
+                    data.user.name = facebookData.name;
+                    data.user.email = facebookData.email; //might be null if user removed
+                    data.user.ageRange = facebookData.age_range
                     callback(null, data);
                 }
                 else {
-                    callback(new exceptions.GeneralError(500, "Error validating facebook access token: " + data.thirdParty.accessToken + ", token actually belongs to: " + facebookData.id + " while input user id was: " + data.thirdParty.id));
+                    callback(new exceptions.GeneralError(500, "Error validating facebook access token: " + data.user.thirdParty.accessToken + ", token actually belongs to: " + facebookData.id + " while input user id was: " + data.user.thirdParty.id));
                     return;
                 }
             }

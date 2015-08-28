@@ -54,16 +54,16 @@ function checkToCloseDb(data) {
 //------------------------------------------------------------------------------------------------
 function register(data, callback) {
     var usersCollection = data.DbHelper.getCollection("Users");
+
     data.user.settings.sound = true;
     data.user.score = 0;
-    data.user.contests = [];
     var newUser = {
-        "facebookUserId": data.thirdParty.id,
-        "facebookAccessToken": data.thirdParty.accessToken,
-        "name": data.name,
-        "ageRange": data.ageRange,
-        "geoInfo": data.geoInfo,
-        "settings": data.settings,
+        "facebookUserId": data.user.thirdParty.id,
+        "facebookAccessToken": data.user.thirdParty.accessToken,
+        "name": data.user.name,
+        "ageRange": data.user.ageRange,
+        "geoInfo": data.user.geoInfo,
+        "settings": data.user.settings,
         "createdAt": new Date()
     };
 
@@ -359,18 +359,18 @@ module.exports.facebookLogin = function (data, callback) {
 
     var usersCollection = data.DbHelper.getCollection('Users');
 
-    usersCollection.findAndModify({"facebookUserId": data.thirdParty.id}, {},
+    usersCollection.findAndModify({"facebookUserId": data.user.thirdParty.id}, {},
         {
             $set: {
-                "lastLogin": new Date(),
-                "settings.timezoneOffset": data.settings.timezoneOffset,
-                "name": data.name,  //keep sync with Facebook changes
-                "email": data.email,  //keep sync with Facebook changes - might be null if user removed email permission
-                "ageRange": data.ageRange //keep sync with Facebook changes
+                "lastLogin": (new Date()).getTime(),
+                "settings": data.user.settings,
+                "name": data.user.name,  //keep sync with Facebook changes
+                "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
+                "ageRange": data.user.ageRange //keep sync with Facebook changes
             }
         }, {w: 1}, function (err, user) {
 
-            if (err || !user) {
+            if (err || !user.value) {
                 register(data, callback);
                 return;
             }

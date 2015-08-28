@@ -11,12 +11,12 @@
                 <div fusioncharts
                      width="260"
                      height="180"
-                     type="column3d"
+                     type="column2d"
                      dataSource="{{contestChart}}"
                      events="fcEvents">
                 </div>
                 <div class="padding center">
-                    <button class="item button button-stable button-small button-assertive" style="overflow: visible"
+                    <button class="item button button-stable button-small button-assertive" style="overflow: visible; font-size: 14px;"
                             ng-click="playContest(contestChart.contest._id)">{{'PLAY_CONTEST' | translate}}
                     </button>
                 </div>
