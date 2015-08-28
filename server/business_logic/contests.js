@@ -1,47 +1,11 @@
 var async = require("async");
 var dalDb = require("../dal/dalDb");
 var exceptions = require("../utils/exceptions");
-var generalUtils = require('../utils/general');
+var mathjs = require("mathjs");
 
 //---------------------------------------------------------------------
 // private functions
 //---------------------------------------------------------------------
-
-//---------------------------------------------------------------------
-// setContestStatus
-//---------------------------------------------------------------------
-function setContestStatus(contest) {
-
-    var now = (new Date()).getTime();
-
-    if (contest.endDate < now) {
-        contest.status = "finished";
-    }
-    else if (contest.startDate > now) {
-        contest.status = "starting";
-    }
-    else {
-        contest.status = "running";
-    }
-
-    var minutesToEnd = (contest.endDate - now) / 1000 / 60;
-
-    var result;
-    if (minutesToEnd >= 60 * 24) {
-        result = minutesToEnd / 24 / 60;
-        contest.endsInUnits = "DAYS";
-    }
-    else if (minutesToEnd >= 60) {
-        result = minutesToEnd / 60;
-        contest.endsInUnits = "HOURS";
-    }
-    else {
-        result = minutesToEnd;
-        contest.endsInUnits = "MINUTES";
-    }
-
-    contest.endsInNumber = Math.ceil(result);
-}
 
 //----------------------------------------------------
 // validateContestData
@@ -94,25 +58,12 @@ function validateContestData(data, callback) {
         data.contest.participants = 0;
         data.contest.score = 0; //The total score gained for this contest
         data.contest.userIdCreated = data.session.userId;
-        data.contest.lastParticipantJoined = null;
         if (!data.contest.teams[0].score) {
             data.contest.teams[0].score = 0;
         }
         if (!data.contest.teams[1].score) {
             data.contest.teams[1].score = 0;
         }
-    }
-
-    //Set chart values based on team scores
-    if (data.contest.teams[0].score == 0 && data.contest.teams[1].score == 0) {
-        data.contest.teams[0].chartValue = 0.5;
-        data.contest.teams[1].chartValue = 0.5;
-    }
-    else {
-        //Do relational compute
-        var sum = data.contest.teams[0].score + data.contest.teams[1].score;
-        data.contest.teams[0].chartValue = Math.round(data.contest.teams[0].score * 100 / sum) / 100;
-        data.contest.teams[1].chartValue = 1 - data.contest.teams[0].chartValue;
     }
 
     //Do not count on status from the client
@@ -178,9 +129,84 @@ function validateJoinContest(data, callback) {
     callback(null, data);
 }
 
+//---------------------------------------------------------------------
+// prepareContestForClient
+//
+// Updates:
+// 1. Status field (finished, starting, running)
+// 2. Ends in fields.
+// 3. Chart values as a result of a score change
+//---------------------------------------------------------------------
+module.exports.prepareContestForClient = prepareContestForClient;
+function prepareContestForClient(contest, myTeamId) {
+
+    //Status
+    var now = (new Date()).getTime();
+
+    if (contest.endDate < now) {
+        contest.status = "finished";
+    }
+    else if (contest.startDate > now) {
+        contest.status = "starting";
+    }
+    else {
+        contest.status = "running";
+    }
+
+    //ends In...
+    var minutesToEnd = (contest.endDate - now) / 1000 / 60;
+
+    var result;
+    if (minutesToEnd >= 60 * 24) {
+        result = minutesToEnd / 24 / 60;
+        contest.endsInUnits = "DAYS";
+    }
+    else if (minutesToEnd >= 60) {
+        result = minutesToEnd / 60;
+        contest.endsInUnits = "HOURS";
+    }
+    else {
+        result = minutesToEnd;
+        contest.endsInUnits = "MINUTES";
+    }
+
+    contest.endsInNumber = mathjs.ceil(result);
+
+    setContestScores(contest);
+
+    contest.myTeam = myTeamId;
+
+    //Fields not to be disclosed to the client
+    delete contest["users"];
+    delete contest["language"];
+
+}
+
+//---------------------------------------------------------------------
+// setContestScores
+//
+// Updates:
+// Chart values as a result of a score change
+//---------------------------------------------------------------------
+module.exports.setContestScores = setContestScores;
+function setContestScores(contest) {
+
+    //Chart values
+    if (contest.teams[0].score == 0 && contest.teams[1].score == 0) {
+        contest.teams[0].chartValue = 0.5;
+        contest.teams[1].chartValue = 0.5;
+    }
+    else {
+        //Do relational compute
+        var sum = contest.teams[0].score + contest.teams[1].score;
+        contest.teams[0].chartValue = mathjs.round(contest.teams[0].score / sum,2);
+        contest.teams[1].chartValue = mathjs.round(contest.teams[1].score / sum,2);
+    }
+}
+
 //----------------------------------------------------
 // setContest
-
+//
 // data:
 // input: contest, mode (add, edit)
 // output: contest (extended)
@@ -303,7 +329,6 @@ module.exports.getContests = function (req, res, next) {
         //Get contests from db
         function (data, callback) {
             data.closeConnection = true;
-            data.setContestStatusCallBack = setContestStatus;
             dalDb.getContests(data, callback);
         },
 
@@ -316,7 +341,11 @@ module.exports.getContests = function (req, res, next) {
                     data.contests[i].myTeam = data.contests[i].users[data.session.userId].team;
                 }
 
-                setContestStatus(data.contests[i]);
+                var myTeam = null;
+                if (data.contests[i].users && data.contests[i].users[data.session.userId]) {
+                    myTeam = data.contests[i].users[data.session.userId].team;
+                }
+                prepareContestForClient(data.contests[i], myTeam);
 
                 data.contestsHash[data.contests[i]._id] = data.contests[i];
             }
@@ -413,8 +442,7 @@ module.exports.joinContest = function (req, res, next) {
 
     async.waterfall(operations, function (err, data) {
         if (!err) {
-            data.contest.myTeam = data.teamId; //Only needed for the client
-            setContestStatus(data.contest);
+            prepareContestForClient(data.contest, data.teamId);
             res.json(data.contest)
         }
         else {

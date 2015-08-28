@@ -262,13 +262,17 @@ angular.module('mySmarteam.services', [])
     })
 
     //Quiz Service.
-    .factory('ContestsService', function ($http, ApiService) {
+    .factory('ContestsService', function ($http, ApiService, $rootScope, $translate) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
         var path = 'contests/';
+
+        var canvas = document.getElementById("myCanvas");
+        var canvasContext = canvas.getContext("2d");
+        canvasContext.font = $rootScope.settings.chartSettings.generalData.annotationsFont;
 
         //add contest
         service.addContest = function (postData, callbackOnSuccess, callbackOnError) {
@@ -293,6 +297,60 @@ angular.module('mySmarteam.services', [])
         //Join Contest
         service.joinContest = function (postData, callbackOnSuccess, callbackOnError) {
             return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError)
+        };
+
+        service.prepareContestChart = function(contest) {
+            var contestCaption = $translate.instant("WHO_IS_SMARTER");
+            var contestChart = JSON.parse(JSON.stringify($rootScope.settings.chartSettings.chartObject));
+            contestChart.contest = contest;
+
+            contestChart.data = [];
+            var teamsOrder;
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
+                teamsOrder = [0, 1];
+            }
+            else {
+                teamsOrder = [1, 0];
+            }
+
+            contestChart.data.push({
+                "label": contest.teams[teamsOrder[0]].name,
+                "value": contest.teams[teamsOrder[0]].chartValue
+            });
+            contestChart.data.push({
+                "label": contest.teams[teamsOrder[1]].name,
+                "value": contest.teams[teamsOrder[1]].chartValue
+            });
+
+            if (contest.myTeam == 0 || contest.myTeam == 1) {
+                contestChart.chart.paletteColors = $rootScope.settings.chartSettings.generalData.teamPaletteColors[teamsOrder[contest.myTeam]];
+            }
+            else {
+                contestChart.chart.paletteColors = $rootScope.settings.chartSettings.generalData.defaultPaletteColors;
+            }
+
+            contestChart.chart.caption = contestCaption;
+            contestChart.chart.subCaption = $translate.instant("CONTEST_NAME", {
+                team0: contest.teams[0].name,
+                team1: contest.teams[1].name
+            });
+
+            var contestEndsString = $translate.instant("CONTEST_ENDS_IN", {
+                number: contest.endsInNumber,
+                units: $translate.instant(contest.endsInUnits)
+            });
+
+            var contestEndsWidth = canvasContext.measureText(contestEndsString).width;
+            var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS", {participants: contest.participants + contest.manualParticipants});
+            var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
+
+            contestChart.annotations.groups[0].items[0].text = contestEndsString;
+            contestChart.annotations.groups[0].items[0].x = "$chartendx - " + (contestEndsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
+
+            contestChart.annotations.groups[0].items[1].text = contestParticipantsString;
+            contestChart.annotations.groups[0].items[1].x = "$chartstartx + " + (contestParticipantsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
+
+            return contestChart;
         };
 
         return service;

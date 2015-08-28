@@ -4,6 +4,7 @@
 var seedrandom = require('seedrandom');
 var uuid = require('node-uuid');
 var rng = seedrandom(uuid.v1());
+var mathjs = require("mathjs")
 
 //-----------------------------------------------------------------------
 // rnd
@@ -11,7 +12,7 @@ var rng = seedrandom(uuid.v1());
 // returns a random number for a given range
 //-----------------------------------------------------------------------
 module.exports.rnd = function (minInclussive, maxInclussive) {
-    return minInclussive + Math.floor(rng() * (maxInclussive - minInclussive + 1));
+    return minInclussive + mathjs.floor(rng() * (maxInclussive - minInclussive + 1));
 };
 
 //-----------------------------------------------------------------------

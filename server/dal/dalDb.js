@@ -793,7 +793,6 @@ function getContest(data, callback) {
 //------------------------------------------------------------------------------------------------
 module.exports.getContests = getContests;
 function getContests(data, callback) {
-    console.log(data.setContestStatusCallback);
     var contestsCollection = data.DbHelper.getCollection('Contests');
     contestsCollection.find({}, {}, function (err, contestsCursor) {
         if (err || !contestsCursor) {

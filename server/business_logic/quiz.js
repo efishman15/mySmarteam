@@ -4,6 +4,7 @@ var exceptions = require('../utils/exceptions');
 var random = require('../utils/random');
 var dalDb = require('../dal/dalDb');
 var generalUtils = require('../utils/general');
+var contestsBusinessLogic = require('../business_logic/contests');
 
 //--------------------------------------------------------------------------
 //Private functions
@@ -101,7 +102,7 @@ module.exports.start = function (req, res, next) {
                     "score": 0
                 },
                 "clientData": {
-                    "totalQuestions": 5,
+                    "totalQuestions": 2,
                     "currentQuestionIndex": 0,
                     "finished": false
                 }
@@ -172,7 +173,7 @@ module.exports.answer = function (req, res, next) {
             data.result.answerId = answerId;
             if (answers[answerId - 1].correct) {
                 data.result.correct = true;
-                data.session.quiz.serverData.score += 10; //Question score
+                data.session.quiz.serverData.score += (100 / data.session.quiz.clientData.totalQuestions); //Question score relational to 100
             }
             else {
                 data.result.correct = false;
@@ -236,10 +237,21 @@ module.exports.answer = function (req, res, next) {
         //Check to save the quiz score into the contest object - when quiz is finished
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+
+                //Update:
+                // 1. contest general score
+                // 2. My score in this contest + lastPlayed
+                // 3. My team's score in this contest
                 data.setData = {};
                 data.setData["users." + data.session.userId + ".score"] = data.contest.users[data.session.userId].score + data.session.quiz.serverData.score;
+                data.setData["users." + data.session.userId + ".lastPlayed"] = (new Date()).getTime();
                 data.setData.score = data.contest.score + data.session.quiz.serverData.score;
-                console.log("setData: " + JSON.stringify(data.setData));
+
+                data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
+                data.setData["teams." + data.contest.users[data.session.userId].team + ".score"] = data.contest.teams[data.contest.users[data.session.userId].team].score;
+
+                data.result.contest = data.contest;
+
                 data.closeConnection = true;
                 dalDb.setContest(data, callback);
             }
@@ -248,6 +260,15 @@ module.exports.answer = function (req, res, next) {
                 callback(null, data);
             }
         },
+
+        //Set contest status fields (required for client only),
+        //AFTER contest has been saved to db
+        function (data, callback) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+                contestsBusinessLogic.prepareContestForClient(data.result.contest, data.result.contest.users[data.session.userId].team);
+            }
+            callback(null, data);
+        }
     ];
 
     async.waterfall(operations, function (err, data) {

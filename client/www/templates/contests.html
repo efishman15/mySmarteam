@@ -3,25 +3,23 @@
 
     <ion-scroll class="padding" style="height: 100%">
         <ion-refresher
-                pulling-text="Pull to refresh..." pulling-icon="on-android-arrow-down"
+                pulling-text="{{'PULL_TO_REFRESH' | translate}}" pulling-icon="on-android-arrow-down"
                 on-refresh="doRefresh()">
         </ion-refresher>
         <ion-list class="padding card" ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
-            <div class="padding item center item-divider item-text-wrap"
-                 fusioncharts
-                 width="260"
-                 height="180"
-                 type="column3d"
-                 dataSource="{{contestChart}}"
-                 events="fcEvents"
-                 dataLoadStartMessage="{{'LOADING' | translate}}"
-                 loadMessage="{{'LOADING' | translate}}">
-            </div>
-            <div class="center padding">
-                <button class="item button button-stable button-small button-assertive" style="overflow: visible"
-                        ng-click="playContest(contestChart.contest._id)">
-                    שחק בתחרות
-                </button>
+            <div class="padding item center item-divider item-text-wrap">
+                <div fusioncharts
+                     width="260"
+                     height="180"
+                     type="column3d"
+                     dataSource="{{contestChart}}"
+                     events="fcEvents">
+                </div>
+                <div class="padding center">
+                    <button class="item button button-stable button-small button-assertive" style="overflow: visible"
+                            ng-click="playContest(contestChart.contest._id)">{{'PLAY_CONTEST' | translate}}
+                    </button>
+                </div>
             </div>
         </ion-list>
     </ion-scroll>
