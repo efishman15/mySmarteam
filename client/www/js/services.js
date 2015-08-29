@@ -270,7 +270,7 @@ angular.module('mySmarteam.services', [])
         var service = this;
         var path = 'contests/';
 
-        var canvas = document.getElementById("myCanvas");
+        var canvas = document.createElement("canvas");
         var canvasContext = canvas.getContext("2d");
         canvasContext.font = $rootScope.settings.chartSettings.generalData.annotationsFont;
 
@@ -322,7 +322,9 @@ angular.module('mySmarteam.services', [])
                 "value": contest.teams[teamsOrder[1]].chartValue
             });
 
+            var labelRootProperty;
             if (contest.myTeam == 0 || contest.myTeam == 1) {
+                //Joined contest
                 contestChart.chart.paletteColors = $rootScope.settings.chartSettings.generalData.teamPaletteColors[teamsOrder[contest.myTeam]];
             }
             else {

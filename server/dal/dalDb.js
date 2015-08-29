@@ -64,7 +64,7 @@ function register(data, callback) {
         "ageRange": data.user.ageRange,
         "geoInfo": data.user.geoInfo,
         "settings": data.user.settings,
-        "createdAt": new Date()
+        "createdAt": (new Date()).getTime()
     };
 
     usersCollection.insert(newUser
@@ -402,10 +402,10 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "facebookUserId": data.user.facebookUserId,
                 "isAdmin": data.user.isAdmin,
                 "facebookAccessToken": data.user.facebookAccessToken,
-                "name": data.name,
-                "ageRange": data.ageRange,
-                "avatar": data.avatar,
-                "createdAt": new Date(),
+                "name": data.user.name,
+                "ageRange": data.user.ageRange,
+                "avatar": data.user.avatar,
+                "createdAt": (new Date()).getTime(),
                 "userToken": userToken,
                 "settings": data.user.settings
             }
@@ -494,7 +494,7 @@ function logAction(data, callback) {
 
     var newAction = {
         "userId": data.userId,
-        "date": new Date(),
+        "date": (new Date()).getTime(),
         "action": data.action
     };
 

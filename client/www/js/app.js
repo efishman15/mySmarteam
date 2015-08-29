@@ -176,7 +176,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                         return UserService.resolveAuthentication();
                     }
                 },
-                params: {score: null, contest: null},
+                params: {results: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quizResult.html",

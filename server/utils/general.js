@@ -41,7 +41,7 @@ var chartSettings = {
         "annotationsFont": "10px Arial",
         "annotationHorizontalMagicNumber": 7,
         "defaultPaletteColors" : "#CCCCCC,#CCCCCC",
-        "teamPaletteColors": ["#00FF21,#CCCCCC","#CCCCCC,#00FF21"],
+        "teamPaletteColors": ["#00FF21,#CCCCCC","#CCCCCC,#00FF21"]
     },
     "chartObject": {
         "chart": {
@@ -50,17 +50,27 @@ var chartSettings = {
             "baseFont": "Arial",
             "baseFontSize": 12,
             "showBorder": 1,
+            "showCanvasBorder" : 0,
+            "showPlotBorder" : 0,
+            "showCanvasBg" : 0,
             "yAxisMinValue": 0.0,
             "yAxisMaxValue": 1.0,
             "numDivLines": 0,
+            "adjustDiv": 0,
+            "divLineColor" : "#FFFFFF",
+            "labelBgColor" : "#f8f8f8",
+            "labelFontColor" : "#040404",
+            "labelBorderColor": "#b2b2b2",
+            "labelBorderPadding" : 5,
             "numberScaleValue": ".01",
             "numberScaleUnit": "%",
             "showYAxisValues": 0,
             "valueFontSize": 12,
-            "labelFontSize": 16,
+            "labelFontSize": "15",
             "chartBottomMargin": 25,
             "valuePadding": 0,
-            "useroundedges": "1",
+            "labelPadding" : 10,
+            "useRoundEdges": "1",
             "showToolTip": 0,
             "labelDisplay": "auto",
             "useEllipsesWhenOverflow": 1,
@@ -77,7 +87,7 @@ var chartSettings = {
                             "y": "$chartendy - 8",
                             "fontSize": 10,
                             "font": "Arial",
-                            "fontColor": "#FF0000"
+                            "fontColor": "#000000"
                         },
                         {
                             "id": "label",
@@ -85,7 +95,7 @@ var chartSettings = {
                             "y": "$chartendy - 8",
                             "fontSize": 10,
                             "font": "Arial",
-                            "fontColor": "#FF0000"
+                            "fontColor": "#000000"
                         }
                     ]
                 }

@@ -6,6 +6,14 @@ var dalDb = require('../dal/dalDb');
 var generalUtils = require('../utils/general');
 var contestsBusinessLogic = require('../business_logic/contests');
 
+var quizSounds = {
+    "finish": {
+        "zero" : ["audio/finish_zero_1.ogg","audio/finish_zero_2.ogg"],
+        "ok" : ["audio/finish_ok_1.ogg"],
+        "great" : ["audio/finish_great_1.ogg"]
+    }
+}
+
 //--------------------------------------------------------------------------
 //Private functions
 //--------------------------------------------------------------------------
@@ -102,7 +110,7 @@ module.exports.start = function (req, res, next) {
                     "score": 0
                 },
                 "clientData": {
-                    "totalQuestions": 5,
+                    "totalQuestions": 2,
                     "currentQuestionIndex": 0,
                     "finished": false
                 }
@@ -168,24 +176,24 @@ module.exports.answer = function (req, res, next) {
                 callback(new excptions.GeneralError(424, "Invalid answer id: " + data.id));
             }
 
-            data.result = {};
+            data.response = {"question" : {}};
 
-            data.result.answerId = answerId;
+            data.response.question.answerId = answerId;
             if (answers[answerId - 1].correct) {
-                data.result.correct = true;
-                data.session.quiz.serverData.score += (100 / data.session.quiz.clientData.totalQuestions); //Question score relational to 100
+                data.response.question.correct = true;
+                data.session.quiz.serverData.questionScore = (100 / data.session.quiz.clientData.totalQuestions); //Question score relational to 100
+                data.session.quiz.serverData.score += data.session.quiz.serverData.questionScore; //Question score relational to 100
             }
             else {
-                data.result.correct = false;
+                data.response.question.correct = false;
                 for (i = 0; i < answers.length; i++) {
                     if (answers[i].correct && answers[i].correct == true) {
-                        data.result.correctAnswerId = i + 1;
+                        data.response.question.correctAnswerId = i + 1;
                         break;
                     }
                 }
             }
 
-            data.result.score = data.session.quiz.serverData.score;
             callback(null, data);
         },
 
@@ -196,10 +204,10 @@ module.exports.answer = function (req, res, next) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
 
                 //Update total score in profile
-                data.session.score += data.session.quiz.serverData.score;
+                data.session.score += data.session.quiz.serverData.questionScore;
                 store = true;
             }
-            else if (data.result.correct == true) {
+            else if (data.response.question.correct == true) {
                 //store temporary score of quiz
                 store = true;
             }
@@ -250,7 +258,7 @@ module.exports.answer = function (req, res, next) {
                 data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
                 data.setData["teams." + data.contest.users[data.session.userId].team + ".score"] = data.contest.teams[data.contest.users[data.session.userId].team].score;
 
-                data.result.contest = data.contest;
+                data.response.results = {"contest" : data.contest};
 
                 data.closeConnection = true;
                 dalDb.setContest(data, callback);
@@ -265,7 +273,25 @@ module.exports.answer = function (req, res, next) {
         //AFTER contest has been saved to db
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
-                contestsBusinessLogic.prepareContestForClient(data.result.contest, data.result.contest.users[data.session.userId].team);
+                contestsBusinessLogic.prepareContestForClient(data.response.results.contest, data.response.results.contest.users[data.session.userId].team);
+
+                data.response.results.score = data.session.quiz.serverData.score;
+
+                if (data.response.results.score == 100) {
+                    data.response.results.sound = random.pick(quizSounds.finish.great);
+                    data.response.results.title = "EXCELLENT_SCORE_TITLE";
+                    data.response.results.message = "POSITIVE_SCORE_MESSAGE";
+                }
+                else if (data.response.results.score > 0) {
+                    data.response.results.sound = random.pick(quizSounds.finish.ok);
+                    data.response.results.title = "POSITIVE_SCORE_TITLE";
+                    data.response.results.message = "POSITIVE_SCORE_MESSAGE";
+                }
+                else { //zero
+                    data.response.results.sound = random.pick(quizSounds.finish.zero);
+                    data.response.results.title = "ZERO_SCORE_TITLE";
+                    data.response.results.message = "ZERO_SCORE_MESSAGE";
+                }
             }
             callback(null, data);
         }
@@ -273,7 +299,7 @@ module.exports.answer = function (req, res, next) {
 
     async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.send(200, data.result);
+            res.send(200, data.response);
         }
         else {
             res.send(err.status, err);

@@ -3,36 +3,24 @@
     <ion-content padding="true">
         <div class="padding center">
 
-            <div class="padding center" ng-show="score == 100">
-                <h3>{{ 'EXCELLENT_SCORE_TITLE' | translate}}</h3>
+            <div class="padding center">
+                <h3>{{title}}</h3>
             </div>
 
-            <div class="center" ng-show="score > 0 && score < 100">
-                <h3>{{ 'POSITIVE_SCORE_TITLE' | translate}}</h3>
-            </div>
-
-            <div class="center" ng-show="score == 0">
-                <h3>{{ 'ZERO_SCORE_TITLE' | translate}}</h3>
-            </div>
-
-            <div class="center" ng-show="score > 0">
-                <h4>{{ 'POSITIVE_SCORE_MESSAGE' | translate:{myScore : score} }}</h4>
-            </div>
-
-            <div class="center" ng-show="score == 0">
-                <h4>{{ 'ZERO_SCORE_MESSAGE' | translate:{myScore : score} }}</h4>
+            <div class="padding center">
+                <h3>{{message}}</h3>
             </div>
 
             <div class="padding center"
                  fusioncharts
                  width="260"
                  height="180"
-                 type="column3d"
-                 dataSource="{{contestChart}}">
+                 type="column2d"
+                 dataSource="{{chart}}">
             </div>
 
             <div class="padding center">
-                <button class="button button-assertive" ng-click="returnToContests()">{{ 'PLAY_AGAIN' | translate}}</button>
+                <button class="button button-assertive" ng-click="$root.gotoView('app.contests', null, true)">{{ 'PLAY_AGAIN' | translate}}</button>
             </div>
         </div>
         <audio id="audioSound" autoplay src=""></audio>
