@@ -27,11 +27,11 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item menu-close ng-click="$root.gotoView('app.contest',{mode: 'add'})">
+                <ion-item menu-close ng-click="$root.gotoView('app.contest',false, {mode: 'add'})">
                     <i class="ion-gear-a"></i>
                     {{ 'NEW_CONTEST' | translate}}
                 </ion-item>
-                <ion-item ng-click="$root.gotoView('app.settings')">
+                <ion-item ng-click="$root.gotoView('app.settings', false)">
                     <i class="ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
@@ -48,11 +48,11 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item menu-close ng-click="$root.$root.gotoView('app.contest',{mode: 'add'})">
+                <ion-item menu-close ng-click="$root.$root.gotoView('app.contest',false,{mode: 'add'})">
                     <i class="ion-gear-a"></i>
                     {{ 'NEW_CONTEST' | translate}}
                 </ion-item>
-                <ion-item ng-click="$root.gotoView('app.settings')">
+                <ion-item ng-click="$root.gotoView('app.settings', false)">
                     <i class="ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
                 </ion-item>

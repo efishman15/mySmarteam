@@ -1,7 +1,7 @@
 angular.module('mySmarteam.services', [])
 
     //User Service
-    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService) {
+    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService, $ionicHistory) {
 
         //----------------------------------------------
         // Service Variables
@@ -30,17 +30,18 @@ angular.module('mySmarteam.services', [])
             service.initUser(callbackOnSuccess, callbackOnError);
         }
 
-
         //Init user
         service.initUser = function (callbackOnSuccess) {
 
-            InfoService.getGeoInfo(function (geoResult) {
+            InfoService.getGeoInfo(function (geoResult, geoInfo) {
                     $rootScope.user = {
                         "settings": {
                             "language": geoResult.language,
                             "timezoneOffset" : (new Date).getTimezoneOffset()
-                        }
+                        },
+                        "geoInfo" : geoInfo //For registration on the server
                     };
+
                     $rootScope.session = null;
 
                     $translate.use($rootScope.user.settings.language);
@@ -134,7 +135,6 @@ angular.module('mySmarteam.services', [])
 
             var deferred = $q.defer();
             resolveRequests.push(deferred);
-
             if (resolveRequests.length > 1) {
                 return resolveRequests[resolveRequests.length - 1].promise;
             }
@@ -159,6 +159,9 @@ angular.module('mySmarteam.services', [])
                                 service.getLoginStatus(resolveQueue, resolveQueue);
                             },
                             ErrorService.logErrorAndAlert)
+                    }
+                    else {
+                        resolveQueue();
                     }
                 });
             }
@@ -218,16 +221,15 @@ angular.module('mySmarteam.services', [])
 
             ApiService.get(geoProviders[geoProviderId], config,
                 function (geoInfo) {
-                    $rootScope.geoInfo = geoInfo;
                     return ApiService.post(path, "geo", geoInfo,
                         function (geoResult) {
                             geoResult.geoInfo = geoInfo;
                             if (callbackOnSuccess) {
-                                callbackOnSuccess(geoResult);
+                                callbackOnSuccess(geoResult, geoInfo);
                             }
                         },
                         function () {
-                            callbackOnSuccess(getDefaultLanguage());
+                            callbackOnSuccess(getDefaultLanguage(),geoInfo);
                         });
                 },
                 function (status, data) {
@@ -261,7 +263,7 @@ angular.module('mySmarteam.services', [])
 
     })
 
-    //Quiz Service.
+    //Sound Service.
     .factory('ContestsService', function ($http, ApiService, $rootScope, $translate) {
 
         //----------------------------------------------
@@ -306,7 +308,8 @@ angular.module('mySmarteam.services', [])
 
             contestChart.data = [];
             var teamsOrder;
-            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
+
+            if ($rootScope.settings.languages[$rootScope.user.settings.language].direction == "ltr") {
                 teamsOrder = [0, 1];
             }
             else {
@@ -569,6 +572,39 @@ angular.module('mySmarteam.services', [])
                 }
             }
         }
+
+        return service;
+    })
+
+    //Sound Service
+    .factory('SoundService', function () {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+        var audio = new Audio();
+        var playOgg = !!(audio.canPlayType && audio.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, ''));
+        var playMp3 = !!(audio.canPlayType && audio.canPlayType('audio/mpeg').replace(/no/, ''));
+
+        //Play
+        service.play = function (sound) {
+            if (playMp3) {
+                audio.src = sound + ".mp3";
+                audio.load();
+                audio.play();
+                return true;
+            }
+            else if (playOgg) {
+                audio.src = sound + ".ogg";;
+                audio.load();
+                audio.play();
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
 
         return service;
     });

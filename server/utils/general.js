@@ -41,7 +41,8 @@ var chartSettings = {
         "annotationsFont": "10px Arial",
         "annotationHorizontalMagicNumber": 7,
         "defaultPaletteColors" : "#CCCCCC,#CCCCCC",
-        "teamPaletteColors": ["#00FF21,#CCCCCC","#CCCCCC,#00FF21"]
+        "teamPaletteColors": ["#00FF21,#CCCCCC","#CCCCCC,#00FF21"],
+        "demoContestRemoveChartProperties" : ["paletteColors", "labelBgColor", "labelBorderColor"]
     },
     "chartObject": {
         "chart": {
@@ -155,26 +156,6 @@ function getLanguageByCountryCode(countryCode) {
         default:
             return "en";
     }
-}
-
-//-----------------------------------------------------------------------
-// fromClientToUTC
-//
-// returns the client epoch date together with the offset from UTC
-//-----------------------------------------------------------------------
-module.exports.fromClientToUTC = fromClientToUTC;
-function fromClientToUTC(clientEpochDate, clientTimezoneOffset) {
-    return clientEpochDate + clientTimezoneOffset * 60 * 1000;
-}
-
-//-----------------------------------------------------------------------
-// fromUTCToClient
-//
-// returns the client epoch date together with the offset from UTC
-//-----------------------------------------------------------------------
-module.exports.fromUTCToClient = fromUTCToClient;
-function fromUTCToClient(clientEpochDate, clientTimezoneOffset) {
-    return clientEpochDate - clientTimezoneOffset * 60 * 1000;
 }
 
 //-----------------------------------------------------------------------

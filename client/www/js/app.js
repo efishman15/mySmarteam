@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
+angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
     .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -130,6 +130,11 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
 
             .state('app.home', {
                 url: "/home",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("home");
+                    }
+                },
                 views: {
                     'menuContent': {
                         controller: "HomeCtrl",
@@ -157,7 +162,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 url: "/quiz",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication();
+                        return UserService.resolveAuthentication("quiz");
                     }
                 },
                 params: {contestId: null},
@@ -173,9 +178,10 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 url: "/quizResult",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication();
+                        return UserService.resolveAuthentication("quizResult");
                     }
                 },
+                cache: false,
                 params: {results: null},
                 views: {
                     'menuContent': {
@@ -189,7 +195,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 url: "/logout",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication();
+                        return UserService.resolveAuthentication("logout");
                     }
                 },
                 views: {
@@ -203,7 +209,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 url: "/settings",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication();
+                        return UserService.resolveAuthentication("settings");
                     }
                 },
                 views: {
@@ -218,7 +224,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 url: "/contest",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication();
+                        return UserService.resolveAuthentication("contest");
                     }
                 },
                 params: {mode: null, contest: null},
@@ -232,6 +238,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
 
             .state("app.otherwise", {
                 url: "/otherwise",
+                cache : false,
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("otherwise");

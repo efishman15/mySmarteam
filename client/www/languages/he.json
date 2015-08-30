@@ -19,7 +19,7 @@
   "FIELD_REQUIRED": "שדה זה חובה בהזנה",
   "MINIMUM_CHARACTERS": "חובה להזין {{minimum}} תווים לפחות",
   "MAXIMUM_CHARACTERS": "שדה זה מוגבל ל- {{maximum}} תווים בלבד",
-  "SCORE": "סמרטפוינטס",
+  "SCORE": "נקודות",
   "QUESTION": "שאלה",
   "OK": "אישור",
   "CANCEL": "ביטול",
@@ -47,7 +47,7 @@
   "DATE_PICKER_WEEK_DAYS": "א,ב,ג,ד,ה,ו,ש",
   "DATE_PICKER_MONTHS": "ינואר,פברואר,מרץ,אפריל,מאי,יוני,יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר",
   "CONTEST_ADMIN_INFO" : "מנהל מערכת",
-  "TEAM_SCORE" : "סמרטפוינטס {{team}}",
+  "TEAM_SCORE" : "נקודות {{team}}",
   "RATING" : "דירוג",
   "PARTICIPANTS": "משתתפים",
   "DAYS" : "ימים",
@@ -56,8 +56,9 @@
   "EXCELLENT_SCORE_TITLE" : "כל הכבוד, הישג מדהים!",
   "POSITIVE_SCORE_TITLE" : "כל הכבוד!",
   "ZERO_SCORE_TITLE" : "נסו את מזלכם שוב בפעם הבאה",
-  "POSITIVE_SCORE_MESSAGE" : "זיכית את קבוצתך ב- {{score}} סמרטפוינטס",
+  "POSITIVE_SCORE_MESSAGE" : "זיכית את קבוצתך ב- {{score}} נקודות",
   "ZERO_SCORE_MESSAGE" : "אנחנו בטוחים שאתם יכולים להצליח",
   "PLAY_AGAIN" : "שחקו שוב",
-  "PULL_TO_REFRESH" : "משכו לעדכון..."
+  "PULL_TO_REFRESH" : "משכו לעדכון...",
+  "HOME": "רשימת התחרויות"
 }

@@ -8,9 +8,9 @@ var contestsBusinessLogic = require('../business_logic/contests');
 
 var quizSounds = {
     "finish": {
-        "zero" : ["audio/finish_zero_1.ogg","audio/finish_zero_2.ogg"],
-        "ok" : ["audio/finish_ok_1.ogg"],
-        "great" : ["audio/finish_great_1.ogg"]
+        "zero" : ["audio/finish_zero_1","audio/finish_zero_2"],
+        "ok" : ["audio/finish_ok_1"],
+        "great" : ["audio/finish_great_1"]
     }
 }
 
@@ -258,8 +258,6 @@ module.exports.answer = function (req, res, next) {
                 data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
                 data.setData["teams." + data.contest.users[data.session.userId].team + ".score"] = data.contest.teams[data.contest.users[data.session.userId].team].score;
 
-                data.response.results = {"contest" : data.contest};
-
                 data.closeConnection = true;
                 dalDb.setContest(data, callback);
             }
@@ -273,6 +271,9 @@ module.exports.answer = function (req, res, next) {
         //AFTER contest has been saved to db
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+
+                data.response.results = {"contest" : data.contest};
+
                 contestsBusinessLogic.prepareContestForClient(data.response.results.contest, data.response.results.contest.users[data.session.userId].team);
 
                 data.response.results.score = data.session.quiz.serverData.score;

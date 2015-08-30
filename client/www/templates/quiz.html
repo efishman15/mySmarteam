@@ -15,6 +15,7 @@
                                 'button-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
                                 'button-assertive blink' : answer.answeredCorrectly == false && answer.correct == null}"
                     ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"
+                    ng-audio=""
                     ng-bind-html="answer.text"
                     animationend="buttonAnimationEnded">
             </button>
@@ -22,6 +23,6 @@
         <div class="bar bar-footer bar-light" dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
             <span>{{ 'QUESTION' | translate}} {{quiz.currentQuestionIndex}}</span>
         </div>
-        <audio id="audioSound" autoplay src=""></audio>
+
     </ion-content>
 </ion-view>

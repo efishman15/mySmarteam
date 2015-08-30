@@ -49,21 +49,21 @@ function checkToCloseDb(data) {
 //
 // data:
 // -----
-// input: DbHelper, user (contains thirdParty.id, thirdParty.accessToken, avatar, geoInfo, settings
+// input: DbHelper, user (contains thirdParty (id, accessToken), name, avatar, geoInfo, settings
 // output: user
 //------------------------------------------------------------------------------------------------
 function register(data, callback) {
     var usersCollection = data.DbHelper.getCollection("Users");
 
     data.user.settings.sound = true;
-    data.user.score = 0;
     var newUser = {
         "facebookUserId": data.user.thirdParty.id,
         "facebookAccessToken": data.user.thirdParty.accessToken,
         "name": data.user.name,
+        "geoInfo" : data.user.geoInfo,
         "ageRange": data.user.ageRange,
-        "geoInfo": data.user.geoInfo,
         "settings": data.user.settings,
+        "score" : 0,
         "createdAt": (new Date()).getTime()
     };
 
@@ -327,7 +327,7 @@ module.exports.setUser = function (data, callback) {
     usersCollection.findAndModify({"_id": ObjectId(data.session.userId)}, {},
         {
             $set: data.setData
-        }, {}, function (err, user) {
+        }, {w: 1}, function (err, user) {
 
             if (err) {
                 console.log("Error finding user with Id: " + data.session.userId + ", err: " + JSON.stringify(err));
@@ -363,12 +363,11 @@ module.exports.facebookLogin = function (data, callback) {
         {
             $set: {
                 "lastLogin": (new Date()).getTime(),
-                "settings": data.user.settings,
                 "name": data.user.name,  //keep sync with Facebook changes
                 "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
                 "ageRange": data.user.ageRange //keep sync with Facebook changes
             }
-        }, {w: 1}, function (err, user) {
+        }, {w: 1, new: true}, function (err, user) {
 
             if (err || !user.value) {
                 register(data, callback);
@@ -694,7 +693,7 @@ function setContest(data, callback) {
     contestsCollection.findAndModify({"_id": contestId}, {},
         {
             $set: data.setData
-        }, {}, function (err, contest) {
+        }, {w: 1, new : true}, function (err, contest) {
 
             if (err) {
                 console.log("Error finding contest with Id: " + data.contest._id + ", err: " + JSON.stringify(err));
