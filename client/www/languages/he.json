@@ -2,7 +2,6 @@
   "LOADING": "אנא המתן...",
   "HOME_WELCOME_PLAY_TRIVIA": "שחקו עבור קבוצתכם ותגלו",
   "FACEBOOK_CONNECT": "התחברו עם פייסבוק",
-  "LEADING_CONTEST": "התחרות המובילה כרגע:",
   "WHO_IS_SMARTER_QUESTION": "מי יותר חכם?",
   "WHO_IS_SMARTER": "מי יותר חכם",
   "DEMO_TEAM0": "הבנים",
@@ -25,8 +24,6 @@
   "CANCEL": "ביטול",
   "QUIZ": "חידון",
   "QUIZ_RESULTS": "תוצאות",
-  "GENERAL_APPLICATION_ERROR_TITLE": "אופס...",
-  "GENERAL_APPLICATION_ERROR_MESSAGE": "משהו השתבש. אנא נסו שנית מאוחר יותר",
   "NEW_CONTEST": "תחרות חדשה",
   "EDIT_CONTEST": "עדכון",
   "REMOVE_CONTEST": "הסרת תחרות",
@@ -60,5 +57,12 @@
   "ZERO_SCORE_MESSAGE" : "אנחנו בטוחים שאתם יכולים להצליח",
   "PLAY_AGAIN" : "שחקו שוב",
   "PULL_TO_REFRESH" : "משכו לעדכון...",
-  "HOME": "רשימת התחרויות"
+  "CONTEST_LIST": "רשימת התחרויות",
+  "FACEBOOK_CONNECT_RELAX_MESSAGE" : "אנו לעולם לא נפרסם דבר ללא רשותך!",
+  "SERVER_ERROR_GENERAL_TITLE" : "אופס...",
+  "SERVER_ERROR_GENERAL_MESSAGE" : "משהו השתבש. אנא נסו שנית מאוחר יותר",
+  "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_TITLE" : "התחברות עם פייסבוק",
+  "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_MESSAGE" : "שגיאה בנסיון התחברות עם פייסבוק - אנא נסו שנית",
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_TITLE" : "הצטרפות לתחרות",
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "אנא בחרו קבוצה על ידי לחיצה על שמה או על הטור שלה בגרף"
 }

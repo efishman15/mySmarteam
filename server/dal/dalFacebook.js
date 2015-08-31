@@ -26,16 +26,16 @@ module.exports.getUserInfo = function(data, callback) {
                     data.user.avatar = getUserAvatar(data.user.thirdParty.id);
                     data.user.name = facebookData.name;
                     data.user.email = facebookData.email; //might be null if user removed
-                    data.user.ageRange = facebookData.age_range
+                    data.user.ageRange = facebookData.age_range;
                     callback(null, data);
                 }
                 else {
-                    callback(new exceptions.GeneralError(500, "Error validating facebook access token: " + data.user.thirdParty.accessToken + ", token actually belongs to: " + facebookData.id + " while input user id was: " + data.user.thirdParty.id));
+                    callback(new exceptions.ServerException("Error validating facebook access token, token belongs to someone else", {"facebookResponse" : responseData, "facebookAccessToken" : data.user.thirdParty.accessToken, "actualFacebookId" : facebookData.id}));
                     return;
                 }
             }
             else {
-                callback(new exceptions.GeneralError(500, "Error validating facebook access token: " + data.thirdParty.accessToken));
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN", {"facebookResponse" : responseData, "facebookAccessToken" : data.user.thirdParty.accessToken}, 424));
                 return;
             }
 
@@ -44,7 +44,7 @@ module.exports.getUserInfo = function(data, callback) {
 
     }).on('error', function (error) {
         console.error(error);
-        callback(new exceptions.GeneralError(500, "Error validating facebook access token: " + data.thirdParty.accessToken + ", error: " + error));
+        callback(new exceptions.ServerException("Error recevied from facebook while validating access token", {"facebookAccessToken" : data.user.thirdParty.accessToken, "error" :  error}));
     });
 };
 

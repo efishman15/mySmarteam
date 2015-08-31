@@ -1,8 +1,7 @@
 {
   "LOADING" : "Cargando...",
-  "HOME_WELCOME_PLAY_TRIVIA" : "Juega a su equipo y descubrir ...",
+  "HOME_WELCOME_PLAY_TRIVIA" : "Juega a su equipo y descubrir",
   "FACEBOOK_CONNECT" : "Conectarse con Facebook",
-  "LEADING_CONTEST" : "Concurso que lleva actual:",
   "WHO_IS_SMARTER_QUESTION" : "¿Quién es más inteligente?",
   "WHO_IS_SMARTER" : "Quién es más inteligente",
   "DEMO_TEAM0" : "Niños",
@@ -25,8 +24,6 @@
   "CANCEL" : "Cancelar",
   "QUIZ" : "Examen",
   "QUIZ_RESULTS" : "Resultados",
-  "GENERAL_APPLICATION_ERROR_TITLE" : "Vaya",
-  "GENERAL_APPLICATION_ERROR_MESSAGE" : "Algo salió mal. Por favor, inténtelo de nuevo más tarde",
   "NEW_CONTEST" : "Nuevo concurso",
   "EDIT_CONTEST" : "Editar",
   "REMOVE_CONTEST" : "Retire concurso",
@@ -60,5 +57,12 @@
   "ZERO_SCORE_MESSAGE" : "Estamos seguros de que puedes hacerlo mejor",
   "PLAY_AGAIN" : "Juega de nuevo",
   "PULL_TO_REFRESH" : "Tirar para actualizar...",
-  "HOME": "Lista Concurso"
-}
+  "CONTEST_LIST": "Lista Concurso",
+  "FACEBOOK_CONNECT_RELAX_MESSAGE" : "Nunca vamos a publicar nada sin su permiso !",
+  "SERVER_ERROR_GENERAL_TITLE" : "Vaya",
+  "SERVER_ERROR_GENERAL_MESSAGE" : "Algo salió mal. Por favor, inténtelo de nuevo más tarde",
+  "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_TITLE" : "Conectarse con Facebook",
+  "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_MESSAGE" : "Error al conectar con Facebook - por favor intente de nuevo",
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_TITLE" : "Únete a concurso",
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "Por favor seleccione uno de los equipos pulsando sobre su nombre o columna en la tabla"
+ }

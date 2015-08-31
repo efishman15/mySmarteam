@@ -7,7 +7,7 @@ var methodOverride = require("method-override");
 var credentials = require("./business_logic/credentials")
 var quiz = require("./business_logic/quiz")
 var contests = require("./business_logic/contests");
-var GeneralError = require("./utils/exceptions").GeneralError;
+var exceptions = require("./utils/exceptions")
 var generalUtils = require("./utils/general");
 var sessionUtils = require("./business_logic/session");
 var domain = require("domain");
@@ -87,9 +87,8 @@ app.post("/info/settings", generalUtils.getSettings);
 // Start server listener
 //----------------------------------------------------
 app.use(function (err, req, res, next) {
-    console.log("error on request %s %s: %s", req.method, req.url, err.stack);
-    var status = 500;
-    res.status(status).send(new GeneralError(status));
+    var exception = new exceptions.UnhandledServerException(err);
+    res.status(exception.httpStatus).send(exception);
     res.end();
 });
 

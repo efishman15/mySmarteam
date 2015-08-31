@@ -18,38 +18,38 @@ function validateContestData(data, callback) {
 
     //Data validations
     if (!data.contest) {
-        callback(new exceptions.GeneralError(424), "Contest not supplied");
+        callback(new exceptions.ServerException("Contest not supplied"));
         return;
     }
 
     if (!data.contest.startDate || !data.contest.endDate || !data.contest.teams) {
-        callback(new exceptions.GeneralError(424, "One of the required fields not supplied: startDate, endDate, teams"));
+        callback(new exceptions.ServerException("One of the required fields not supplied: startDate, endDate, teams"));
         return;
     }
 
     if (data.contest.startDate > data.contest.endDate) {
-        callback(new exceptions.GeneralError(424, "Contest end date must be later than contest start date"));
+        callback(new exceptions.ServerException("Contest end date must be later than contest start date"));
         return;
     }
 
     if (data.contest.teams.length != 2) {
-        callback(new exceptions.GeneralError(424, "Number of teams must be 2"));
+        callback(new exceptions.ServerException("Number of teams must be 2"));
         return;
     }
 
     if (!data.contest.teams[0].name || !data.contest.teams[1].name) {
-        callback(new exceptions.GeneralError(424, "One or more of the team names are missing"));
+        callback(new exceptions.ServerException("One or more of the team names are missing"));
         return;
     }
 
     if ((data.contest.teams[0].score || data.contest.teams[1].score) &&
         (!data.session.isAdmin || data.session.isAdmin == false)) {
-        callback(new exceptions.GeneralError(424, "Only admins are allowed to set team scores"));
+        callback(new exceptions.ServerException("Only admins are allowed to set team scores"));
         return;
     }
 
     if (data.mode == "edit" && !data.contest._id) {
-        callback(new exceptions.GeneralError(424, "Contest _id not supplied in edit mode"));
+        callback(new exceptions.ServerException("Contest _id not supplied in edit mode"));
         return;
     }
 
@@ -109,21 +109,7 @@ function validateJoinContest(data, callback) {
 
     //Cannot join a contest that ended
     if (data.contest.status == "finished") {
-        callback(new exceptions.GeneralError(424, "Contest: " + data.contestId + " has already been finished"));
-    }
-
-    //Already joined the contest to that same team
-    if (data.contest.users &&
-        data.contest.users[data.session.userId] &&
-        data.contest.users[data.session.userId].team == data.teamId) {
-        callback(new exceptions.GeneralError(424, "You have already joined contest: " + data.contestId + ", to the same team: " + data.contest.teams[data.teamId].name));
-    }
-
-    //Already joined the contest, cannot switch teams if score>0
-    if (data.contest.users &&
-        data.contest.users[data.session.userId] &&
-        data.contest.users[data.session.userId].team != data.teamId && data.contest.users[data.session.userId].score > 0) {
-        callback(new exceptions.GeneralError(424, "Contest: " + data.contestId + ", cannot switch to the " + data.contest.teams[data.teamId].name + " if you already played for the " + data.contest.teams[1-data.teamId].name));
+        callback(new exceptions.ServerException("Contest has already been finished", data));
     }
 
     callback(null, data);
@@ -249,7 +235,7 @@ module.exports.setContest = function (req, res, next) {
             res.json(data.contest)
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     });
 };
@@ -266,7 +252,7 @@ module.exports.removeContest = function (req, res, next) {
     var data = req.body;
 
     if (!data.contestId) {
-        res.send(424, "contestId not supplied");
+        exceptions.ServerResponseException(res, "contestId not supplied",null,"warning",424);
         return;
     }
 
@@ -285,7 +271,7 @@ module.exports.removeContest = function (req, res, next) {
         //Check that only admins are allowed to remove a contest
         function (data, callback) {
             if (!data.session.isAdmin || data.session.isAdmin == false) {
-                callback(new exceptions.GeneralError(424), "Removing contest is allowed only for administrators");
+                callback(new exceptions.ServerException("Removing contest is allowed only for administrators", data));
                 return;
             }
             data.closeConnection = true;
@@ -298,7 +284,7 @@ module.exports.removeContest = function (req, res, next) {
             res.json(data.contest)
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     });
 }
@@ -314,6 +300,7 @@ module.exports.getContests = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
 
+
     var operations = [
 
         //Connect to the database (so connection will stay open until we decide to close it)
@@ -321,6 +308,7 @@ module.exports.getContests = function (req, res, next) {
 
         //Retrieve the session
         function (connectData, callback) {
+
             data.DbHelper = connectData.DbHelper;
             data.token = token;
             dalDb.retrieveSession(data, callback);
@@ -359,7 +347,7 @@ module.exports.getContests = function (req, res, next) {
             res.json(data.contestsHash)
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     });
 }
@@ -376,12 +364,12 @@ module.exports.joinContest = function (req, res, next) {
     var data = req.body;
 
     if (!data.contestId) {
-        res.send(424, "contestId not supplied");
+        exceptions.ServerResponseException(res, "contestId not supplied",null,"warning",424);
         return;
     }
 
     if (data.teamId != 0 && data.teamId != 1) {
-        res.send(424, "teamId can be either 0 or 1");
+        exceptions.ServerResponseException(res, "teamId can be either 0 or 1",null,"warning",424);
         return;
     }
 
@@ -446,7 +434,7 @@ module.exports.joinContest = function (req, res, next) {
             res.json(data.contest)
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     });
 }

@@ -54,7 +54,7 @@ module.exports.facebookConnect = function (req, res, next) {
             res.json(getSessionResponse(data.session))
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     });
 };
@@ -85,7 +85,7 @@ module.exports.logout = function (req, res, next) {
             res.send(200, "OK");
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     })
 };

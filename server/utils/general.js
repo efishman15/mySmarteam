@@ -39,10 +39,10 @@ var triviaTopisPerLangage = {
 var chartSettings = {
     "generalData": {
         "annotationsFont": "10px Arial",
-        "annotationHorizontalMagicNumber": 7,
-        "defaultPaletteColors" : "#CCCCCC,#CCCCCC",
-        "teamPaletteColors": ["#00FF21,#CCCCCC","#CCCCCC,#00FF21"],
-        "demoContestRemoveChartProperties" : ["paletteColors", "labelBgColor", "labelBorderColor"]
+        "annotationHorizontalMagicNumbers": {
+            "ltr": { "endsIn" : {"id" : 0, "position" : "$chartstartx + ", "spacing" : 2}, "participants" : {"id" : 1, "position" : "$chartendx - ", "spacing" : 0}},
+            "rtl": { "endsIn" : {"id" : 0, "position" : "$chartendx - ", "spacing" : 7}, "participants" : {"id" : 1, "position" : "$chartstartx + ", "spacing" : 3}},
+        }
     },
     "chartObject": {
         "chart": {
@@ -59,10 +59,7 @@ var chartSettings = {
             "numDivLines": 0,
             "adjustDiv": 0,
             "divLineColor" : "#FFFFFF",
-            "labelBgColor" : "#f8f8f8",
             "labelFontColor" : "#040404",
-            "labelBorderColor": "#b2b2b2",
-            "labelBorderPadding" : 5,
             "numberScaleValue": ".01",
             "numberScaleUnit": "%",
             "showYAxisValues": 0,

@@ -21,19 +21,19 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         });
     })
 
-    .config(function ($httpProvider) {
+    .config(function ($httpProvider, $translateProvider) {
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
-                    $rootScope.$broadcast('loading:show')
+                    $rootScope.$broadcast('mySmarteam-httpRequest')
                     return config;
                 },
                 response: function (response) {
-                    $rootScope.$broadcast('loading:hide')
+                    $rootScope.$broadcast('mySmarteam-httpResponse')
                     return response;
                 },
                 responseError: function (rejection) {
-                    $rootScope.$broadcast('loading:hide')
+                    $rootScope.$broadcast('mySmarteam-httpResponseError', rejection.data)
                     return $q.reject(rejection);
                 }
             }
@@ -165,7 +165,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                         return UserService.resolveAuthentication("quiz");
                     }
                 },
-                params: {contestId: null},
+                params: {contestId: null, teamId: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quiz.html",

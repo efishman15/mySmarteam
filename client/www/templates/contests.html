@@ -1,13 +1,13 @@
-<ion-view class="padding bubble-background" view-title="לחץ על הקבוצה להצטרפות"
+<ion-view class="padding bubble-background" view-title="{{'CONTEST_LIST' | translate}}"
 <ion-content class="padding" dir="{{$root.languages[$root.user.settings.language].direction}}" overflow-scroll="true">
 
     <ion-scroll class="padding" style="height: 100%">
         <ion-refresher
-                pulling-text="{{'PULL_TO_REFRESH' | translate}}" pulling-icon="on-android-arrow-down"
+                pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
                 on-refresh="doRefresh()">
         </ion-refresher>
-        <ion-list class="padding card" ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
-            <div class="padding item center item-divider item-text-wrap">
+        <ion-list class="padding" ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
+            <div class="padding center">
                 <div fusioncharts
                      width="260"
                      height="180"
@@ -17,7 +17,7 @@
                 </div>
                 <div class="padding center">
                     <button class="item button button-stable button-small button-assertive nowrapText font14"
-                            ng-click="playContest(contestChart.contest._id)">{{'PLAY_CONTEST' | translate}}
+                            ng-click="playContest(contestChart.contest)">{{'PLAY_CONTEST' | translate}}
                     </button>
                 </div>
             </div>

@@ -73,7 +73,7 @@ function register(data, callback) {
 
                 closeDb(data);
 
-                callback(new exceptions.GeneralError(500));
+                callback(new exceptions.ServerException("Error inserting new user", {"user" : newUser, "dbError" : err}, "error"));
                 return;
             }
 
@@ -115,9 +115,7 @@ module.exports.connect = connect;
 function connect(callback) {
     mongoClient.connect(CONNECTION_STRING, function (err, db) {
         if (err) {
-            var message = "Error connecting to the database";
-            console.log(message);
-            callback(new exceptions.GeneralError(500, message));
+            callback(new exceptions.ServerException("Error connecting to the database", {"dbError" : err}, "error"));
             return;
         }
 
@@ -155,7 +153,7 @@ module.exports.getSubjects = function (data, callback) {
             "language": data.language
         }, {}, function (err, subjectsCursor) {
             if (err || !subjectsCursor) {
-                callback(new exceptions.GeneralError(500, "Error retrieving subjects for language: " + data.language + " from the database"));
+                callback(new exceptions.ServerException("Error retrieving subjects for language", {"language" : data.language, "dbError" : err}, "error"));
                 return;
             }
             subjectsCursor.toArray(function (err, serverSubjects) {
@@ -210,7 +208,7 @@ module.exports.getTopic = function (data, callback) {
 
                     closeDb(connectData);
 
-                    callback(new exceptions.GeneralError(500, "Error retrieving topic Id " + data.topicId + " from the database"));
+                    callback(new exceptions.ServerException("Error retrieving topic by id", {"topicId" : data.topicId, "dbError" : err}, "error"));
                     return;
                 }
                 topics["" + data.topicId] = topic;
@@ -258,12 +256,10 @@ function retrieveSession(data, callback) {
         , {},
         function (err, session) {
             if (err || !session) {
-                //Session does not exist - stop the call chain
-                console.log("error finding session with token: " + data.token, "error: " + err);
 
                 closeDb(data);
 
-                callback(new exceptions.GeneralError(401, "Session expired"));
+                callback(new exceptions.ServerException("Error retrieving session - session expired", {"sessionId" : data.token}, "info"), 401);
                 return;
             }
 
@@ -296,12 +292,9 @@ module.exports.storeSession = function (data, callback) {
         function (err, updated) {
             if (err) {
 
-                //Session does not exist - stop the call chain
-                console.log("error finding session with token: " + session._id, "error: " + err);
-
                 closeDb(data);
 
-                callback(new exceptions.GeneralError(401, "Session expired"));
+                callback(new exceptions.ServerException("Error storing session expired - session expired", {"sessionId" : data.session._id}, "info"), 401);
                 return;
             }
 
@@ -330,11 +323,11 @@ module.exports.setUser = function (data, callback) {
         }, {w: 1}, function (err, user) {
 
             if (err) {
-                console.log("Error finding user with Id: " + data.session.userId + ", err: " + JSON.stringify(err));
 
                 closeDb(data);
 
-                callback(new exceptions.GeneralError(500));
+                callback(new exceptions.ServerException("Error updating user", {"userId" : ObjectId(data.session.userId), "dbError" : err}, "error"));
+
                 return;
             }
 
@@ -404,18 +397,17 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "name": data.user.name,
                 "ageRange": data.user.ageRange,
                 "avatar": data.user.avatar,
-                "createdAt": (new Date()).getTime(),
+                "createdAt": new Date(), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
                 "userToken": userToken,
                 "settings": data.user.settings
             }
         }, {upsert: true, new: true}, function (err, session) {
 
             if (err) {
-                console.log("Error finding/creating session for user Id: " + user._id + ", err: " + JSON.stringify(err));
 
                 closeDb(data);
 
-                callback(new excptions.GeneralError(500));
+                callback(new exceptions.ServerException("Error finding/creating session", {"userId" : user._id, "dbError" : err}, "error"));
                 return;
             }
 
@@ -449,7 +441,7 @@ module.exports.logout = function (data, callback) {
 
             closeDb(data);
 
-            callback(new exceptions.GeneralError(401));
+            callback(new exceptions.ServerException("Error logging out from session - session expired", {"userId" : data.token, "dbError" : err}, "info"));
             return;
         }
 
@@ -465,7 +457,7 @@ module.exports.logout = function (data, callback) {
 
                     closeDb(data);
 
-                    callback(new excptions.GeneralError(401)); //Will cause the client to re-login
+                    callback(new exceptions.ServerException("Error logging out from session - session expired", {"userId" : data.token, "dbError" : err}, "info"));
                     return;
                 }
 
@@ -507,7 +499,7 @@ function logAction(data, callback) {
 
                 checkToCloseDb(data);
 
-                callback(new exceptions.GeneralError(500));
+                callback(new exceptions.ServerException("Error inserting record to log", {"action" : newAction, "dbError" : err}, "error"));
                 return;
             }
 
@@ -567,7 +559,7 @@ function getQuestionsCount(data, callback) {
     var questionsCollection = data.DbHelper.getCollection("Questions");
     questionsCollection.count(data.questionCriteria, function (err, count) {
         if (err) {
-            callback(new exceptions.GeneralError(500, "Error retrieving number of questions from database"));
+            callback(new exceptions.ServerException("Error retrieving number of questions from database", {"data" : data, "dbError" : err}, "error"));
             return;
         }
 
@@ -593,7 +585,7 @@ function getNextQuestion(data, callback) {
     var questionsCollection = data.DbHelper.getCollection("Questions");
     questionsCollection.findOne(data.questionCriteria, {skip: skip}, function (err, question) {
         if (err || !question) {
-            callback(new exceptions.GeneralError(500, "Error retrieving next question from database"));
+            callback(new exceptions.ServerException("Error retrieving next question from database", {"data" : data, "dbError" : err}, "error"));
             return;
         }
 
@@ -665,7 +657,7 @@ function addContest(data, callback) {
 
                 closeDb(data);
 
-                callback(new exceptions.GeneralError(500));
+                callback(new exceptions.ServerException("Error adding contest", {"data" : data, "dbError" : err}, "error"));
                 return;
             }
 
@@ -696,11 +688,9 @@ function setContest(data, callback) {
         }, {w: 1, new : true}, function (err, contest) {
 
             if (err) {
-                console.log("Error finding contest with Id: " + data.contest._id + ", err: " + JSON.stringify(err));
-
                 closeDb(data);
 
-                callback(new exceptions.GeneralError(500));
+                callback(new exceptions.ServerException("Error setting contest", {"data" : data, "contestId" : contestId, "dbError" : err}, "error"));
                 return;
             }
 
@@ -738,7 +728,7 @@ function removeContest(data, callback) {
                 //Contest does not exist - stop the call chain
                 closeDb(data);
 
-                callback(new excptions.GeneralError(424));
+                callback(new exceptions.ServerException("Error removing contest", {"data" : data, "dbError" : err}, "error"));
                 return;
             }
 
@@ -769,7 +759,8 @@ function getContest(data, callback) {
 
             closeDb(data);
 
-            callback(new exceptions.GeneralError(500, "Error retrieving contest, Id " + data.contestId + " from the database"));
+            callback(new exceptions.ServerException("Error finding contest", {"data" : data, "dbError" : err}, "error"));
+
             return;
         }
 
@@ -795,7 +786,9 @@ function getContests(data, callback) {
     var contestsCollection = data.DbHelper.getCollection('Contests');
     contestsCollection.find({}, {}, function (err, contestsCursor) {
         if (err || !contestsCursor) {
-            callback(new exceptions.GeneralError(500, "Error retrieving from the database"));
+
+            callback(new exceptions.ServerException("Error retrieving contests", {"data" : data, "dbError" : err}, "error"));
+
             return;
         }
         contestsCursor.toArray(function (err, contests) {

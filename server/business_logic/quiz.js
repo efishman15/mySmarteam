@@ -71,7 +71,7 @@ module.exports.subjects = function (req, res, next) {
             res.json(data.subjects);
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     })
 };
@@ -79,7 +79,7 @@ module.exports.subjects = function (req, res, next) {
 //--------------------------------------------------------------------------
 // start
 //
-// data: contestId
+// data: contestId, teamId
 //--------------------------------------------------------------------------
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
@@ -99,7 +99,7 @@ module.exports.start = function (req, res, next) {
         function (data, callback) {
             if (!data.contest.users || !data.contest.users[data.session.userId]) {
                 data.DbHelper.close();
-                callback(new exceptions.GeneralError(424, "ErrorNotJoinedToContest"));
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_NOT_JOINED_TO_CONTEST"));
             }
 
             var quiz = {
@@ -146,7 +146,7 @@ module.exports.start = function (req, res, next) {
             res.send(200, data.session.quiz.clientData);
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     })
 };
@@ -173,7 +173,7 @@ module.exports.answer = function (req, res, next) {
             var answers = data.session.quiz.serverData.currentQuestion.answers;
             var answerId = parseInt(data.id, 10);
             if (answerId < 1 || answerId > answers.length) {
-                callback(new excptions.GeneralError(424, "Invalid answer id: " + data.id));
+                callback(new exceptions.ServerException("Invalid answer id",  {"answerId" : data.id}));
             }
 
             data.response = {"question" : {}};
@@ -303,7 +303,7 @@ module.exports.answer = function (req, res, next) {
             res.send(200, data.response);
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     })
 };
@@ -348,7 +348,7 @@ module.exports.nextQuestion = function (req, res, next) {
             res.send(200, data.session.quiz.clientData);
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     })
 };

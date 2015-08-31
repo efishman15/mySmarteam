@@ -125,7 +125,7 @@ angular.module('mySmarteam.services', [])
                     function (status, data, headers) {
                         clearDataAfterLogout(headers, callbackOnSuccess, callbackOnError);
                     }
-                ), ErrorService.logError
+                )
             });
         };
 
@@ -157,8 +157,7 @@ angular.module('mySmarteam.services', [])
                             function (data) {
                                 $rootScope.settings = data;
                                 service.getLoginStatus(resolveQueue, resolveQueue);
-                            },
-                            ErrorService.logErrorAndAlert)
+                            })
                     }
                     else {
                         resolveQueue();
@@ -309,6 +308,23 @@ angular.module('mySmarteam.services', [])
             contestChart.data = [];
             var teamsOrder;
 
+            var contestEndsString = $translate.instant("CONTEST_ENDS_IN", {
+                number: contest.endsInNumber,
+                units: $translate.instant(contest.endsInUnits)
+            });
+            var contestEndsWidth = canvasContext.measureText(contestEndsString).width;
+            var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS", {participants: contest.participants + contest.manualParticipants});
+            var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
+
+            var direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
+            var magicNumbers = $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumbers[direction];
+
+            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].text = contestEndsString;
+            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].x = magicNumbers.endsIn.position +  (contestEndsWidth / 2 + magicNumbers.endsIn.spacing);
+
+            contestChart.annotations.groups[0].items[magicNumbers.participants.id].text = contestParticipantsString;
+            contestChart.annotations.groups[0].items[magicNumbers.participants.id].x = magicNumbers.participants.position +  (contestParticipantsWidth / 2 + magicNumbers.participants.spacing);
+
             if ($rootScope.settings.languages[$rootScope.user.settings.language].direction == "ltr") {
                 teamsOrder = [0, 1];
             }
@@ -318,7 +334,7 @@ angular.module('mySmarteam.services', [])
 
             contestChart.data.push({
                 "label": contest.teams[teamsOrder[0]].name,
-                "value": contest.teams[teamsOrder[0]].chartValue
+                "value": contest.teams[teamsOrder[0]].chartValue,
             });
             contestChart.data.push({
                 "label": contest.teams[teamsOrder[1]].name,
@@ -327,11 +343,7 @@ angular.module('mySmarteam.services', [])
 
             var labelRootProperty;
             if (contest.myTeam == 0 || contest.myTeam == 1) {
-                //Joined contest
-                contestChart.chart.paletteColors = $rootScope.settings.chartSettings.generalData.teamPaletteColors[teamsOrder[contest.myTeam]];
-            }
-            else {
-                contestChart.chart.paletteColors = $rootScope.settings.chartSettings.generalData.defaultPaletteColors;
+                contestChart.data[teamsOrder[contest.myTeam]].labelFontBold = true;
             }
 
             contestChart.chart.caption = contestCaption;
@@ -339,21 +351,6 @@ angular.module('mySmarteam.services', [])
                 team0: contest.teams[0].name,
                 team1: contest.teams[1].name
             });
-
-            var contestEndsString = $translate.instant("CONTEST_ENDS_IN", {
-                number: contest.endsInNumber,
-                units: $translate.instant(contest.endsInUnits)
-            });
-
-            var contestEndsWidth = canvasContext.measureText(contestEndsString).width;
-            var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS", {participants: contest.participants + contest.manualParticipants});
-            var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
-
-            contestChart.annotations.groups[0].items[0].text = contestEndsString;
-            contestChart.annotations.groups[0].items[0].x = "$chartendx - " + (contestEndsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
-
-            contestChart.annotations.groups[0].items[1].text = contestParticipantsString;
-            contestChart.annotations.groups[0].items[1].x = "$chartstartx + " + (contestParticipantsWidth / 2 + $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumber);
 
             return contestChart;
         };
@@ -396,36 +393,26 @@ angular.module('mySmarteam.services', [])
         //----------------------------------------------
         var service = this;
 
-        //Log Error
-        service.logError = function (status, error) {
-            var errorMessage = "Error " + status + ": " + $translate.instant(error.message ? error.message : error);
-            console.log(errorMessage);
-            return errorMessage;
-        };
-
-        service.logErrorAndAlert = function (status, error) {
-            service.logError(status, error);
-            return service.alert(error);
-        }
-
         //ionic alert popup
         service.alert = function (error) {
-            if (error) {
-                if (error.title) {
+            if (error && error.type) {
+                if (error.type) {
+                    if (!error.additionalInfo) {
+                        error.additionalInfo = {};
+                    }
                     return $ionicPopup.alert({
                         cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
-                        title: $translate.instant(error.title),
-                        template: $translate.instant(error.message),
+                        title: $translate.instant(error.type + "_TITLE"),
+                        template: $translate.instant(error.type + "_MESSAGE", error.additionalInfo),
                         okText: $translate.instant("OK")
                     });
                 }
-                else {
+                else if (error)
                     return $ionicPopup.alert({
                         cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
-                        template: error.message ? error.message : error,
+                        template: error,
                         okText: $translate.instant("OK")
                     });
-                }
             }
         };
 

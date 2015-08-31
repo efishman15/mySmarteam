@@ -2,7 +2,6 @@
   "LOADING" : "Loading...",
   "HOME_WELCOME_PLAY_TRIVIA" : "Play for your team and find out",
   "FACEBOOK_CONNECT" : "Connect with Facebook",
-  "LEADING_CONTEST" : "Current leading contest:",
   "WHO_IS_SMARTER_QUESTION" : "Who is smarter ?",
   "WHO_IS_SMARTER" : "Who is smarter",
   "DEMO_TEAM0" : "Boys",
@@ -25,8 +24,6 @@
   "CANCEL" : "Cancel",
   "QUIZ" : "Quiz",
   "QUIZ_RESULTS" : "Results",
-  "GENERAL_APPLICATION_ERROR_TITLE" : "Oops",
-  "GENERAL_APPLICATION_ERROR_MESSAGE" : "Something went wrong. Please try again later",
   "NEW_CONTEST" : "New Contest",
   "EDIT_CONTEST" : "Edit",
   "REMOVE_CONTEST" : "Remove contest",
@@ -60,5 +57,12 @@
   "ZERO_SCORE_MESSAGE" : "We are sure you can do better",
   "PLAY_AGAIN" : "Play again",
   "PULL_TO_REFRESH" : "Pull to refresh...",
-  "HOME": "Contest List"
+  "CONTEST_LIST": "Contest List",
+  "FACEBOOK_CONNECT_RELAX_MESSAGE" : "We will never post anything without your permission !",
+  "SERVER_ERROR_GENERAL_TITLE" : "Oops",
+  "SERVER_ERROR_GENERAL_MESSAGE" : "Something went wrong. Please try again later",
+  "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_TITLE" : "Facebook connect",
+  "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_MESSAGE" : "Error connecting to Facebook - please try again",
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_TITLE" : "Join contest",
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "Please select one of the teams by tapping on its name or column on the chart"
 }

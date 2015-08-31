@@ -1,31 +1,27 @@
 <ion-view>
-        <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
 
-            <h3 class="padding-top center" translate="WHO_IS_SMARTER_QUESTION"></h3>
-            <h4 class="center" translate="HOME_WELCOME_PLAY_TRIVIA"></h4>
+        <h3 class="padding-top center" translate="WHO_IS_SMARTER_QUESTION"></h3>
+        <h4 class="center" translate="HOME_WELCOME_PLAY_TRIVIA"></h4>
 
-            <div class="center padding-top">
-                <h5 translate="LEADING_CONTEST"></h5>
+        <div class="padding center">
+            <img src="images/demo_contest_{{$root.user.settings.language}}.png" width="75%">
+        </div>
+
+        <div class="row">
+            <div class="col text-center">
+                <button class="center button button-block button-facebook"
+                        analytics-on="click"
+                        analytics-event="FacebookLogin"
+                        analytics-properties="{ category: 'Login' }" ng-click="facebookConnect()">
+                    {{'FACEBOOK_CONNECT' | translate}}
+                </button>
             </div>
+        </div>
 
-            <div id="fusionChart" class="center"
-                 fusioncharts
-                 width="260"
-                 height="180"
-                 type="column2d"
-                 dataSource="{{demoChart}}">
-            </div>
-
-            <div class="row">
-                <div class="col text-center">
-                    <button class="center button button-block button-facebook"
-                            analytics-on="click"
-                            analytics-event="FacebookLogin"
-                            analytics-properties="{ category: 'Login' }" ng-click="facebookConnect()">
-                        {{'FACEBOOK_CONNECT' | translate}}
-                    </button>
-                </div>
-            </div>
-        </ion-content>
+        <div class="center">
+            <span class="center" translate="FACEBOOK_CONNECT_RELAX_MESSAGE"></span>
+        </div>
+    </ion-content>
 
 </ion-view>

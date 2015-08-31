@@ -75,7 +75,7 @@ module.exports.saveSettings = function (req, res, next) {
             res.send(200, "OK");
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     });
 };
@@ -118,7 +118,7 @@ module.exports.toggleSound = function (req, res, next) {
             res.send(200, "OK");
         }
         else {
-            res.send(err.status, err);
+            res.send(err.httpStatus, err);
         }
     });
 };
