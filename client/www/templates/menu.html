@@ -1,18 +1,8 @@
-<div dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-    <ion-header-bar class="padding" ng-hide="$root.session">
-        <a class="language padding" ng-repeat="language in $root.settings.languages track by language.value" class="padding" title="{{language.displayNames[$root.user.settings.language]}}"
-           ng-click="changeLanguage(language)">
-            <img style="border: 1px solid" ng-src="{{language.flag}}" width="20" height="12" alt="{{language.displayNames[$root.user.settings.language]}}">
-        </a>
-    </ion-header-bar>
-</div>
-
-<ion-side-menus enable-menu-with-back-views="true"
-                dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+<ion-side-menus enable-menu-with-back-views="true" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
     <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-stable" align-title="center" ng-hide="!$root.session">
-            <ion-nav-back-button class="nav-button">
-            </ion-nav-back-button>
+            <ion-nav-back-button class="nav-button ion-arrow-return-left" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'ltr'"></ion-nav-back-button>
+            <ion-nav-back-button class="nav-button ion-arrow-return-right" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'rtl'"></ion-nav-back-button>
             <ion-nav-buttons side="{{$root.settings.languages[$root.user.settings.language].align}}">
                 <button class="button button-icon button-clear ion-navicon"
                         menu-toggle="{{$root.settings.languages[$root.user.settings.language].align}}">
@@ -35,10 +25,6 @@
                     <i class="ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
-                <ion-item nav-clear menu-close ng-click="$root.gotoView('app.logout')">
-                    <i class="ion-log-out"></i>
-                {{ 'SIGN_OUT' | translate}}
-                </ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>
@@ -55,10 +41,6 @@
                 <ion-item ng-click="$root.gotoView('app.settings', false)">
                     <i class="ion-gear-a"></i>
                     {{ 'SETTINGS' | translate}}
-                </ion-item>
-                <ion-item nav-clear menu-close ng-click="$root.gotoView('app.logout')">
-                    <i class="ion-log-out"></i>
-                    {{ 'SIGN_OUT' | translate}}
                 </ion-item>
             </ion-list>
         </ion-content>

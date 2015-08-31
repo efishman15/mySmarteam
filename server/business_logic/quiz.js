@@ -8,9 +8,9 @@ var contestsBusinessLogic = require('../business_logic/contests');
 
 var quizSounds = {
     "finish": {
-        "zero" : ["audio/finish_zero_1","audio/finish_zero_2"],
-        "ok" : ["audio/finish_ok_1"],
-        "great" : ["audio/finish_great_1"]
+        "zero": ["audio/finish_zero_1", "audio/finish_zero_2"],
+        "ok": ["audio/finish_ok_1"],
+        "great": ["audio/finish_great_1"]
     }
 }
 
@@ -95,12 +95,29 @@ module.exports.start = function (req, res, next) {
 
         dalDb.getContest,
 
-        //Init quiz
+        //Check contest join and possible team switch
         function (data, callback) {
-            if (!data.contest.users || !data.contest.users[data.session.userId]) {
+            if (data.teamId == null && (!data.contest.users || !data.contest.users[data.session.userId])) {
                 data.DbHelper.close();
                 callback(new exceptions.ServerMessageException("SERVER_ERROR_NOT_JOINED_TO_CONTEST"));
             }
+            else if (
+                (data.teamId == 0 || data.teamId == 1) &&
+                (
+                    (data.contest.users == null || //nobody joined yet
+                    data.contest.users[data.session.userId] == null || //I did not join
+                    data.contest.users[data.session.userId].team != data.teamId) //I joined but I am switching teams now
+                )) {
+
+                contestsBusinessLogic.joinContestTeam(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
+        //Init quiz
+        function (data, callback) {
 
             var quiz = {
                 "serverData": {
@@ -110,7 +127,7 @@ module.exports.start = function (req, res, next) {
                     "score": 0
                 },
                 "clientData": {
-                    "totalQuestions": 2,
+                    "totalQuestions": 5,
                     "currentQuestionIndex": 0,
                     "finished": false
                 }
@@ -173,10 +190,10 @@ module.exports.answer = function (req, res, next) {
             var answers = data.session.quiz.serverData.currentQuestion.answers;
             var answerId = parseInt(data.id, 10);
             if (answerId < 1 || answerId > answers.length) {
-                callback(new exceptions.ServerException("Invalid answer id",  {"answerId" : data.id}));
+                callback(new exceptions.ServerException("Invalid answer id", {"answerId": data.id}));
             }
 
-            data.response = {"question" : {}};
+            data.response = {"question": {}};
 
             data.response.question.answerId = answerId;
             if (answers[answerId - 1].correct) {
@@ -272,7 +289,7 @@ module.exports.answer = function (req, res, next) {
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
 
-                data.response.results = {"contest" : data.contest};
+                data.response.results = {"contest": data.contest};
 
                 contestsBusinessLogic.prepareContestForClient(data.response.results.contest, data.response.results.contest.users[data.session.userId].team);
 

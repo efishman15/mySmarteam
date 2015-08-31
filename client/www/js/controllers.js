@@ -2,12 +2,6 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
     .controller('AppCtrl', function ($scope, $rootScope, $state, $ionicLoading, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicHistory) {
 
-        $scope.changeLanguage = function (language) {
-            $rootScope.user.settings.language = language.value;
-            $translate.use(language.value);
-
-        };
-
         $rootScope.$on('$translateChangeEnd', function (data) {
             $rootScope.$broadcast("mySmarteam-languageChanged");
         });
@@ -82,6 +76,11 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
         });
 
+        $scope.changeLanguage = function (language) {
+            $rootScope.user.settings.language = language.value;
+            $translate.use(language.value);
+        };
+
         $scope.facebookConnect = function () {
             UserService.facebookClientConnect(function (session) {
                 $rootScope.gotoView("app.contests");
@@ -90,7 +89,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
     })
 
-    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $ionicGesture) {
+    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout) {
 
         $scope.hasMoreContests = false;
         $scope.loadMoreContests = function () {
@@ -123,7 +122,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
         $scope.playContest = function (contest) {
             if (contest.myTeam == 0 || contest.myTeam == 1) {
-                $rootScope.gotoView("app.quiz", false, {contestId: contest._id, teamId: contest.myTeam});
+                $rootScope.gotoView("app.quiz", false, {contestId: contest._id});
             }
             else {
                 ErrorService.alert({"type" : "SERVER_ERROR_NOT_JOINED_TO_CONTEST"});
@@ -148,11 +147,21 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 serverTeamId = 1 - teamId; //In RTL - the teams are presented backwards
             }
 
-            var postData = {"contestId": dataSource.contest._id, "teamId": serverTeamId};
-            ContestsService.joinContest(postData,
-                function (contest) {
-                    $scope.contestCharts[contest._id] = ContestsService.prepareContestChart(contest);
-                });
+            //Show effect of joining the team on the client side before entering the quiz
+            if (dataSource.contest.myTeam == null || dataSource.contest.myTeam != serverTeamId) {
+                dataSource.contest.myTeam = serverTeamId;
+
+                $scope.$apply(function() {
+                    $scope.contestCharts[dataSource.contest._id] = ContestsService.prepareContestChart(dataSource.contest);
+                })
+
+                $timeout(function() {
+                    $rootScope.gotoView("app.quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
+                },1500);
+            }
+            else {
+                $rootScope.gotoView("app.quiz", false, {contestId : dataSource.contest._id, teamId: serverTeamId});
+            }
         }
 
         $scope.$on('$ionicView.beforeEnter', function () {
@@ -169,7 +178,12 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 return;
             }
 
-            QuizService.start({"contestId": $stateParams.contestId},
+            var postData = {"contestId": $stateParams.contestId};
+            if ($stateParams.teamId == 0 || $stateParams.teamId == 1) {
+                postData.teamId = $stateParams.teamId;
+            }
+
+            QuizService.start(postData,
                 function (data) {
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;

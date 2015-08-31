@@ -257,25 +257,6 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         });
     })
 
-    .directive('myCompareTo', function () {
-        return {
-            require: "ngModel",
-            scope: {
-                otherModelValue: "=myCompareTo"
-            },
-            link: function (scope, element, attributes, ngModel) {
-
-                ngModel.$validators.myCompareTo = function (modelValue) {
-                    return modelValue == scope.otherModelValue.$modelValue;
-                };
-
-                scope.$watch("otherModelValue", function () {
-                    ngModel.$validate();
-                });
-            }
-        };
-    })
-
     .directive('animationend', function () {
         return {
             restrict: 'A',

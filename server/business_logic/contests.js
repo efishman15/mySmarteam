@@ -190,6 +190,41 @@ function setContestScores(contest) {
     }
 }
 
+//Join to the contest in the contest object
+module.exports.joinContestTeam = joinContestTeam;
+function joinContestTeam(data, callback) {
+
+    var now = (new Date).getTime();
+
+    if (!data.contest.users) {
+        data.contest.users = {};
+    }
+
+    data.setData = {};
+
+    //Increment participants only if I did not join this contest yet
+    if (!data.contest.users[data.session.userId]) {
+        data.contest.participants++;
+        data.setData.participants = data.contest.participants;
+
+        data.contest.lastParticipantJoinDate = now;
+        data.setData.lastParticipantJoinDate = now;
+    }
+
+    //Actual join
+    data.contest.users[data.session.userId] = {
+        "userId": data.session.userId,
+        "joinDate": now,
+        "team" : data.teamId,
+        "score": 0,
+    }
+
+    data.setData["users." + data.session.userId]  = data.contest.users[data.session.userId];
+
+    dalDb.setContest(data, callback);
+}
+
+
 //----------------------------------------------------
 // setContest
 //
@@ -373,8 +408,6 @@ module.exports.joinContest = function (req, res, next) {
         return;
     }
 
-    var now = (new Date).getTime();
-
     var operations = [
 
         //Connect to the database (so connection will stay open until we decide to close it)
@@ -395,37 +428,13 @@ module.exports.joinContest = function (req, res, next) {
         //Check that I can join this contest
         validateJoinContest,
 
-        //Join to the contest in the contest object
+        //Set to close the connection after the join
         function (data, callback) {
-
-            if (!data.contest.users) {
-                data.contest.users = {};
-            }
-
-            data.setData = {};
-
-            //Increment participants only if I did not join this contest yet
-            if (!data.contest.users[data.session.userId]) {
-                data.contest.participants++;
-                data.setData.participants = data.contest.participants;
-            }
-
-            //Actual join
-            data.contest.users[data.session.userId] = {
-                "userId": data.session.userId,
-                "joinDate": now,
-                "team" : data.teamId,
-                "score": 0,
-            }
-            data.setData.users = data.contest.users;
-
-            data.contest.lastParticipantJoinDate = now;
-            data.setData.lastParticipantJoinDate = now;
-
             data.closeConnection = true;
+        },
 
-            dalDb.setContest(data, callback);
-        }
+        joinContestTeam
+
     ];
 
     async.waterfall(operations, function (err, data) {

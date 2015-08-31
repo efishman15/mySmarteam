@@ -4,7 +4,6 @@
 var supportedLanguages = {
     "en": {
         "value": "en",
-        "flag": "images/languages/unitedstates.jpg",
         "direction": "ltr",
         "align": "left",
         "oppositeAlign": "right",
@@ -12,7 +11,6 @@ var supportedLanguages = {
     },
     "he": {
         "value": "he",
-        "flag": "images/languages/israel.jpg",
         "direction": "rtl",
         "triviaTopics": [5, 270],
         "align": "right",
@@ -21,7 +19,6 @@ var supportedLanguages = {
     },
     "es": {
         "value": "es",
-        "flag": "images/languages/spain.jpg",
         "direction": "ltr",
         "triviaSubjectId": 210,
         "align": "left",

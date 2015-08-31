@@ -116,8 +116,32 @@ button.item.quiz-answer {
     font-size: 14px;
 }
 
-.background.scroll-content {
-    background-image: url('../images/bg.jpg');
-    background-size: 100% 100%;
+.language {
+    color: #000000;
+    font-size: 80%;
+    cursor: pointer;
+    text-align: center;
+}
+
+.language:hover {
+    text-decoration: underline;
+}
+
+.background {
+    background-image: url('../images/bg.png');
     background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 150px;
+}
+
+.gameHeader {
+    color: #0000ff;
+    padding-top: 40px;
+    font-weight: bolder;
+}
+
+.gameSubHeader {
+    color: #0000ff;
+    padding-bottom: 40px;
 }
