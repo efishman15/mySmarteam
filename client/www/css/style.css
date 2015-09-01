@@ -127,21 +127,24 @@ button.item.quiz-answer {
     text-decoration: underline;
 }
 
-.background {
-    background-image: url('../images/bg.png');
+.bgHome {
+    background-image: url('../images/bg_home.jpg');
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    width: 100%;
-    height: 150px;
+}
+
+.bgQuestionMarks {
+    background-image: url('../images/bg_question_marks.png');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .gameHeader {
-    color: #0000ff;
-    padding-top: 40px;
+    color: #FFFFFF;
     font-weight: bolder;
+    padding-top: 40px;
 }
 
 .gameSubHeader {
-    color: #0000ff;
-    padding-bottom: 40px;
+    color: #FFFFFF;
 }

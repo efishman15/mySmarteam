@@ -33,71 +33,85 @@ var triviaTopisPerLangage = {
     "es": [465]
 }
 
-var chartSettings = {
-    "generalData": {
-        "annotationsFont": "10px Arial",
-        "annotationHorizontalMagicNumbers": {
-            "ltr": { "endsIn" : {"id" : 0, "position" : "$chartstartx + ", "spacing" : 2}, "participants" : {"id" : 1, "position" : "$chartendx - ", "spacing" : 0}},
-            "rtl": { "endsIn" : {"id" : 0, "position" : "$chartendx - ", "spacing" : 7}, "participants" : {"id" : 1, "position" : "$chartstartx + ", "spacing" : 3}},
+var generalSettings = {
+    "languages" : supportedLanguages,
+    "charts": {
+        "contestAnnotations" : {
+            "annotationsFont": "10px Arial",
+            "annotationHorizontalMagicNumbers": {
+                "ltr": {
+                    "endsIn": {"id": 0, "position": "$chartstartx + ", "spacing": 2},
+                    "participants": {"id": 1, "position": "$chartendx - ", "spacing": 0}
+                },
+                "rtl": {
+                    "endsIn": {"id": 0, "position": "$chartendx - ", "spacing": 7},
+                    "participants": {"id": 1, "position": "$chartstartx + ", "spacing": 3}
+                },
+            }
+        },
+        "chartObject": {
+            "chart": {
+                "bgColor" : "#FFFFFF",
+                "plotBorderAlpha": 0,
+                "baseFont": "Arial",
+                "baseFontSize": 12,
+                "showBorder": 1,
+                "showCanvasBorder" : 0,
+                "showPlotBorder" : 0,
+                "showCanvasBg" : 0,
+                "yAxisMinValue": 0.0,
+                "yAxisMaxValue": 1.0,
+                "numDivLines": 0,
+                "adjustDiv": 0,
+                "divLineColor" : "#FFFFFF",
+                "labelFontColor" : "#040404",
+                "numberScaleValue": ".01",
+                "numberScaleUnit": "%",
+                "showYAxisValues": 0,
+                "valueFontSize": 12,
+                "labelFontSize": "15",
+                "chartBottomMargin": 25,
+                "valuePadding": 0,
+                "labelPadding" : 10,
+                "useRoundEdges": "1",
+                "showToolTip": 0,
+                "labelDisplay": "auto",
+                "useEllipsesWhenOverflow": 1,
+                "maxLabelWidthPercent": 50
+            },
+            "annotations": {
+                "groups": [
+                    {
+                        "id": "infobar",
+                        "items": [
+                            {
+                                "id": "label",
+                                "type": "text",
+                                "y": "$chartendy - 8",
+                                "fontSize": 10,
+                                "font": "Arial",
+                                "fontColor": "#000000"
+                            },
+                            {
+                                "id": "label",
+                                "type": "text",
+                                "y": "$chartendy - 8",
+                                "fontSize": 10,
+                                "font": "Arial",
+                                "fontColor": "#000000"
+                            }
+                        ]
+                    }
+                ]
+            },
         }
     },
-    "chartObject": {
-        "chart": {
-            "bgColor" : "#FFFFFF",
-            "plotBorderAlpha": 0,
-            "baseFont": "Arial",
-            "baseFontSize": 12,
-            "showBorder": 1,
-            "showCanvasBorder" : 0,
-            "showPlotBorder" : 0,
-            "showCanvasBg" : 0,
-            "yAxisMinValue": 0.0,
-            "yAxisMaxValue": 1.0,
-            "numDivLines": 0,
-            "adjustDiv": 0,
-            "divLineColor" : "#FFFFFF",
-            "labelFontColor" : "#040404",
-            "numberScaleValue": ".01",
-            "numberScaleUnit": "%",
-            "showYAxisValues": 0,
-            "valueFontSize": 12,
-            "labelFontSize": "15",
-            "chartBottomMargin": 25,
-            "valuePadding": 0,
-            "labelPadding" : 10,
-            "useRoundEdges": "1",
-            "showToolTip": 0,
-            "labelDisplay": "auto",
-            "useEllipsesWhenOverflow": 1,
-            "maxLabelWidthPercent": 50
-        },
-        "annotations": {
-            "groups": [
-                {
-                    "id": "infobar",
-                    "items": [
-                        {
-                            "id": "label",
-                            "type": "text",
-                            "y": "$chartendy - 8",
-                            "fontSize": 10,
-                            "font": "Arial",
-                            "fontColor": "#000000"
-                        },
-                        {
-                            "id": "label",
-                            "type": "text",
-                            "y": "$chartendy - 8",
-                            "fontSize": 10,
-                            "font": "Arial",
-                            "fontColor": "#000000"
-                        }
-                    ]
-                }
-            ]
-        },
-    },
+    "contestList" : {
+        "pageSize" : 5,
+        "distance" : "1%"
+    }
 }
+module.exports.generalSettings = generalSettings;
 
 //-----------------------------------------------------------------------
 // getDirectionByLanguage
@@ -169,7 +183,7 @@ module.exports.geoInfo = function (req, res, next) {
 // returns general server settings for each client
 //-----------------------------------------------------------------------
 module.exports.getSettings = function (req, res, next) {
-    res.json({"languages": supportedLanguages, "chartSettings": chartSettings});
+    res.json(generalSettings);
 }
 
 //-----------------------------------------------------------------------

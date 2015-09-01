@@ -107,10 +107,6 @@ function validateContestData(data, callback) {
 //----------------------------------------------------
 function validateJoinContest(data, callback) {
 
-    //Cannot join a contest that ended
-    if (data.contest.status == "finished") {
-        callback(new exceptions.ServerException("Contest has already been finished", data));
-    }
 
     callback(null, data);
 }
@@ -197,6 +193,11 @@ function setContestScores(contest) {
 //Join to the contest in the contest object
 module.exports.joinContestTeam = joinContestTeam;
 function joinContestTeam(data, callback) {
+
+    //Cannot join a contest that ended
+    if (data.contest.status == "finished") {
+        callback(new exceptions.ServerException("Contest has already been finished", data));
+    }
 
     var now = (new Date).getTime();
 
@@ -291,7 +292,7 @@ module.exports.removeContest = function (req, res, next) {
     var data = req.body;
 
     if (!data.contestId) {
-        exceptions.ServerResponseException(res, "contestId not supplied",null,"warning",424);
+        exceptions.ServerResponseException(res, "contestId not supplied",null,"warn",424);
         return;
     }
 
@@ -332,13 +333,18 @@ module.exports.removeContest = function (req, res, next) {
 // getContests
 
 // data:
-// input: TODO: In the future - tab: 0=myContest, 1=openContests, 2=closedContests
+// input: clientContestCount (how many contest does the client have currently to show
+// TODO: In the future - tab: 0=myContest, 1=openContests, 2=closedContests
 // output: <NA>
 //-------------------------------------------------------------------------------------
 module.exports.getContests = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
 
+    if (data.clientContestCount == null) {
+        exceptions.ServerResponseException(res, "clientContestCount not supplied",null,"warn",424);
+        return;
+    }
 
     var operations = [
 
@@ -353,6 +359,10 @@ module.exports.getContests = function (req, res, next) {
             dalDb.retrieveSession(data, callback);
         },
 
+        dalDb.prepareContestsCriteria,
+
+        dalDb.getContestsCount,
+
         //Get contests from db
         function (data, callback) {
             data.closeConnection = true;
@@ -361,7 +371,6 @@ module.exports.getContests = function (req, res, next) {
 
         //Set contest status for each contest
         function(data, callback) {
-            data.contestsHash = {};
             for (var i = 0; i < data.contests.length; i++) {
 
                 if (data.contests[i].users && data.contests[i].users[data.session.userId]) {
@@ -373,8 +382,6 @@ module.exports.getContests = function (req, res, next) {
                     myTeam = data.contests[i].users[data.session.userId].team;
                 }
                 prepareContestForClient(data.contests[i], myTeam);
-
-                data.contestsHash[data.contests[i]._id] = data.contests[i];
             }
 
             callback(null, data);
@@ -383,68 +390,7 @@ module.exports.getContests = function (req, res, next) {
 
     async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.json(data.contestsHash)
-        }
-        else {
-            res.send(err.httpStatus, err);
-        }
-    });
-}
-
-///--------------------------------------------------------------
-// validateContestData
-//
-// data:
-// input: contestId, teamId
-// output: <NA>
-//---------------------------------------------------------------
-module.exports.joinContest = function (req, res, next) {
-    var token = req.headers.authorization;
-    var data = req.body;
-
-    if (!data.contestId) {
-        exceptions.ServerResponseException(res, "contestId not supplied",null,"warning",424);
-        return;
-    }
-
-    if (data.teamId != 0 && data.teamId != 1) {
-        exceptions.ServerResponseException(res, "teamId can be either 0 or 1",null,"warning",424);
-        return;
-    }
-
-    var operations = [
-
-        //Connect to the database (so connection will stay open until we decide to close it)
-        dalDb.connect,
-
-        //Retrieve the session
-        function (connectData, callback) {
-            data.DbHelper = connectData.DbHelper;
-            data.token = token;
-            dalDb.retrieveSession(data, callback);
-        },
-
-        //Get the contest object - to make sure this contest exists
-        function (data, callback) {
-            dalDb.getContest(data, callback);
-        },
-
-        //Check that I can join this contest
-        validateJoinContest,
-
-        //Set to close the connection after the join
-        function (data, callback) {
-            data.closeConnection = true;
-        },
-
-        joinContestTeam
-
-    ];
-
-    async.waterfall(operations, function (err, data) {
-        if (!err) {
-            prepareContestForClient(data.contest, data.teamId);
-            res.json(data.contest)
+            res.json({"count" : data.contestsCount, "list" : data.contests});
         }
         else {
             res.send(err.httpStatus, err);

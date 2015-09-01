@@ -42,48 +42,19 @@ function setQuestionDirection(data, callback) {
 
     });
 }
-
-//--------------------------------------------------------------------------
-// subjects
-//
-// data: language
-//--------------------------------------------------------------------------
-module.exports.subjects = function (req, res, next) {
-
-    var token = req.headers.authorization;
-    var data = req.body;
-
-    var operations = [
-
-        dalDb.connect,
-
-        //get subjects
-        function (connectData, callback) {
-            data.DbHelper = connectData.DbHelper;
-            data.isServerSide = false;
-            data.closeConnection = true;
-            dalDb.getSubjects(data, callback);
-        }
-    ];
-
-    async.waterfall(operations, function (err, data) {
-        if (!err) {
-            res.json(data.subjects);
-        }
-        else {
-            res.send(err.httpStatus, err);
-        }
-    })
-};
-
 //--------------------------------------------------------------------------
 // start
 //
-// data: contestId, teamId
+// data: contestId, teamId (optional)
 //--------------------------------------------------------------------------
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
+
+    if (!data.contestId) {
+        exceptions.ServerResponseException(res, "contestId not supplied",null,"warn",424);
+        return;
+    }
 
     var operations = [
 

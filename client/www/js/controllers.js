@@ -98,34 +98,79 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
     .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout) {
 
-        $scope.hasMoreContests = false;
-        $scope.loadMoreContests = function () {
-            console.log("load more contests...");
-        }
-
-        $scope.doRefresh = function () {
-
-            ContestsService.getContests(null, function (contests) {
-                    var contestCharts = {};
-                    for (var key in contests) {
-                        if (contests.hasOwnProperty(key)) {
-                            var contestChart = ContestsService.prepareContestChart(contests[key]);
-                            contestCharts[key] = contestChart;
-                        }
-                    }
-
-                    $scope.contestCharts = contestCharts;
-                }
-            );
-
-            $scope.$broadcast('scroll.refreshComplete');
-        }
+        var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
 
         $scope.$on('$ionicView.beforeEnter', function () {
             if (!$rootScope.session) {
                 $rootScope.gotoView("app.home");
+                return;
             }
+
+            $scope.loadMoreContests();
         });
+
+        $scope.doRefresh = function() {
+
+            $scope.contestCharts.length = 0;
+            $scope.totalContests = 0;
+
+            //That bug again...prevent inifinite firing twice
+            shouldTriggerScrollInfiniteRealFunction = false;
+
+            $scope.loadMoreContests(true);
+        };
+
+        $scope.haveMoreContests = function() {
+            return (!$scope.contestCharts || $scope.contestCharts.length == 0 || ($scope.totalContests && $scope.contestCharts.length < $scope.totalContests));
+        }
+
+        $scope.infiniteLoadMoreContests = function() {
+            if (shouldTriggerScrollInfiniteRealFunction == false) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
+                shouldTriggerScrollInfiniteRealFunction = true; // set the boolean to true so that the real load function is called next time infinite scrolling triggers
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            }
+            else {  // here it will be the real need for scrolling
+                $scope.loadMoreContests();
+            }
+        }
+
+        $scope.loadMoreContests = function (fullRefresh) {
+
+            var clientContestCount;
+
+            if ($scope.contestCharts) {
+                clientContestCount = $scope.contestCharts.length;
+            }
+            else {
+                clientContestCount = 0;
+            }
+
+            var postData = {"clientContestCount" : clientContestCount};
+
+            ContestsService.getContests(postData, function (contestsResult) {
+                    $scope.totalContests = contestsResult.count;
+
+                    if (!$scope.contestCharts) {
+                        $scope.contestCharts = [];
+                    }
+
+                    //Add server contests to the end of the array
+                    var contestChartsCount = $scope.contestCharts.length;
+
+                    for (var i=0; i<contestsResult.list.length; i++) {
+                        var contestChart = ContestsService.prepareContestChart(contestsResult.list[i]);
+                        contestChart.contestIndex = contestChartsCount + i;
+                        $scope.contestCharts.push(contestChart);
+                    }
+
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+
+                    if (fullRefresh == true) {
+                        $scope.$broadcast('scroll.refreshComplete');
+                    }
+                }
+            );
+        }
 
         $scope.playContest = function (contest) {
             if (contest.myTeam == 0 || contest.myTeam == 1) {
@@ -162,7 +207,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 dataSource.contest.myTeam = serverTeamId;
 
                 $scope.$apply(function () {
-                    $scope.contestCharts[dataSource.contest._id] = ContestsService.prepareContestChart(dataSource.contest);
+                    $scope.contestCharts[dataSource.contestIndex] = ContestsService.prepareContestChart(dataSource.contest);
                 })
 
                 $timeout(function () {
@@ -173,10 +218,6 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 $rootScope.gotoView("app.quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
             }
         }
-
-        $scope.$on('$ionicView.beforeEnter', function () {
-            $scope.doRefresh();
-        });
     })
 
     .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate, $timeout, SoundService) {

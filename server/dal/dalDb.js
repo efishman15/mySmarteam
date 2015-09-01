@@ -5,6 +5,7 @@ var uuid = require('node-uuid');
 var exceptions = require("../utils/exceptions");
 var ObjectId = require("mongodb").ObjectID;
 var random = require('../utils/random');
+var generalUtils = require('../utils/general');
 
 //---------------------------------------------------------------------
 // Cache variables
@@ -512,7 +513,6 @@ function logAction(data, callback) {
 
 //---------------------------------------------------------------------
 // prepareQuestionCriteria
-// removes the user's session (if exist)
 //
 // data:
 // -----
@@ -548,7 +548,7 @@ function prepareQuestionCriteria(data, callback) {
 //---------------------------------------------------------------------
 // getQuestionsCount
 //
-// Count questions collection in the selected subject (its topics)
+// Count questions collection in the prepared question criteria
 //
 // data:
 // -----
@@ -771,6 +771,49 @@ function getContest(data, callback) {
     })
 }
 
+//---------------------------------------------------------------------
+// prepareContestsCriteria
+//
+// data:
+// -----
+// input: DbHelper, session, clientContestsCount
+// output: contestsCriteria
+//---------------------------------------------------------------------
+module.exports.prepareContestsCriteria = prepareContestsCriteria;
+function prepareContestsCriteria(data, callback) {
+
+    var contestsCriteria = {};
+
+    data.contestsCriteria = contestsCriteria;
+
+    callback(null, data);
+};
+
+//---------------------------------------------------------------------
+// getContestsCount
+//
+// Count contests based on the prepared criteria
+//
+// data:
+// -----
+// input: DbHelper, session, questionCriteria
+// output: contestsCount
+//---------------------------------------------------------------------
+module.exports.getContestsCount = getContestsCount;
+function getContestsCount(data, callback) {
+    var contestsCollection = data.DbHelper.getCollection("Contests");
+    contestsCollection.count(data.contestCriteria, function (err, count) {
+        if (err) {
+            callback(new exceptions.ServerException("Error retrieving number of contests from database", {"data" : data, "dbError" : err}, "error"));
+            return;
+        }
+
+        data.contestsCount = count;
+
+        callback(null, data);
+    })
+};
+
 //------------------------------------------------------------------------------------------------
 // getContests
 //
@@ -785,7 +828,7 @@ function getContest(data, callback) {
 module.exports.getContests = getContests;
 function getContests(data, callback) {
     var contestsCollection = data.DbHelper.getCollection('Contests');
-    contestsCollection.find({}, {}, function (err, contestsCursor) {
+    contestsCollection.find(data.contestsCriteria, {skip : data.clientContestCount, limit : generalUtils.generalSettings.contestList.pageSize}, function (err, contestsCursor) {
         if (err || !contestsCursor) {
 
             callback(new exceptions.ServerException("Error retrieving contests", {"data" : data, "dbError" : err}, "error"));
@@ -799,3 +842,4 @@ function getContests(data, callback) {
         })
     })
 }
+

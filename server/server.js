@@ -66,15 +66,12 @@ function isAuthenticated(req, res, next) {
 app.post("/user/logout", isAuthenticated, credentials.logout);
 app.post("/user/settings", sessionUtils.saveSettings);
 app.post("/user/toggleSound", sessionUtils.toggleSound);
-app.post("/quiz/subjects", isAuthenticated, quiz.subjects);
 app.post("/quiz/start", isAuthenticated, quiz.start);
 app.post("/quiz/answer", isAuthenticated, quiz.answer);
-app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
 app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
 app.post("/contests/set", isAuthenticated, contests.setContest);
 app.post("/contests/remove", isAuthenticated, contests.removeContest);
 app.post("/contests/get", isAuthenticated, contests.getContests);
-app.post("/contests/join", isAuthenticated, contests.joinContest);
 
 //----------------------------------------------------
 // API's that do NOT require authentication

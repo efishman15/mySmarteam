@@ -1,10 +1,11 @@
-<ion-view class="padding bubble-background" view-title="{{'CONTEST_LIST' | translate}}"
+<ion-view class="padding bgQuestionMarks"
+          view-title="{{'CONTEST_LIST' | translate}} - {{totalContests}} / {{contestCharts.length}}"
 <ion-content class="padding" dir="{{$root.languages[$root.user.settings.language].direction}}" overflow-scroll="true">
 
     <ion-scroll class="padding" style="height: 100%">
-        <ion-refresher
-                pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
-                on-refresh="doRefresh()">
+        <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
+                       pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
+                       on-refresh="doRefresh()">
         </ion-refresher>
         <ion-list class="padding" ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
             <div class="padding center">
@@ -24,10 +25,11 @@
         </ion-list>
     </ion-scroll>
     <ion-infinite-scroll
-            on-infinite="loadMoreContests()"
-            distance="1%"
-            ng-if="hasMoreContests==true"
-            icon="ion-loading-c">
+            on-infinite="infiniteLoadMoreContests()"
+            distance="{{$root.settings.contestList.distance}}"
+            ng-if="haveMoreContests()"
+            icon="ion-loading-c"
+            immediate-check="false">
     </ion-infinite-scroll>
 </ion-content>
 </ion-view>

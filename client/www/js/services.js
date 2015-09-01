@@ -273,7 +273,7 @@ angular.module('mySmarteam.services', [])
 
         var canvas = document.createElement("canvas");
         var canvasContext = canvas.getContext("2d");
-        canvasContext.font = $rootScope.settings.chartSettings.generalData.annotationsFont;
+        canvasContext.font = $rootScope.settings.charts.contestAnnotations.annotationsFont;
 
         //add contest
         service.addContest = function (postData, callbackOnSuccess, callbackOnError) {
@@ -302,7 +302,7 @@ angular.module('mySmarteam.services', [])
 
         service.prepareContestChart = function(contest) {
             var contestCaption = $translate.instant("WHO_IS_SMARTER");
-            var contestChart = JSON.parse(JSON.stringify($rootScope.settings.chartSettings.chartObject));
+            var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.chartObject));
             contestChart.contest = contest;
 
             contestChart.data = [];
@@ -317,7 +317,7 @@ angular.module('mySmarteam.services', [])
             var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
 
             var direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
-            var magicNumbers = $rootScope.settings.chartSettings.generalData.annotationHorizontalMagicNumbers[direction];
+            var magicNumbers = $rootScope.settings.charts.contestAnnotations.annotationHorizontalMagicNumbers[direction];
 
             contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].text = contestEndsString;
             contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].x = magicNumbers.endsIn.position +  (contestEndsWidth / 2 + magicNumbers.endsIn.spacing);
