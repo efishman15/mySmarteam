@@ -43,7 +43,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
         );
 
-        $rootScope.gotoView = function (viewName, isRootView, params) {
+        $rootScope.gotoView = function (viewName, isRootView, params, clearHistory) {
             if (isRootView == null) {
                 isRootView = true;
             }
@@ -53,14 +53,21 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
 
             if (isRootView == true) {
-                $ionicHistory.clearHistory();
+
+                if (clearHistory == null) {
+                    clearHistory = true;
+                }
+
+                if (clearHistory == true) {
+                    $ionicHistory.clearHistory();
+                }
                 $ionicHistory.nextViewOptions({
                     disableBack: true,
-                    historyRoot: true
+                    historyRoot: clearHistory
                 });
             }
 
-            $state.go(viewName, params, {reload: true, inherit: true});
+            $state.go(viewName, params, {reload: true, inherit: true, location: true});
 
         };
     })
@@ -125,7 +132,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 $rootScope.gotoView("app.quiz", false, {contestId: contest._id});
             }
             else {
-                ErrorService.alert({"type" : "SERVER_ERROR_NOT_JOINED_TO_CONTEST"});
+                ErrorService.alert({"type": "SERVER_ERROR_NOT_JOINED_TO_CONTEST"});
             }
         };
 
@@ -137,7 +144,10 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 teamClicked(eventObj.sender.args.dataSource, dataObj.dataIndex);
             },
             "annotationClick": function (eventObj, dataObj) {
-                $rootScope.gotoView("app.contest", false, {mode: "edit", contest: eventObj.sender.args.dataSource.contest});
+                $rootScope.gotoView("app.contest", false, {
+                    mode: "edit",
+                    contest: eventObj.sender.args.dataSource.contest
+                });
             }
         };
 
@@ -151,16 +161,16 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             if (dataSource.contest.myTeam == null || dataSource.contest.myTeam != serverTeamId) {
                 dataSource.contest.myTeam = serverTeamId;
 
-                $scope.$apply(function() {
+                $scope.$apply(function () {
                     $scope.contestCharts[dataSource.contest._id] = ContestsService.prepareContestChart(dataSource.contest);
                 })
 
-                $timeout(function() {
+                $timeout(function () {
                     $rootScope.gotoView("app.quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
-                },1500);
+                }, 1500);
             }
             else {
-                $rootScope.gotoView("app.quiz", false, {contestId : dataSource.contest._id, teamId: serverTeamId});
+                $rootScope.gotoView("app.quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
             }
         }
 
@@ -203,7 +213,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             if ($scope.correctButtonId == button.id) {
                 if ($scope.quiz.finished == true) {
                     $rootScope.session.score += $scope.quiz.results.score;
-                    $rootScope.gotoView('app.quizResult', false, {results: $scope.quiz.results});
+                    $rootScope.gotoView('app.quizResult', true, {results: $scope.quiz.results}, false);
                 }
                 else {
                     getNextQuestion();
@@ -256,7 +266,9 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
     .controller('QuizResultCtrl', function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory, ContestsService, SoundService) {
 
-        $scope.chart = {};
+        if (!$scope.chart) {
+            $scope.chart = {};
+        }
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
@@ -269,22 +281,30 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
             $scope.chart = ContestsService.prepareContestChart($scope.results.contest);
 
-            if ($rootScope.session.settings.sound == true) {
+            //Play sound only if enabled and not came by pressing back
+            if ($rootScope.session.settings.sound == true && (!$rootScope.lastPlayed || $rootScope.lastPlayed < $stateParams.results.contest.lastPlayed)) {
                 SoundService.play($scope.results.sound);
             }
+
+            $rootScope.lastPlayed = $stateParams.results.contest.lastPlayed;
         });
 
-        $scope.playAgain = function() {
-            $rootScope.gotoView('app.quiz', false, {contestId: $scope.results.contest._id, teamId : $scope.results.contest.myTeam} )
+        $scope.playAgain = function () {
+
+            $rootScope.gotoView('app.quiz', false, {
+                contestId: $scope.results.contest._id,
+                teamId: $scope.results.contest.myTeam
+            });
+
         };
     })
 
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory, $translate) {
         $scope.$on('$ionicView.beforeEnter', function () {
             UserService.logout(function () {
-                    $translate.use($rootScope.user.settings.language);
-                    $rootScope.gotoView("app.home");
-                });
+                $translate.use($rootScope.user.settings.language);
+                $rootScope.gotoView("app.home");
+            });
         });
     })
 

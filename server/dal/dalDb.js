@@ -399,7 +399,8 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "avatar": data.user.avatar,
                 "createdAt": new Date(), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
                 "userToken": userToken,
-                "settings": data.user.settings
+                "settings": data.user.settings,
+                "score" : data.user.score
             }
         }, {upsert: true, new: true}, function (err, session) {
 

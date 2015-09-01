@@ -124,7 +124,7 @@ function validateJoinContest(data, callback) {
 // 3. Chart values as a result of a score change
 //---------------------------------------------------------------------
 module.exports.prepareContestForClient = prepareContestForClient;
-function prepareContestForClient(contest, myTeamId) {
+function prepareContestForClient(contest, myTeamId, addLastPlayedStamp) {
 
     //Status
     var now = (new Date()).getTime();
@@ -137,6 +137,10 @@ function prepareContestForClient(contest, myTeamId) {
     }
     else {
         contest.status = "running";
+    }
+
+    if (addLastPlayedStamp == true) {
+        contest.lastPlayed = now;
     }
 
     //ends In...

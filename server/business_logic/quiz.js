@@ -127,7 +127,7 @@ module.exports.start = function (req, res, next) {
                     "score": 0
                 },
                 "clientData": {
-                    "totalQuestions": 5,
+                    "totalQuestions": 1,
                     "currentQuestionIndex": 0,
                     "finished": false
                 }
@@ -222,6 +222,7 @@ module.exports.answer = function (req, res, next) {
 
                 //Update total score in profile
                 data.session.score += data.session.quiz.serverData.questionScore;
+                console.log("data.session.score=" + data.session.score + ", data.session.quiz.serverData.questionScore=" + data.session.quiz.serverData.questionScore);
                 store = true;
             }
             else if (data.response.question.correct == true) {
@@ -291,7 +292,7 @@ module.exports.answer = function (req, res, next) {
 
                 data.response.results = {"contest": data.contest};
 
-                contestsBusinessLogic.prepareContestForClient(data.response.results.contest, data.response.results.contest.users[data.session.userId].team);
+                contestsBusinessLogic.prepareContestForClient(data.response.results.contest, data.response.results.contest.users[data.session.userId].team, true);
 
                 data.response.results.score = data.session.quiz.serverData.score;
 

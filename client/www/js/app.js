@@ -54,49 +54,49 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         }
     })
 
-/*
-    .config(function (AnalyticsProvider) {
-        // Set analytics account
-        AnalyticsProvider.setAccount('UA-66555929-1');
+    /*
+     .config(function (AnalyticsProvider) {
+     // Set analytics account
+     AnalyticsProvider.setAccount('UA-66555929-1');
 
-        // Track all routes (or not)
-        AnalyticsProvider.trackPages(true);
+     // Track all routes (or not)
+     AnalyticsProvider.trackPages(true);
 
-        // Track all URL query params (default is false)
-        AnalyticsProvider.trackUrlParams(true);
+     // Track all URL query params (default is false)
+     AnalyticsProvider.trackUrlParams(true);
 
-        // Use display features plugin
-        AnalyticsProvider.useDisplayFeatures(true);
+     // Use display features plugin
+     AnalyticsProvider.useDisplayFeatures(true);
 
-        // Use analytics.js instead of ga.js
-        AnalyticsProvider.useAnalytics(true);
+     // Use analytics.js instead of ga.js
+     AnalyticsProvider.useAnalytics(true);
 
-        // Ignore first page view... helpful when using hashes and whenever your bounce rate looks obscenely low.
-        AnalyticsProvider.ignoreFirstPageLoad(true);
+     // Ignore first page view... helpful when using hashes and whenever your bounce rate looks obscenely low.
+     AnalyticsProvider.ignoreFirstPageLoad(true);
 
-        // Enable enhanced link attribution
-        AnalyticsProvider.useEnhancedLinkAttribution(true);
+     // Enable enhanced link attribution
+     AnalyticsProvider.useEnhancedLinkAttribution(true);
 
-        // Set custom cookie parameters for analytics.js
-        AnalyticsProvider.setCookieConfig({
-            cookieDomain: 'studyb4.ddns.net',
-            cookieName: 'mySmarteamAnalytics',
-            cookieExpires: 20000
-        });
+     // Set custom cookie parameters for analytics.js
+     AnalyticsProvider.setCookieConfig({
+     cookieDomain: 'studyb4.ddns.net',
+     cookieName: 'mySmarteamAnalytics',
+     cookieExpires: 20000
+     });
 
-        // Change page event name
-        AnalyticsProvider.setPageEvent('$stateChangeSuccess');
+     // Change page event name
+     AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 
-        // Delay script tag creation
-        // must manually call Analytics.createScriptTag(cookieConfig) or Analytics.createAnalyticsScriptTag(cookieConfig)
-        AnalyticsProvider.delayScriptTag(true);
-    })
+     // Delay script tag creation
+     // must manually call Analytics.createScriptTag(cookieConfig) or Analytics.createAnalyticsScriptTag(cookieConfig)
+     AnalyticsProvider.delayScriptTag(true);
+     })
 
-    .run(function (Analytics) {
-        // In case you are relying on automatic page tracking, you need to inject Analytics
-        // at least once in your application (for example in the main run() block)
-    })
-*/
+     .run(function (Analytics) {
+     // In case you are relying on automatic page tracking, you need to inject Analytics
+     // at least once in your application (for example in the main run() block)
+     })
+     */
     .config(function ($translateProvider) {
         $translateProvider.useSanitizeValueStrategy('escaped');
         $translateProvider.useStaticFilesLoader({
@@ -238,7 +238,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
 
             .state("app.otherwise", {
                 url: "/otherwise",
-                cache : false,
+                cache: false,
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("otherwise");
@@ -251,7 +251,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 }
             })
 
-        $urlRouterProvider.otherwise( function($injector, $location) {
+        $urlRouterProvider.otherwise(function ($injector, $location) {
             var $state = $injector.get("$state");
             $state.go("app.otherwise");
         });
