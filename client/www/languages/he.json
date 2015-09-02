@@ -8,6 +8,7 @@
   "DEMO_TEAM1": "הבנות",
   "CONTEST_NAME": "{{team0}} או {{team1}}",
   "CONTEST_ENDS_IN": "מסתיימת בעוד {{number}} {{units}}",
+  "CONTEST_ENDED" : "הסתיימה לפני {{number}} {{units}}",
   "DEMO_CONTEST_ENDS_IN_UNITS": "ימים",
   "CONTEST_PARTICIPANTS": "משתתפים: {{participants}}",
   "SOUND": "קול",
@@ -64,5 +65,8 @@
   "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_TITLE" : "התחברות עם פייסבוק",
   "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_MESSAGE" : "שגיאה בנסיון התחברות עם פייסבוק - אנא נסו שנית",
   "SERVER_ERROR_NOT_JOINED_TO_CONTEST_TITLE" : "הצטרפות לתחרות",
-  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "אנא בחרו קבוצה על ידי לחיצה על שמה או על הטור שלה בגרף"
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "אנא בחרו קבוצה על ידי לחיצה על שמה או על הטור שלה בגרף",
+  "MY_CONTESTS" : "התחרויות שלי",
+  "RUNNING_CONTESTS" : "תחרויות רצות",
+  "RECENTLY_FINISHED_CONTESTS" : "הסתיימו לאחרונה"
 }

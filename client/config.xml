@@ -19,6 +19,7 @@
   <preference name="SplashScreenDelay" value="3000"/>
   <preference name="loadUrlTimeoutValue" value="60000" />
   <preference name="InAppBrowserStorageEnabled" value="true"/>
+  <preference name="orientation" value="portrait" />
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>

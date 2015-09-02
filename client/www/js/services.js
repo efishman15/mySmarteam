@@ -1,7 +1,7 @@
 angular.module('mySmarteam.services', [])
 
     //User Service
-    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService, $ionicHistory) {
+    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading) {
 
         //----------------------------------------------
         // Service Variables
@@ -37,9 +37,9 @@ angular.module('mySmarteam.services', [])
                     $rootScope.user = {
                         "settings": {
                             "language": geoResult.language,
-                            "timezoneOffset" : (new Date).getTimezoneOffset()
+                            "timezoneOffset": (new Date).getTimezoneOffset()
                         },
-                        "geoInfo" : geoInfo //For registration on the server
+                        "geoInfo": geoInfo //For registration on the server
                     };
 
                     $rootScope.session = null;
@@ -90,8 +90,8 @@ angular.module('mySmarteam.services', [])
         };
 
         //Connect to the server with the Facebook credentials
-        service.facebookServerConnect = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "facebookConnect", {"user" : $rootScope.user},
+        service.facebookServerConnect = function (callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "facebookConnect", {"user": $rootScope.user},
                 function (session) {
                     $http.defaults.headers.common.Authorization = session.token;
                     if ($rootScope.user.settings.language != session.settings.language) {
@@ -103,7 +103,7 @@ angular.module('mySmarteam.services', [])
                 },
                 function (status, data) {
                     callbackOnError(status, data);
-                })
+                }, config)
         };
 
         //Invoke Facebook Client UI and then connect to the server
@@ -116,7 +116,7 @@ angular.module('mySmarteam.services', [])
         };
 
         //Logout
-        service.logout = function (callbackOnSuccess, callbackOnError) {
+        service.logout = function (callbackOnSuccess, callbackOnError, config) {
             FacebookService.logout(function (response) {
                 return ApiService.post(path, "logout", null,
                     function (data, headers) {
@@ -124,7 +124,8 @@ angular.module('mySmarteam.services', [])
                     },
                     function (status, data, headers) {
                         clearDataAfterLogout(headers, callbackOnSuccess, callbackOnError);
-                    }
+                    },
+                    config
                 )
             });
         };
@@ -145,17 +146,94 @@ angular.module('mySmarteam.services', [])
             }
             else {
                 //-------------------------------------------------------------------------
-                //-- Normal flow - try performing auto login
+                //-- Normal flow - first time load
                 //-------------------------------------------------------------------------
                 service.initUser(function () {
 
-                    //----------------------------------------------------
+                    //------------------------------------------------------------------------------------
                     //-- Load languages from server - can be done without waiting for result
-                    //----------------------------------------------------
+                    //------------------------------------------------------------------------------------
                     if (!$rootScope.settings) {
                         InfoService.getSettings(
                             function (data) {
                                 $rootScope.settings = data;
+
+                                //Define core events and functions to be used in the app
+                                $rootScope.$on('$translateChangeEnd', function (data) {
+                                    $rootScope.$broadcast("mySmarteam-languageChanged");
+                                });
+
+                                $rootScope.$on("mySmarteam-httpRequest", function (error, config) {
+                                    if (!config || config.blockUserInterface !== false) {
+                                        $ionicLoading.show({
+                                                template: "<span dir='" + $rootScope.settings.languages[$rootScope.user.settings.language].direction + "'>" + $translate.instant("LOADING") + "</span>"
+                                            }
+                                        )
+                                    }
+                                });
+
+                                $rootScope.$on("mySmarteam-httpResponse", function (error, config) {
+                                    if (!config || config.blockUserInterface !== false) {
+                                        $ionicLoading.hide();
+                                    }
+                                });
+
+                                $rootScope.$on("mySmarteam-httpResponseError", function (error, rejection) {
+                                    if (!config || config.blockUserInterface !== false) {
+                                        $ionicLoading.hide();
+                                    }
+                                    if (rejection.data instanceof Object && rejection.data.type) {
+                                        ErrorService.alert(rejection.data)
+                                    }
+                                });
+
+                                $rootScope.$on("event:auth-loginRequired", function (error, rejection) {
+                                    UserService.getLoginStatus(function (success) {
+                                            UserService.facebookServerConnect(
+                                                function (data) {
+                                                    authService.loginConfirmed(null, function (config) {
+                                                        return MyAuthService.confirmLogin(data.token, config);
+                                                    });
+                                                },
+                                                function (status, error) {
+                                                    $rootScope.gotoView("home");
+                                                }
+                                            )
+                                        },
+                                        function (error) {
+                                            $rootScope.gotoView("home");
+                                        });
+                                });
+
+                                $rootScope.gotoView = function (viewName, isRootView, params, clearHistory) {
+
+                                    if (isRootView == null) {
+                                        isRootView = true;
+                                    }
+
+                                    if (!params) {
+                                        params = {};
+                                    }
+
+                                    if (isRootView == true) {
+
+                                        if (clearHistory == null) {
+                                            clearHistory = true;
+                                        }
+
+                                        if (clearHistory == true) {
+                                            $ionicHistory.clearHistory();
+                                        }
+                                        $ionicHistory.nextViewOptions({
+                                            disableBack: true,
+                                            historyRoot: clearHistory
+                                        });
+                                    }
+
+                                    $state.go(viewName, params, {reload: true, inherit: true, location: true});
+
+                                };
+
                                 service.getLoginStatus(resolveQueue, resolveQueue);
                             })
                     }
@@ -169,13 +247,13 @@ angular.module('mySmarteam.services', [])
         };
 
         //Save settings to server
-        service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError);
+        service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError, config) {
+            ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError, config);
         }
 
         //Toggle sound to server
-        service.toggleSound = function (callbackOnSuccess, callbackOnError) {
-            ApiService.post(path, "toggleSound", null, callbackOnSuccess, callbackOnError);
+        service.toggleSound = function (callbackOnSuccess, callbackOnError, config) {
+            ApiService.post(path, "toggleSound", null, callbackOnSuccess, callbackOnError, config);
         }
 
         return service;
@@ -218,7 +296,7 @@ angular.module('mySmarteam.services', [])
                 geoProviderId = 0;
             }
 
-            ApiService.get(geoProviders[geoProviderId], config,
+            ApiService.get(geoProviders[geoProviderId],
                 function (geoInfo) {
                     return ApiService.post(path, "geo", geoInfo,
                         function (geoResult) {
@@ -228,7 +306,7 @@ angular.module('mySmarteam.services', [])
                             }
                         },
                         function () {
-                            callbackOnSuccess(getDefaultLanguage(),geoInfo);
+                            callbackOnSuccess(getDefaultLanguage(), geoInfo);
                         });
                 },
                 function (status, data) {
@@ -239,12 +317,12 @@ angular.module('mySmarteam.services', [])
                     else {
                         callbackOnSuccess(getDefaultLanguage());
                     }
-                });
+                }, config);
         };
 
 
         //Get settings from server
-        service.getSettings = function (callbackOnSuccess, callbackOnError) {
+        service.getSettings = function (callbackOnSuccess, callbackOnError, config) {
             return ApiService.post(path, "settings", null,
                 function (data) {
                     if (callbackOnSuccess) {
@@ -255,7 +333,7 @@ angular.module('mySmarteam.services', [])
                     if (callbackOnError) {
                         callbackOnError(status, data);
                     }
-                })
+                }, config)
         };
 
         return service;
@@ -276,31 +354,31 @@ angular.module('mySmarteam.services', [])
         canvasContext.font = $rootScope.settings.charts.contestAnnotations.annotationsFont;
 
         //add contest
-        service.addContest = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "add", postData, callbackOnSuccess, callbackOnError)
+        service.addContest = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "add", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Set Contest
-        service.setContest = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "set", postData, callbackOnSuccess, callbackOnError)
+        service.setContest = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "set", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Remove Contest
-        service.removeContest = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "remove", postData, callbackOnSuccess, callbackOnError)
+        service.removeContest = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "remove", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Get Contests
-        service.getContests = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "get", postData, callbackOnSuccess, callbackOnError)
+        service.getContests = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "get", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Join Contest
-        service.joinContest = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError)
+        service.joinContest = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError, config)
         };
 
-        service.prepareContestChart = function(contest) {
+        service.prepareContestChart = function (contest) {
             var contestCaption = $translate.instant("WHO_IS_SMARTER");
             var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.chartObject));
             contestChart.contest = contest;
@@ -308,22 +386,30 @@ angular.module('mySmarteam.services', [])
             contestChart.data = [];
             var teamsOrder;
 
-            var contestEndsString = $translate.instant("CONTEST_ENDS_IN", {
+            var contestEndTerm
+            if (contest.status != "finished") {
+                contestEndTerm = "CONTEST_ENDS_IN";
+            }
+            else {
+                contestEndTerm = "CONTEST_ENDED";
+            }
+            var contestEndString = $translate.instant(contestEndTerm, {
                 number: contest.endsInNumber,
                 units: $translate.instant(contest.endsInUnits)
             });
-            var contestEndsWidth = canvasContext.measureText(contestEndsString).width;
+
+            var contestEndsWidth = canvasContext.measureText(contestEndString).width;
             var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS", {participants: contest.participants + contest.manualParticipants});
             var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
 
             var direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
             var magicNumbers = $rootScope.settings.charts.contestAnnotations.annotationHorizontalMagicNumbers[direction];
 
-            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].text = contestEndsString;
-            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].x = magicNumbers.endsIn.position +  (contestEndsWidth / 2 + magicNumbers.endsIn.spacing);
+            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].text = contestEndString;
+            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].x = magicNumbers.endsIn.position + (contestEndsWidth / 2 + magicNumbers.endsIn.spacing);
 
             contestChart.annotations.groups[0].items[magicNumbers.participants.id].text = contestParticipantsString;
-            contestChart.annotations.groups[0].items[magicNumbers.participants.id].x = magicNumbers.participants.position +  (contestParticipantsWidth / 2 + magicNumbers.participants.spacing);
+            contestChart.annotations.groups[0].items[magicNumbers.participants.id].x = magicNumbers.participants.position + (contestParticipantsWidth / 2 + magicNumbers.participants.spacing);
 
             if ($rootScope.settings.languages[$rootScope.user.settings.language].direction == "ltr") {
                 teamsOrder = [0, 1];
@@ -368,18 +454,18 @@ angular.module('mySmarteam.services', [])
         var path = 'quiz/';
 
         //Start quiz
-        service.start = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "start", postData, callbackOnSuccess, callbackOnError)
+        service.start = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "start", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Answer a quiz question
-        service.answer = function (postData, callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "answer", postData, callbackOnSuccess, callbackOnError)
+        service.answer = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "answer", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Get next question
-        service.nextQuestion = function (callbackOnSuccess, callbackOnError) {
-            return ApiService.post(path, "nextQuestion", null, callbackOnSuccess, callbackOnError)
+        service.nextQuestion = function (callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "nextQuestion", null, callbackOnSuccess, callbackOnError, config)
         };
 
         return service;
@@ -395,7 +481,7 @@ angular.module('mySmarteam.services', [])
 
         //ionic alert popup
         service.alert = function (error) {
-            if (error && error.type) {
+            if (error) {
                 if (error.type) {
                     if (!error.additionalInfo) {
                         error.additionalInfo = {};
@@ -407,12 +493,13 @@ angular.module('mySmarteam.services', [])
                         okText: $translate.instant("OK")
                     });
                 }
-                else if (error)
+                else {
                     return $ionicPopup.alert({
                         cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
                         template: error,
                         okText: $translate.instant("OK")
                     });
+                }
             }
         };
 
@@ -459,7 +546,7 @@ angular.module('mySmarteam.services', [])
         }
 
         //Get
-        service.get = function (path, config, callbackOnSuccess, callbackOnError) {
+        service.get = function (path, callbackOnSuccess, callbackOnError, config) {
             return $http.get(path, config)
                 .success(function (data, status, headers, config) {
                     if (callbackOnSuccess) {
@@ -474,8 +561,8 @@ angular.module('mySmarteam.services', [])
         };
 
         //Post
-        service.post = function (path, action, postData, callbackOnSuccess, callbackOnError) {
-            return $http.post(getActionUrl(path, action), postData)
+        service.post = function (path, action, postData, callbackOnSuccess, callbackOnError, config) {
+            return $http.post(getActionUrl(path, action), postData, config)
                 .success(function (data, status, headers, config) {
                     if (callbackOnSuccess) {
                         callbackOnSuccess(data, headers);
@@ -583,7 +670,8 @@ angular.module('mySmarteam.services', [])
                 return true;
             }
             else if (playOgg) {
-                audio.src = sound + ".ogg";;
+                audio.src = sound + ".ogg";
+                ;
                 audio.load();
                 audio.play();
                 return true;

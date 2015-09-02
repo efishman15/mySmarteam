@@ -1,3 +1,7 @@
+@viewport {
+    orientation: portrait;
+}
+
 label.item.has-error {
     border-bottom: 2px solid red;
 }
@@ -147,4 +151,9 @@ button.item.quiz-answer {
 
 .gameSubHeader {
     color: #FFFFFF;
+}
+
+.tabs-top >.tabs, .tabs.tabs-top
+{
+    top: 0 !important;
 }

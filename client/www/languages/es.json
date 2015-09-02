@@ -8,6 +8,7 @@
   "DEMO_TEAM1" : "Chicas",
   "CONTEST_NAME" : "{{team0}} o {{team1}}",
   "CONTEST_ENDS_IN" : "El concurso termina en {{number}} {{units}}",
+  "CONTEST_ENDED" : "Concurso terminó hace {{number}} {{units}}",
   "DEMO_CONTEST_ENDS_IN_UNITS" : "días",
   "CONTEST_PARTICIPANTS" : "Participantes: {{participants}}",
   "SOUND" : "Sonido",
@@ -64,5 +65,8 @@
   "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_TITLE" : "Conectarse con Facebook",
   "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_MESSAGE" : "Error al conectar con Facebook - por favor intente de nuevo",
   "SERVER_ERROR_NOT_JOINED_TO_CONTEST_TITLE" : "Únete a concurso",
-  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "Por favor seleccione uno de los equipos pulsando sobre su nombre o columna en la tabla"
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "Por favor seleccione uno de los equipos pulsando sobre su nombre o columna en la tabla",
+  "MY_CONTESTS" : "Mis Concursos",
+  "RUNNING_CONTESTS" : "Correr Concursos",
+  "RECENTLY_FINISHED_CONTESTS" : "Recientemente terminado"
  }

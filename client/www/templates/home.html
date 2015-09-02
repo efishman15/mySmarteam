@@ -1,12 +1,12 @@
 <ion-view hide-nav-bar="true" class="bgHome">
     <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <div class="center padding" style="vert-align: middle">
+        <div class="center">
             <h2 class="gameHeader" translate="WHO_IS_SMARTER_QUESTION"></h2>
             <h4 class="gameSubHeader" translate="HOME_WELCOME_PLAY_TRIVIA"></h4>
         </div>
 
         <div class="padding center">
-            <img src="images/demo_contest_{{$root.user.settings.language}}.png" width="75%">
+            <img id="demoContestImage" src="images/demo_contest_{{$root.user.settings.language}}.png" width="{{getDemoContestWidth()}}">
         </div>
 
         <div class="row">
@@ -26,7 +26,7 @@
 
     </ion-content>
 
-    <ion-footer-bar align="center" class="center padding" ng-hide="$root.session" align-title="center" >
+    <ion-footer-bar align="center" class="center padding" ng-hide="$root.session" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <a class="language padding" ng-repeat="language in $root.settings.languages track by language.value"
            ng-click="changeLanguage(language)">{{language.displayNames[language.value]}}
         </a>

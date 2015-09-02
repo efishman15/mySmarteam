@@ -8,6 +8,7 @@
   "DEMO_TEAM1" : "Girls",
   "CONTEST_NAME" : "{{team0}} or {{team1}}",
   "CONTEST_ENDS_IN" : "Contest ends in {{number}} {{units}}",
+  "CONTEST_ENDED" : "Contest ended {{number}} {{units}} ago",
   "DEMO_CONTEST_ENDS_IN_UNITS" : "Days",
   "CONTEST_PARTICIPANTS" : "Participants: {{participants}}",
   "SOUND" : "Sound",
@@ -64,5 +65,8 @@
   "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_TITLE" : "Facebook connect",
   "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_MESSAGE" : "Error connecting to Facebook - please try again",
   "SERVER_ERROR_NOT_JOINED_TO_CONTEST_TITLE" : "Join contest",
-  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "Please select one of the teams by tapping on its name or column on the chart"
+  "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "Please select one of the teams by tapping on its name or column on the chart",
+  "MY_CONTESTS" : "My Contests",
+  "RUNNING_CONTESTS" : "Running Contests",
+  "RECENTLY_FINISHED_CONTESTS" : "Recently finished"
 }

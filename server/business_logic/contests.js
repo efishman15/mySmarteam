@@ -139,20 +139,20 @@ function prepareContestForClient(contest, myTeamId, addLastPlayedStamp) {
         contest.lastPlayed = now;
     }
 
-    //ends In...
-    var minutesToEnd = (contest.endDate - now) / 1000 / 60;
+    //ends In...or ended
+    var endMinutes = mathjs.abs(contest.endDate - now) / 1000 / 60;
 
     var result;
-    if (minutesToEnd >= 60 * 24) {
-        result = minutesToEnd / 24 / 60;
+    if (endMinutes >= 60 * 24) {
+        result = endMinutes / 24 / 60;
         contest.endsInUnits = "DAYS";
     }
-    else if (minutesToEnd >= 60) {
-        result = minutesToEnd / 60;
+    else if (endMinutes >= 60) {
+        result = endMinutes / 60;
         contest.endsInUnits = "HOURS";
     }
     else {
-        result = minutesToEnd;
+        result = endMinutes;
         contest.endsInUnits = "MINUTES";
     }
 
@@ -333,8 +333,9 @@ module.exports.removeContest = function (req, res, next) {
 // getContests
 
 // data:
-// input: clientContestCount (how many contest does the client have currently to show
-// TODO: In the future - tab: 0=myContest, 1=openContests, 2=closedContests
+// input: clientContestCount (how many contest does the client have currently to show,
+//        tab (myContests,runningContests)
+//
 // output: <NA>
 //-------------------------------------------------------------------------------------
 module.exports.getContests = function (req, res, next) {
@@ -359,7 +360,7 @@ module.exports.getContests = function (req, res, next) {
             dalDb.retrieveSession(data, callback);
         },
 
-        dalDb.prepareContestsCriteria,
+        dalDb.prepareContestsQuery,
 
         dalDb.getContestsCount,
 

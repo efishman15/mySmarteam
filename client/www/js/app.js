@@ -17,7 +17,6 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
-
         });
     })
 
@@ -25,15 +24,15 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
-                    $rootScope.$broadcast('mySmarteam-httpRequest')
+                    $rootScope.$broadcast('mySmarteam-httpRequest', config)
                     return config;
                 },
                 response: function (response) {
-                    $rootScope.$broadcast('mySmarteam-httpResponse')
+                    $rootScope.$broadcast('mySmarteam-httpResponse', response.config)
                     return response;
                 },
                 responseError: function (rejection) {
-                    $rootScope.$broadcast('mySmarteam-httpResponseError', rejection.data)
+                    $rootScope.$broadcast('mySmarteam-httpResponseError', rejection)
                     return $q.reject(rejection);
                 }
             }
@@ -113,52 +112,37 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         }
     })
 
+    .config(function ($ionicConfigProvider) {
+
+        $ionicConfigProvider.backButton.previousTitleText(true);
+
+    })
+
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
         $stateProvider
-            .state('app', {
-                url: "/app",
-                abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'AppCtrl',
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("menu");
-                    }
-                },
-            })
-
-            .state('app.home', {
+            .state('home', {
                 url: "/home",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("home");
                     }
                 },
-                views: {
-                    'menuContent': {
-                        controller: "HomeCtrl",
-                        templateUrl: "templates/home.html"
-                    }
-                }
+                controller: "HomeCtrl",
+                templateUrl: "templates/home.html"
             })
 
-            .state('app.contests', {
-                url: "/contests",
+            .state("otherwise", {
+                url: "/otherwise",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("contests");
+                        return UserService.resolveAuthentication("otherwise");
                     }
                 },
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/contests.html",
-                        controller: 'ContestsCtrl'
-                    }
-                }
+                controller: "OtherwiseCtrl"
             })
 
-            .state('app.quiz', {
+            .state('quiz', {
                 url: "/quiz",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
@@ -166,46 +150,98 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                     }
                 },
                 params: {contestId: null, teamId: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/quiz.html",
-                        controller: 'QuizCtrl'
-                    }
-                }
+                templateUrl: "templates/quiz.html",
+                controller: 'QuizCtrl'
             })
 
-            .state('app.quizResult', {
+            .state('quizResult', {
                 url: "/quizResult",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("quizResult");
                     }
                 },
+                templateUrl: "templates/quizResult.html",
+                controller: 'QuizResultCtrl',
                 cache: false,
-                params: {results: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/quizResult.html",
-                        controller: 'QuizResultCtrl'
-                    }
-                }
+                params: {results: null}
             })
 
-            .state('app.logout', {
-                url: "/logout",
+            .state('contest', {
+                url: "/contest",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("logout");
+                        return UserService.resolveAuthentication("contest");
+                    }
+                },
+                templateUrl: "templates/contest.html",
+                controller: "ContestCtrl",
+                params: {mode: null, contest: null}
+            })
+
+            // setup an abstract state for the tabs directive
+            .state('tab', {
+                url: "/tab",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("tab");
+                    }
+                },
+                abstract: true,
+                controller: 'AppCtrl',
+                templateUrl: "templates/tabs.html"
+            })
+
+
+            .state('tab.myContests', {
+                url: '/myContests',
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("contests");
                     }
                 },
                 views: {
-                    'menuContent': {
-                        controller: "LogoutCtrl"
+                    'myContestsTab': {
+                        templateUrl: 'templates/contests.html',
+                        controller: 'ContestsCtrl'
                     }
-                }
+                },
+                appData: {"serverTab" : "mine", "showPlay" : true, "showParticipants" : false}
             })
 
-            .state('app.settings', {
+            .state('tab.runningContests', {
+                url: '/runningContests',
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("contests");
+                    }
+                },
+                views: {
+                    'runningContestsTab': {
+                        templateUrl: 'templates/contests.html',
+                        controller: 'ContestsCtrl'
+                    }
+                },
+                appData: {"serverTab" : "running", "showPlay" : true, "showParticipants" : false}
+            })
+
+            .state('tab.recentlyFinishedContests', {
+                url: '/recentlyFinishedContests',
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("contests");
+                    }
+                },
+                views: {
+                    'recentlyFinishedContestsTab': {
+                        templateUrl: 'templates/contests.html',
+                        controller: 'ContestsCtrl'
+                    }
+                },
+                appData: {"serverTab" : "recentlyFinished", "showPlay" : false, "showParticipants" : true}
+            })
+
+            .state('tab.settings', {
                 url: "/settings",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
@@ -213,47 +249,30 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                     }
                 },
                 views: {
-                    'menuContent': {
+                    'settingsTab': {
                         templateUrl: "templates/settings.html",
                         controller: "SettingsCtrl"
                     }
                 }
             })
 
-            .state('app.contest', {
-                url: "/contest",
+            .state('tab.logout', {
+                url: "/logout",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("contest");
-                    }
-                },
-                params: {mode: null, contest: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/contest.html",
-                        controller: "ContestCtrl"
-                    }
-                }
-            })
-
-            .state("app.otherwise", {
-                url: "/otherwise",
-                cache: false,
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("otherwise");
+                        return UserService.resolveAuthentication("logout");
                     }
                 },
                 views: {
-                    'menuContent': {
-                        controller: "OtherwiseCtrl"
+                    'settingsTab': {
+                        controller: "LogoutCtrl"
                     }
                 }
-            })
+            });
 
         $urlRouterProvider.otherwise(function ($injector, $location) {
             var $state = $injector.get("$state");
-            $state.go("app.otherwise");
+            $state.go("otherwise");
         });
     })
 
@@ -273,6 +292,28 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 });
             }
         };
+    })
+
+    .directive('resize', function ($window) {
+        return function (scope, element) {
+            var w = angular.element($window);
+
+            w.bind('resize', function () {
+                scope.$broadcast("mySmarteam-windowResize");
+                scope.$apply();
+            });
+        }
+    })
+
+    .directive('orientationchange', function ($window) {
+        return function (scope, element) {
+            var w = angular.element($window);
+
+            w.bind('orientationchange', function () {
+                scope.$broadcast("mySmarteam-orientationChanged");
+                scope.$apply();
+            });
+        }
     })
 
     .filter('orderObjectBy', function () {

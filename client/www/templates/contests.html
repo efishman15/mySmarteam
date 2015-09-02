@@ -1,35 +1,45 @@
-<ion-view class="padding bgQuestionMarks"
-          view-title="{{'CONTEST_LIST' | translate}} - {{totalContests}} / {{contestCharts.length}}"
-<ion-content class="padding" dir="{{$root.languages[$root.user.settings.language].direction}}" overflow-scroll="true">
-
-    <ion-scroll class="padding" style="height: 100%">
-        <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
-                       pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
-                       on-refresh="doRefresh()">
-        </ion-refresher>
-        <ion-list class="padding" ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
-            <div class="padding center">
-                <div fusioncharts
-                     width="260"
-                     height="180"
-                     type="column2d"
-                     dataSource="{{contestChart}}"
-                     events="fcEvents">
-                </div>
+<ion-view class="bgQuestionMarks" view-title="{{'CONTEST_LIST' | translate}}" hide-nav-bar="true">
+    <!------------------------------------------------------------------------------>
+    <!-- This is a workaround - when navigating to other views, forcing the back
+    <!-- button to show the previous view title only from the ion-nav-title
+    <!------------------------------------------------------------------------------>
+    <ion-nav-bar ng-hide="true">
+        <ion-nav-title>
+            {{'CONTEST_LIST' | translate}}
+        </ion-nav-title>
+    </ion-nav-bar>
+    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}" overflow-scroll="true">
+        <ion-scroll style="height: 100%">
+            <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
+                           pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
+                           on-refresh="doRefresh()">
+            </ion-refresher>
+            <ion-list ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
                 <div class="padding center">
-                    <button class="item button button-stable button-small button-assertive nowrapText font14"
-                            ng-click="playContest(contestChart.contest)">{{'PLAY_CONTEST' | translate}}
-                    </button>
+                    <div fusioncharts
+                         width="260"
+                         height="180"
+                         type="column2d"
+                         dataSource="{{contestChart}}"
+                         events="fcEvents">
+                    </div>
+                    <div class="padding center">
+                        <button class="item button button-stable button-small button-assertive nowrapText font14"
+                                ng-show="showPlay()" ng-click="playContest(contestChart.contest)">{{'PLAY_CONTEST' | translate}}
+                        </button>
+                        <button class="item button button-stable button-small button-assertive nowrapText font14"
+                                ng-show="showContestParticipants()" ng-click="showParticipants(contestChart.contest)">{{'PARTICIPANTS' | translate}}
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </ion-list>
-    </ion-scroll>
-    <ion-infinite-scroll
-            on-infinite="infiniteLoadMoreContests()"
-            distance="{{$root.settings.contestList.distance}}"
-            ng-if="haveMoreContests()"
-            icon="ion-loading-c"
-            immediate-check="false">
-    </ion-infinite-scroll>
-</ion-content>
+            </ion-list>
+        </ion-scroll>
+        <ion-infinite-scroll
+                on-infinite="infiniteLoadMoreContests()"
+                distance="{{$root.settings.contestList.distance}}"
+                ng-if="haveMoreContests()"
+                icon="ion-loading-c"
+                immediate-check="false">
+        </ion-infinite-scroll>
+    </ion-content>
 </ion-view>

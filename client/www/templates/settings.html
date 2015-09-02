@@ -1,10 +1,6 @@
-<ion-view view-title="{{'SETTINGS' | translate}}" hide-back-button="false">
-    <ion-nav-bar class="bar-stable">
-        <ion-nav-back-button class="back-button">
-        </ion-nav-back-button>
-    </ion-nav-bar>
+<ion-view view-title="{{'SETTINGS' | translate}}" hide-nav-bar="true">
     <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <ion-list class="card">
+        <ion-list>
             <ion-item ng-click="openLanguagePopover($event)">
                 <span translate="LANGUAGE"></span>
                 <br/>
@@ -16,7 +12,7 @@
                 <i class="icon ion-music-note"></i>
                 {{ 'SOUND' | translate}}
             </ion-toggle>
-            <ion-item nav-clear ng-click="$root.gotoView('app.logout')">
+            <ion-item nav-clear ng-click="$root.gotoView('tab.logout')">
                 {{ 'SIGN_OUT' | translate}}
             </ion-item>
         </ion-list>

@@ -1,4 +1,8 @@
 <ion-view view-title="{{ 'QUIZ' | translate}}" class="bgQuestionMarks">
+    <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+        <ion-nav-back-button class="nav-button ion-arrow-return-left" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'ltr'"></ion-nav-back-button>
+        <ion-nav-back-button class="nav-button ion-arrow-return-right" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'rtl'"></ion-nav-back-button>
+    </ion-nav-bar>
     <ion-content padding="true" dir="{{quiz.currentQuestion.direction}}">
 
         <div class="row">
@@ -25,7 +29,6 @@
                                 'button-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
                                 'button-assertive blink' : answer.answeredCorrectly == false && answer.correct == null}"
                     ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"
-                    ng-audio=""
                     ng-bind-html="answer.text"
                     animationend="buttonAnimationEnded">
             </button>
