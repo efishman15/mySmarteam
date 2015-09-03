@@ -66,6 +66,8 @@
   "SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN_MESSAGE" : "Error al conectar con Facebook - por favor intente de nuevo",
   "SERVER_ERROR_NOT_JOINED_TO_CONTEST_TITLE" : "Únete a concurso",
   "SERVER_ERROR_NOT_JOINED_TO_CONTEST_MESSAGE" : "Por favor seleccione uno de los equipos pulsando sobre su nombre o columna en la tabla",
+  "SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ_TITLE" : "sesión ha expirado",
+  "SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ_MESSAGE" : "Su sesión ha expirado , pulse OK para iniciar la prueba de nuevo",
   "MY_CONTESTS" : "Mis Concursos",
   "RUNNING_CONTESTS" : "Correr Concursos",
   "RECENTLY_FINISHED_CONTESTS" : "Recientemente terminado"

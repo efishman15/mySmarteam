@@ -203,10 +203,6 @@ module.exports.getTopic = function (data, callback) {
     }
     else {
         connect(function (err, connectData) {
-            if (err) {
-                callback(err);
-                return;
-            }
             var topicsCollection = connectData.DbHelper.getCollection("Topics");
             topicsCollection.findOne({
                 "topicId": data.topicId
@@ -246,10 +242,6 @@ function retrieveSession(data, callback) {
     //If no connection open - call recursively to this function from within the "connect' block
     if (!data.DbHelper) {
         connect(function (err, connectData) {
-            if (err) {
-                callback(err);
-                return;
-            }
 
             data.closeConnection = true; //Indicates to close the connection after the action
             data.DbHelper = connectData.DbHelper;
@@ -269,7 +261,7 @@ function retrieveSession(data, callback) {
 
                 closeDb(data);
 
-                callback(new exceptions.ServerException("Error retrieving session - session expired", {"sessionId": data.token}, "info"), 401);
+                callback(new exceptions.ServerException("Error retrieving session - session expired", {"sessionId": data.token}, "info", 401));
                 return;
             }
 
@@ -304,7 +296,7 @@ module.exports.storeSession = function (data, callback) {
 
                 closeDb(data);
 
-                callback(new exceptions.ServerException("Error storing session expired - session expired", {"sessionId": data.session._id}, "info"), 401);
+                callback(new exceptions.ServerException("Error storing session expired - session expired", {"sessionId": data.session._id}, "info", 401));
                 return;
             }
 
@@ -338,6 +330,7 @@ module.exports.setUser = function (data, callback) {
 
                 callback(new exceptions.ServerException("Error updating user", {
                     "userId": ObjectId(data.session.userId),
+                    "setData" : data.setData,
                     "dbError": err
                 }, "error"));
 
@@ -365,6 +358,11 @@ module.exports.facebookLogin = function (data, callback) {
 
     var usersCollection = data.DbHelper.getCollection('Users');
 
+    //Save avatar which is a computed field
+    //The findAndModify will bring a "fresh" user object from db
+    //Put the avatar back later on this fresh object
+    var avatar = data.user.avatar;
+
     usersCollection.findAndModify({"facebookUserId": data.user.thirdParty.id}, {},
         {
             $set: {
@@ -381,6 +379,10 @@ module.exports.facebookLogin = function (data, callback) {
             }
 
             data.user = user.value;
+
+            //restore the avatar back
+            data.user.avatar = avatar;
+
             callback(null, data);
         })
 };
@@ -721,11 +723,11 @@ function setContest(data, callback) {
             $set: data.setData
         }, {w: 1, new: true}, function (err, contest) {
 
-            if (err) {
+            if (err || !contest) {
                 closeDb(data);
 
                 callback(new exceptions.ServerException("Error setting contest", {
-                    "data": data,
+                    "setData" : data.setData,
                     "contestId": contestId,
                     "dbError": err
                 }, "error"));
@@ -891,7 +893,6 @@ function getContestsCount(data, callback) {
 // getContests
 //
 // Get all contests.
-// TODO: retrieve by filters of tabs/paging etc...
 //
 // data:
 // -----
@@ -924,4 +925,69 @@ function getContests(data, callback) {
             });
 
         });
+}
+
+//------------------------------------------------------------------------------------------------
+// updateQuestionStatistics
+//
+// Update questions statistics (correctAnswers, wrongAnswers, correctRatio)
+//
+// data:
+// -----
+// input: DbHelper, session, response.question.correct
+// output: <NA>
+//------------------------------------------------------------------------------------------------
+module.exports.updateQuestionStatistics = updateQuestionStatistics;
+function updateQuestionStatistics(data, callback) {
+
+    var questionsCollection = data.DbHelper.getCollection("Questions");
+    questionsCollection.findOne({
+        "_id": ObjectId(data.session.quiz.serverData.currentQuestion._id)
+    }, {}, function (err, question) {
+
+        if (err || !question) {
+
+            closeDb(data);
+
+            callback(new exceptions.ServerException("Error finding question to update statistics", {
+                "data": data,
+                "dbError": err
+            }, "error"));
+            return;
+        }
+
+        var increment = 0;
+        if (data.response.question.correct === true) {
+            increment = 1;
+        }
+        var correctAnswers = question.correctAnswers + increment;
+        var wrongAnswers = question.wrongAnswers + increment;
+        var correctRatio = correctAnswers / (correctAnswers + wrongAnswers);
+
+        questionsCollection.updateOne({"_id": ObjectId(data.session.quiz.serverData.currentQuestion._id)},
+            {
+                $set: {"correctAnswers" : correctAnswers, "wrongAnswers" : wrongAnswers, "correctRatio" : correctRatio}
+            }, function (err, results) {
+
+                if (err || results.nModified < 1) {
+
+                    closeDb(data);
+
+                    callback(new exceptions.ServerException("Error updating question statistics", {
+                        "quesitonId": data.session.quiz.serverData.currentQuestion.questionId,
+                        "updateResults" : results,
+                        "dbError": err
+                    }, "error"));
+
+                    return;
+                }
+
+                checkToCloseDb(data);
+
+                callback(null, data);
+            });
+
+        callback(null, data);
+    })
+
 }

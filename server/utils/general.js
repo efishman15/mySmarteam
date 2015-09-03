@@ -108,7 +108,7 @@ var generalSettings = {
     },
     "contestList" : {
         "pageSize" : 5,
-        "distance" : "1%"
+        "distance" : "50%"
     }
 }
 module.exports.generalSettings = generalSettings;

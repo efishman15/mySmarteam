@@ -43,7 +43,6 @@ module.exports.getUserInfo = function(data, callback) {
 
 
     }).on('error', function (error) {
-        console.error(error);
         callback(new exceptions.ServerException("Error recevied from facebook while validating access token", {"facebookAccessToken" : data.user.thirdParty.accessToken, "error" :  error}));
     });
 };

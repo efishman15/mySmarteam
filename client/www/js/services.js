@@ -179,17 +179,24 @@ angular.module('mySmarteam.services', [])
                                 });
 
                                 $rootScope.$on("mySmarteam-httpResponseError", function (error, rejection) {
-                                    if (!config || config.blockUserInterface !== false) {
+                                    if (!rejection.config || rejection.config.blockUserInterface !== false) {
                                         $ionicLoading.hide();
                                     }
-                                    if (rejection.data instanceof Object && rejection.data.type) {
-                                        ErrorService.alert(rejection.data)
+                                    if (rejection.data instanceof Object && rejection.data.type && rejection.status != 401) {
+                                        if (rejection.config && rejection.config.onServerErrors && rejection.data.type && rejection.config.onServerErrors[rejection.data.type]) {
+                                            //Caller has set a function to be invoked after user presses ok on the alert
+                                            rejection.data.onTap = rejection.config.onServerErrors[rejection.data.type].next;
+                                            ErrorService.alert(rejection.data);
+                                        }
+                                        else {
+                                            ErrorService.alert(rejection.data)
+                                        }
                                     }
                                 });
 
                                 $rootScope.$on("event:auth-loginRequired", function (error, rejection) {
-                                    UserService.getLoginStatus(function (success) {
-                                            UserService.facebookServerConnect(
+                                    service.getLoginStatus(function (success) {
+                                            service.facebookServerConnect(
                                                 function (data) {
                                                     authService.loginConfirmed(null, function (config) {
                                                         return MyAuthService.confirmLogin(data.token, config);
@@ -490,7 +497,7 @@ angular.module('mySmarteam.services', [])
                         cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
                         title: $translate.instant(error.type + "_TITLE"),
                         template: $translate.instant(error.type + "_MESSAGE", error.additionalInfo),
-                        okText: $translate.instant("OK")
+                        buttons : [{"text" : $translate.instant("OK"), "type" : "button-positive", "onTap" : error.onTap}]
                     });
                 }
                 else {

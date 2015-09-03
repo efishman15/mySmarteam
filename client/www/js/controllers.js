@@ -103,14 +103,16 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         }
 
         $scope.infiniteLoadMoreContests = function () {
-            if (shouldTriggerScrollInfiniteRealFunction == false) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
-                shouldTriggerScrollInfiniteRealFunction = true; // set the boolean to true so that the real load function is called next time infinite scrolling triggers
-                $scope.$broadcast('scroll.infiniteScrollComplete');
-            }
-            else {  // here it will be the real need for scrolling
-                $scope.loadMoreContests();
-            }
-        }
+            $timeout(function() {
+                if (shouldTriggerScrollInfiniteRealFunction == false) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
+                    shouldTriggerScrollInfiniteRealFunction = true; // set the boolean to true so that the real load function is called next time infinite scrolling triggers
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+                else {  // here it will be the real need for scrolling
+                    $scope.loadMoreContests();
+                }
+            },100);
+        };
 
         $scope.loadMoreContests = function (fullRefresh) {
 
@@ -221,6 +223,11 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
             viewData.enableBack = true;
+            startQuiz();
+
+        });
+
+        function startQuiz() {
 
             if (!$stateParams.contestId) {
                 $rootScope.gotoView("tab.myContests");
@@ -237,7 +244,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
                 });
-        });
+        }
 
         function getNextQuestion() {
             QuizService.nextQuestion(
@@ -269,6 +276,12 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
         $scope.submitAnswer = function (answerId) {
             $scope.quiz.currentQuestion.answered = true;
+
+            var config = {"onServerErrors" : {
+                "SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ": {"next": startQuiz},
+                "SERVER_ERROR_GENERAL": {"next": function() {$ionicHistory.goBack();}}
+            }};
+
             QuizService.answer({"id": answerId},
                 function (data) {
                     var correctAnswerId;
@@ -299,7 +312,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     }
 
                     $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
-                });
+                }, null, config);
         }
     })
 

@@ -52,7 +52,7 @@ module.exports.start = function (req, res, next) {
     var data = req.body;
 
     if (!data.contestId) {
-        exceptions.ServerResponseException(res, "contestId not supplied",null,"warn",424);
+        exceptions.ServerResponseException(res, "contestId not supplied", null, "warn", 424);
         return;
     }
 
@@ -90,18 +90,19 @@ module.exports.start = function (req, res, next) {
         //Init quiz
         function (data, callback) {
 
-            var quiz = {
-                "serverData": {
-                    "previousQuestions": [],
-                    "topics": generalUtils.getLanguageTriviaTopics(data.session.settings.language),
-                    "contestId": data.contestId,
-                    "score": 0
-                },
-                "clientData": {
-                    "totalQuestions": 1,
-                    "currentQuestionIndex": 0,
-                    "finished": false
-                }
+            var quiz = {};
+            quiz.clientData = {
+                "totalQuestions": 1,
+                "currentQuestionIndex": 0,
+                "finished": false
+            };
+
+            quiz.serverData = {
+                "previousQuestions": [],
+                "topics": generalUtils.getLanguageTriviaTopics(data.session.settings.language),
+                "contestId": data.contestId,
+                "questionScore": (100 / quiz.clientData.totalQuestions), //Question score relational to 100
+                "score": 0
             };
 
             data.session.quiz = quiz;
@@ -158,6 +159,12 @@ module.exports.answer = function (req, res, next) {
 
         //Check answer
         function (data, callback) {
+
+            if (!data.session.quiz) {
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ", null, 403));
+                return;
+            }
+
             var answers = data.session.quiz.serverData.currentQuestion.answers;
             var answerId = parseInt(data.id, 10);
             if (answerId < 1 || answerId > answers.length) {
@@ -169,7 +176,7 @@ module.exports.answer = function (req, res, next) {
             data.response.question.answerId = answerId;
             if (answers[answerId - 1].correct) {
                 data.response.question.correct = true;
-                data.session.quiz.serverData.questionScore = (100 / data.session.quiz.clientData.totalQuestions); //Question score relational to 100
+
                 data.session.quiz.serverData.score += data.session.quiz.serverData.questionScore; //Question score relational to 100
             }
             else {
@@ -182,7 +189,7 @@ module.exports.answer = function (req, res, next) {
                 }
             }
 
-            callback(null, data);
+            dalDb.updateQuestionStatistics(data, callback);
         },
 
         //Store session
@@ -192,8 +199,7 @@ module.exports.answer = function (req, res, next) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
 
                 //Update total score in profile
-                data.session.score += data.session.quiz.serverData.questionScore;
-                console.log("data.session.score=" + data.session.score + ", data.session.quiz.serverData.questionScore=" + data.session.quiz.serverData.questionScore);
+                data.session.score += data.session.quiz.serverData.score;
                 store = true;
             }
             else if (data.response.question.correct == true) {

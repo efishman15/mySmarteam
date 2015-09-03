@@ -1,14 +1,15 @@
 var logger = require("bunyan");
 
-var log = logger.createLogger({
-    name: 'myapp',
-    serializers: {
-        req: reqSerializer
-    }
+var logConsole = logger.createLogger({
+    name: "mySmarteamConsole",
+    streams: [{
+        stream: process.stderr
+        // `type: 'stream'` is implied
+    }]
 });
 
-var log = logger.createLogger({
-    name: "mySmarteam",
+var logFile = logger.createLogger({
+    name: "mySmarteamLogFile",
     streams: [{
         type: 'rotating-file',
         path: './logs/mySmarteam.log',
@@ -69,7 +70,8 @@ module.exports.UnhandledServerException = UnhandledServerException;
 function UnhandledServerException(err) {
 
     var exception = new ServerMessageException("SERVER_ERROR_GENERAL", null, 500);
-    log.fatal(err);
+    logFile.fatal(err);
+    logConsole.fatal(err);
 
     //TODO: send an email to the operator
 
@@ -101,13 +103,16 @@ function ServerException(message, additionalInfo, severity, httpStatus) {
 
     switch (severity) {
         case "info":
-            log.info(additionalInfo, message);
+            logFile.info(additionalInfo, message);
+            logConsole.info(additionalInfo, message);
             break;
         case "warn":
-            log.warn(additionalInfo, message);
+            logFile.warn(additionalInfo, message);
+            logConsole.info(additionalInfo, message);
             break;
         case "error":
-            log.error(additionalInfo, message);
+            logFile.error(additionalInfo, message);
+            logConsole.info(additionalInfo, message);
             break;
     }
 
