@@ -1,14 +1,11 @@
-<ion-view class="bgQuestionMarks" view-title="{{'CONTEST_LIST' | translate}}" hide-nav-bar="true">
+<ion-view class="bgQuestionMarks">
+
     <!------------------------------------------------------------------------------>
     <!-- This is a workaround - when navigating to other views, forcing the back
     <!-- button to show the previous view title only from the ion-nav-title
     <!------------------------------------------------------------------------------>
-    <ion-nav-bar ng-hide="true">
-        <ion-nav-title>
-            {{'CONTEST_LIST' | translate}}
-        </ion-nav-title>
-    </ion-nav-bar>
-    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}" overflow-scroll="true">
+    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}"
+                 overflow-scroll="true">
         <ion-scroll style="height: 100%">
             <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
                            pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
@@ -25,10 +22,12 @@
                     </div>
                     <div class="padding center">
                         <button class="item button button-stable button-small button-assertive nowrapText font14"
-                                ng-show="showPlay()" ng-click="playContest(contestChart.contest)">{{'PLAY_CONTEST' | translate}}
+                                ng-show="showPlay()" ng-click="playContest(contestChart.contest)">{{'PLAY_CONTEST' |
+                            translate}}
                         </button>
                         <button class="item button button-stable button-small button-assertive nowrapText font14"
-                                ng-show="showContestParticipants()" ng-click="showParticipants(contestChart.contest)">{{'PARTICIPANTS' | translate}}
+                                ng-show="showContestParticipants()" ng-click="showParticipants(contestChart.contest)">
+                            {{'PARTICIPANTS' | translate}}
                         </button>
                     </div>
                 </div>

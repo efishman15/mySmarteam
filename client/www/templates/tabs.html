@@ -1,24 +1,19 @@
 <ion-tabs class="tabs-icon-top tabs-positive" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
 
     <!-- My contests Tab -->
-    <ion-tab title="{{'MY_CONTESTS' | translate}}" icon="icon ion-star" href="#/tab/myContests">
-        <ion-nav-view name="myContestsTab" hidden="true"></ion-nav-view>
+    <ion-tab title="{{'MY_CONTESTS' | translate}}" icon="icon ion-star" ng-click="$root.gotoView('tabs.contests.mine')">
+        <ion-nav-view name="myContestsTab"></ion-nav-view>
     </ion-tab>
 
 
     <!-- Running contests Tab -->
-    <ion-tab title="{{'RUNNING_CONTESTS' | translate}}" icon="icon ion-loop" href="#/tab/runningContests">
+    <ion-tab title="{{'RUNNING_CONTESTS' | translate}}" icon="icon ion-loop" ng-click="$root.gotoView('tabs.contests.running')">
         <ion-nav-view name="runningContestsTab"></ion-nav-view>
     </ion-tab>
 
     <!-- Recently finished contests Tab -->
-    <ion-tab title="{{'RECENTLY_FINISHED_CONTESTS' | translate}}" icon="icon ion-flag" href="#/tab/recentlyFinishedContests">
+    <ion-tab title="{{'RECENTLY_FINISHED_CONTESTS' | translate}}" icon="icon ion-flag" ng-click="$root.gotoView('tabs.contests.recentlyFinished')">
         <ion-nav-view name="recentlyFinishedContestsTab"></ion-nav-view>
-    </ion-tab>
-
-    <!-- Settings Tab -->
-    <ion-tab title="{{'SETTINGS' | translate}}" icon="icon ion-gear-b" href="#/tab/settings">
-        <ion-nav-view name="settingsTab"></ion-nav-view>
     </ion-tab>
 
 </ion-tabs>

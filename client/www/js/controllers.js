@@ -1,6 +1,6 @@
 angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
-    .controller('AppCtrl', function ($scope, $rootScope, $state, $ionicLoading, UserService, ErrorService, MyAuthService, authService, InfoService, $translate, $ionicHistory) {
+    .controller('AppCtrl', function ($scope, $rootScope, $ionicSideMenuDelegate) {
     })
 
     .controller('HomeCtrl', function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory, $ionicPopup, $translate, $window) {
@@ -8,7 +8,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         $scope.$on('$ionicView.beforeEnter', function () {
 
             if ($rootScope.session) {
-                $rootScope.gotoView("tab.myContests");
+                $rootScope.gotoView("tabs.contests.mine");
             }
             else if (!$rootScope.user) {
                 UserService.initUser();
@@ -54,13 +54,13 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
         $scope.facebookConnect = function () {
             UserService.facebookClientConnect(function (session) {
-                $rootScope.gotoView("tab.myContests");
+                $rootScope.gotoView("tabs.contests.mine");
             })
         };
 
     })
 
-    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout) {
+    .controller('ContestsCtrl', function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout, ChartService) {
 
         var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
 
@@ -70,13 +70,15 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 return;
             }
 
-            $scope.totalContests = -1;
-            $scope.loadMoreContests();
+            $scope.doRefresh();
         });
 
         $scope.doRefresh = function () {
 
-            $scope.contestCharts.length = 0;
+            if ($scope.contestCharts) {
+                $scope.contestCharts.length = 0;
+            }
+
             $scope.totalContests = 0;
 
             //That bug again...prevent inifinite firing twice
@@ -143,8 +145,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     var contestChartsCount = $scope.contestCharts.length;
 
                     for (var i = 0; i < contestsResult.list.length; i++) {
-                        var contestChart = ContestsService.prepareContestChart(contestsResult.list[i]);
-                        contestChart.contestIndex = contestChartsCount + i;
+                        var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], contestChartsCount + i);
                         $scope.contestCharts.push(contestChart);
                     }
 
@@ -165,55 +166,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
         };
 
-        $scope.fcEvents = {
-            "dataplotClick": function (eventObj, dataObj) {
-                teamClicked(eventObj.sender.args.dataSource, dataObj.dataIndex);
-            },
-            "dataLabelClick": function (eventObj, dataObj) {
-                teamClicked(eventObj.sender.args.dataSource, dataObj.dataIndex);
-            },
-            "annotationClick": function (eventObj, dataObj) {
-                if ($rootScope.session.isAdmin === true) {
-                    $rootScope.gotoView("contest", false, {
-                        mode: "edit",
-                        contest: eventObj.sender.args.dataSource.contest
-                    });
-                }
-            },
-            "drawComplete": function (eventObj, dataObj) {
-                if ($scope.teamChanged == true) {
-                    $scope.teamChanged = false;
-
-                    //Let the chart animation finish
-                    $timeout(function () {
-                        $rootScope.gotoView("quiz", false, {
-                            contestId: eventObj.sender.args.dataSource.contest._id,
-                            teamId: eventObj.sender.args.dataSource.contest.myTeam
-                        });
-                    }, 1000);
-                }
-            }
-        };
-
-        function teamClicked(dataSource, teamId) {
-            var serverTeamId = teamId;
-            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "rtl") {
-                serverTeamId = 1 - teamId; //In RTL - the teams are presented backwards
-            }
-
-            //Show effect of joining the team on the client side before entering the quiz
-            if (dataSource.contest.myTeam == null || dataSource.contest.myTeam != serverTeamId) {
-                dataSource.contest.myTeam = serverTeamId;
-
-                $scope.$apply(function () {
-                    $scope.teamChanged = true;
-                    $scope.contestCharts[dataSource.contestIndex] = ContestsService.prepareContestChart(dataSource.contest);
-                });
-            }
-            else {
-                $rootScope.gotoView("quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
-            }
-        }
+        ChartService.setEvents($scope);
     })
 
     .controller('QuizCtrl', function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate, $timeout, SoundService) {
@@ -230,7 +183,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         function startQuiz() {
 
             if (!$stateParams.contestId) {
-                $rootScope.gotoView("tab.myContests");
+                $rootScope.gotoView("tabs.contests.mine");
                 return;
             }
 
@@ -246,8 +199,8 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 });
         }
 
-        function getNextQuestion() {
-            QuizService.nextQuestion(
+        $scope.nextQuestion = function() {
+            QuizService.nextQuestion({"questionId" : $scope.quiz.currentQuestion.id},
                 function (data) {
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
@@ -262,7 +215,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     $rootScope.gotoView('quizResult', true, {results: $scope.quiz.results}, false);
                 }
                 else {
-                    getNextQuestion();
+                    $scope.nextQuestion();
                 }
             }
         };
@@ -316,22 +269,23 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         }
     })
 
-    .controller('QuizResultCtrl', function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory, ContestsService, SoundService) {
+    .controller('QuizResultCtrl', function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory, ContestsService, SoundService, ChartService) {
 
-        if (!$scope.chart) {
-            $scope.chart = {};
+        if (!$scope.contestCharts) {
+            $scope.contestCharts = [{}];
         }
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
             if (!$stateParams.results) {
-                $rootScope.gotoView("tab.myContests");
+                $rootScope.gotoView("tabs.contests.mine");
                 return;
             }
 
             $scope.results = $stateParams.results;
 
-            $scope.chart = ContestsService.prepareContestChart($scope.results.contest);
+            //Work with an array becase ChartService.setEvents works with an array scope property called contestCharts
+            $scope.contestCharts = [ContestsService.prepareContestChart($scope.results.contest, 0)];
 
             //Play sound only if enabled and not came by pressing back
             if ($rootScope.session.settings.sound == true && (!$rootScope.lastPlayed || $rootScope.lastPlayed < $stateParams.results.contest.lastPlayed)) {
@@ -349,6 +303,9 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             });
 
         };
+
+        ChartService.setEvents($scope);
+
     })
 
     .controller('LogoutCtrl', function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory, $translate) {
@@ -365,7 +322,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             $scope.localViewData = JSON.parse(JSON.stringify($rootScope.session.settings));
             //A bug - if putting "menu-close" in menu.html - back button won't show - have to close the menu programatically
             if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
@@ -375,6 +332,9 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 $ionicSideMenuDelegate.toggleRight();
             }
             $ionicSideMenuDelegate.canDragContent(false);
+
+            viewData.enableBack = true;
+
         });
 
         //-------------------------------------------------------
@@ -418,7 +378,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
     .controller('OtherwiseCtrl', function ($scope, $rootScope, $state) {
         $scope.$on('$ionicView.beforeEnter', function () {
             if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
-                $rootScope.gotoView("tab.myContests");
+                $rootScope.gotoView("tabs.contests.mine");
             }
             else {
                 $rootScope.gotoView("home");
@@ -519,7 +479,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 }
             }
             else {
-                $rootScope.gotoView("tab.myContests");
+                $rootScope.gotoView("tabs.contests.mine");
                 return;
             }
 

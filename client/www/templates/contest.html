@@ -1,7 +1,6 @@
 <ion-view view-title="{{getTitle()}}">
     <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <ion-nav-back-button class="nav-button ion-arrow-return-left" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'ltr'"></ion-nav-back-button>
-        <ion-nav-back-button class="nav-button ion-arrow-return-right" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'rtl'"></ion-nav-back-button>
+        <ion-nav-back-button></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">

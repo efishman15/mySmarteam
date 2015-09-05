@@ -1,8 +1,7 @@
 <ion-view view-title="{{ 'WHO_IS_SMARTER' | translate}} - {{ 'QUIZ_RESULTS' | translate}}"
           dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
     <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <ion-nav-back-button class="nav-button ion-arrow-return-left" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'ltr'"></ion-nav-back-button>
-        <ion-nav-back-button class="nav-button ion-arrow-return-right" ng-show="$root.settings.languages[$root.user.settings.language].direction == 'rtl'"></ion-nav-back-button>
+        <ion-nav-back-button></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content padding="true">
         <div class="padding center">
@@ -20,7 +19,8 @@
                  width="260"
                  height="180"
                  type="column2d"
-                 dataSource="{{chart}}">
+                 dataSource="{{contestCharts[0]}}"
+                 events="fcEvents">
             </div>
 
             <div class="padding center">

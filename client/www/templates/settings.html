@@ -1,4 +1,7 @@
-<ion-view view-title="{{'SETTINGS' | translate}}" hide-nav-bar="true">
+<ion-view view-title="{{'SETTINGS' | translate}}" hide-nav-bar="false">
+    <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
     <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <ion-list>
             <ion-item ng-click="openLanguagePopover($event)">

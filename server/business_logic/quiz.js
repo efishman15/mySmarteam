@@ -92,7 +92,7 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": 1,
+                "totalQuestions": 3000, //1
                 "currentQuestionIndex": 0,
                 "finished": false
             };
@@ -310,7 +310,7 @@ module.exports.answer = function (req, res, next) {
 //--------------------------------------------------------------------------
 module.exports.nextQuestion = function (req, res, next) {
     var token = req.headers.authorization;
-    var data = {};
+    var data = req.body;
     var operations = [
 
         //getSession

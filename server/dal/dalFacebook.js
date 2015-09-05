@@ -54,5 +54,5 @@ module.exports.getUserInfo = function(data, callback) {
 //-------------------------------------------------------------------------------------
 module.exports.getUserAvatar = getUserAvatar;
 function getUserAvatar(facebookUserId) {
-    return "http://graph.facebook.com/" + facebookUserId + "/picture?type=square";
+    return "https://graph.facebook.com/" + facebookUserId + "/picture?type=square";
 }

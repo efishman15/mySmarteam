@@ -39,6 +39,10 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         })
     })
 
+    .config(function($ionicConfigProvider) {
+        $ionicConfigProvider.backButton.text("");
+    })
+
     .config(function (ezfbProvider) {
         if (!window.cordova) {
             ezfbProvider.setInitParams({
@@ -179,22 +183,42 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 params: {mode: null, contest: null}
             })
 
+            .state('settings', {
+                url: "/settings",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("settings");
+                    }
+                },
+                templateUrl: "templates/settings.html",
+                controller: "SettingsCtrl"
+            })
+
+            .state('tabs', {
+                url: "/tabs",
+                abstract: true,
+                templateUrl: "templates/menu.html",
+                controller: 'AppCtrl'
+            })
+
             // setup an abstract state for the tabs directive
-            .state('tab', {
-                url: "/tab",
+            .state('tabs.contests', {
+                url: "/contests",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("tab");
                     }
                 },
-                abstract: true,
-                controller: 'AppCtrl',
-                templateUrl: "templates/tabs.html"
+                views: {
+                    "menuContent": {
+                        templateUrl: "templates/tabs.html"
+                    }
+                }
+
             })
 
-
-            .state('tab.myContests', {
-                url: '/myContests',
+            .state('tabs.contests.mine', {
+                url: '/mine',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("contests");
@@ -209,8 +233,8 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 appData: {"serverTab" : "mine", "showPlay" : true, "showParticipants" : false}
             })
 
-            .state('tab.runningContests', {
-                url: '/runningContests',
+            .state('tabs.contests.running', {
+                url: '/running',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("contests");
@@ -225,8 +249,8 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 appData: {"serverTab" : "running", "showPlay" : true, "showParticipants" : false}
             })
 
-            .state('tab.recentlyFinishedContests', {
-                url: '/recentlyFinishedContests',
+            .state('tabs.contests.recentlyFinished', {
+                url: '/recentlyFinished',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("contests");
@@ -241,22 +265,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 appData: {"serverTab" : "recentlyFinished", "showPlay" : false, "showParticipants" : true}
             })
 
-            .state('tab.settings', {
-                url: "/settings",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("settings");
-                    }
-                },
-                views: {
-                    'settingsTab': {
-                        templateUrl: "templates/settings.html",
-                        controller: "SettingsCtrl"
-                    }
-                }
-            })
-
-            .state('tab.logout', {
+            .state('logout', {
                 url: "/logout",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
@@ -264,7 +273,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                     }
                 },
                 views: {
-                    'settingsTab': {
+                    'menuContent': {
                         controller: "LogoutCtrl"
                     }
                 }

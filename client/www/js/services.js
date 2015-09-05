@@ -1,7 +1,7 @@
 angular.module('mySmarteam.services', [])
 
     //User Service
-    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading) {
+    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig) {
 
         //----------------------------------------------
         // Service Variables
@@ -33,6 +33,10 @@ angular.module('mySmarteam.services', [])
         //Init user
         service.initUser = function (callbackOnSuccess) {
 
+            //Until real language will be resolved
+            var defaultLanguage = InfoService.getDefaultLanguage();
+            $translate.use(defaultLanguage.language);
+
             InfoService.getGeoInfo(function (geoResult, geoInfo) {
                     $rootScope.user = {
                         "settings": {
@@ -42,9 +46,12 @@ angular.module('mySmarteam.services', [])
                         "geoInfo": geoInfo //For registration on the server
                     };
 
-                    $rootScope.session = null;
+                    if ($rootScope.user.settings.language != defaultLanguage) {
+                        $translate.use($rootScope.user.settings.language);
+                    }
 
-                    $translate.use($rootScope.user.settings.language);
+
+                    $rootScope.session = null;
 
                     if (callbackOnSuccess) {
                         callbackOnSuccess();
@@ -98,7 +105,16 @@ angular.module('mySmarteam.services', [])
                         $translate.use(session.settings.language);
                     }
                     $rootScope.user.settings = session.settings;
+
                     $rootScope.session = session;
+
+                    if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
+                        $ionicConfig.backButton.icon('ion-chevron-left');
+                    }
+                    else {
+                        $ionicConfig.backButton.icon('ion-chevron-right');
+                    }
+
                     callbackOnSuccess(session);
                 },
                 function (status, data) {
@@ -282,7 +298,7 @@ angular.module('mySmarteam.services', [])
         //----------------------------------------------
 
         //Get Default language
-        function getDefaultLanguage() {
+        service.getDefaultLanguage = function() {
             //Always return a language - get the browser's language
             var language = navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage)
             if (!language) {
@@ -313,7 +329,7 @@ angular.module('mySmarteam.services', [])
                             }
                         },
                         function () {
-                            callbackOnSuccess(getDefaultLanguage(), geoInfo);
+                            callbackOnSuccess(service.getDefaultLanguage(), geoInfo);
                         });
                 },
                 function (status, data) {
@@ -322,7 +338,7 @@ angular.module('mySmarteam.services', [])
                         return service.getGeoInfo(callbackOnSuccess, geoProviderId + 1);
                     }
                     else {
-                        callbackOnSuccess(getDefaultLanguage());
+                        callbackOnSuccess(service.getDefaultLanguage());
                     }
                 }, config);
         };
@@ -385,7 +401,7 @@ angular.module('mySmarteam.services', [])
             return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError, config)
         };
 
-        service.prepareContestChart = function (contest) {
+        service.prepareContestChart = function (contest, contestIndex) {
             var contestCaption = $translate.instant("WHO_IS_SMARTER");
             var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.chartObject));
             contestChart.contest = contest;
@@ -445,6 +461,8 @@ angular.module('mySmarteam.services', [])
                 team1: contest.teams[1].name
             });
 
+            contestChart.contestIndex = contestIndex;
+
             return contestChart;
         };
 
@@ -471,8 +489,8 @@ angular.module('mySmarteam.services', [])
         };
 
         //Get next question
-        service.nextQuestion = function (callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "nextQuestion", null, callbackOnSuccess, callbackOnError, config)
+        service.nextQuestion = function (postData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "nextQuestion", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         return service;
@@ -497,7 +515,7 @@ angular.module('mySmarteam.services', [])
                         cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
                         title: $translate.instant(error.type + "_TITLE"),
                         template: $translate.instant(error.type + "_MESSAGE", error.additionalInfo),
-                        buttons : [{"text" : $translate.instant("OK"), "type" : "button-positive", "onTap" : error.onTap}]
+                        buttons: [{"text": $translate.instant("OK"), "type": "button-positive", "onTap": error.onTap}]
                     });
                 }
                 else {
@@ -686,6 +704,77 @@ angular.module('mySmarteam.services', [])
             else {
                 return false;
             }
+        };
+
+        return service;
+    })
+
+    //Chart Service
+    .factory('ChartService', function ($rootScope, $timeout, ContestsService) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+
+        function teamClicked(scope, dataSource, teamId) {
+            var serverTeamId = teamId;
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "rtl") {
+                serverTeamId = 1 - teamId; //In RTL - the teams are presented backwards
+            }
+
+            //Show effect of joining the team on the client side before entering the quiz
+            if (dataSource.contest.myTeam == null || dataSource.contest.myTeam != serverTeamId) {
+                dataSource.contest.myTeam = serverTeamId;
+
+                scope.$apply(function () {
+                    scope.teamChanged = true;
+
+                    //The caller must set this property as an array of charts in order to work with this reused peace of code
+                    scope.contestCharts[dataSource.contestIndex] = ContestsService.prepareContestChart(dataSource.contest);
+                });
+            }
+            else {
+                $rootScope.gotoView("quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
+            }
+        }
+
+        //setEvents
+        service.setEvents = function (scope) {
+
+            scope.$on("mySmarteam-teamClicked", function(error, data) {
+                teamClicked(scope, data.dataSource, data.teamId)
+            });
+
+            scope.fcEvents = {
+                "dataplotClick": function (eventObj, dataObj) {
+                    scope.$broadcast("mySmarteam-teamClicked", {"dataSource" : eventObj.sender.args.dataSource, "teamId" : dataObj.dataIndex});
+                },
+                "dataLabelClick": function (eventObj, dataObj) {
+                    scope.$broadcast("mySmarteam-teamClicked", {"dataSource" : eventObj.sender.args.dataSource, "teamId" : dataObj.dataIndex});
+                },
+                "annotationClick": function (eventObj, dataObj) {
+                    if ($rootScope.session.isAdmin === true) {
+                        $rootScope.gotoView("contest", false, {
+                            mode: "edit",
+                            contest: eventObj.sender.args.dataSource.contest
+                        });
+                    }
+                },
+                "drawComplete": function (eventObj, dataObj) {
+                    if (scope.teamChanged == true) {
+                        scope.teamChanged = false;
+
+                        //Let the chart animation finish
+                        $timeout(function () {
+                            $rootScope.gotoView("quiz", false, {
+                                contestId: eventObj.sender.args.dataSource.contest._id,
+                                teamId: eventObj.sender.args.dataSource.contest.myTeam
+                            });
+                        }, 1000);
+                    }
+                }
+            };
         };
 
         return service;

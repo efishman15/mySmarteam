@@ -6,6 +6,7 @@ var exceptions = require("../utils/exceptions");
 var ObjectId = require("mongodb").ObjectID;
 var random = require('../utils/random');
 var generalUtils = require('../utils/general');
+var mathjs = require("mathjs");
 
 //---------------------------------------------------------------------
 // Cache variables
@@ -319,6 +320,7 @@ module.exports.storeSession = function (data, callback) {
 //---------------------------------------------------------------------
 module.exports.setUser = function (data, callback) {
     var usersCollection = data.DbHelper.getCollection('Users');
+
     usersCollection.findAndModify({"_id": ObjectId(data.session.userId)}, {},
         {
             $set: data.setData
@@ -548,15 +550,17 @@ function logAction(data, callback) {
 module.exports.prepareQuestionCriteria = prepareQuestionCriteria;
 function prepareQuestionCriteria(data, callback) {
 
+    console.log("current question=" + data.questionId);
     var randomTopic = random.rnd(0, data.session.quiz.serverData.topics.length - 1);
 
     var questionCriteria = {
-        "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        "topicId": data.session.quiz.serverData.topics[randomTopic]
+        //"_id": {"$nin": data.session.quiz.serverData.previousQuestions},
+        //"topicId": data.session.quiz.serverData.topics[randomTopic],
+        "questionId" : {$gt : data.questionId ? data.questionId : 0}
     };
 
     //Filter by age if available
-    if (data.session.ageRange) {
+    /*if (data.session.ageRange) {
         if (data.session.ageRange.min) {
             questionCriteria.minAge = {$lte: data.session.ageRange.min}
         }
@@ -564,7 +568,7 @@ function prepareQuestionCriteria(data, callback) {
         if (data.session.ageRange.max) {
             questionCriteria.maxAge = {$gte: data.session.ageRange.max}
         }
-    }
+    }*/
 
     data.questionCriteria = questionCriteria;
 
@@ -611,9 +615,10 @@ function getQuestionsCount(data, callback) {
 //---------------------------------------------------------------------
 module.exports.getNextQuestion = getNextQuestion;
 function getNextQuestion(data, callback) {
-    var skip = random.rnd(0, data.questionsCount - 1);
+    var skip = 0; //random.rnd(0, data.questionsCount - 1);
+    console.log("criteria=" + JSON.stringify(data.questionCriteria));
     var questionsCollection = data.DbHelper.getCollection("Questions");
-    questionsCollection.findOne(data.questionCriteria, {skip: skip}, function (err, question) {
+    questionsCollection.findOne(data.questionCriteria, {sort : "questionId"}, function (err, question) {
         if (err || !question) {
             callback(new exceptions.ServerException("Error retrieving next question from database", {
                 "data": data,
@@ -658,7 +663,11 @@ function getNextQuestion(data, callback) {
 
         data.session.quiz.serverData.currentQuestion = question;
 
-        data.session.quiz.clientData.currentQuestion = {"text": question.text, "answers": []};
+        data.session.quiz.clientData.currentQuestion = {"text": question.text, "answers": [], "id" : question.questionId};
+        if (question.correctAnswers > 0 || question.wrongAnswers > 0) {
+            data.session.quiz.clientData.currentQuestion.correctRatio = 100 * mathjs.round(question.correctRatio,2)
+        }
+
         for (var i = 0; i < question.answers.length; i++) {
             data.session.quiz.clientData.currentQuestion.answers.push({"id": i + 1, "text": question.answers[i].text})
         }
@@ -824,7 +833,7 @@ function getContest(data, callback) {
 module.exports.prepareContestsQuery = prepareContestsQuery;
 function prepareContestsQuery(data, callback) {
 
-    var contestsCriteria = {};
+    var contestsCriteria = {"language" : data.session.settings.language};
     var contestsOrder = [];
 
     var now = (new Date()).getTime();
@@ -956,12 +965,14 @@ function updateQuestionStatistics(data, callback) {
             return;
         }
 
-        var increment = 0;
+        var correctAnswers = question.correctAnswers;
+        var wrongAnswers = question.wrongAnswers;
         if (data.response.question.correct === true) {
-            increment = 1;
+            correctAnswers++;
         }
-        var correctAnswers = question.correctAnswers + increment;
-        var wrongAnswers = question.wrongAnswers + increment;
+        else {
+            wrongAnswers++;
+        }
         var correctRatio = correctAnswers / (correctAnswers + wrongAnswers);
 
         questionsCollection.updateOne({"_id": ObjectId(data.session.quiz.serverData.currentQuestion._id)},
@@ -987,7 +998,6 @@ function updateQuestionStatistics(data, callback) {
                 callback(null, data);
             });
 
-        callback(null, data);
     })
 
 }
