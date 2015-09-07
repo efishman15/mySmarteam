@@ -98,19 +98,6 @@ function validateContestData(data, callback) {
     callback(null, data);
 }
 
-//----------------------------------------------------
-// validateJoinContest
-
-// data:
-// input: DbHelper, contest, session, teamId, contestId
-// output: modified contest with server logic
-//----------------------------------------------------
-function validateJoinContest(data, callback) {
-
-
-    callback(null, data);
-}
-
 //---------------------------------------------------------------------
 // prepareContestForClient
 //

@@ -1,24 +1,13 @@
-<ion-side-menus enable-menu-with-back-views="true" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+<ion-side-menus enable-menu-with-back-views="false" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
     <ion-side-menu-content drag-content="false">
-        <ion-nav-bar class="bar-stable bar-dark" align-title="center" ng-hide="!$root.session">
+        <ion-nav-bar class="bar-stable bar-dark" align-title="center">
             <ion-nav-back-button class="nav-button">
             </ion-nav-back-button>
-            <ion-nav-buttons side="{{$root.settings.languages[$root.user.settings.language].align}}">
-                <button class="button button-icon button-clear ion-navicon"
-                        menu-toggle="{{$root.settings.languages[$root.user.settings.language].align}}">
+            <ion-nav-buttons side="primary">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="{{$root.settings.languages[$root.user.settings.language].align}}">
                 </button>
-                <button class="button" ng-click="$root.gotoView('contest', false, {mode : 'add'})">{{ 'NEW_CONTEST' |
-                    translate}}
-                </button>
-                <div class="item-avatar">
-                    <image ng-src="{{$root.session.avatar}}" width="36" height="36" style="top: 2px"></image>
-                    <progress max="100" value="70" class="html5" style="width: 200px; horiz-align: center">
-                        <!-- Browsers that support HTML5 progress element will ignore the html inside `progress` element. Whereas older browsers will ignore the `progress` element and instead render the html inside it. -->
-                        <div class="progress-bar">
-                            <span style="width: 40%">80%</span>
-                        </div>
-                    </progress>
-                </div>
+                <image ng-show="$root.settings.languages[$root.user.settings.language].align=='left'" ng-src="{{$root.session.avatar}}" style="width: 36px; height: 36px; border-radius: 50%; position: absolute; top: 4px; right: 5px"></image>
+                <image ng-show="$root.settings.languages[$root.user.settings.language].align=='right'" ng-src="{{$root.session.avatar}}" style="width: 36px; height: 36px; border-radius: 50%; position: absolute; top: 4px; left: 5px"></image>
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
@@ -29,7 +18,8 @@
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item class="ion-android-create" menu-close ng-click="$root.gotoView('contest', false, {mode : 'add'})">
+                <ion-item class="ion-android-create" menu-close
+                          ng-click="$root.gotoView('contest', false, {mode : 'add'})">
                     {{ 'NEW_CONTEST' | translate}}
                 </ion-item>
                 <ion-item class="ion-gear-a" ng-click="$root.gotoView('settings', false)">
@@ -39,12 +29,13 @@
         </ion-content>
     </ion-side-menu>
     <ion-side-menu side="right" ng-show="$root.settings.languages[$root.user.settings.language].align=='right'">
-        <ion-header-bar class="bar-assertive">
+        <ion-header-bar class="bar-assertive" align-title="center">
             <h1 class="title">{{'TOOLS' | translate}}</h1>
         </ion-header-bar>
         <ion-content>
             <ion-list>
-                <ion-item class="ion-android-create" menu-close ng-click="$root.gotoView('contest', false, {mode : 'add'})">
+                <ion-item class="ion-android-create" menu-close
+                          ng-click="$root.gotoView('contest', false, {mode : 'add'})">
                     {{ 'NEW_CONTEST' | translate}}
                 </ion-item>
                 <ion-item class="ion-gear-a" ng-click="$root.gotoView('settings', false)">
@@ -54,3 +45,5 @@
         </ion-content>
     </ion-side-menu>
 </ion-side-menus>
+<canvas ng-hide="false" id="myCanvas" width="40" height="44"
+        style="position: absolute; top: 0px; left: 60px; z-index: 500;"></canvas>

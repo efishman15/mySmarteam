@@ -69,17 +69,42 @@ module.exports.start = function (req, res, next) {
         //Check contest join and possible team switch
         function (data, callback) {
             if (data.teamId == null && (!data.contest.users || !data.contest.users[data.session.userId])) {
+
+                //----------------------------------
+                //Not joined and did not pass team
+                //----------------------------------
                 data.DbHelper.close();
                 callback(new exceptions.ServerMessageException("SERVER_ERROR_NOT_JOINED_TO_CONTEST"));
             }
-            else if (
-                (data.teamId == 0 || data.teamId == 1) &&
+            else if ((data.teamId == 0 || data.teamId == 1) &&
                 (
                     (data.contest.users == null || //nobody joined yet
-                    data.contest.users[data.session.userId] == null || //I did not join
-                    data.contest.users[data.session.userId].team != data.teamId) //I joined but I am switching teams now
+                    data.contest.users[data.session.userId] == null) //I did not join
                 )) {
 
+                //----------------------------------
+                //Not joined and passed a valid team
+                //----------------------------------
+                generalUtils.addXp(data.session, "joinContest");
+
+                //Flagging for next function to do the join if necessary
+                data.joinTeam = true;
+
+                //Save the user to the db - session will be stored at the end of this block
+                data.setData = {"xp": data.session.xp, "rank": data.session.rank};
+                dalDb.setUser(data, callback);
+            }
+            else if (data.contest.users[data.session.userId].team != data.teamId) { //I joined but I am switching teams now
+                contestsBusinessLogic.joinContestTeam(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
+        //Check to join contest team because of switch teams
+        function (data, callback) {
+            if (data.joinTeam && data.joinTeam === true) {
                 contestsBusinessLogic.joinContestTeam(data, callback);
             }
             else {
@@ -92,7 +117,7 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": 3000, //1
+                "totalQuestions": 1, //1
                 "currentQuestionIndex": 0,
                 "finished": false
             };
@@ -208,6 +233,7 @@ module.exports.answer = function (req, res, next) {
             }
 
             if (store == true) {
+                generalUtils.addXp(data.session, "playContest");
                 dalDb.storeSession(data, callback);
             }
             else {
@@ -218,7 +244,12 @@ module.exports.answer = function (req, res, next) {
         //Check to save the score into the users object as well - when quiz is finished
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
-                data.setData = {"score": data.session.score};
+
+                data.setData = {
+                    "score": data.session.score,
+                    "xp": data.session.xp,
+                    "rank": data.session.rank
+                };
                 dalDb.setUser(data, callback);
             }
             else {

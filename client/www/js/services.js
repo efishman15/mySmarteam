@@ -735,7 +735,7 @@ angular.module('mySmarteam.services', [])
                 });
             }
             else {
-                $rootScope.gotoView("quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
+                $rootScope.gotoView("app.quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
             }
         }
 
@@ -767,7 +767,7 @@ angular.module('mySmarteam.services', [])
 
                         //Let the chart animation finish
                         $timeout(function () {
-                            $rootScope.gotoView("quiz", false, {
+                            $rootScope.gotoView("app.quiz", false, {
                                 contestId: eventObj.sender.args.dataSource.contest._id,
                                 teamId: eventObj.sender.args.dataSource.contest.myTeam
                             });

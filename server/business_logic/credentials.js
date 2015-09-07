@@ -2,6 +2,7 @@ var async = require('async');
 var dalDb = require('../dal/dalDb');
 var dalFacebook = require('../dal/dalFacebook');
 var exceptions = require('../utils/exceptions');
+var generalUtils = require('../utils/general');
 
 //--------------------------------------------------------------------------
 // private functions
@@ -13,6 +14,9 @@ function getSessionResponse(session) {
         "isAdmin" : session.isAdmin,
         "avatar": session.avatar,
         "name": session.name,
+        "score" : session.score,
+        "rank" : session.rank,
+        "xpProgress" : generalUtils.getXpProgress(session.xp, session.rank),
         "settings": session.settings
     };
 }

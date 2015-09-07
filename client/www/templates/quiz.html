@@ -1,39 +1,39 @@
 <ion-view view-title="{{ 'QUIZ' | translate}}" class="bgQuestionMarks">
-    <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <ion-nav-back-button></ion-nav-back-button>
-    </ion-nav-bar>
-    <ion-content padding="true" dir="{{quiz.currentQuestion.direction}}">
+    <ion-content dir="{{$root.settings.languages[$root.session.settings.language]}}">
 
         <div class="row">
-            <div class="col-50">
-                <input class="bar-stable" style="width: 40px" type="number" ng-model="quiz.currentQuestion.id" value="{{quiz.currentQuestion.id}}">
-                <span ng-show="false">{{ 'QUESTION_INDEX' | translate:{ index : quiz.currentQuestionIndex, total : quiz.totalQuestions} }}</span>
-                <span ng-show="false"> {{ 'SUCCESS_RATIO' | translate:{correctRatio : quiz.currentQuestion.correctRatio} }}</span>
-            </div>
             <div class="col-50" align="{{$root.settings.languages[$root.session.settings.language].oppositeAlign}}">
-                <button class="button button-positive button-small" ng-click="nextQuestion()">NEXT</button>
-                <button ng-show="false"
+                <button
                         ng-class="{'ion-volume-high' :  $root.session.settings.sound == true,
-                            'ion-volume-mute' : $root.session.settings.sound == false}"
+                        'ion-volume-mute' : $root.session.settings.sound == false}"
                         ng-click="toggleSound()">
                 </button>
             </div>
+            <div class="col-50" align="{{$root.settings.languages[$root.session.settings.language].align}}">
+                <span>{{ 'QUESTION_INDEX' | translate:{ index : quiz.currentQuestionIndex, total : quiz.totalQuestions} }}</span>
+                <span ng-show="quiz.currentQuestion.correctRatio"> {{ 'SUCCESS_RATIO' | translate:{correctRatio : quiz.currentQuestion.correctRatio} }}</span>
+            </div>
         </div>
 
-        <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
+        <div dir="{{quiz.currentQuestion.direction}}">
 
-        <div class="list padding">
-            <button id="buttonAnswer{{answer.id}}"
-                    ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
-                    ng-repeat="answer in quiz.currentQuestion.answers track by answer.id"
-                    class="item button button-full quiz-answer"
-                    ng-class="{'button-positive' : !quiz.currentQuestion.answered,
-                                'button-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
-                                'button-assertive blink' : answer.answeredCorrectly == false && answer.correct == null}"
-                    ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"
-                    ng-bind-html="answer.text"
-                    animationend="buttonAnimationEnded">
-            </button>
+            <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
+
+            <div class="list padding">
+                <button id="buttonAnswer{{answer.id}}"
+                        ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
+                        ng-repeat="answer in quiz.currentQuestion.answers track by answer.id"
+                        class="item button button-full"
+                        ng-class="{'button-positive' : !quiz.currentQuestion.answered,
+                            'button-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
+                            'button-assertive blink' : answer.answeredCorrectly == false && answer.correct == null,
+                            'quiz-normal-answer' : answer.text.length <= 30,
+                            'quiz-long-answer' : answer.text.length > 30}"
+                        ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"
+                        ng-bind-html="answer.text"
+                        animationend="buttonAnimationEnded">
+                </button>
+            </div>
         </div>
 
     </ion-content>

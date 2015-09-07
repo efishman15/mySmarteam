@@ -8,7 +8,7 @@
             <ion-list>
 
                 <ion-item class="padding row">
-                    <div style="width: 45%">
+                    <div class="contest-team">
                         <label class="item item-input"
                                ng-class="{ 'has-error' : contestForm.team0.$invalid && contestForm.team0.$touched, 'valid-lr' : contestForm.team0.$valid}"
                                ng-messages-include="templates/contest-error-list.html">
@@ -26,7 +26,7 @@
                     <div class="center col-10 padding-vertical">
                         <h4>{{'OR' | translate}}</h4>
                     </div>
-                    <div style="width: 45%">
+                    <div class="contest-team">
                         <label class="item item-input"
                                ng-class="{ 'has-error' : contestForm.team1.$invalid && contestForm.team1.$touched, 'valid-lr' : contestForm.team1.$valid}"
                                ng-messages-include="templates/contest-error-list.html">
@@ -73,7 +73,7 @@
 
                     <div ng-hide="showAdminInfo==false && contestForm.team0 && contestForm.team1">
                         <div class="row">
-                            <div class="padding" style="width: 45%">
+                            <div class="padding contest-team">
                                 <span class="padding">{{'TEAM_SCORE' | translate:{team : localViewData.teams[0].name} }}</span>
                                 <label class="item item-input"
                                        ng-class="{ 'has-error' : contestForm.score0.$invalid && contestForm.score0.$touched, 'valid-lr' : contestForm.score0.$valid}"
@@ -91,7 +91,7 @@
                             </div>
                             <div class="center col-10 padding-vertical">
                             </div>
-                            <div class="padding" style="width: 45%">
+                            <div class="padding contest-team">
                                 <span class="padding">{{'TEAM_SCORE' | translate:{team : localViewData.teams[1].name} }}</span>
                                 <label class="item item-input"
                                        ng-class="{ 'has-error' : contestForm.score1.$invalid && contestForm.score1.$touched, 'valid-lr' : contestForm.score1.$valid}"

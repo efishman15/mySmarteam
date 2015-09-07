@@ -1,4 +1,4 @@
-<ion-view class="bgQuestionMarks">
+<ion-view class="bgQuestionMarks" title="{{'CONTEST_LIST' | translate}}">
 
     <!------------------------------------------------------------------------------>
     <!-- This is a workaround - when navigating to other views, forcing the back
@@ -6,7 +6,7 @@
     <!------------------------------------------------------------------------------>
     <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}"
                  overflow-scroll="true">
-        <ion-scroll style="height: 100%">
+        <ion-scroll class="contests-scroll">
             <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
                            pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
                            on-refresh="doRefresh()">

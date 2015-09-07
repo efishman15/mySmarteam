@@ -57,16 +57,24 @@ function checkToCloseDb(data) {
 function register(data, callback) {
     var usersCollection = data.DbHelper.getCollection("Users");
 
+    var now = (new Date()).getTime();
+
+    var avatar = data.user.avatar;
+
     data.user.settings.sound = true;
     var newUser = {
         "facebookUserId": data.user.thirdParty.id,
         "facebookAccessToken": data.user.thirdParty.accessToken,
         "name": data.user.name,
+        "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
         "geoInfo": data.user.geoInfo,
         "ageRange": data.user.ageRange,
         "settings": data.user.settings,
         "score": 0,
-        "createdAt": (new Date()).getTime()
+        "xp": 0,
+        "rank": 1,
+        "createdAt": now,
+        "lastLogin": now
     };
 
     usersCollection.insert(newUser
@@ -83,6 +91,9 @@ function register(data, callback) {
             }
 
             data.user = newUser;
+
+            //restore avatar - computed field
+            data.user.avatar = avatar;
 
             checkToCloseDb(data);
 
@@ -332,7 +343,7 @@ module.exports.setUser = function (data, callback) {
 
                 callback(new exceptions.ServerException("Error updating user", {
                     "userId": ObjectId(data.session.userId),
-                    "setData" : data.setData,
+                    "setData": data.setData,
                     "dbError": err
                 }, "error"));
 
@@ -365,28 +376,62 @@ module.exports.facebookLogin = function (data, callback) {
     //Put the avatar back later on this fresh object
     var avatar = data.user.avatar;
 
-    usersCollection.findAndModify({"facebookUserId": data.user.thirdParty.id}, {},
-        {
-            $set: {
-                "lastLogin": (new Date()).getTime(),
-                "name": data.user.name,  //keep sync with Facebook changes
-                "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
-                "ageRange": data.user.ageRange //keep sync with Facebook changes
-            }
-        }, {w: 1, new: true}, function (err, user) {
+    var now = (new Date()).getTime();
 
-            if (err || !user.value) {
-                register(data, callback);
-                return;
-            }
+    usersCollection.findOne({"facebookUserId": data.user.thirdParty.id}, {}, function (err, user) {
+        if (err || !user) {
+            register(data, callback);
+            return;
+        }
 
-            data.user = user.value;
+        var dailyXp = 0;
+        var prevLogin = new Date(user.lastLogin);
 
-            //restore the avatar back
-            data.user.avatar = avatar;
+        var today = new Date();
+        var now = today.getTime();
 
-            callback(null, data);
-        })
+        if (prevLogin.getUTCDay() != today.getUTCDay() ||
+            prevLogin.getUTCMonth() != today.getUTCMonth() ||
+            prevLogin.getUTCFullYear() != today.getUTCFullYear()) {
+
+            dailyXp = generalUtils.xpCredits.login;
+            generalUtils.addXp(user, "login");
+        }
+
+        usersCollection.updateOne({"_id": user._id},
+            {
+                $set: {
+                    "lastLogin": now,
+                    "name": data.user.name,  //keep sync with Facebook changes
+                    "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
+                    "ageRange": data.user.ageRange, //keep sync with Facebook changes
+                    "xp": user.xp,
+                    "rank" : user.rank
+                }
+            }, function (err, results) {
+
+                if (err || results.nModified < 1) {
+
+                    closeDb(data);
+
+                    callback(new exceptions.ServerException("Error updating user during login", {
+                        "user": user
+                    }, "error"));
+
+                    return;
+                }
+
+                user.lastLogin = now;
+                data.user = user;
+
+                //restore the avatar back
+                data.user.avatar = avatar;
+
+                checkToCloseDb(data);
+
+                callback(null, data);
+            });
+    });
 };
 
 //---------------------------------------------------------------------
@@ -404,6 +449,9 @@ module.exports.facebookLogin = function (data, callback) {
 module.exports.createOrUpdateSession = function (data, callback) {
     var userToken = uuid.v1();
     var sessionsCollection = data.DbHelper.getCollection('Sessions');
+
+    var now = (new Date()).getTime();
+
     sessionsCollection.findAndModify({"userId": ObjectId(data.user._id)}, {},
         {
             $set: {
@@ -417,7 +465,9 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "createdAt": new Date(), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
                 "userToken": userToken,
                 "settings": data.user.settings,
-                "score": data.user.score
+                "score": data.user.score,
+                "xp": data.user.xp,
+                "rank": data.user.rank
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -556,19 +606,19 @@ function prepareQuestionCriteria(data, callback) {
     var questionCriteria = {
         //"_id": {"$nin": data.session.quiz.serverData.previousQuestions},
         //"topicId": data.session.quiz.serverData.topics[randomTopic],
-        "questionId" : {$gt : data.questionId ? data.questionId : 0}
+        "questionId": {$gt: data.questionId ? data.questionId : 0}
     };
 
     //Filter by age if available
     /*if (data.session.ageRange) {
-        if (data.session.ageRange.min) {
-            questionCriteria.minAge = {$lte: data.session.ageRange.min}
-        }
+     if (data.session.ageRange.min) {
+     questionCriteria.minAge = {$lte: data.session.ageRange.min}
+     }
 
-        if (data.session.ageRange.max) {
-            questionCriteria.maxAge = {$gte: data.session.ageRange.max}
-        }
-    }*/
+     if (data.session.ageRange.max) {
+     questionCriteria.maxAge = {$gte: data.session.ageRange.max}
+     }
+     }*/
 
     data.questionCriteria = questionCriteria;
 
@@ -618,7 +668,7 @@ function getNextQuestion(data, callback) {
     var skip = 0; //random.rnd(0, data.questionsCount - 1);
     console.log("criteria=" + JSON.stringify(data.questionCriteria));
     var questionsCollection = data.DbHelper.getCollection("Questions");
-    questionsCollection.findOne(data.questionCriteria, {sort : "questionId"}, function (err, question) {
+    questionsCollection.findOne(data.questionCriteria, {sort: "questionId"}, function (err, question) {
         if (err || !question) {
             callback(new exceptions.ServerException("Error retrieving next question from database", {
                 "data": data,
@@ -663,9 +713,13 @@ function getNextQuestion(data, callback) {
 
         data.session.quiz.serverData.currentQuestion = question;
 
-        data.session.quiz.clientData.currentQuestion = {"text": question.text, "answers": [], "id" : question.questionId};
+        data.session.quiz.clientData.currentQuestion = {
+            "text": question.text,
+            "answers": [],
+            "id": question.questionId
+        };
         if (question.correctAnswers > 0 || question.wrongAnswers > 0) {
-            data.session.quiz.clientData.currentQuestion.correctRatio = 100 * mathjs.round(question.correctRatio,2)
+            data.session.quiz.clientData.currentQuestion.correctRatio = 100 * mathjs.round(question.correctRatio, 2)
         }
 
         for (var i = 0; i < question.answers.length; i++) {
@@ -736,7 +790,7 @@ function setContest(data, callback) {
                 closeDb(data);
 
                 callback(new exceptions.ServerException("Error setting contest", {
-                    "setData" : data.setData,
+                    "setData": data.setData,
                     "contestId": contestId,
                     "dbError": err
                 }, "error"));
@@ -833,7 +887,7 @@ function getContest(data, callback) {
 module.exports.prepareContestsQuery = prepareContestsQuery;
 function prepareContestsQuery(data, callback) {
 
-    var contestsCriteria = {"language" : data.session.settings.language};
+    var contestsCriteria = {"language": data.session.settings.language};
     var contestsOrder = [];
 
     var now = (new Date()).getTime();
@@ -977,7 +1031,7 @@ function updateQuestionStatistics(data, callback) {
 
         questionsCollection.updateOne({"_id": ObjectId(data.session.quiz.serverData.currentQuestion._id)},
             {
-                $set: {"correctAnswers" : correctAnswers, "wrongAnswers" : wrongAnswers, "correctRatio" : correctRatio}
+                $set: {"correctAnswers": correctAnswers, "wrongAnswers": wrongAnswers, "correctRatio": correctRatio}
             }, function (err, results) {
 
                 if (err || results.nModified < 1) {
@@ -986,7 +1040,7 @@ function updateQuestionStatistics(data, callback) {
 
                     callback(new exceptions.ServerException("Error updating question statistics", {
                         "quesitonId": data.session.quiz.serverData.currentQuestion.questionId,
-                        "updateResults" : results,
+                        "updateResults": results,
                         "dbError": err
                     }, "error"));
 
