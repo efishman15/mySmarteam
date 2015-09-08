@@ -159,22 +159,25 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quiz.html",
-                        controller: 'QuizCtrl',
+                        controller: 'QuizCtrl'
                     }
                 }
-
             })
 
-            .state('quizResult', {
+            .state('app.quizResult', {
                 url: "/quizResult",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication("quizResult");
                     }
                 },
-                templateUrl: "templates/quizResult.html",
-                controller: 'QuizResultCtrl',
                 cache: false,
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/quizResult.html",
+                        controller: 'QuizResultCtrl'
+                    }
+                },
                 params: {results: null}
             })
 

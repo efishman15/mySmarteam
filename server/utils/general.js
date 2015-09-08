@@ -48,6 +48,7 @@ var triviaTopisPerLangage = {
 var generalSettings = {
     "languages": supportedLanguages,
     "charts": {
+        "size": {"width": 260, "height": 180},
         "contestAnnotations": {
             "annotationsFont": "10px Arial",
             "annotationHorizontalMagicNumbers": {
@@ -121,7 +122,20 @@ var generalSettings = {
     "contestList": {
         "pageSize": 5,
         "distance": "50%"
-    }
+    },
+    "quiz": {"longAnswerTreshold": 30},
+    "xpControl": {
+        "canvas": {"width": 40, "height": 44},
+        "radius": 15,
+        "fillColor": "#ffff37",
+        "lineWidth": 4,
+        "fullLineColor": "#444",
+        "progressLineColor": "#0094ff",
+        "font": {"bold": true, "name": "Arial", "d1": "14px", "d2": "14px", "d3": "11px"},
+        "textColor": "#444",
+        "shadow": {"offsetX": 0, "offsetY": 0, blur: 10, color: "#656565'"}
+    },
+    "db": {"sessionExpirationMilliseconds": 30 * 60 * 1000}
 }
 module.exports.generalSettings = generalSettings;
 
@@ -147,8 +161,9 @@ var rankByXp = [
 
 var xpCredits = {
     "login": 5,
-    "joinContest": 10,
-    "playContest": 50,
+    "joinContest": 2,
+    "correctAnswer": 20,
+    "quizFullScore": 50,
     "shareContest": 30
 }
 module.exports.xpCredits = xpCredits;
@@ -166,23 +181,21 @@ function binaryRangeSearch(arr, searchProperty, number) {
         return arr[0][resultProperty];
     }
 
-    var first = 0;
-    var last = arr.length - 1;
+    var left = 0;
+    var right = arr.length - 1;
 
-    var mid;
-    while (first <= last) {
-        mid = mathjs.floor((first + last) / 2);
-        if (number < arr[mid][searchProperty]) {
-            last = mid - 1;
-        }
-        else if (number > arr[mid][searchProperty]) {
-            first = mid + 1;
+    var middle;
+    while (left < right) {
+        middle = mathjs.floor(left + (right - left) / 2);
+        if (number <= arr[middle][searchProperty]) {
+            right = middle;
         }
         else {
-            break;
+            left = middle + 1;
         }
     }
-    return arr[mid];
+
+    return arr[left];
 }
 
 //-----------------------------------------------------------------------
@@ -274,14 +287,15 @@ module.exports.getLanguageTriviaTopics = function (language) {
 //
 // returns a rank of a given experience
 //-----------------------------------------------------------------------
-module.exports.addXp = function (object, action) {
+module.exports.addXp = function (object, responseData, action) {
 
     var xp = xpCredits[action];
     if (xp) {
         object.xp += xp;
         var result = binaryRangeSearch(rankByXp, "xp", object.xp);
         object.rank = result.rank;
-        return xp;
+
+        return getXpProgress(xp, object.xp, object.rank, responseData);
     }
 
     //Error - the action does not produce any xp
@@ -293,18 +307,39 @@ module.exports.addXp = function (object, action) {
 //
 // returns the xp in a relational manner to be presented in a progress element
 //-----------------------------------------------------------------------------------
-module.exports.getXpProgress = function(xp, rank) {
+module.exports.getXpProgress = getXpProgress;
+
+function getXpProgress(xpDelta, currentXp, currentRank, xpProgressContainer) {
 
     var xpForRank;
-    if (rank-2 >= 0) {
-        xpForRank = rankByXp[rank-2].xp;
+    if (currentRank - 2 >= 0) {
+        xpForRank = rankByXp[currentRank - 2].xp;
     }
     else {
         xpForRank = 0;
     }
 
-    var xpForNextRank = rankByXp[rank-1].xp;
-    var xpAchievedInRank = xp - xpForRank;
-    var xpDelta = xpForNextRank - xpForRank;
-    return {"value" : xpAchievedInRank, "max" : xpDelta, "percent" : mathjs.floor(xpAchievedInRank * 100 / xpDelta)};
+    var xpForNextRank = rankByXp[currentRank - 1].xp;
+    var xpAchievedInRank = currentXp - xpForRank;
+    var xpDiff = xpForNextRank - xpForRank;
+
+    var xpProgress;
+    if ((xpProgressContainer && !xpProgressContainer.xpProgress) || !xpProgressContainer) {
+        xpProgress = {"addition": 0};
+    }
+    else {
+        xpProgress = {"addition": xpProgressContainer.xpProgress.addition};
+    }
+
+    xpProgress.current = xpAchievedInRank;
+    xpProgress.max = xpDiff;
+    xpProgress.addition += xpDelta;
+    xpProgress.rank = currentRank;
+
+    if (xpProgressContainer) {
+        xpProgressContainer.xpProgress = xpProgress;
+    }
+
+    return xpProgress;
 }
+

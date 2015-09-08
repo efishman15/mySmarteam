@@ -1,8 +1,5 @@
 <ion-view view-title="{{ 'WHO_IS_SMARTER' | translate}} - {{ 'QUIZ_RESULTS' | translate}}"
           dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
-    <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <ion-nav-back-button></ion-nav-back-button>
-    </ion-nav-bar>
     <ion-content padding="true">
         <div class="padding center">
 
@@ -24,8 +21,8 @@
             </div>
 
             <div class="padding center">
-                <button class="item button button-stable button-small button-assertive nowrapText font14" ng-click="playAgain()">{{ 'PLAY_AGAIN' | translate}}</button>
-                <button class="item button button-stable button-small button-assertive nowrapText font14" ng-click="$root.gotoView('tab.myContests')">{{ 'CONTEST_LIST' | translate}}</button>
+                <button class="item button button-stable button-small button-assertive button-3d button-3d-assertive nowrapText font14" ng-click="playAgain()">{{ 'PLAY_AGAIN' | translate}}</button>
+                <button class="item button button-stable button-small button-assertive button-3d button-3d-assertive nowrapText font14" ng-click="$root.gotoView('app.contests.mine')">{{ 'CONTEST_LIST' | translate}}</button>
             </div>
         </div>
     </ion-content>

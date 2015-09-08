@@ -1,13 +1,16 @@
-<ion-side-menus enable-menu-with-back-views="false" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+<ion-side-menus enable-menu-with-back-views="false"
+                dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
     <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-stable bar-dark" align-title="center">
             <ion-nav-back-button class="nav-button">
             </ion-nav-back-button>
-            <ion-nav-buttons side="primary">
-                <button class="button button-icon button-clear ion-navicon" menu-toggle="{{$root.settings.languages[$root.user.settings.language].align}}">
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-navicon" ng-hide="$root.hideMenuButton"
+                        menu-toggle="{{$root.settings.languages[$root.user.settings.language].align}}">
                 </button>
-                <image ng-show="$root.settings.languages[$root.user.settings.language].align=='left'" ng-src="{{$root.session.avatar}}" style="width: 36px; height: 36px; border-radius: 50%; position: absolute; top: 4px; right: 5px"></image>
-                <image ng-show="$root.settings.languages[$root.user.settings.language].align=='right'" ng-src="{{$root.session.avatar}}" style="width: 36px; height: 36px; border-radius: 50%; position: absolute; top: 4px; left: 5px"></image>
+                <image ng-class="{'menu-avatar-ltr' : $root.settings.languages[$root.user.settings.language].direction === 'ltr', 'menu-avatar-rtl' :  $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                       ng-src="{{$root.session.avatar}}"></image>
+
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
@@ -45,5 +48,6 @@
         </ion-content>
     </ion-side-menu>
 </ion-side-menus>
-<canvas ng-hide="false" id="myCanvas" width="40" height="44"
-        style="position: absolute; top: 0px; left: 60px; z-index: 500;"></canvas>
+<div id="canvasWrapper">
+</div>
+

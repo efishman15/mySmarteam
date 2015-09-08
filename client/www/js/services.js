@@ -298,7 +298,7 @@ angular.module('mySmarteam.services', [])
         //----------------------------------------------
 
         //Get Default language
-        service.getDefaultLanguage = function() {
+        service.getDefaultLanguage = function () {
             //Always return a language - get the browser's language
             var language = navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage)
             if (!language) {
@@ -489,8 +489,8 @@ angular.module('mySmarteam.services', [])
         };
 
         //Get next question
-        service.nextQuestion = function (postData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "nextQuestion", postData, callbackOnSuccess, callbackOnError, config)
+        service.nextQuestion = function (callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "nextQuestion", null, callbackOnSuccess, callbackOnError, config)
         };
 
         return service;
@@ -742,16 +742,22 @@ angular.module('mySmarteam.services', [])
         //setEvents
         service.setEvents = function (scope) {
 
-            scope.$on("mySmarteam-teamClicked", function(error, data) {
+            scope.$on("mySmarteam-teamClicked", function (error, data) {
                 teamClicked(scope, data.dataSource, data.teamId)
             });
 
             scope.fcEvents = {
                 "dataplotClick": function (eventObj, dataObj) {
-                    scope.$broadcast("mySmarteam-teamClicked", {"dataSource" : eventObj.sender.args.dataSource, "teamId" : dataObj.dataIndex});
+                    scope.$broadcast("mySmarteam-teamClicked", {
+                        "dataSource": eventObj.sender.args.dataSource,
+                        "teamId": dataObj.dataIndex
+                    });
                 },
                 "dataLabelClick": function (eventObj, dataObj) {
-                    scope.$broadcast("mySmarteam-teamClicked", {"dataSource" : eventObj.sender.args.dataSource, "teamId" : dataObj.dataIndex});
+                    scope.$broadcast("mySmarteam-teamClicked", {
+                        "dataSource": eventObj.sender.args.dataSource,
+                        "teamId": dataObj.dataIndex
+                    });
                 },
                 "annotationClick": function (eventObj, dataObj) {
                     if ($rootScope.session.isAdmin === true) {
@@ -776,6 +782,139 @@ angular.module('mySmarteam.services', [])
                 }
             };
         };
+
+        return service;
+    })
+
+//Chart Service
+    .factory('XpService', function ($rootScope) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+
+        var canvas = null;
+        var context = null;
+
+        service.circle = Math.PI * 2;
+        service.quarter = Math.PI / 2;
+
+        var centerX;
+        var centerY;
+
+        service.initXp = function (canvas, context) {
+
+            if (canvas && context) {
+                service.canvas = canvas;
+                service.context = context;
+            }
+
+            service.context.clearRect(0,0,service.canvas.width, service.canvas.height);
+
+            centerX = service.canvas.width / 2;
+            centerY = service.canvas.height / 2;
+
+            service.context.shadowOffsetX = $rootScope.settings.xpControl.shadow.offsetX;
+            service.context.shadowOffsetY = $rootScope.settings.xpControl.shadow.offsetY;
+            service.context.shadowBlur = $rootScope.settings.xpControl.shadow.blur;
+            service.context.shadowColor = $rootScope.settings.xpControl.shadow.color;
+
+            //-------------------------------------------------------------------------------------
+            // Draw the full circle representing the entire xp required for the next level
+            //-------------------------------------------------------------------------------------
+            service.context.beginPath();
+
+            service.context.arc(centerX, centerY, $rootScope.settings.xpControl.radius, 0, service.circle, false);
+            service.context.fillStyle = $rootScope.settings.xpControl.fillColor;
+            service.context.fill();
+
+            //Full line color
+            service.context.lineWidth = $rootScope.settings.xpControl.lineWidth;
+            service.context.strokeStyle = $rootScope.settings.xpControl.fullLineColor;
+            service.context.stroke();
+            service.context.closePath();
+
+            //-------------------------------------------------------------------------------------
+            //Draw the arc representing the xp in the current level
+            //-------------------------------------------------------------------------------------
+            service.context.beginPath();
+
+            // line color
+
+            service.context.arc(centerX, centerY, $rootScope.settings.xpControl.radius, -(service.quarter), (($rootScope.session.xpProgress.current / $rootScope.session.xpProgress.max) * service.circle) - service.quarter, false);
+            service.context.strokeStyle = $rootScope.settings.xpControl.progressLineColor;
+            service.context.stroke();
+
+            //Rank Text
+            var font = "";
+            if ($rootScope.settings.xpControl.font.bold === true) {
+                font += "bold ";
+            }
+
+            var fontSize;
+            if ($rootScope.session.rank < 10) {
+                //1 digit font
+                fontSize = $rootScope.settings.xpControl.font.d1;
+            }
+            else if ($rootScope.session.rank < 100) {
+                //2 digits font
+                fontSize = $rootScope.settings.xpControl.font.d2;
+            }
+            else {
+                fontSize = $rootScope.settings.xpControl.font.d3;
+            }
+            font += fontSize + " ";
+
+            font += $rootScope.settings.xpControl.font.name;
+
+            service.context.font = font;
+
+            // Move it down by half the text height and left by half the text width
+            var rankText = "" + $rootScope.session.rank;
+            var textWidth = service.context.measureText(rankText).width;
+            var textHeight = service.context.measureText("w").width;
+
+            service.context.fillStyle = $rootScope.settings.xpControl.textColor;
+            service.context.fillText(rankText, centerX - (textWidth / 2), centerY + (textHeight / 2));
+
+            service.context.closePath();
+
+        };
+
+        service.addXp = function (xpProgress) {
+
+            var startPoint = $rootScope.session.xpProgress.current / $rootScope.session.xpProgress.max;
+
+            if (requestAnimationFrame) {
+
+                //Occurs after xp has already been added to the session
+                for (var i = 1; i <= xpProgress.addition; i++) {
+                    requestAnimationFrame(function () {
+                        var endPoint = ($rootScope.session.xpProgress.current + i) / $rootScope.session.xpProgress.max;
+                        animateXpAddition(startPoint, endPoint, service.quarter, service.circle);
+                    })
+                }
+            }
+
+            //Add the actual xp to the client side
+            $rootScope.session.xpProgress = xpProgress;
+            if (xpProgress.rank > $rootScope.session.rank) {
+                $rootScope.session.rank = xpProgress.rank;
+                service.initXp();
+                $rootScope.$broadcast("mySmarteam-rankChanged");
+            }
+
+
+        };
+
+        function animateXpAddition(startPoint, endPoint) {
+
+            service.context.beginPath();
+            service.context.arc(centerX, centerY, $rootScope.settings.xpControl.radius, (service.circle * startPoint) - service.quarter, (service.circle * endPoint) - service.quarter, false);
+            service.context.stroke();
+            service.context.closePath();
+        }
 
         return service;
     });

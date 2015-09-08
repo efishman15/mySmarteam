@@ -1,4 +1,4 @@
-<ion-view class="bgQuestionMarks" title="{{'CONTEST_LIST' | translate}}">
+<ion-view class="bgQuestionMarks" title="{{'WHO_IS_SMARTER_QUESTION' | translate}}">
 
     <!------------------------------------------------------------------------------>
     <!-- This is a workaround - when navigating to other views, forcing the back
@@ -14,14 +14,14 @@
             <ion-list ng-repeat="contestChart in contestCharts track by contestChart.contest._id">
                 <div class="padding center">
                     <div fusioncharts
-                         width="260"
-                         height="180"
                          type="column2d"
                          dataSource="{{contestChart}}"
-                         events="fcEvents">
+                         events="fcEvents"
+                         width="{{$root.settings.charts.size.width}}"
+                         height="{{$root.settings.charts.size.height}}">
                     </div>
                     <div class="padding center">
-                        <button class="item button button-stable button-small button-assertive nowrapText font14"
+                        <button class="item button button-stable button-small button-assertive nowrapText font14 btn"
                                 ng-show="showPlay()" ng-click="playContest(contestChart.contest)">{{'PLAY_CONTEST' |
                             translate}}
                         </button>

@@ -51,6 +51,8 @@ module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
 
+    data.clientResponse = {};
+
     if (!data.contestId) {
         exceptions.ServerResponseException(res, "contestId not supplied", null, "warn", 424);
         return;
@@ -76,7 +78,7 @@ module.exports.start = function (req, res, next) {
                 data.DbHelper.close();
                 callback(new exceptions.ServerMessageException("SERVER_ERROR_NOT_JOINED_TO_CONTEST"));
             }
-            else if ((data.teamId == 0 || data.teamId == 1) &&
+            else if ((data.teamId === 0 || data.teamId === 1) &&
                 (
                     (data.contest.users == null || //nobody joined yet
                     data.contest.users[data.session.userId] == null) //I did not join
@@ -85,7 +87,7 @@ module.exports.start = function (req, res, next) {
                 //----------------------------------
                 //Not joined and passed a valid team
                 //----------------------------------
-                generalUtils.addXp(data.session, "joinContest");
+                generalUtils.addXp(data.session, data.clientResponse, "joinContest");
 
                 //Flagging for next function to do the join if necessary
                 data.joinTeam = true;
@@ -94,7 +96,7 @@ module.exports.start = function (req, res, next) {
                 data.setData = {"xp": data.session.xp, "rank": data.session.rank};
                 dalDb.setUser(data, callback);
             }
-            else if (data.contest.users[data.session.userId].team != data.teamId) { //I joined but I am switching teams now
+            else if ((data.teamId === 0 || data.teamId === 1) && data.contest.users[data.session.userId].team != data.teamId) { //I joined but I am switching teams now
                 contestsBusinessLogic.joinContestTeam(data, callback);
             }
             else {
@@ -108,7 +110,7 @@ module.exports.start = function (req, res, next) {
                 contestsBusinessLogic.joinContestTeam(data, callback);
             }
             else {
-                callback(null, data);
+                callback(null, data)
             }
         },
 
@@ -117,7 +119,7 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": 1, //1
+                "totalQuestions": 5,
                 "currentQuestionIndex": 0,
                 "finished": false
             };
@@ -131,6 +133,8 @@ module.exports.start = function (req, res, next) {
             };
 
             data.session.quiz = quiz;
+
+            data.clientResponse.quiz = data.session.quiz.clientData;
 
             callback(null, data);
 
@@ -157,7 +161,7 @@ module.exports.start = function (req, res, next) {
 
     async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.send(200, data.session.quiz.clientData);
+            res.send(200, data.clientResponse);
         }
         else {
             res.send(err.httpStatus, err);
@@ -173,6 +177,8 @@ module.exports.start = function (req, res, next) {
 module.exports.answer = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
+
+    data.clientResponse = {"question": {}, "xp" : 0};
 
     var operations = [
 
@@ -196,19 +202,19 @@ module.exports.answer = function (req, res, next) {
                 callback(new exceptions.ServerException("Invalid answer id", {"answerId": data.id}));
             }
 
-            data.response = {"question": {}};
-
-            data.response.question.answerId = answerId;
+            data.clientResponse.question.answerId = answerId;
             if (answers[answerId - 1].correct) {
-                data.response.question.correct = true;
+                data.clientResponse.question.correct = true;
+
+                generalUtils.addXp(data.session, data.clientResponse, "correctAnswer");
 
                 data.session.quiz.serverData.score += data.session.quiz.serverData.questionScore; //Question score relational to 100
             }
             else {
-                data.response.question.correct = false;
+                data.clientResponse.question.correct = false;
                 for (i = 0; i < answers.length; i++) {
                     if (answers[i].correct && answers[i].correct == true) {
-                        data.response.question.correctAnswerId = i + 1;
+                        data.clientResponse.question.correctAnswerId = i + 1;
                         break;
                     }
                 }
@@ -227,13 +233,16 @@ module.exports.answer = function (req, res, next) {
                 data.session.score += data.session.quiz.serverData.score;
                 store = true;
             }
-            else if (data.response.question.correct == true) {
+            else if (data.clientResponse.question.correct == true) {
                 //store temporary score of quiz
                 store = true;
             }
 
             if (store == true) {
-                generalUtils.addXp(data.session, "playContest");
+                if (data.session.quiz.serverData.score == 100) {
+                    generalUtils.addXp(data.session, data.clientResponse, "quizFullScore");
+                }
+
                 dalDb.storeSession(data, callback);
             }
             else {
@@ -241,9 +250,9 @@ module.exports.answer = function (req, res, next) {
             }
         },
 
-        //Check to save the score into the users object as well - when quiz is finished
+        //Check to save the score into the users object as well - when quiz is finished or when got a correct answer (which gives score and/or xp
         function (data, callback) {
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex || (data.clientResponse.xpProgress && data.clientResponse.xpProgress.addition)) {
 
                 data.setData = {
                     "score": data.session.score,
@@ -298,26 +307,26 @@ module.exports.answer = function (req, res, next) {
         function (data, callback) {
             if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
 
-                data.response.results = {"contest": data.contest};
+                data.clientResponse.results = {"contest": data.contest};
 
-                contestsBusinessLogic.prepareContestForClient(data.response.results.contest, data.response.results.contest.users[data.session.userId].team, true);
+                contestsBusinessLogic.prepareContestForClient(data.clientResponse.results.contest, data.clientResponse.results.contest.users[data.session.userId].team, true);
 
-                data.response.results.score = data.session.quiz.serverData.score;
+                data.clientResponse.results.score = data.session.quiz.serverData.score;
 
-                if (data.response.results.score == 100) {
-                    data.response.results.sound = random.pick(quizSounds.finish.great);
-                    data.response.results.title = "EXCELLENT_SCORE_TITLE";
-                    data.response.results.message = "POSITIVE_SCORE_MESSAGE";
+                if (data.clientResponse.results.score == 100) {
+                    data.clientResponse.results.sound = random.pick(quizSounds.finish.great);
+                    data.clientResponse.results.title = "EXCELLENT_SCORE_TITLE";
+                    data.clientResponse.results.message = "POSITIVE_SCORE_MESSAGE";
                 }
-                else if (data.response.results.score > 0) {
-                    data.response.results.sound = random.pick(quizSounds.finish.ok);
-                    data.response.results.title = "POSITIVE_SCORE_TITLE";
-                    data.response.results.message = "POSITIVE_SCORE_MESSAGE";
+                else if (data.clientResponse.results.score > 0) {
+                    data.clientResponse.results.sound = random.pick(quizSounds.finish.ok);
+                    data.clientResponse.results.title = "POSITIVE_SCORE_TITLE";
+                    data.clientResponse.results.message = "POSITIVE_SCORE_MESSAGE";
                 }
                 else { //zero
-                    data.response.results.sound = random.pick(quizSounds.finish.zero);
-                    data.response.results.title = "ZERO_SCORE_TITLE";
-                    data.response.results.message = "ZERO_SCORE_MESSAGE";
+                    data.clientResponse.results.sound = random.pick(quizSounds.finish.zero);
+                    data.clientResponse.results.title = "ZERO_SCORE_TITLE";
+                    data.clientResponse.results.message = "ZERO_SCORE_MESSAGE";
                 }
             }
             callback(null, data);
@@ -326,7 +335,7 @@ module.exports.answer = function (req, res, next) {
 
     async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.send(200, data.response);
+            res.send(200, data.clientResponse);
         }
         else {
             res.send(err.httpStatus, err);
@@ -341,7 +350,7 @@ module.exports.answer = function (req, res, next) {
 //--------------------------------------------------------------------------
 module.exports.nextQuestion = function (req, res, next) {
     var token = req.headers.authorization;
-    var data = req.body;
+    var data = {};
     var operations = [
 
         //getSession

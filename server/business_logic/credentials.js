@@ -16,7 +16,7 @@ function getSessionResponse(session) {
         "name": session.name,
         "score" : session.score,
         "rank" : session.rank,
-        "xpProgress" : generalUtils.getXpProgress(session.xp, session.rank),
+        "xpProgress" : generalUtils.getXpProgress(0, session.xp, session.rank),
         "settings": session.settings
     };
 }

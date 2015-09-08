@@ -1,46 +1,37 @@
 angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
-    .controller("AppCtrl", function ($scope, $rootScope, $ionicSideMenuDelegate) {
+    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, ErrorService, SoundService) {
 
-        console.log("menu");
-        var canvas = document.getElementById("myCanvas");
-        var context = canvas.getContext('2d');
-        var x = canvas.width / 2;
-        var y = canvas.height / 2;
+        $rootScope.$on('mySmarteam-directionChanged', function () {
+            $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
+        });
 
-        context.beginPath();
+        $rootScope.$on("mySmarteam-rankChanged", function () {
+            //TODO: nice popup celebrating new rank!
+            SoundService.play("audio/finish_great_1");
+            ErrorService.alert("TODO: nice popup celebrating new rank!");
+        });
 
-        var gradient = context.createRadialGradient(x, y, 3, x, y, 12);
-        gradient.addColorStop(0, 'white');
-        gradient.addColorStop(1, 'blue');
+        $scope.canvas = document.createElement("canvas");
+        $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
+        $scope.canvas.height =  $rootScope.settings.xpControl.canvas.height;
 
-        context.arc(x, y, 15, 0, 2 * Math.PI, false);
+        $scope.context = $scope.canvas.getContext('2d');
 
-        context.fillStyle = "#ffff37";
-        context.fill();
+        angular.element(document.querySelector("#canvasWrapper")).append($scope.canvas);
 
-        // line color
-        context.lineWidth = 4;
-        context.strokeStyle = '#444';
-        context.stroke();
-        context.closePath();
+        XpService.initXp($scope.canvas, $scope.context);
 
-        context.beginPath();
-        // line color
-        context.arc(x, y, 15, 0.8 * Math.PI, 1.5 * Math.PI, true);
-        context.strokeStyle = '#0094ff';
-        context.stroke();
-
-        var font = "bold 10px arial";
-        context.font = font;
-        // Move it down by half the text height and left by half the text width
-        var text = "123";
-        var width = context.measureText(text).width;
-        var height = context.measureText("w").width; // this is a GUESS of height
-        context.fillStyle = "#444";
-        context.fillText(text, x - (width/2) ,y + (height/2));
-
-        context.closePath();
+        $scope.$watch(function() {
+            return $ionicSideMenuDelegate.isOpen();
+        }, function(value) {
+            if (value === false) {
+                $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
+            }
+            else {
+                $scope.canvas.className = "menu-xp-menu-open";
+            }
+        });
 
     })
 
@@ -142,7 +133,8 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         };
 
         $scope.showParticipants = function() {
-            ErrorService.alert("TBD");
+            //TODO: show top 10 contest participants!
+            ErrorService.alert("TODO: show top 10 contest participants!");
         }
 
         $scope.infiniteLoadMoreContests = function () {
@@ -210,7 +202,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         ChartService.setEvents($scope);
     })
 
-    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate, $timeout, SoundService) {
+    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate, $timeout, SoundService, XpService) {
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
@@ -233,15 +225,19 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
             QuizService.start(postData,
                 function (data) {
-                    $scope.quiz = data;
+                    $scope.quiz = data.quiz;
+
+                    //Might get xp if starting quiz by pressing a new team (joining contest)
+                    if ($scope.quiz.xpProgress && $scope.quiz.xpProgress.addition > 0) {
+                        XpService.addXp($scope.quiz.xpProgress.addition);
+                    }
+
                     $scope.quiz.currentQuestion.answered = false;
                 });
         }
 
         $scope.nextQuestion = function() {
-            console.log($scope.quiz.currentQuestion.id);
-            QuizService.nextQuestion({"questionId" : $scope.quiz.currentQuestion.id},
-                function (data) {
+            QuizService.nextQuestion(function (data) {
                     $scope.quiz = data;
                     $scope.quiz.currentQuestion.answered = false;
                 });
@@ -252,7 +248,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             if ($scope.correctButtonId == button.id) {
                 if ($scope.quiz.finished == true) {
                     $rootScope.session.score += $scope.quiz.results.score;
-                    $rootScope.gotoView('quizResult', true, {results: $scope.quiz.results}, false);
+                    $rootScope.gotoView("app.quizResult", true, {results: $scope.quiz.results}, false);
                 }
                 else {
                     $scope.nextQuestion();
@@ -284,6 +280,8 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                         $scope.quiz.results = data.results;
                     }
 
+                    $scope.quiz.currentQuestion.xpProgress = data.xpProgress;
+
                     if (data.question.correct == true) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
@@ -304,6 +302,10 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                         }, 3000);
                     }
 
+                    if ($scope.quiz.currentQuestion.xpProgress && $scope.quiz.currentQuestion.xpProgress.addition > 0) {
+                        XpService.addXp($scope.quiz.currentQuestion.xpProgress);
+                    }
+
                     $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
                 }, null, config);
         }
@@ -315,12 +317,15 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             $scope.contestCharts = [{}];
         }
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
             if (!$stateParams.results) {
                 $rootScope.gotoView("app.contests.mine");
                 return;
             }
+
+            viewData.enableBack = false;
+            $rootScope.hideMenuButton = true;
 
             $scope.results = $stateParams.results;
 
@@ -335,9 +340,14 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             $rootScope.lastPlayed = $stateParams.results.contest.lastPlayed;
         });
 
+        $scope.$on('$ionicView.beforeLeave', function () {
+
+            $rootScope.hideMenuButton = false;
+        });
+
         $scope.playAgain = function () {
 
-            $rootScope.gotoView('quiz', false, {
+            $rootScope.gotoView("app.quiz", false, {
                 contestId: $scope.results.contest._id,
                 teamId: $scope.results.contest.myTeam
             });
@@ -408,11 +418,17 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 var postData = {"settings": $scope.localViewData};
                 UserService.saveSettingsToServer(postData,
                     function (data) {
-                        if ($scope.localViewData.language != $rootScope.session.settings.language) {
-                            $translate.use($scope.localViewData.language);
-                        }
+                        prevLanguage = $rootScope.user.settings.language;
                         $rootScope.user.settings = $scope.localViewData;
                         $rootScope.session.settings = $scope.localViewData;
+                        if ($scope.localViewData.language != prevLanguage) {
+                            $translate.use($scope.localViewData.language);
+
+                            //Check to fire directionChanged event
+                            if ($rootScope.settings.languages[$scope.localViewData.language].direction != $rootScope.settings.languages[prevLanguage].direction) {
+                                $rootScope.$broadcast('mySmarteam-directionChanged');
+                            }
+                        }
                     });
             }
         });

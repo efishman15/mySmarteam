@@ -297,6 +297,8 @@ function retrieveSession(data, callback) {
 // output: <NA>
 //---------------------------------------------------------------------
 module.exports.storeSession = function (data, callback) {
+
+    data.session.expires = new Date((new Date()).getTime() + generalUtils.generalSettings.db.sessionExpirationMilliseconds)
     var sessionsCollection = data.DbHelper.getCollection("Sessions");
     sessionsCollection.update(
         {
@@ -394,8 +396,7 @@ module.exports.facebookLogin = function (data, callback) {
             prevLogin.getUTCMonth() != today.getUTCMonth() ||
             prevLogin.getUTCFullYear() != today.getUTCFullYear()) {
 
-            dailyXp = generalUtils.xpCredits.login;
-            generalUtils.addXp(user, "login");
+            generalUtils.addXp(user, null, "login");
         }
 
         usersCollection.updateOne({"_id": user._id},
@@ -406,7 +407,7 @@ module.exports.facebookLogin = function (data, callback) {
                     "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
                     "ageRange": data.user.ageRange, //keep sync with Facebook changes
                     "xp": user.xp,
-                    "rank" : user.rank
+                    "rank": user.rank
                 }
             }, function (err, results) {
 
@@ -450,7 +451,8 @@ module.exports.createOrUpdateSession = function (data, callback) {
     var userToken = uuid.v1();
     var sessionsCollection = data.DbHelper.getCollection('Sessions');
 
-    var now = (new Date()).getTime();
+    var now = new Date();
+    var nowEpoch = now.getTime();
 
     sessionsCollection.findAndModify({"userId": ObjectId(data.user._id)}, {},
         {
@@ -462,7 +464,8 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "name": data.user.name,
                 "ageRange": data.user.ageRange,
                 "avatar": data.user.avatar,
-                "createdAt": new Date(), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
+                "created": nowEpoch,
+                "expires" : new Date(nowEpoch + generalUtils.generalSettings.db.sessionExpirationMilliseconds), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
                 "userToken": userToken,
                 "settings": data.user.settings,
                 "score": data.user.score,
@@ -600,25 +603,23 @@ function logAction(data, callback) {
 module.exports.prepareQuestionCriteria = prepareQuestionCriteria;
 function prepareQuestionCriteria(data, callback) {
 
-    console.log("current question=" + data.questionId);
     var randomTopic = random.rnd(0, data.session.quiz.serverData.topics.length - 1);
 
     var questionCriteria = {
-        //"_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        //"topicId": data.session.quiz.serverData.topics[randomTopic],
-        "questionId": {$gt: data.questionId ? data.questionId : 0}
+        "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
+        "topicId": data.session.quiz.serverData.topics[randomTopic]
     };
 
     //Filter by age if available
-    /*if (data.session.ageRange) {
-     if (data.session.ageRange.min) {
-     questionCriteria.minAge = {$lte: data.session.ageRange.min}
-     }
+    if (data.session.ageRange) {
+        if (data.session.ageRange.min) {
+            questionCriteria.minAge = {$lte: data.session.ageRange.min}
+        }
 
-     if (data.session.ageRange.max) {
-     questionCriteria.maxAge = {$gte: data.session.ageRange.max}
-     }
-     }*/
+        if (data.session.ageRange.max) {
+            questionCriteria.maxAge = {$gte: data.session.ageRange.max}
+        }
+    }
 
     data.questionCriteria = questionCriteria;
 
@@ -665,10 +666,9 @@ function getQuestionsCount(data, callback) {
 //---------------------------------------------------------------------
 module.exports.getNextQuestion = getNextQuestion;
 function getNextQuestion(data, callback) {
-    var skip = 0; //random.rnd(0, data.questionsCount - 1);
-    console.log("criteria=" + JSON.stringify(data.questionCriteria));
+    var skip = random.rnd(0, data.questionsCount - 1);
     var questionsCollection = data.DbHelper.getCollection("Questions");
-    questionsCollection.findOne(data.questionCriteria, {sort: "questionId"}, function (err, question) {
+    questionsCollection.findOne(data.questionCriteria, {skip : skip}, function (err, question) {
         if (err || !question) {
             callback(new exceptions.ServerException("Error retrieving next question from database", {
                 "data": data,
@@ -715,8 +715,7 @@ function getNextQuestion(data, callback) {
 
         data.session.quiz.clientData.currentQuestion = {
             "text": question.text,
-            "answers": [],
-            "id": question.questionId
+            "answers": []
         };
         if (question.correctAnswers > 0 || question.wrongAnswers > 0) {
             data.session.quiz.clientData.currentQuestion.correctRatio = 100 * mathjs.round(question.correctRatio, 2)
@@ -724,6 +723,9 @@ function getNextQuestion(data, callback) {
 
         for (var i = 0; i < question.answers.length; i++) {
             data.session.quiz.clientData.currentQuestion.answers.push({"id": i + 1, "text": question.answers[i].text})
+            if (question.answers[i].text.length > generalUtils.generalSettings.quiz.longAnswerTreshold) {
+                data.session.quiz.clientData.currentQuestion.hasLongAnswers = true;
+            }
         }
 
         //Add this question id to the list of questions already asked during this quiz
@@ -1021,7 +1023,7 @@ function updateQuestionStatistics(data, callback) {
 
         var correctAnswers = question.correctAnswers;
         var wrongAnswers = question.wrongAnswers;
-        if (data.response.question.correct === true) {
+        if (data.clientResponse.question.correct === true) {
             correctAnswers++;
         }
         else {
