@@ -208,7 +208,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 url: "/app",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("tab");
+                        return UserService.resolveAuthentication("app");
                     }
                 },
                 abstract: true,

@@ -882,7 +882,7 @@ angular.module('mySmarteam.services', [])
 
         };
 
-        service.addXp = function (xpProgress) {
+        service.addXp = function (xpProgress, callbackOnRankChange) {
 
             var startPoint = $rootScope.session.xpProgress.current / $rootScope.session.xpProgress.max;
 
@@ -899,12 +899,11 @@ angular.module('mySmarteam.services', [])
 
             //Add the actual xp to the client side
             $rootScope.session.xpProgress = xpProgress;
-            if (xpProgress.rank > $rootScope.session.rank) {
+            if (xpProgress.rankChanged === true) {
                 $rootScope.session.rank = xpProgress.rank;
                 service.initXp();
-                $rootScope.$broadcast("mySmarteam-rankChanged");
+                $rootScope.$broadcast("mySmarteam-rankChanged", {"xpProgress" : xpProgress, "callback" : callbackOnRankChange});
             }
-
 
         };
 

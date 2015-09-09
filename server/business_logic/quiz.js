@@ -70,6 +70,7 @@ module.exports.start = function (req, res, next) {
 
         //Check contest join and possible team switch
         function (data, callback) {
+
             if (data.teamId == null && (!data.contest.users || !data.contest.users[data.session.userId])) {
 
                 //----------------------------------
@@ -87,7 +88,7 @@ module.exports.start = function (req, res, next) {
                 //----------------------------------
                 //Not joined and passed a valid team
                 //----------------------------------
-                generalUtils.addXp(data.session, data.clientResponse, "joinContest");
+                data.clientResponse.xpProgress.addXp(data.session, "joinContest");
 
                 //Flagging for next function to do the join if necessary
                 data.joinTeam = true;
@@ -178,7 +179,7 @@ module.exports.answer = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
 
-    data.clientResponse = {"question": {}, "xp" : 0};
+    data.clientResponse = {"question": {}};
 
     var operations = [
 
@@ -206,7 +207,7 @@ module.exports.answer = function (req, res, next) {
             if (answers[answerId - 1].correct) {
                 data.clientResponse.question.correct = true;
 
-                generalUtils.addXp(data.session, data.clientResponse, "correctAnswer");
+                data.clientResponse.xpProgress.addXp(data.session, "correctAnswer");
 
                 data.session.quiz.serverData.score += data.session.quiz.serverData.questionScore; //Question score relational to 100
             }
@@ -240,7 +241,7 @@ module.exports.answer = function (req, res, next) {
 
             if (store == true) {
                 if (data.session.quiz.serverData.score == 100) {
-                    generalUtils.addXp(data.session, data.clientResponse, "quizFullScore");
+                    data.clientResponse.xpProgress.addXp(data.session, "quizFullScore");
                 }
 
                 dalDb.storeSession(data, callback);
@@ -252,7 +253,7 @@ module.exports.answer = function (req, res, next) {
 
         //Check to save the score into the users object as well - when quiz is finished or when got a correct answer (which gives score and/or xp
         function (data, callback) {
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex || (data.clientResponse.xpProgress && data.clientResponse.xpProgress.addition)) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex || data.clientResponse.xpProgress.addition > 0) {
 
                 data.setData = {
                     "score": data.session.score,

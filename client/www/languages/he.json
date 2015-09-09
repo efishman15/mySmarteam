@@ -71,5 +71,15 @@
   "MY_CONTESTS" : "התחרויות שלי",
   "RUNNING_CONTESTS" : "תחרויות רצות",
   "RECENTLY_FINISHED_CONTESTS" : "הסתיימו לאחרונה",
-  "SUCCESS_RATIO" : "({{correctRatio}}% הצלחה)"
+  "SUCCESS_RATIO" : "({{correctRatio}}% הצלחה)",
+  "NEW_RANK_TITLE" : "מזל טוב!",
+  "NEW_RANK_MESSAGE" : "עליתם לרמה: {{rank}}",
+  "NEW_RANK_NEW_CONTEST_UNLOCKED" : "כעת תוכלו ליצור תחרויות משלכם!",
+  "FEATURE_LOCKED_NEW_CONTEST" : "יצירת תחרויות חדשות נעולה עד רמה {{rank}}",
+  "UNLOCK_FEATURE" : "שחררו עבור {{cost}}",
+  "ENDS_IN" : "מסתיימת בעוד",
+  "ENDS_IN_MINUTES" : "{{number}} דקות",
+  "ENDS_IN_HOURS" : "{{number}} שעות",
+  "ENDS_IN_DAYS" : "{{number}} ימים"
+
 }

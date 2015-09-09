@@ -43,121 +43,57 @@ var triviaTopisPerLangage = {
 }
 
 //-------------------------------------------------------------------------------
-// generalSettings - sent back to the client
-//-------------------------------------------------------------------------------
-var generalSettings = {
-    "languages": supportedLanguages,
-    "charts": {
-        "size": {"width": 260, "height": 180},
-        "contestAnnotations": {
-            "annotationsFont": "10px Arial",
-            "annotationHorizontalMagicNumbers": {
-                "ltr": {
-                    "endsIn": {"id": 0, "position": "$chartstartx + ", "spacing": 2},
-                    "participants": {"id": 1, "position": "$chartendx - ", "spacing": 0}
-                },
-                "rtl": {
-                    "endsIn": {"id": 0, "position": "$chartendx - ", "spacing": 7},
-                    "participants": {"id": 1, "position": "$chartstartx + ", "spacing": 3}
-                },
-            }
-        },
-        "chartObject": {
-            "chart": {
-                "bgColor": "#FFFFFF",
-                "plotBorderAlpha": 0,
-                "baseFont": "Arial",
-                "baseFontSize": 12,
-                "showBorder": 1,
-                "showCanvasBorder": 0,
-                "showPlotBorder": 0,
-                "showCanvasBg": 0,
-                "yAxisMinValue": 0.0,
-                "yAxisMaxValue": 1.0,
-                "numDivLines": 0,
-                "adjustDiv": 0,
-                "divLineColor": "#FFFFFF",
-                "labelFontColor": "#040404",
-                "numberScaleValue": ".01",
-                "numberScaleUnit": "%",
-                "showYAxisValues": 0,
-                "valueFontSize": 12,
-                "labelFontSize": "15",
-                "chartBottomMargin": 25,
-                "valuePadding": 0,
-                "labelPadding": 10,
-                "useRoundEdges": "1",
-                "showToolTip": 0,
-                "labelDisplay": "auto",
-                "useEllipsesWhenOverflow": 1,
-                "maxLabelWidthPercent": 50
-            },
-            "annotations": {
-                "groups": [
-                    {
-                        "id": "infobar",
-                        "items": [
-                            {
-                                "id": "label",
-                                "type": "text",
-                                "y": "$chartendy - 8",
-                                "fontSize": 10,
-                                "font": "Arial",
-                                "fontColor": "#000000"
-                            },
-                            {
-                                "id": "label",
-                                "type": "text",
-                                "y": "$chartendy - 8",
-                                "fontSize": 10,
-                                "font": "Arial",
-                                "fontColor": "#000000"
-                            }
-                        ]
-                    }
-                ]
-            },
-        }
-    },
-    "contestList": {
-        "pageSize": 5,
-        "distance": "50%"
-    },
-    "quiz": {"longAnswerTreshold": 30},
-    "xpControl": {
-        "canvas": {"width": 40, "height": 44},
-        "radius": 15,
-        "fillColor": "#ffff37",
-        "lineWidth": 4,
-        "fullLineColor": "#444",
-        "progressLineColor": "#0094ff",
-        "font": {"bold": true, "name": "Arial", "d1": "14px", "d2": "14px", "d3": "11px"},
-        "textColor": "#444",
-        "shadow": {"offsetX": 0, "offsetY": 0, blur: 10, color: "#656565'"}
-    },
-    "db": {"sessionExpirationMilliseconds": 30 * 60 * 1000}
-}
-module.exports.generalSettings = generalSettings;
-
-//-------------------------------------------------------------------------------
 // Features can be unlocked either by having a minimum rank or by purchasing an
 // item per that feature
 //-------------------------------------------------------------------------------
-var unlockFeatures = {
-    "newContest": {"rank": 3, purchaseProductId: "newContest"},
-    "inviteFriendsToContest": {"rank": 2, purchaseProductId: "inviteFriendsToContest"}
+var features = {
+    "rankComputed": false,
+    "list": {
+        "newContest": {
+            "lockText": "FEATURE_LOCKED_NEW_CONTEST",
+            "purchase": {
+                "productId": "newContest",
+                "productName": "PURCHASE_NEW_CONTEST_UNLOCK_KEY",
+                "cost": "$0.99"
+            }
+        },
+        "challengeFriendContest": {
+            "lockText": "FEATURE_CHALLENGE_FRIEND_CONTEST",
+            "purchase": {
+                "productId": "challengeFriendContest",
+                "productName": "PURCHASE_CHALLENGE_FRIEND_CONTEST_UNLOCK_KEY",
+                "cost": "$0.99"
+            }
+        }
+    }
 }
-module.exports.unlockFeatures = unlockFeatures;
 
 //-------------------------------------------------------------------------------
 // rankByXp steps - rank must be consecutive starting from 1
 //-------------------------------------------------------------------------------
 var rankByXp = [
     {"xp": 100, "rank": 1},
-    {"xp": 500, "rank": 2},
+    {"xp": 500, "rank": 2, "unlockFeature": "newContest", "unlockFeatureMessage": "NEW_RANK_NEW_CONTEST_UNLOCKED"},
     {"xp": 1500, "rank": 3},
-    {"xp": 3000, "rank": 4}
+    {"xp": 3000, "rank": 4},
+    {"xp": 5000, "rank": 5}
 ]
+
+module.exports.featuresList = featuresList;
+function featuresList() {
+
+    //Lazy compute unlockRank property for each feature
+    if (features.rankComputed === false) {
+        for (var i = 0; i < rankByXp.length; i++) {
+            if (rankByXp[i].unlockFeature) {
+                features.list[rankByXp[i].unlockFeature].unlockRank = rankByXp[i].rank;
+            }
+        }
+        features.rankComputed = true;
+    }
+
+    return features.list;
+}
 
 var xpCredits = {
     "login": 5,
@@ -280,66 +216,163 @@ module.exports.getLanguageTriviaTopics = function (language) {
     return triviaTopisPerLangage[language];
 };
 
-
-//Object can be either a session or a user - both should contain xp and rank as properties
-//-----------------------------------------------------------------------
-// addXp
+//---------------------------------------------------------------------------------------------------
+// XpProgress class
 //
-// returns a rank of a given experience
-//-----------------------------------------------------------------------
-module.exports.addXp = function (object, responseData, action) {
+// Constructs the xp in a relational manner to be presented in a progress element
+// addXP function:
+// object can be either a session or a user - both should contain xp and rank as properties
+//---------------------------------------------------------------------------------------------------
+module.exports.XpProgress = XpProgress;
+function XpProgress(xp, rank) {
+    this.addition = 0;
+    this.xp = xp;
+    this.rank = rank;
+    this.refresh();
+}
 
+XpProgress.prototype.addXp = function (object, action) {
     var xp = xpCredits[action];
     if (xp) {
+
         object.xp += xp;
         var result = binaryRangeSearch(rankByXp, "xp", object.xp);
+
+        //update object (session, user)
         object.rank = result.rank;
 
-        return getXpProgress(xp, object.xp, object.rank, responseData);
-    }
 
-    //Error - the action does not produce any xp
-    return null;
+        //update my progress
+        this.addition += xp;
+        this.xp += xp;
+
+        if (result.rank > this.rank) {
+            this.rankChanged = true;
+            if (result.unlockFeature && result.unlockFeatureMessage) {
+                this.unlockFeatureMessage = result.unlockFeatureMessage;
+            }
+            this.rank = result.rank
+        }
+        else {
+            this.rankChanged = false;
+        }
+
+        this.refresh();
+
+    }
 };
 
-//-----------------------------------------------------------------------------------
-// getXpProgress
-//
-// returns the xp in a relational manner to be presented in a progress element
-//-----------------------------------------------------------------------------------
-module.exports.getXpProgress = getXpProgress;
-
-function getXpProgress(xpDelta, currentXp, currentRank, xpProgressContainer) {
-
+XpProgress.prototype.refresh = function () {
     var xpForRank;
-    if (currentRank - 2 >= 0) {
-        xpForRank = rankByXp[currentRank - 2].xp;
+    if (this.rank - 2 >= 0) {
+        xpForRank = rankByXp[this.rank - 2].xp;
     }
     else {
         xpForRank = 0;
     }
 
-    var xpForNextRank = rankByXp[currentRank - 1].xp;
-    var xpAchievedInRank = currentXp - xpForRank;
+    var xpForNextRank = rankByXp[this.rank - 1].xp;
+    var xpAchievedInRank = this.xp - xpForRank;
     var xpDiff = xpForNextRank - xpForRank;
 
-    var xpProgress;
-    if ((xpProgressContainer && !xpProgressContainer.xpProgress) || !xpProgressContainer) {
-        xpProgress = {"addition": 0};
-    }
-    else {
-        xpProgress = {"addition": xpProgressContainer.xpProgress.addition};
-    }
+    this.current = xpAchievedInRank;
+    this.max = xpDiff;
+};
 
-    xpProgress.current = xpAchievedInRank;
-    xpProgress.max = xpDiff;
-    xpProgress.addition += xpDelta;
-    xpProgress.rank = currentRank;
-
-    if (xpProgressContainer) {
-        xpProgressContainer.xpProgress = xpProgress;
-    }
-
-    return xpProgress;
+//-------------------------------------------------------------------------------
+// generalSettings - sent back to the client
+//-------------------------------------------------------------------------------
+var generalSettings = {
+    "languages": supportedLanguages,
+    "features": featuresList(),
+    "charts": {
+        "size": {"width": 260, "height": 180},
+        "contestAnnotations": {
+            "annotationsFont": "10px Arial",
+            "annotationHorizontalMagicNumbers": {
+                "ltr": {
+                    "endsIn": {"id": 0, "position": "$chartstartx + ", "spacing": 2},
+                    "participants": {"id": 1, "position": "$chartendx - ", "spacing": 0}
+                },
+                "rtl": {
+                    "endsIn": {"id": 0, "position": "$chartendx - ", "spacing": 7},
+                    "participants": {"id": 1, "position": "$chartstartx + ", "spacing": 3}
+                },
+            }
+        },
+        "chartObject": {
+            "chart": {
+                "bgColor": "#FFFFFF",
+                "plotBorderAlpha": 0,
+                "baseFont": "Arial",
+                "baseFontSize": 12,
+                "showBorder": 1,
+                "showCanvasBorder": 0,
+                "showPlotBorder": 0,
+                "showCanvasBg": 0,
+                "yAxisMinValue": 0.0,
+                "yAxisMaxValue": 1.0,
+                "numDivLines": 0,
+                "adjustDiv": 0,
+                "divLineColor": "#FFFFFF",
+                "labelFontColor": "#040404",
+                "numberScaleValue": ".01",
+                "numberScaleUnit": "%",
+                "showYAxisValues": 0,
+                "valueFontSize": 12,
+                "labelFontSize": "15",
+                "chartBottomMargin": 25,
+                "valuePadding": 0,
+                "labelPadding": 10,
+                "useRoundEdges": "1",
+                "showToolTip": 0,
+                "labelDisplay": "auto",
+                "useEllipsesWhenOverflow": 1,
+                "maxLabelWidthPercent": 50
+            },
+            "annotations": {
+                "groups": [
+                    {
+                        "id": "infobar",
+                        "items": [
+                            {
+                                "id": "label",
+                                "type": "text",
+                                "y": "$chartendy - 8",
+                                "fontSize": 10,
+                                "font": "Arial",
+                                "fontColor": "#000000"
+                            },
+                            {
+                                "id": "label",
+                                "type": "text",
+                                "y": "$chartendy - 8",
+                                "fontSize": 10,
+                                "font": "Arial",
+                                "fontColor": "#000000"
+                            }
+                        ]
+                    }
+                ]
+            },
+        }
+    },
+    "contestList": {
+        "pageSize": 5,
+        "distance": "50%"
+    },
+    "quiz": {"longAnswerTreshold": 30},
+    "xpControl": {
+        "canvas": {"width": 40, "height": 44},
+        "radius": 15,
+        "fillColor": "#ffff37",
+        "lineWidth": 4,
+        "fullLineColor": "#cccccc",
+        "progressLineColor": "#0094ff",
+        "font": {"bold": true, "name": "Arial", "d1": "14px", "d2": "14px", "d3": "11px"},
+        "textColor": "#444",
+        "shadow": {"offsetX": 0, "offsetY": 0, blur: 10, color: "#656565'"}
+    },
+    "db": {"sessionExpirationMilliseconds": 30 * 60 * 1000}
 }
-
+module.exports.generalSettings = generalSettings;

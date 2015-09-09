@@ -71,5 +71,14 @@
   "MY_CONTESTS" : "Mis Concursos",
   "RUNNING_CONTESTS" : "Correr Concursos",
   "RECENTLY_FINISHED_CONTESTS" : "Recientemente terminado",
-  "SUCCESS_RATIO" : "({{correctRatio}}% éxito)"
- }
+  "SUCCESS_RATIO" : "({{correctRatio}}% éxito)",
+  "NEW_RANK_TITLE" : "¡Felicidades",
+  "NEW_RANK_MESSAGE" : "Has alcanzado el nivel : {{rank}}",
+  "NEW_RANK_NEW_CONTEST_UNLOCKED" : "Ahora puede crear sus propios concursos !",
+  "FEATURE_LOCKED_NEW_CONTEST" : "Creación de nuevos concursos se bloquea hasta que el nivel {{rank}}",
+  "UNLOCK_FEATURE" : "Desbloquear para {{cost}}",
+  "ENDS_IN" : "Termina en",
+  "ENDS_IN_MINUTES" : "{{number}} Minutos",
+  "ENDS_IN_HOURS" : "{{number}} Horas",
+  "ENDS_IN_DAYS" : "{{number}} Días"
+}

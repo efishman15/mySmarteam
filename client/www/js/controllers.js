@@ -1,20 +1,54 @@
 angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
-    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, ErrorService, SoundService) {
+    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, ErrorService, SoundService, $ionicModal) {
 
         $rootScope.$on('mySmarteam-directionChanged', function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
         });
 
-        $rootScope.$on("mySmarteam-rankChanged", function () {
+        //-------------------------------------------------------
+        // New rank modal form
+        //-------------------------------------------------------
+        $ionicModal.fromTemplateUrl('templates/newRank.html', function (newRankModal) {
+            $scope.newRankModal = newRankModal;
+        }, {
+            scope: $scope,
+            animation: 'slide-in-up'
+
+        });
+
+        $scope.openNewRankModal = function () {
+            $scope.newRankModal.show();
+        };
+
+        $scope.closeNewRankModal = function () {
+            $scope.newRankModal.hide();
+        };
+
+        //Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.newRankModal.remove();
+        });
+
+        $scope.$on('modal.hidden', function () {
+            if ($scope.callbackAfterNewRankModal) {
+                $scope.callbackAfterNewRankModal();
+            }
+        });
+
+        $rootScope.$on("mySmarteam-rankChanged", function (error, data) {
             //TODO: nice popup celebrating new rank!
             SoundService.play("audio/finish_great_1");
-            ErrorService.alert("TODO: nice popup celebrating new rank!");
+            $scope.xpProgress = data.xpProgress;
+            $scope.callbackAfterNewRankModal = data.callback;
+
+            $scope.openNewRankModal();
+
         });
 
         $scope.canvas = document.createElement("canvas");
         $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
-        $scope.canvas.height =  $rootScope.settings.xpControl.canvas.height;
+        $scope.canvas.height = $rootScope.settings.xpControl.canvas.height;
 
         $scope.context = $scope.canvas.getContext('2d');
 
@@ -22,9 +56,9 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
         XpService.initXp($scope.canvas, $scope.context);
 
-        $scope.$watch(function() {
+        $scope.$watch(function () {
             return $ionicSideMenuDelegate.isOpen();
-        }, function(value) {
+        }, function (value) {
             if (value === false) {
                 $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
             }
@@ -119,11 +153,11 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             $scope.loadMoreContests(true);
         };
 
-        $scope.showPlay = function() {
+        $scope.showPlay = function () {
             return ($state.current.appData && $state.current.appData.showPlay);
         };
 
-        $scope.showContestParticipants = function() {
+        $scope.showContestParticipants = function () {
             return ($state.current.appData && $state.current.appData.showParticipants);
         };
 
@@ -132,13 +166,13 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             ($scope.totalContests > 0 && $scope.contestCharts.length < $scope.totalContests)); //retrieved, server has data, and I have less than the server
         };
 
-        $scope.showParticipants = function() {
+        $scope.showParticipants = function () {
             //TODO: show top 10 contest participants!
             ErrorService.alert("TODO: show top 10 contest participants!");
         }
 
         $scope.infiniteLoadMoreContests = function () {
-            $timeout(function() {
+            $timeout(function () {
                 if (shouldTriggerScrollInfiniteRealFunction == false) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
                     shouldTriggerScrollInfiniteRealFunction = true; // set the boolean to true so that the real load function is called next time infinite scrolling triggers
                     $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -146,7 +180,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 else {  // here it will be the real need for scrolling
                     $scope.loadMoreContests();
                 }
-            },100);
+            }, 100);
         };
 
         $scope.loadMoreContests = function (fullRefresh) {
@@ -164,30 +198,30 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
             var config;
             if ($scope.totalContests != -1) {
-                config = {"blockUserInterface" : false}
+                config = {"blockUserInterface": false}
             }
 
             ContestsService.getContests(postData, function (contestsResult) {
-                    $scope.totalContests = contestsResult.count;
+                $scope.totalContests = contestsResult.count;
 
-                    if (!$scope.contestCharts) {
-                        $scope.contestCharts = [];
-                    }
+                if (!$scope.contestCharts) {
+                    $scope.contestCharts = [];
+                }
 
-                    //Add server contests to the end of the array
-                    var contestChartsCount = $scope.contestCharts.length;
+                //Add server contests to the end of the array
+                var contestChartsCount = $scope.contestCharts.length;
 
-                    for (var i = 0; i < contestsResult.list.length; i++) {
-                        var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], contestChartsCount + i);
-                        $scope.contestCharts.push(contestChart);
-                    }
+                for (var i = 0; i < contestsResult.list.length; i++) {
+                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], contestChartsCount + i);
+                    $scope.contestCharts.push(contestChart);
+                }
 
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                $scope.$broadcast('scroll.infiniteScrollComplete');
 
-                    if (fullRefresh == true) {
-                        $scope.$broadcast('scroll.refreshComplete');
-                    }
-                }, null, config);
+                if (fullRefresh == true) {
+                    $scope.$broadcast('scroll.refreshComplete');
+                }
+            }, null, config);
         }
 
         $scope.playContest = function (contest) {
@@ -236,25 +270,33 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 });
         }
 
-        $scope.nextQuestion = function() {
+        $scope.nextQuestion = function () {
             QuizService.nextQuestion(function (data) {
-                    $scope.quiz = data;
-                    $scope.quiz.currentQuestion.answered = false;
-                });
+                $scope.quiz = data;
+                $scope.quiz.currentQuestion.answered = false;
+            });
         }
 
         $scope.buttonAnimationEnded = function (button, event) {
 
-            if ($scope.correctButtonId == button.id) {
-                if ($scope.quiz.finished == true) {
-                    $rootScope.session.score += $scope.quiz.results.score;
-                    $rootScope.gotoView("app.quizResult", true, {results: $scope.quiz.results}, false);
-                }
-                else {
-                    $scope.nextQuestion();
-                }
+            if ($scope.quiz.currentQuestion.xpProgress && $scope.quiz.currentQuestion.xpProgress.addition > 0) {
+                XpService.addXp($scope.quiz.currentQuestion.xpProgress, $scope.quizProceed);
+            }
+
+            if (!$scope.quiz.currentQuestion.xpProgress.rankChanged && $scope.correctButtonId == button.id) {
+                $scope.quizProceed();
             }
         };
+
+        $scope.quizProceed = function () {
+            if ($scope.quiz.finished == true) {
+                $rootScope.session.score += $scope.quiz.results.score;
+                $rootScope.gotoView("app.quizResult", true, {results: $scope.quiz.results}, false);
+            }
+            else {
+                $scope.nextQuestion();
+            }
+        }
 
         $scope.toggleSound = function () {
             UserService.toggleSound(
@@ -266,10 +308,16 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         $scope.submitAnswer = function (answerId) {
             $scope.quiz.currentQuestion.answered = true;
 
-            var config = {"onServerErrors" : {
-                "SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ": {"next": startQuiz},
-                "SERVER_ERROR_GENERAL": {"next": function() {$ionicHistory.goBack();}}
-            }};
+            var config = {
+                "onServerErrors": {
+                    "SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ": {"next": startQuiz},
+                    "SERVER_ERROR_GENERAL": {
+                        "next": function () {
+                            $ionicHistory.goBack();
+                        }
+                    }
+                }
+            };
 
             QuizService.answer({"id": answerId},
                 function (data) {
@@ -300,10 +348,6 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                                 $scope.quiz.currentQuestion.answers[data.question.correctAnswerId - 1].correct = true;
                             })
                         }, 3000);
-                    }
-
-                    if ($scope.quiz.currentQuestion.xpProgress && $scope.quiz.currentQuestion.xpProgress.addition > 0) {
-                        XpService.addXp($scope.quiz.currentQuestion.xpProgress);
                     }
 
                     $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
@@ -445,10 +489,10 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
         });
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService, $ionicPopup) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService, $ionicPopup, $ionicPopover) {
 
         var startDate = new Date();
-        var endDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
+        var endDate = new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000);
 
         var datePickerToday = $translate.instant("DATE_PICKER_TODAY");
         var datePickerClose = $translate.instant("DATE_PICKER_CLOSE");
@@ -496,10 +540,41 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             $scope.contestStartDatePicker.from = startDate;
         }
         else {
-            var pastDate = new Date(1970,0,1);
+            var pastDate = new Date(1970, 0, 1);
             $scope.contestStartDatePicker.from = pastDate;
             $scope.contestStartDatePicker.from = pastDate;
         }
+
+        $scope.contestEndOptions = {
+            "m30": {"value": "m30", "number": 30, "units": "ENDS_IN_MINUTES", "msecMultiplier": 60 * 1000},
+            "h4": {"value": "h4", "number": 4, "units": "ENDS_IN_HOURS", "msecMultiplier": 60 * 60 * 1000},
+            "h24": {"value": "h24", "number": 24, "units": "ENDS_IN_HOURS", "msecMultiplier": 60 * 60 * 1000},
+            "d3": {"value": "d3", "number": 3, "units": "ENDS_IN_DAYS", "msecMultiplier": 24 * 60 * 60 * 1000}
+        }
+
+        //-------------------------------------------------------
+        // Choose Contest end option Popover
+        // -------------------------------------------------------
+        $ionicPopover.fromTemplateUrl('templates/chooseEndsIn.html', {
+            scope: $scope
+        }).then(function (contestEndsInPopover) {
+            $scope.contestEndsInPopover = contestEndsInPopover;
+        });
+
+        $scope.openContestEndsInPopover = function ($event) {
+            $scope.contestEndsInPopover.show($event);
+        };
+
+        $scope.closeContestEndsInPopover = function (contestEndsInOption) {
+            $scope.localViewData.endOption = contestEndsInOption.value;
+            $scope.localViewData.endDate = new Date((new Date()).getTime() + $scope.contestEndOptions[contestEndsInOption.value].number * $scope.contestEndOptions[contestEndsInOption.value].msecMultiplier);
+            $scope.contestEndsInPopover.hide();
+        };
+
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.contestEndsInPopover.remove();
+        });
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             if ($stateParams.mode) {
@@ -511,7 +586,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                         $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
                         $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
 
-                        if ($scope.localViewData.status == "running" && $scope.localViewData.participants > 0) {
+                        if ($scope.localViewData.participants > 0) {
                             $scope.showStartDate = false;
                         }
                         else {
@@ -524,10 +599,11 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     }
                 }
                 else {
-                    //Copy data from first profile, and then clear the
+                    //Create new local instance of a contest
                     $scope.localViewData = {
                         "startDate": startDate,
                         "endDate": endDate,
+                        "endOption": "h24",
                         "participants": 0,
                         "manualParticipants": 0,
                         "manualRating": 0,
@@ -682,4 +758,13 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
         }
 
-    });
+        $scope.lockNewContest = function() {
+            return !($rootScope.session.isAdmin===true) && $rootScope.session.rank <  $rootScope.settings.features.newContest.unlockRank
+        }
+
+        $scope.buyNewContestKey = function() {
+            ErrorService.alert("TODO: purchase new contest unlock key");
+        }
+
+    })
+;

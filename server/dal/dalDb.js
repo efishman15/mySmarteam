@@ -278,6 +278,10 @@ function retrieveSession(data, callback) {
             }
 
             data.session = session;
+            if (!data.clientResponse) {
+                data.clientResponse = {};
+            }
+            data.clientResponse.xpProgress = new generalUtils.XpProgress(session.xp, session.rank);
 
             checkToCloseDb(data);
 

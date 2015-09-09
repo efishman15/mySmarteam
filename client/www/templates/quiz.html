@@ -24,9 +24,9 @@
                         ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
                         ng-repeat="answer in quiz.currentQuestion.answers track by answer.id"
                         class="item button button-full button-3d"
-                        ng-class="{'button-positive button-3d-positive' : !quiz.currentQuestion.answered,
-                            'button-balanced button-3d-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
-                            'button-assertive button-3d-assertive blink' : answer.answeredCorrectly == false && answer.correct == null,
+                        ng-class="{'button-positive' : !quiz.currentQuestion.answered,
+                            'button-3d-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
+                            'button-3d-assertive blink' : answer.answeredCorrectly == false && answer.correct == null,
                             'quiz-normal-answer' : !(quiz.currentQuestion.hasLongAnswers) || quiz.currentQuestion.hasLongAnswers === false,
                             'quiz-long-answer' : quiz.currentQuestion.hasLongAnswers === true}"
                         ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"

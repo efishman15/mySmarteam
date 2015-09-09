@@ -71,5 +71,14 @@
   "MY_CONTESTS" : "My Contests",
   "RUNNING_CONTESTS" : "Running Contests",
   "RECENTLY_FINISHED_CONTESTS" : "Recently finished",
-  "SUCCESS_RATIO" : "({{correctRatio}}% success)"
+  "SUCCESS_RATIO" : "({{correctRatio}}% success)",
+  "NEW_RANK_TITLE" : "Congratulations!",
+  "NEW_RANK_MESSAGE" : "You have reached level: {{rank}}",
+  "NEW_RANK_NEW_CONTEST_UNLOCKED" : "You can now create your own contests!",
+  "FEATURE_LOCKED_NEW_CONTEST" : "Creating new contests is locked until level {{rank}}",
+  "UNLOCK_FEATURE" : "Unlock for {{cost}}",
+  "ENDS_IN" : "Ends in",
+  "ENDS_IN_MINUTES" : "{{number}} Minutes",
+  "ENDS_IN_HOURS" : "{{number}} Hours",
+  "ENDS_IN_DAYS" : "{{number}} Days"
 }

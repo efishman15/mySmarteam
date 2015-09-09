@@ -1,18 +1,31 @@
 <ion-view view-title="{{getTitle()}}">
-    <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+    <ion-nav-bar class="bar-stable" align-title="center"
+                 dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+        <ion-nav-buttons side="primary">
+            <button class="button" ng-click="removeContest()" ng-hide="hideRemoveContest()">{{ 'REMOVE_CONTEST' |
+                translate}}
+            </button>
+        </ion-nav-buttons>
         <ion-nav-back-button></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
+        <div class="padding" ng-show="lockNewContest()">
+            <span class="featureLockedText">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.settings.features.newContest.unlockRank} }}</span>
+            <button class="button button-full button-small button-3d button-3d-balanced" ng-click="buyNewContestKey()">{{'UNLOCK_FEATURE' |
+                translate:{cost :
+                $root.settings.features.newContest.purchase.cost} }}
+            </button>
+        </div>
         <form name="contestForm" novalidate="novalidate">
             <ion-list>
-
                 <ion-item class="padding row">
                     <div class="contest-team">
                         <label class="item item-input"
                                ng-class="{ 'has-error' : contestForm.team0.$invalid && contestForm.team0.$touched, 'valid-lr' : contestForm.team0.$valid}"
                                ng-messages-include="templates/contest-error-list.html">
-                            <input type="text" placeholder="{{ 'TEAM0' | translate }}" name="team0"
+                            <input ng-disabled="lockNewContest()" type="text" placeholder="{{ 'TEAM0' | translate }}"
+                                   name="team0"
                                    ng-model="localViewData.teams[0].name" autofocus
                                    ng-minlength="2" ng-maxlength="15" maxlength="15" required>
                         </label>
@@ -30,7 +43,8 @@
                         <label class="item item-input"
                                ng-class="{ 'has-error' : contestForm.team1.$invalid && contestForm.team1.$touched, 'valid-lr' : contestForm.team1.$valid}"
                                ng-messages-include="templates/contest-error-list.html">
-                            <input type="text" placeholder="{{ 'TEAM1' | translate }}" name="team1"
+                            <input ng-disabled="lockNewContest()" type="text" placeholder="{{ 'TEAM1' | translate }}"
+                                   name="team1"
                                    ng-model="localViewData.teams[1].name"
                                    ng-minlength="2" ng-maxlength="15" maxlength="15" required>
                         </label>
@@ -43,23 +57,14 @@
                     </div>
                 </ion-item>
 
-                <ion-item class="padding" ng-show="showStartDate==false">
-                    <span>{{'CONTEST_START' | translate}}</span>
-                        <button class="button button-block button-stable">{{localViewData.startDate | date:'dd-MM-yyyy'}}
-                        </button>
+                <ion-item ng-click="openContestEndsInPopover($event)" ng-show="mode==='add'">
+                    <span translate="ENDS_IN"></span>
+                    <br/>
+                    <strong>{{ contestEndOptions[localViewData.endOption].units | translate:{number :
+                        contestEndOptions[localViewData.endOption].number} }}</strong>
                 </ion-item>
 
-                <ion-item class="padding" ng-show="showStartDate==true">
-                    <span>{{'CONTEST_START' | translate}}</span>
-                    <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
-                        <button class="button button-block button-positive">{{localViewData.startDate |
-                            date:'dd-MM-yyyy'}}
-                        </button>
-                    </ionic-datepicker>
-                </ion-item>
-
-
-                <ion-item class="padding">
+                <ion-item class="padding" ng-show="mode==='edit'">
                     <span>{{'CONTEST_END' | translate}}</span>
                     <ionic-datepicker input-obj="contestEndDatePicker" dir="ltr">
                         <button class="button button-block button-positive">{{localViewData.endDate |
@@ -69,9 +74,17 @@
                 </ion-item>
 
                 <ion-item class="padding" ng-hide="!$root.session.isAdmin || $root.session.isAdmin == false">
-                    <span ng-click="toggleAdminInfo()">{{'CONTEST_ADMIN_INFO' | translate}} {{getAdminArrowSign()}}</span>
+                    <span class="pointer" ng-click="toggleAdminInfo()">{{'CONTEST_ADMIN_INFO' | translate}} {{getAdminArrowSign()}}</span>
 
                     <div ng-hide="showAdminInfo==false && contestForm.team0 && contestForm.team1">
+                        <div class="padding" ng-show="showStartDate===true">
+                            <span>{{'CONTEST_START' | translate}}</span>
+                            <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
+                                <button class="button button-block button-positive">{{localViewData.startDate |
+                                    date:'dd-MM-yyyy'}}
+                                </button>
+                            </ionic-datepicker>
+                        </div>
                         <div class="row">
                             <div class="padding contest-team">
                                 <span class="padding">{{'TEAM_SCORE' | translate:{team : localViewData.teams[0].name} }}</span>
@@ -110,16 +123,21 @@
                         </div>
                         <div class="padding">
                             <span>{{'RATING' | translate}}: {{localViewData.manualRating}}</span>
+
                             <div class="padding item range">
                                 0
-                                <input type="range" name="manualRating" min="0" max="100" ng-model="localViewData.manualRating" value="{{localViewData.manualRating}}">
+                                <input type="range" name="manualRating" min="0" max="100"
+                                       ng-model="localViewData.manualRating" value="{{localViewData.manualRating}}">
                                 100
                             </div>
                         </div>
                         <div class="padding">
                             <span>{{'PARTICIPANTS' | translate}}: {{localViewData.totalParticipants}}</span>
+
                             <div class="padding item range">
-                                <input type="range" name="manualParticipants" min="{{localViewData.participants}}" max="10000" ng-model="localViewData.totalParticipants" value="{{localViewData.totalParticipants}}">
+                                <input type="range" name="manualParticipants" min="{{localViewData.participants}}"
+                                       max="10000" ng-model="localViewData.totalParticipants"
+                                       value="{{localViewData.totalParticipants}}">
                             </div>
                         </div>
 
@@ -127,9 +145,10 @@
                 </ion-item>
 
                 <ion-item class="button-bar">
-                    <button class="button button-bar button-positive button-calm button-3d button-3d-calm" translate="OK" ng-click="contestForm.$valid && setContest()">
+                    <button class="button button-bar button-calm" translate="OK"
+                            ng-click="contestForm.$valid && setContest()">
                     </button>
-                    <button class="button button-bar button-3d button-3d-normal" translate="CANCEL" ng-click="goBack()">
+                    <button class="button button-bar button-stable" translate="CANCEL" ng-click="goBack()">
                     </button>
                 </ion-item>
 
