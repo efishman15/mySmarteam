@@ -1,4 +1,4 @@
-var CONNECTION_STRING = "mongodb://localhost:27017/mySmarteam";
+var CONNECTION_STRING = "mongodb://localhost:27017/whoSmarter";
 
 var mongoClient = require("mongodb").MongoClient;
 var uuid = require('node-uuid');
@@ -400,7 +400,8 @@ module.exports.facebookLogin = function (data, callback) {
             prevLogin.getUTCMonth() != today.getUTCMonth() ||
             prevLogin.getUTCFullYear() != today.getUTCFullYear()) {
 
-            generalUtils.addXp(user, null, "login");
+            var xpProgress = new generalUtils.XpProgress(user.xp, user.rank);
+            xpProgress.addXp(user, "login");
         }
 
         usersCollection.updateOne({"_id": user._id},

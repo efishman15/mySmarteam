@@ -1,1 +1,1 @@
-# mySmarteam server
+# whoSmarter server

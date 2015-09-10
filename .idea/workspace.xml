@@ -5,30 +5,170 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/images/new_rank.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/templates/chooseEndsIn.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/templates/newRank.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/resources/android/splash/drawable-port-hdpi-screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/resources/android/splash/drawable-port-ldpi-screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/resources/android/splash/drawable-port-mdpi-screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/resources/android/splash/drawable-port-xhdpi-screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/resources/android/splash/drawable-port-xxhdpi-screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/resources/android/splash/drawable-port-xxxhdpi-screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/icons/icon144.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/icons/icon192.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/icons/icon36.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/icons/icon48.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/icons/icon512.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/icons/icon72.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/icons/icon96.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/land/drawable-hdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/land/drawable-ldpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/land/drawable-mdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/land/drawable-xhdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/land/drawable-xxhdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/land/drawable-xxxhdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/port/drawable-hdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/port/drawable-ldpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/port/drawable-mdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/port/drawable-xhdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/port/drawable-xxhdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/splash/port/drawable-xxxhdpi/screen.9.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/hooks/010_sign_apk.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/graphics/copyToAndroid.bat" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/hooks/after_build/sign.bat" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-land-hdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-land-ldpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-land-mdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-land-xhdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-land-xxhdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-land-xxxhdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-port-hdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-port-ldpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-port-mdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-port-xhdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-port-xxhdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\resources\android\splash\drawable-port-xxxhdpi-screen.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\downloads\studyb4.apk" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\img\ionic.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\angular-animate.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\angular-animate.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\angular-animate.min.js.map" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-animate\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-http-auth\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-http-auth\.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-http-auth\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-http-auth\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-http-auth\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-http-auth\src\http-auth-interceptor.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\angular-route.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\angular-route.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\angular-route.min.js.map" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-route\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\angular-sanitize.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\angular-sanitize.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\angular-sanitize.min.js.map" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-sanitize\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-storage\angular-storage.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\CHANGELOG.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\CONTRIBUTING.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\api\angular-ui-router.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\release\angular-ui-router.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\release\angular-ui-router.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\common.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\resolve.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\state.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\stateDirectives.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\stateFilters.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\templateFactory.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\urlMatcherFactory.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\urlRouter.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\view.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\viewDirective.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular-ui-router\src\viewScroll.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\angular-csp.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\angular.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\angular.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\angular.min.js.gzip" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\angular.min.js.map" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\angular\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\facebook-connect-plugin\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\facebook-connect-plugin\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\LICENSE.MD" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\dist\ionic-datepicker.bundle.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\gulpfile.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\src\ionic-datepicker-modal.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\src\ionic-datepicker-popup.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\src\ionic-datepicker.app.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\src\ionic-datepicker.directive.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\src\ionic-datepicker.service.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ionic-datepicker\src\ionic-datepicker.styles.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\.bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\CHANGELOG.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\bower.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\dist\ng-cordova-mocks.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\dist\ng-cordova-mocks.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\dist\ng-cordova.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\dist\ng-cordova.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\lib\ngCordova\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\server\logs\mySmarteam.log.0" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\server\logs\mySmarteam.log.1" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\server\logs\mySmarteam.log.2" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\server\logs\mySmarteam.log.3" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\server\logs\mySmarteam.log.4" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\server\logs\mySmarteam.log.5" afterPath="" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\server\logs\mySmarteam.log.6" afterPath="" />
+      <change type="MOVED" beforePath="C:\Dev\whoSmarter\.idea\mySmarteam.iml" afterPath="$PROJECT_DIR$/.idea/whoSmarter.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/images/demo_contest_en.png" afterPath="$PROJECT_DIR$/client/www/images/demo_contest_en.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/images/demo_contest_es.png" afterPath="$PROJECT_DIR$/client/www/images/demo_contest_es.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/images/demo_contest_he.png" afterPath="$PROJECT_DIR$/client/www/images/demo_contest_he.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/android/icon/drawable-hdpi-icon.png" afterPath="$PROJECT_DIR$/client/resources/android/icon/drawable-hdpi-icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/android/icon/drawable-ldpi-icon.png" afterPath="$PROJECT_DIR$/client/resources/android/icon/drawable-ldpi-icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/android/icon/drawable-mdpi-icon.png" afterPath="$PROJECT_DIR$/client/resources/android/icon/drawable-mdpi-icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/android/icon/drawable-xhdpi-icon.png" afterPath="$PROJECT_DIR$/client/resources/android/icon/drawable-xhdpi-icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/android/icon/drawable-xxhdpi-icon.png" afterPath="$PROJECT_DIR$/client/resources/android/icon/drawable-xxhdpi-icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/android/icon/drawable-xxxhdpi-icon.png" afterPath="$PROJECT_DIR$/client/resources/android/icon/drawable-xxxhdpi-icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/icon.png" afterPath="$PROJECT_DIR$/client/resources/icon.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/resources/splash.png" afterPath="$PROJECT_DIR$/client/resources/splash.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/app.js" afterPath="$PROJECT_DIR$/client/www/js/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/contest.html" afterPath="$PROJECT_DIR$/client/www/templates/contest.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/contests.html" afterPath="$PROJECT_DIR$/client/www/templates/contests.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/bower.json" afterPath="$PROJECT_DIR$/client/bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/config.xml" afterPath="$PROJECT_DIR$/client/config.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/credentials.js" afterPath="$PROJECT_DIR$/server/business_logic/credentials.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/dal/dalDb.js" afterPath="$PROJECT_DIR$/server/dal/dalDb.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/en.json" afterPath="$PROJECT_DIR$/client/www/languages/en.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/es.json" afterPath="$PROJECT_DIR$/client/www/languages/es.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/utils/general.js" afterPath="$PROJECT_DIR$/server/utils/general.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/utils/exceptions.js" afterPath="$PROJECT_DIR$/server/utils/exceptions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/he.json" afterPath="$PROJECT_DIR$/client/www/languages/he.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/logs/mySmarteam.log.0" afterPath="$PROJECT_DIR$/server/logs/mySmarteam.log.0" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/logs/mySmarteam.log.1" afterPath="$PROJECT_DIR$/server/logs/mySmarteam.log.1" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/logs/mySmarteam.log.2" afterPath="$PROJECT_DIR$/server/logs/mySmarteam.log.2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/logs/mySmarteam.log.3" afterPath="$PROJECT_DIR$/server/logs/mySmarteam.log.3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/logs/mySmarteam.log.4" afterPath="$PROJECT_DIR$/server/logs/mySmarteam.log.4" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/logs/mySmarteam.log.5" afterPath="$PROJECT_DIR$/server/logs/mySmarteam.log.5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/logs/mySmarteam.log.6" afterPath="$PROJECT_DIR$/server/logs/mySmarteam.log.6" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/quiz.html" afterPath="$PROJECT_DIR$/client/www/templates/quiz.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/quiz.js" afterPath="$PROJECT_DIR$/server/business_logic/quiz.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/quizResult.html" afterPath="$PROJECT_DIR$/client/www/templates/quizResult.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/index.html" afterPath="$PROJECT_DIR$/client/www/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/info.txt" afterPath="$PROJECT_DIR$/client/info.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/ionic.project" afterPath="$PROJECT_DIR$/client/ionic.project" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/package.json" afterPath="$PROJECT_DIR$/client/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/readme.md" afterPath="$PROJECT_DIR$/server/readme.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/services.js" afterPath="$PROJECT_DIR$/client/www/js/services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/settings.html" afterPath="$PROJECT_DIR$/client/www/templates/settings.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/css/style.css" afterPath="$PROJECT_DIR$/client/www/css/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -66,19 +206,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/client/www/lib/fb-angular/fb-angular.js" />
-        <option value="$PROJECT_DIR$/server/dal/myMongoDB.js" />
-        <option value="$PROJECT_DIR$/server/dal/dalMongoDB.js" />
-        <option value="$PROJECT_DIR$/client/platforms/android/com.phonegap.plugins.facebookconnect/contest-FacebookLib/build.gradle" />
-        <option value="$PROJECT_DIR$/client/plugins/com.phonegap.plugins.facebookconnect/plugin.xml" />
-        <option value="$PROJECT_DIR$/client/www/lib/facebook-connect-plugin/index.js" />
-        <option value="$PROJECT_DIR$/client/www/oauthcallback.html" />
-        <option value="$PROJECT_DIR$/client/platforms/android/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/client/platforms/android/res/xml/config.xml" />
-        <option value="$PROJECT_DIR$/client/www/languages/ru.json" />
-        <option value="$PROJECT_DIR$/client/www/lib/ionic-datepicker/dist/ionic-datepicker.bundle.min.js" />
-        <option value="$PROJECT_DIR$/client/www/lib/ionic-datepicker/src/ionic-datepicker.directive.js" />
-        <option value="$PROJECT_DIR$/client/www/templates/chooseSubjects.html" />
         <option value="$PROJECT_DIR$/client/www/templates/contest-error-list.html" />
         <option value="$PROJECT_DIR$/server/utils/random.js" />
         <option value="$PROJECT_DIR$/client/platforms/android/res/values/facebookconnect.xml" />
@@ -88,34 +215,47 @@
         <option value="$PROJECT_DIR$/client/www/lib/angular-audio/app/angular.audio.js" />
         <option value="$PROJECT_DIR$/server/business_logic/session.js" />
         <option value="$PROJECT_DIR$/client/www/templates/chooseLanguage.html" />
-        <option value="$PROJECT_DIR$/client/config.xml" />
         <option value="$PROJECT_DIR$/client/www/manifest.json" />
-        <option value="$PROJECT_DIR$/client/www/templates/home.html" />
         <option value="$PROJECT_DIR$/client/www/templates/navbar.html" />
-        <option value="$PROJECT_DIR$/server/utils/exceptions.js" />
         <option value="$PROJECT_DIR$/server/dal/dalFacebook.js" />
         <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/server/business_logic/contests.js" />
-        <option value="$PROJECT_DIR$/client/www/index.html" />
-        <option value="$PROJECT_DIR$/client/www/templates/settings.html" />
         <option value="$PROJECT_DIR$/client/www/templates/tabs.html" />
         <option value="$PROJECT_DIR$/server/business_logic/credentials.js" />
-        <option value="$PROJECT_DIR$/client/www/js/app.js" />
         <option value="$PROJECT_DIR$/server/business_logic/quiz.js" />
-        <option value="$PROJECT_DIR$/server/dal/dalDb.js" />
-        <option value="$PROJECT_DIR$/client/www/js/services.js" />
         <option value="$PROJECT_DIR$/client/www/templates/menu.html" />
         <option value="$PROJECT_DIR$/client/www/templates/contests.html" />
         <option value="$PROJECT_DIR$/client/www/templates/quizResult.html" />
         <option value="$PROJECT_DIR$/server/utils/general.js" />
-        <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
         <option value="$PROJECT_DIR$/client/www/languages/en.json" />
         <option value="$PROJECT_DIR$/client/www/languages/es.json" />
-        <option value="$PROJECT_DIR$/client/www/languages/he.json" />
         <option value="$PROJECT_DIR$/client/www/templates/newRank.html" />
         <option value="$PROJECT_DIR$/client/www/templates/chooseEndsIn.html" />
-        <option value="$PROJECT_DIR$/client/www/css/style.css" />
         <option value="$PROJECT_DIR$/client/www/templates/contest.html" />
+        <option value="$PROJECT_DIR$/readme.md" />
+        <option value="$PROJECT_DIR$/server/readme.md" />
+        <option value="$PROJECT_DIR$/client/ionic.project" />
+        <option value="$PROJECT_DIR$/client/bower.json" />
+        <option value="$PROJECT_DIR$/client/plugins/fetch.json" />
+        <option value="$PROJECT_DIR$/client/www/js/services.js" />
+        <option value="$PROJECT_DIR$/server/utils/exceptions.js" />
+        <option value="$PROJECT_DIR$/server/dal/dalDb.js" />
+        <option value="$PROJECT_DIR$/client/info.txt" />
+        <option value="$PROJECT_DIR$/client/plugins/android.json" />
+        <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
+        <option value="$PROJECT_DIR$/client/www/templates/settings.html" />
+        <option value="$PROJECT_DIR$/client/www/css/style.css" />
+        <option value="$PROJECT_DIR$/client/www/templates/home.html" />
+        <option value="$PROJECT_DIR$/client/www/languages/he.json" />
+        <option value="$PROJECT_DIR$/client/platforms/android/build.gradle" />
+        <option value="$PROJECT_DIR$/client/package.json" />
+        <option value="$PROJECT_DIR$/client/www/index.html" />
+        <option value="$PROJECT_DIR$/client/platforms/android/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/client/config.xml" />
+        <option value="$PROJECT_DIR$/client/plugins/com.smartmobilesoftware.androidinappbilling/res/values/billing_key.xml" />
+        <option value="$PROJECT_DIR$/client/plugins/com.smartmobilesoftware.androidinappbilling/res/values/billing_key_param.xml" />
+        <option value="$PROJECT_DIR$/client/hooks/after_build/010_sign_apk.js" />
+        <option value="$PROJECT_DIR$/client/www/js/app.js" />
         <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
       </list>
     </option>
@@ -134,7 +274,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-9" />
     <option name="y" value="-9" />
-    <option name="width" value="1698" />
+    <option name="width" value="1692" />
     <option name="height" value="1030" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -161,60 +301,32 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mySmarteam" />
+              <option name="myItemId" value="whoSmarter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mySmarteam" />
+              <option name="myItemId" value="whoSmarter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mySmarteam" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mySmarteam" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mySmarteam" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mySmarteam" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mySmarteam" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
+              <option name="myItemId" value="whoSmarter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../datePickerRepro" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
@@ -325,12 +437,6 @@
       <created>1431500570423</created>
       <option name="number" value="Default" />
       <updated>1431500570423</updated>
-    </task>
-    <task id="LOCAL-00006" summary="1. Login/Register/Logout fully working - client+server&#10;">
-      <created>1433767615845</created>
-      <option name="number" value="00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1433767615845</updated>
     </task>
     <task id="LOCAL-00007" summary="1. Login/Register/Logout fully working - client+server with form validations (client side+ server side) using ngMessages &#10;2. Global ErrorHandler in node server to avoid crashes">
       <created>1434015779563</created>
@@ -620,7 +726,13 @@
       <option name="project" value="LOCAL" />
       <updated>1441732855447</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="New contest - set as &quot;Feature&quot;&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;">
+      <created>1441820349866</created>
+      <option name="number" value="00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1441820349867</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TodoView">
@@ -633,15 +745,14 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1698" height="1030" extended-state="6" />
+    <frame x="-9" y="-9" width="1692" height="1030" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20906344" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2819891" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3284091" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3272727" sideWeight="0.5191025" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3784091" sideWeight="0.48089752" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.68636364" sideWeight="0.48089752" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54917127" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -649,6 +760,7 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26125136" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32930845" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39956093" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -690,7 +802,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="TODO:&#10;1. Interface translation (Angular Translate) &#10;2. After switching &quot;interfaceLanguage&quot; in settings - refresh page / translation lang.&#10;3. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;" />
     <MESSAGE value="Translation infrastructure working.&#10;TODO:&#10;1. Finish translating all texts &#10;2. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;" />
     <MESSAGE value="Translation infrastructure working.&#10;TODO:&#10;1. Finish translating all texts (in progress)&#10;2. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;" />
     <MESSAGE value="TODO:&#10;1. Check why error on server does not catch on domain.error&#10;2. Finish &quot;Setting&quot; with password protection.&#10;3. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;, Sound, List of subjects - if empty - user will pick a subject as today." />
@@ -715,7 +826,8 @@
     <MESSAGE value="menu/navbar - rank element&#10;&#10;TODO:&#10;- TopBar - personal details&#10;- RankByXp&#10;- Show question stats&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
     <MESSAGE value="menu/navbar - rank element&#10;&#10;TODO:&#10;- RankByXp - nice dialog (general popup from server - with image and ok buttons?)&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
     <MESSAGE value="New contest - set as &quot;Feature&quot;&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="New contest - set as &quot;Feature&quot;&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
+    <MESSAGE value="Add billing support / google store upload for alpha&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add billing support / google store upload for alpha&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -731,419 +843,261 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mathjs/lib/core/core.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mathjs/lib/core/import.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36009446">
-          <caret line="35" column="42" selection-start-line="35" selection-start-column="40" selection-end-line="35" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mathjs/HISTORY.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3644315">
-          <caret line="134" column="41" selection-start-line="134" selection-start-column="41" selection-end-line="134" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mathjs/test/function/arithmetic/abs.test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="17" column="28" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mathjs/lib/function/arithmetic/sign.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mathjs/lib/core/typed.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34120426">
-          <caret line="17" column="36" selection-start-line="17" selection-start-column="34" selection-end-line="17" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/angular-http-auth/src/http-auth-interceptor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70247936">
-          <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/dal/dalFacebook.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="56" column="17" selection-start-line="56" selection-start-column="17" selection-end-line="56" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/css/ionic.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="389.625">
-          <caret line="22" column="118117" selection-start-line="22" selection-start-column="118117" selection-end-line="22" selection-end-column="118117" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/HTML5.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1016" column="0" selection-start-line="1016" selection-start-column="0" selection-end-line="1016" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.384615">
-          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/scss/_variables.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.230769">
-          <caret line="292" column="1" selection-start-line="292" selection-start-column="1" selection-end-line="292" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/scss/_items.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45705023">
-          <caret line="466" column="38" selection-start-line="466" selection-start-column="38" selection-end-line="466" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/scss/_bar.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57978076">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/js/ionic.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33293977">
-          <caret line="8023" column="29" selection-start-line="8023" selection-start-column="25" selection-end-line="8023" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/js/ionic-angular.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7254" column="20" selection-start-line="7254" selection-start-column="7" selection-end-line="7254" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/tabs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1045082">
-          <caret line="3" column="101" selection-start-line="3" selection-start-column="101" selection-end-line="3" selection-end-column="101" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/logs/mySmarteam.log.2">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1605667">
-          <caret line="8" column="240" selection-start-line="8" selection-start-column="240" selection-end-line="8" selection-end-column="240" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="210" column="60" selection-start-line="210" selection-start-column="60" selection-end-line="210" selection-end-column="60" />
-          <folding>
-            <element signature="e#5296#5609#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5486381">
-          <caret line="255" column="141" selection-start-line="255" selection-start-column="136" selection-end-line="255" selection-end-column="141" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mongodb/node_modules/mongodb-core/lib/connection/pool.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33268481">
-          <caret line="47" column="2" selection-start-line="47" selection-start-column="2" selection-end-line="47" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/session.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5311284">
-          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mongodb/node_modules/mongodb-core/lib/auth/gssapi.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33268481">
-          <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/utils/exceptions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.4610895">
-          <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/bunyan/CHANGES.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.34375">
-          <caret line="542" column="18" selection-start-line="542" selection-start-column="18" selection-end-line="542" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/express/node_modules/accepts/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="4" selection-start-line="0" selection-start-column="4" selection-end-line="0" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/async/lib/async.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1104" column="51" selection-start-line="1104" selection-start-column="40" selection-end-line="1104" selection-end-column="51" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/node_modules/mathjs/dist/math.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1113" column="24" selection-start-line="1113" selection-start-column="13" selection-end-line="1113" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/dal/dalDb.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="283" column="70" selection-start-line="283" selection-start-column="70" selection-end-line="283" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.65">
-          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/js/ionic.bundle.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="56866" column="26" selection-start-line="56866" selection-start-column="26" selection-end-line="56866" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/css/ionic.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="61.125">
-          <caret line="4318" column="8" selection-start-line="4318" selection-start-column="8" selection-end-line="4318" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/quizResult.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.923077">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contests.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.192308">
-          <caret line="27" column="89" selection-start-line="27" selection-start-column="89" selection-end-line="27" selection-end-column="89" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/utils/general.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/quiz.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.0">
-          <caret line="26" column="43" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
+        <state vertical-scroll-proportion="-1.9615384">
+          <caret line="3" column="24" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
           <folding>
-            <marker date="1441811398905" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1441811398905" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1441870284320" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1441870284320" expanded="true" signature="-1:-1" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/settings.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.1923075">
-          <caret line="11" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/en.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-28.961538">
-          <caret line="83" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8757613">
-          <caret line="83" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8343484">
-          <caret line="78" column="35" selection-start-line="78" selection-start-column="35" selection-end-line="78" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/newRank.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.8846154">
-          <caret line="9" column="111" selection-start-line="9" selection-start-column="111" selection-end-line="9" selection-end-column="111" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.230769">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/chooseEndsIn.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.230769">
-          <caret line="8" column="51" selection-start-line="8" selection-start-column="51" selection-end-line="8" selection-end-column="51" />
+        <state vertical-scroll-proportion="-10.230769">
+          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8996458">
-          <caret line="314" column="8" selection-start-line="314" selection-start-column="1" selection-end-line="314" selection-end-column="8" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="126" column="48" selection-start-line="126" selection-start-column="48" selection-end-line="126" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
+    <entry file="file://$PROJECT_DIR$/client/www/templates/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.020070838">
-          <caret line="18" column="42" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
+        <state vertical-scroll-proportion="-13.730769">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
+    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.961538">
+          <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/resources/android/icon/drawable-hdpi-icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/resources/android/icon/drawable-ldpi-icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/resources/android/icon/drawable-mdpi-icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/resources/android/icon/drawable-xhdpi-icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/resources/android/icon/drawable-xxhdpi-icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/resources/android/icon/drawable-xxxhdpi-icon.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/platforms/platforms.json">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="121" column="32" selection-start-line="121" selection-start-column="25" selection-end-line="121" selection-end-column="32" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
+    <entry file="file://$PROJECT_DIR$/client/www/lib/ionic/js/http-auth-interceptor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20706455">
-          <caret line="14" column="117" selection-start-line="14" selection-start-column="117" selection-end-line="14" selection-end-column="117" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="57" column="26" selection-start-line="57" selection-start-column="20" selection-end-line="57" selection-end-column="26" />
           <folding>
-            <element signature="n#div#0;n#div#1;n#div#0;n#ion-item#3;n#ion-list#0;n#form#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="false" />
-            <element signature="n#div#2;n#div#1;n#div#0;n#ion-item#3;n#ion-list#0;n#form#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="false" />
-            <element signature="n#div#2;n#div#0;n#ion-item#3;n#ion-list#0;n#form#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="false" />
-            <marker date="1441819877932" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1441819877932" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.423077">
+          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/.bowerrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/gulpfile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/info.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="18" selection-start-line="7" selection-start-column="18" selection-end-line="7" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ionic.project">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.653847">
+          <caret line="27" column="27" selection-start-line="27" selection-start-column="27" selection-end-line="27" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/hooks/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.60613495">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/hooks/after_prepare/010_add_platform_class.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/plugins/com.ionic.keyboard/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/plugins/org.apache.cordova.inappbrowser/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/plugins/org.apache.cordova.inappbrowser/src/android/InAppBrowser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/plugins/org.apache.cordova.device/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.4923258">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/plugins/com.smartmobilesoftware.androidinappbilling/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.46875">
+          <caret line="31" column="114" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="114" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/plugins/com.smartmobilesoftware.androidinappbilling/plugin.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/plugins/com.smartmobilesoftware.androidinappbilling/res/values/billing_key_param.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.040141676">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/platforms/android/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.020070838">
+          <caret line="1" column="115" selection-start-line="1" selection-start-column="114" selection-end-line="1" selection-end-column="115" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/config.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.56198347">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="770" column="0" selection-start-line="770" selection-start-column="0" selection-end-line="770" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.66233766">
+          <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45336482">
-          <caret line="775" column="57" selection-start-line="775" selection-start-column="49" selection-end-line="775" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.44155845">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
           <folding />
         </state>
       </provider>

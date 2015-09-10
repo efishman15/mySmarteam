@@ -1,8 +1,8 @@
-angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
+angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, ErrorService, SoundService, $ionicModal) {
 
-        $rootScope.$on('mySmarteam-directionChanged', function () {
+        $rootScope.$on('whoSmarter-directionChanged', function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
         });
 
@@ -36,7 +36,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
         });
 
-        $rootScope.$on("mySmarteam-rankChanged", function (error, data) {
+        $rootScope.$on("whoSmarter-rankChanged", function (error, data) {
             //TODO: nice popup celebrating new rank!
             SoundService.play("audio/finish_great_1");
             $scope.xpProgress = data.xpProgress;
@@ -96,7 +96,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     return "400px";
                 }
                 else {
-                    return "75%"
+                    return "100%"
                 }
             }
             else {
@@ -110,11 +110,11 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
             }
         };
 
-        $scope.$on("mySmarteam-windowResize", function () {
+        $scope.$on("whoSmarter-windowResize", function () {
             angular.element(document.querySelector("#demoContestImage")).width = $scope.getDemoContestWidth();
         });
 
-        $scope.$on("mySmarteam-orientationChanged", function () {
+        $scope.$on("whoSmarter-orientationChanged", function () {
             angular.element(document.querySelector("#demoContestImage")).width = $scope.getDemoContestWidth();
         });
 
@@ -470,7 +470,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
 
                             //Check to fire directionChanged event
                             if ($rootScope.settings.languages[$scope.localViewData.language].direction != $rootScope.settings.languages[prevLanguage].direction) {
-                                $rootScope.$broadcast('mySmarteam-directionChanged');
+                                $rootScope.$broadcast('whoSmarter-directionChanged');
                             }
                         }
                     });
@@ -712,7 +712,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                 ContestsService.setContest(postData,
                     function (contest) {
                         //Raise event - so the contest graph can be refreshed without going to the server again
-                        $rootScope.$broadcast("mySmarteam-contestUpdated", contest);
+                        $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
                         $scope.goBack();
                     }, function (status, error) {
                         console.log(error);
@@ -742,7 +742,7 @@ angular.module('mySmarteam.controllers', ['mySmarteam.services', 'ngAnimate'])
                     var postData = {"contestId": $scope.localViewData._id};
                     ContestsService.removeContest(postData,
                         function (data) {
-                            $rootScope.$broadcast("mySmarteam-contestRemoved");
+                            $rootScope.$broadcast("whoSmarter-contestRemoved");
                             $scope.goBack();
                         });
                 }

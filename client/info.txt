@@ -5,13 +5,13 @@ Cordova version: 5.0.0
 Config.xml file: 
 
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.mysmarteam.contest" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>mysmarteam</name>
+<widget id="com.fplabs.whosmarter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>whoSmarter</name>
   <description>
-        An Ionic Framework and Cordova project.
+        Choose your team to play for and prove who is smarter.
     </description>
-  <author email="eddy.fishman@gmail.com" href="http://www.mysmarteam.com/">
-      mySmarteam Staff
+  <author email="eddy.fishman@gmail.com" href="http://www.whoSmarter.com/">
+      whoSmarter Staff
     </author>
   <content src="index.html"/>
   <access origin="*"/>

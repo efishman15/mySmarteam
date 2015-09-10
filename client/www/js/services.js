@@ -1,4 +1,4 @@
-angular.module('mySmarteam.services', [])
+angular.module('whoSmarter.services', [])
 
     //User Service
     .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig) {
@@ -176,10 +176,10 @@ angular.module('mySmarteam.services', [])
 
                                 //Define core events and functions to be used in the app
                                 $rootScope.$on('$translateChangeEnd', function (data) {
-                                    $rootScope.$broadcast("mySmarteam-languageChanged");
+                                    $rootScope.$broadcast("whoSmarter-languageChanged");
                                 });
 
-                                $rootScope.$on("mySmarteam-httpRequest", function (error, config) {
+                                $rootScope.$on("whoSmarter-httpRequest", function (error, config) {
                                     if (!config || config.blockUserInterface !== false) {
                                         $ionicLoading.show({
                                                 template: "<span dir='" + $rootScope.settings.languages[$rootScope.user.settings.language].direction + "'>" + $translate.instant("LOADING") + "</span>"
@@ -188,13 +188,13 @@ angular.module('mySmarteam.services', [])
                                     }
                                 });
 
-                                $rootScope.$on("mySmarteam-httpResponse", function (error, config) {
+                                $rootScope.$on("whoSmarter-httpResponse", function (error, config) {
                                     if (!config || config.blockUserInterface !== false) {
                                         $ionicLoading.hide();
                                     }
                                 });
 
-                                $rootScope.$on("mySmarteam-httpResponseError", function (error, rejection) {
+                                $rootScope.$on("whoSmarter-httpResponseError", function (error, rejection) {
                                     if (!rejection.config || rejection.config.blockUserInterface !== false) {
                                         $ionicLoading.hide();
                                     }
@@ -742,19 +742,19 @@ angular.module('mySmarteam.services', [])
         //setEvents
         service.setEvents = function (scope) {
 
-            scope.$on("mySmarteam-teamClicked", function (error, data) {
+            scope.$on("whoSmarter-teamClicked", function (error, data) {
                 teamClicked(scope, data.dataSource, data.teamId)
             });
 
             scope.fcEvents = {
                 "dataplotClick": function (eventObj, dataObj) {
-                    scope.$broadcast("mySmarteam-teamClicked", {
+                    scope.$broadcast("whoSmarter-teamClicked", {
                         "dataSource": eventObj.sender.args.dataSource,
                         "teamId": dataObj.dataIndex
                     });
                 },
                 "dataLabelClick": function (eventObj, dataObj) {
-                    scope.$broadcast("mySmarteam-teamClicked", {
+                    scope.$broadcast("whoSmarter-teamClicked", {
                         "dataSource": eventObj.sender.args.dataSource,
                         "teamId": dataObj.dataIndex
                     });
@@ -902,7 +902,7 @@ angular.module('mySmarteam.services', [])
             if (xpProgress.rankChanged === true) {
                 $rootScope.session.rank = xpProgress.rank;
                 service.initXp();
-                $rootScope.$broadcast("mySmarteam-rankChanged", {"xpProgress" : xpProgress, "callback" : callbackOnRankChange});
+                $rootScope.$broadcast("whoSmarter-rankChanged", {"xpProgress" : xpProgress, "callback" : callbackOnRankChange});
             }
 
         };

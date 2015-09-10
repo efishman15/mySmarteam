@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
+angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
     .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -17,6 +17,17 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
+
+            if((window.device && device.platform == "Android") && typeof inappbilling !== "undefined") {
+                inappbilling.init(function(resultInit) {
+                        console.log("IAB Initialized");
+                    },
+                    function(errorInit) {
+                        console.log("ERROR -> " + errorInit);
+                    },
+                    {showLog: true},
+                    ["productId1", "productId2", "productId3"]);
+            }
         });
     })
 
@@ -24,15 +35,15 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
-                    $rootScope.$broadcast('mySmarteam-httpRequest', config)
+                    $rootScope.$broadcast('whoSmarter-httpRequest', config)
                     return config;
                 },
                 response: function (response) {
-                    $rootScope.$broadcast('mySmarteam-httpResponse', response.config)
+                    $rootScope.$broadcast('whoSmarter-httpResponse', response.config)
                     return response;
                 },
                 responseError: function (rejection) {
-                    $rootScope.$broadcast('mySmarteam-httpResponseError', rejection)
+                    $rootScope.$broadcast('whoSmarter-httpResponseError', rejection)
                     return $q.reject(rejection);
                 }
             }
@@ -85,7 +96,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
      // Set custom cookie parameters for analytics.js
      AnalyticsProvider.setCookieConfig({
      cookieDomain: 'studyb4.ddns.net',
-     cookieName: 'mySmarteamAnalytics',
+     cookieName: 'whoSmarterAnalytics',
      cookieExpires: 20000
      });
 
@@ -204,6 +215,16 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                 controller: "SettingsCtrl"
             })
 
+            .state('logout', {
+                url: "/logout",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("logout");
+                    }
+                },
+                controller: "LogoutCtrl"
+            })
+
             .state('app', {
                 url: "/app",
                 resolve: {
@@ -278,21 +299,8 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
                     }
                 },
                 appData: {"serverTab" : "recentlyFinished", "showPlay" : false, "showParticipants" : true}
-            })
-
-            .state('logout', {
-                url: "/logout",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("logout");
-                    }
-                },
-                views: {
-                    'menuContent': {
-                        controller: "LogoutCtrl"
-                    }
-                }
             });
+
 
         $urlRouterProvider.otherwise(function ($injector, $location) {
             var $state = $injector.get("$state");
@@ -323,7 +331,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
             var w = angular.element($window);
 
             w.bind('resize', function () {
-                scope.$broadcast("mySmarteam-windowResize");
+                scope.$broadcast("whoSmarter-windowResize");
                 scope.$apply();
             });
         }
@@ -334,7 +342,7 @@ angular.module('mySmarteam.app', ['mySmarteam.services', 'mySmarteam.controllers
             var w = angular.element($window);
 
             w.bind('orientationchange', function () {
-                scope.$broadcast("mySmarteam-orientationChanged");
+                scope.$broadcast("whoSmarter-orientationChanged");
                 scope.$apply();
             });
         }

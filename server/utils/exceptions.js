@@ -1,7 +1,7 @@
 var logger = require("bunyan");
 
 var logConsole = logger.createLogger({
-    name: "mySmarteamConsole",
+    name: "whoSmarterConsole",
     streams: [{
         stream: process.stderr
         // `type: 'stream'` is implied
@@ -9,10 +9,10 @@ var logConsole = logger.createLogger({
 });
 
 var logFile = logger.createLogger({
-    name: "mySmarteamLogFile",
+    name: "whoSmarterLogFile",
     streams: [{
         type: 'rotating-file',
-        path: './logs/mySmarteam.log',
+        path: './logs/whoSmarter.log',
         period: '1d',   // daily rotation
         count: 30        // keep 3 back copies
     }],
