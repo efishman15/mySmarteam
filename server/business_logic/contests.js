@@ -2,6 +2,7 @@ var async = require("async");
 var dalDb = require("../dal/dalDb");
 var exceptions = require("../utils/exceptions");
 var mathjs = require("mathjs");
+var generalUtils = require('../utils/general');
 
 //---------------------------------------------------------------------
 // private functions
@@ -19,6 +20,11 @@ function validateContestData(data, callback) {
     //Data validations
     if (!data.contest) {
         callback(new exceptions.ServerException("Contest not supplied"));
+        return;
+    }
+
+    if (data.mode == "add" && (data.session.rank < generalUtils.featuresList().newContest.unlockRank || (data.session.assets && data.session.assets[generalUtils.featuresList().newContest.purchase.productId]))) {
+        callback(new exceptions.ServerException("Attempt to create a new contest without having an eligable rank or feature asset",{"session" : data.session, "contest" : data.contest}));
         return;
     }
 
@@ -41,6 +47,12 @@ function validateContestData(data, callback) {
         callback(new exceptions.ServerException("One or more of the team names are missing"));
         return;
     }
+
+    if (data.contest.teams[0].name.trim() === data.contest.teams[1].name.trim()) {
+        callback(new exceptions.ServerMessageException("SERVER_ERROR_TEAMS_MUST_HAVE_DIFFERENT_NAMES"));
+        return;
+    }
+
 
     if ((data.contest.teams[0].score || data.contest.teams[1].score) &&
         (!data.session.isAdmin || data.session.isAdmin == false)) {
@@ -177,7 +189,11 @@ function setContestScores(contest) {
     }
 }
 
-//Join to the contest in the contest object
+//---------------------------------------------------------------------
+// joinContestTeam
+//
+// Actual joining to the contest object and database update
+//---------------------------------------------------------------------
 module.exports.joinContestTeam = joinContestTeam;
 function joinContestTeam(data, callback) {
 
@@ -186,29 +202,12 @@ function joinContestTeam(data, callback) {
         callback(new exceptions.ServerException("Contest has already been finished", data));
     }
 
-    var now = (new Date).getTime();
-
-    if (!data.contest.users) {
-        data.contest.users = {};
-    }
-
     data.setData = {};
 
     //Increment participants only if I did not join this contest yet
-    if (!data.contest.users[data.session.userId]) {
-        data.contest.participants++;
+    if (joinToContestObject(data.contest, data.session.userId, data.teamId) === true) {
         data.setData.participants = data.contest.participants;
-
-        data.contest.lastParticipantJoinDate = now;
-        data.setData.lastParticipantJoinDate = now;
-    }
-
-    //Actual join
-    data.contest.users[data.session.userId] = {
-        "userId": data.session.userId,
-        "joinDate": now,
-        "team" : data.teamId,
-        "score": 0,
+        data.setData.lastParticipantJoinDate = (new Date()).getTime();
     }
 
     data.setData["users." + data.session.userId]  = data.contest.users[data.session.userId];
@@ -216,6 +215,38 @@ function joinContestTeam(data, callback) {
     dalDb.setContest(data, callback);
 }
 
+//---------------------------------------------------------------------
+// joinToContestObject
+//
+// Actual joining to the contest object in memory
+//---------------------------------------------------------------------
+function joinToContestObject(contest, userId, teamId) {
+
+    var newJoin = false;
+
+    var now = (new Date).getTime();
+
+    if (!contest.users) {
+        contest.users = {};
+    }
+
+    //Increment participants only if I did not join this contest yet
+    if (contest.users[userId]) {
+        contest.participants++;
+        contest.lastParticipantJoinDate = now;
+        newJoin = true;
+    }
+
+    //Actual join
+    contest.users[userId] = {
+        "userId": userId,
+        "joinDate": now,
+        "team" : teamId,
+        "score": 0,
+    }
+
+    return newJoin;
+}
 
 //----------------------------------------------------
 // setContest
@@ -248,6 +279,8 @@ module.exports.setContest = function (req, res, next) {
         function (data, callback) {
             data.closeConnection = true;
             if (data.mode == "add") {
+                //Join by default to the first team (on screen appears as "my team")
+                joinToContestObject(data.contest, data.session.userId, 0);
                 dalDb.addContest(data, callback);
             }
             else {

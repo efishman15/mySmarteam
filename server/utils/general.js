@@ -52,7 +52,7 @@ var features = {
         "newContest": {
             "lockText": "FEATURE_LOCKED_NEW_CONTEST",
             "purchase": {
-                "productId": "newContest",
+                "productId": "sandbox.feature.newContest",
                 "productName": "PURCHASE_NEW_CONTEST_UNLOCK_KEY",
                 "cost": "$0.99"
             }
@@ -320,7 +320,7 @@ var generalSettings = {
                 "numberScaleUnit": "%",
                 "showYAxisValues": 0,
                 "valueFontSize": 12,
-                "labelFontSize": "15",
+                "labelFontSize": "14",
                 "chartBottomMargin": 25,
                 "valuePadding": 0,
                 "labelPadding": 10,

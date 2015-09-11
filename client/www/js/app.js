@@ -308,6 +308,30 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         });
     })
 
+    .directive('mustBeDifferent', function () {
+        return {
+            require: "ngModel",
+            scope: {
+                otherModelValue: "=mustBeDifferent"
+            },
+            link: function (scope, element, attributes, ngModel) {
+
+                ngModel.$validators.mustBeDifferent = function (modelValue) {
+                    if (modelValue && scope.otherModelValue) {
+                        return modelValue.trim() != scope.otherModelValue.$modelValue.trim();
+                    }
+                    else {
+                        return true;
+                    }
+                };
+
+                scope.$watch("otherModelValue", function () {
+                    ngModel.$validate();
+                });
+            }
+        };
+    })
+
     .directive('animationend', function () {
         return {
             restrict: 'A',

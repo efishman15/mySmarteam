@@ -635,24 +635,19 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             }
         };
 
-        $scope.getAdminArrowSign = function () {
-            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
-                if ($scope.showAdminInfo == false) {
+        $scope.getArrowDirection = function(stateClosed) {
+            if (stateClosed === true) {
+                if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
                     return "►";
                 }
                 else {
-                    return "▼";
+                    return "◄";
                 }
             }
             else {
-                if ($scope.showAdminInfo == false) {
-                    return "◄";
-                }
-                else {
-                    return "▼";
-                }
+                return "▼";
             }
-        };
+        }
 
         $scope.goBack = function () {
             $ionicHistory.goBack();
@@ -715,7 +710,8 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                         $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
                         $scope.goBack();
                     }, function (status, error) {
-                        console.log(error);
+                        $scope.localViewData.startDate = startDate;
+                        $scope.localViewData.endDate = endDate;
                     });
             }
             else {

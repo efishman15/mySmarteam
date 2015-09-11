@@ -305,3 +305,23 @@ label.item.valid-lr {
 .pointer {
     cursor: pointer;
 }
+
+.my-item-note-left {
+    float: left;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.my-item-note-right {
+    float: right;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.my-toggle-rtl-fix {
+    margin: -45px;
+}
+
+.contest-or-between-teams {
+    padding-top: 4px;
+}

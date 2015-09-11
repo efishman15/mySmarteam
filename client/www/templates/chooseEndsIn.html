@@ -1,8 +1,8 @@
-<ion-popover-view>
+<ion-popover-view dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
     <ion-header-bar align-title="center">
         <h1 class="title">{{'ENDS_IN' | translate}}</h1>
     </ion-header-bar>
-    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+    <ion-content>
         <ion-radio ng-repeat="contestEndOption in contestEndOptions track by contestEndOption.value"
                    ng-model="localViewData.endOption"
                    ng-change="closeContestEndsInPopover(contestEndOption)"

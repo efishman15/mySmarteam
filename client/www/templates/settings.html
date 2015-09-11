@@ -1,23 +1,40 @@
 <ion-view view-title="{{'SETTINGS' | translate}}" hide-nav-bar="false">
-    <ion-nav-bar class="bar-stable" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+    <ion-nav-bar class="bar-stable" align-title="center"
+                 dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <ion-nav-back-button></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <ion-list>
-            <ion-item ng-click="openLanguagePopover($event)">
-                <span translate="LANGUAGE"></span>
-                <br/>
-                <strong>{{$root.settings.languages[localViewData.language].displayNames[$root.user.settings.language]}}</strong>
-            </ion-item>
-            <ion-toggle
-                    ng-model="localViewData.sound"
-                    toggle-class="toggle-royal">
-                <i class="icon ion-music-note"></i>
-                {{ 'SOUND' | translate}}
+        <div class="list">
+            <a class="item" ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
+                                    'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+               ng-click="openLanguagePopover($event)">
+                <i class="icon ion-android-globe"></i>
+                {{'LANGUAGE' | translate}}
+                <p>
+                    <strong>{{$root.settings.languages[localViewData.language].displayNames[$root.user.settings.language]}}</strong>
+                </p>
+            </a>
+
+            <ion-toggle ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
+                                    'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                        ng-model="localViewData.sound"
+                        class="item toggle-small"
+                        toggle-class="toggle-royal">
+                <span ng-class="{'my-toggle-rtl-fix' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}">{{ 'SOUND' | translate}}</span>
+                <i ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"
+                   class="icon ion-ios-musical-notes"></i>
+
+                <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"><p>{{localViewData.sound === true ? 'SOUND_ON' : 'SOUND_OFF' | translate }}</p></span>
+                <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'rtl'"
+                      class="my-item-note-left">{{localViewData.sound === true ? 'SOUND_ON' : 'SOUND_OFF' | translate }}</span>
+
             </ion-toggle>
-            <ion-item ng-click="$root.gotoView('logout')">
+            <a class="item" ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
+                                    'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+               ng-click="$root.gotoView('logout')" class="ion-log-out">
+                <i class="icon ion-log-out"></i>
                 {{ 'SIGN_OUT' | translate}}
-            </ion-item>
-        </ion-list>
+            </a>
+        </div>
     </ion-content>
 </ion-view>
