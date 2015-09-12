@@ -10,12 +10,12 @@
     </ion-nav-bar>
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
-        <div class="padding" ng-show="lockNewContest()">
-            <span class="featureLockedText">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.settings.features.newContest.unlockRank} }}</span>
+        <div class="padding" ng-show="$root.session.features.newContest.locked===true">
+            <span class="featureLockedText">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.session.features.newContest.unlockRank} }}</span>
             <button class="button button-full button-small button-3d button-3d-balanced" ng-click="buyNewContestUnlockKey()" ng-disabled="buyInProgress">
                 {{'UNLOCK_FEATURE' |
                 translate:{cost :
-                $root.settings.purchaseProducts[$root.settings.features.newContest.purchaseProductId].cost, currency : $root.settings.purchaseProducts[$root.settings.features.newContest.purchaseProductId].currency} }}
+                $root.session.features.newContest.purchaseData.cost, currency : $root.session.features.newContest.purchaseData.currency} }}
             </button>
         </div>
         <form name="contestForm" novalidate="novalidate">

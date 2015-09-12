@@ -12,8 +12,6 @@ var mathjs = require("mathjs");
 // Cache variables
 //---------------------------------------------------------------------
 var topics = {};
-var serverSubjectsPerLanguages = {};
-var clientSubjectsPerLanguages = {};
 
 //---------------------------------------------------------------------
 // Class DbHelper
@@ -32,7 +30,7 @@ DbHelper.prototype.close = function () {
 };
 
 //---------------------------------------------------------------------
-// private functions
+// private methods
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
@@ -140,62 +138,37 @@ function connect(callback) {
 }
 
 //---------------------------------------------------------------------
-// getSubjects
-//
-// Lazy load from DB first time.
-// Then, retrieved from memory cache - managed as has by language
-//
-// data:
-// -----
-// input: DbHelper, language, isServerSide
-// output: subjects
+// public methods
 //---------------------------------------------------------------------
-module.exports.getSubjects = function (data, callback) {
-    var subjects;
-    if (data.isServerSide) {
-        subjects = serverSubjectsPerLanguages[data.language];
-    }
-    else {
-        subjects = clientSubjectsPerLanguages[data.language];
-    }
 
-    if (subjects) {
-        data.subjects = subjects;
-        callback(null, data);
-    }
-    else {
-        var subjectsCollection = data.DbHelper.getCollection("Subjects");
-        subjectsCollection.find({
-            "language": data.language
-        }, {}, function (err, subjectsCursor) {
-            if (err || !subjectsCursor) {
-                callback(new exceptions.ServerException("Error retrieving subjects for language", {
-                    "language": data.language,
-                    "dbError": err
-                }, "error"));
+//------------------------------------------------------------------------------------------------
+// loadSettings
+//
+// loads settings object from db
+//------------------------------------------------------------------------------------------------
+module.exports.loadSettings = loadSettings;
+function loadSettings(callback) {
+
+    connect(function (err, data) {
+        var settingsCollection = data.DbHelper.getCollection("Settings");
+        settingsCollection.findOne({}, {}, function (err, settings) {
+            if (err || !settings) {
+
+                closeDb(data);
+
+                callback(new exceptions.ServerException("Error finding contest", {"data": data, "dbError": err}, "error"));
+
                 return;
             }
-            subjectsCursor.toArray(function (err, serverSubjects) {
-                serverSubjectsPerLanguages[data.language] = serverSubjects;
-                var clientSubjects = [];
-                for (var i = 0; i < serverSubjects.length; i++) {
-                    var clientSubject = {};
-                    clientSubject.subjectId = serverSubjects[i].subjectId;
-                    clientSubject.displayNames = serverSubjects[i].displayNames;
-                    clientSubjects.push(clientSubject);
-                }
-                clientSubjectsPerLanguages[data.language] = clientSubjects;
-                if (data.isServerSide) {
-                    data.subjects = serverSubjects
-                }
-                else {
-                    data.subjects = clientSubjects
-                }
-                callback(null, data);
-            })
+
+            closeDb(data);
+
+            data.settings = settings;
+
+            callback(null, data);
         })
-    }
-};
+    })
+}
 
 //---------------------------------------------------------------------
 // getTopic
@@ -302,7 +275,7 @@ function retrieveSession(data, callback) {
 //---------------------------------------------------------------------
 module.exports.storeSession = function (data, callback) {
 
-    data.session.expires = new Date((new Date()).getTime() + generalUtils.generalSettings.db.sessionExpirationMilliseconds)
+    data.session.expires = new Date((new Date()).getTime() + generalUtils.settings.server.db.sessionExpirationMilliseconds)
     var sessionsCollection = data.DbHelper.getCollection("Sessions");
     sessionsCollection.update(
         {
@@ -470,13 +443,13 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "ageRange": data.user.ageRange,
                 "avatar": data.user.avatar,
                 "created": nowEpoch,
-                "expires" : new Date(nowEpoch + generalUtils.generalSettings.db.sessionExpirationMilliseconds), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
+                "expires" : new Date(nowEpoch + generalUtils.settings.server.db.sessionExpirationMilliseconds), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
                 "userToken": userToken,
                 "settings": data.user.settings,
                 "score": data.user.score,
                 "xp": data.user.xp,
                 "rank": data.user.rank,
-                "assets" : data.user.assets
+                "features" : data.features
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -493,8 +466,14 @@ module.exports.createOrUpdateSession = function (data, callback) {
 
             data.session = session.value;
 
-            if (session.nUpserted > 0) {
+            if (session.lastErrorObject.upserted) {
                 data.action = "login";
+
+                var closeConnection = data.closeConnection;
+
+                data.closeConnection = false;
+
+                //Do not close connection on an inner logAction
                 logAction(data, function(err, data) {
 
                     if (err) {
@@ -508,6 +487,8 @@ module.exports.createOrUpdateSession = function (data, callback) {
                         return;
                     }
 
+                    data.closeConnection = closeConnection;
+
                     checkToCloseDb(data);
 
                     callback(null, data);
@@ -519,6 +500,7 @@ module.exports.createOrUpdateSession = function (data, callback) {
             }
         })
 };
+
 
 //---------------------------------------------------------------------
 // logout
@@ -745,7 +727,7 @@ function getNextQuestion(data, callback) {
 
         for (var i = 0; i < question.answers.length; i++) {
             data.session.quiz.clientData.currentQuestion.answers.push({"id": i + 1, "text": question.answers[i].text})
-            if (question.answers[i].text.length > generalUtils.generalSettings.quiz.longAnswerTreshold) {
+            if (question.answers[i].text.length > generalUtils.settings.server.quiz.longAnswerTreshold) {
                 data.session.quiz.clientData.currentQuestion.hasLongAnswers = true;
             }
         }
@@ -828,7 +810,6 @@ function setContest(data, callback) {
             callback(null, data);
         });
 }
-
 
 //------------------------------------------------------------------------------------------------
 // removeContest
@@ -955,7 +936,7 @@ function prepareContestsQuery(data, callback) {
 //
 // data:
 // -----
-// input: DbHelper, session, questionCriteria
+// input: DbHelper, session, contestCriteria
 // output: contestsCount
 //---------------------------------------------------------------------
 module.exports.getContestsCount = getContestsCount;
@@ -992,7 +973,7 @@ function getContests(data, callback) {
     contestsCollection.find(data.contestsCriteria,
         {
             skip: data.clientContestCount,
-            limit: generalUtils.generalSettings.contestList.pageSize,
+            limit: generalUtils.settings.client.contestList.pageSize,
             sort: data.contestsOrder
         },
         function (err, contestsCursor) {

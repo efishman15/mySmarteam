@@ -37,7 +37,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         });
 
         $rootScope.$on("whoSmarter-rankChanged", function (error, data) {
-            //TODO: get sound for new rank
+
             SoundService.play("audio/finish_great_1");
             $scope.xpProgress = data.xpProgress;
             $scope.callbackAfterNewRankModal = data.callback;
@@ -326,6 +326,11 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                     if (data.results) {
                         //Will get here when quiz is finished
                         $scope.quiz.results = data.results;
+                    }
+
+                    //Rank might change during quiz - and feature might open
+                    if (data.features) {
+                        $rootScope.session.features = data.features;
                     }
 
                     $scope.quiz.currentQuestion.xpProgress = data.xpProgress;
@@ -761,15 +766,9 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             }
         }
 
-        $scope.lockNewContest = function () {
-            return (!$rootScope.session.isAdmin === true &&
-            $rootScope.session.rank < $rootScope.settings.features.newContest.unlockRank &&
-            (!$rootScope.session.assets || !$rootScope.session.assets[$rootScope.settings.features.newContest.name]));
-        }
-
         $scope.buyNewContestUnlockKey = function () {
             $scope.buyInProgress = true;
-            PaymentService.buy($rootScope.settings.features.newContest, function (data) {
+            PaymentService.buy($rootScope.session.features.newContest.name, function (data) {
                 location.replace(data.url);
             });
         }
@@ -787,9 +786,9 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                     transactionData.payerId = $stateParams.PayerID;
                     PaymentService.validate(transactionData, function (data) {
                         //Update local assets
-                        $rootScope.session.assets = data.assets;
-                        $scope.unlockFeature = data.unlockFeature;
-                        $scope.unlockText = $translate.instant($rootScope.settings.features[data.unlockFeature].unlockText);
+                        $rootScope.session.features = data.features
+                        $scope.unlockText = $translate.instant($rootScope.session.features[data.featurePurchased].unlockText);
+                        $scope.nextView = data.nextView;
                     })
                     break;
                 default:
@@ -799,6 +798,6 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         });
 
         $scope.proceed = function () {
-            $rootScope.gotoView($rootScope.settings.features[$scope.unlockFeature].view.name, $rootScope.settings.features[$scope.unlockFeature].view.isRoot, $rootScope.settings.features[$scope.unlockFeature].view.params);
+            $rootScope.gotoView($scope.nextView.name, $scope.nextView.isRoot, $scope.nextView.params);
         }
     });

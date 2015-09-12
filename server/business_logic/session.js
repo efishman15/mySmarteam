@@ -1,6 +1,7 @@
 var async = require("async");
 var dalDb = require("../dal/dalDb");
 var exceptions = require("../utils/exceptions");
+var generalUtils = require("../utils/general");
 
 //----------------------------------------------------
 // getSession
@@ -122,3 +123,41 @@ module.exports.toggleSound = function (req, res, next) {
         }
     });
 };
+
+//---------------------------------------------------------------------------------
+// computeFeatures
+//
+// Can receive either user object or session object.
+
+// Runs through the available features in settings
+// and computes lock state, cost, currency and unlockRank, lockText, unlockText
+//
+// returns: the computed feature list
+//---------------------------------------------------------------------------------
+module.exports.computeFeatures = function(userOrSession) {
+
+    var features = {};
+    for (var property in generalUtils.settings.server.features) {
+        if (generalUtils.settings.server.features.hasOwnProperty(property)) {
+            features[property] = {};
+            var serverFeature = generalUtils.settings.server.features[property];
+            features[property].name = serverFeature.name;
+            features[property].lockText = serverFeature.lockText;
+            features[property].unlockText = serverFeature.unlockText;
+            features[property].unlockRank = serverFeature.unlockRank;
+            features[property].purchaseData = generalUtils.settings.server.purchaseProducts[serverFeature.purchaseProductId];
+
+            switch (property) {
+                case "newContest":
+                    features[property].locked = !(userOrSession.isAdmin === true) &&
+                        userOrSession.rank <  serverFeature.unlockRank &&
+                        (!userOrSession.assets || !userOrSession.assets[property])
+                    break;
+                case "challengeFriendContest":
+                    features[property].locked = true;
+            }
+        }
+    }
+
+    return features;
+}

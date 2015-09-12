@@ -18,10 +18,10 @@ PaypalObject.prototype.params = function () {
 };
 
 //----------------------------------------------------
-// setContest
+// payPalBuy
 //
 // data:
-// input: productId, productDisplayName
+// input: feature, language
 // output: url to surf to
 //----------------------------------------------------
 module.exports.payPalBuy = function (req, res, next) {
@@ -29,19 +29,39 @@ module.exports.payPalBuy = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
 
+    if (!data.language) {
+        exceptions.ServerResponseException(res, "Language not received during payPal buy", null, "warn", 424);
+        return;
+    }
+
     //Invoice number will contain the product id which will be required later for validation
-    var invoiceNumber = uuid.v1() + "_" + data.feature.name;
+    var invoiceNumber = uuid.v1() + "_" + data.feature;
 
-    paypal.pay(invoiceNumber, generalUtils.purchaseProducts[data.feature.purchaseProductId].cost, data.productDisplayName, "USD", function (err, url) {
-        if (err) {
+    var feature = generalUtils.settings.server.features[data.feature];
+    if (!feature) {
+        exceptions.ServerResponseException(res, "Invalid feature received during payPal buy", {"feature": data.feature}, "warn", 424);
+        return;
+    }
 
-            exceptions.ServerResponseException(res, err, null, "warn", 424);
-            return;
+    var purchaseProduct = generalUtils.settings.server.purchaseProducts[feature.purchaseProductId];
+    var purchaseProductDisplayName = purchaseProduct.displayNames[data.language];
+    if (!purchaseProductDisplayName) {
+        exceptions.ServerResponseException(res, "Unable to find product display name during payPal buy", {"data": data}, "warn", 424);
+        return;
+    }
 
-        }
+    paypal.pay(invoiceNumber,
+        purchaseProduct.cost,
+        purchaseProductDisplayName, "USD", function (err, url) {
+            if (err) {
 
-        res.json({"url": url});
-    });
+                exceptions.ServerResponseException(res, err, null, "warn", 424);
+                return;
+
+            }
+
+            res.json({"url": url});
+        });
 };
 
 //--------------------------------------------------------------------------
@@ -66,9 +86,14 @@ module.exports.validate = function (req, res, next) {
 
             switch (data.method) {
                 case "paypal":
-                    paypal.detail(data.purchaseToken, data.payerId, function(err, payPalData, invoiceNumber, price) {
+                    paypal.detail(data.purchaseToken, data.payerId, function (err, payPalData, invoiceNumber, price) {
                         if (err) {
-                            callback(new exceptions.ServerException("Error verifying paypal transacion", {"error" : err, "payPalData": payPalData, "invoiceNumber" : invoiceNumber, "price": price}, 403));
+                            callback(new exceptions.ServerException("Error verifying paypal transacion", {
+                                "error": err,
+                                "payPalData": payPalData,
+                                "invoiceNumber": invoiceNumber,
+                                "price": price
+                            }, 403));
                             return;
                         }
                         if (!data.session.assets) {
@@ -80,17 +105,21 @@ module.exports.validate = function (req, res, next) {
                         data.purchaseData = payPalData;
 
                         data.response = {};
-                        data.response.unlockFeature = invoiceNumberParts[1];
 
-                        data.session.assets[data.response.unlockFeature] = true;
-                        data.response.assets = data.session.assets;
+                        var featurePurchased = invoiceNumberParts[1];
+                        data.session.assets[featurePurchased] = true;
+                        data.session.features = sessionUtils.computeFeatures(data.session);
+
+                        data.response.features = data.session.features;
+                        data.response.featurePurchased = featurePurchased;
+                        data.response.nextView = generalUtils.settings.server.features[featurePurchased].view;
 
                         dalDb.storeSession(data, callback);
                     });
                     break;
 
                 default:
-                    callback(new exceptions.ServerException("Method not supported for payment validation", {"method" : data.method}, 403));
+                    callback(new exceptions.ServerException("Method not supported for payment validation", {"method": data.method}, 403));
                     return;
             }
         },

@@ -127,7 +127,7 @@ module.exports.start = function (req, res, next) {
 
             quiz.serverData = {
                 "previousQuestions": [],
-                "topics": generalUtils.getLanguageTriviaTopics(data.session.settings.language),
+                "topics": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language],
                 "contestId": data.contestId,
                 "questionScore": (100 / quiz.clientData.totalQuestions), //Question score relational to 100
                 "score": 0
@@ -237,6 +237,12 @@ module.exports.answer = function (req, res, next) {
             else if (data.clientResponse.question.correct == true) {
                 //store temporary score of quiz
                 store = true;
+            }
+
+            if (data.clientResponse.xpProgress.rankChanged === true) {
+                store = true;
+                data.session.features = sessionUtils.computeFeatures(data.session);
+                data.clientResponse.features = data.session.features;
             }
 
             if (store == true) {

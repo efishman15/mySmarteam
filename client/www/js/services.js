@@ -937,8 +937,7 @@ angular.module('whoSmarter.services', [])
 
             switch (method) {
                 case "paypal/buy" :
-                    var productDisplayName = $translate.instant($rootScope.settings.purchaseProducts[feature.purchaseProductId].displayName);
-                    var postData = {"feature": feature, "productDisplayName": productDisplayName};
+                    var postData = {"feature": feature, "language" : $rootScope.session.settings.language};
                     return ApiService.post(path, method, postData, callbackOnSuccess, callbackOnError, config);
                     break;
 

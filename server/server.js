@@ -11,6 +11,7 @@ var exceptions = require("./utils/exceptions")
 var generalUtils = require("./utils/general");
 var sessionUtils = require("./business_logic/session");
 var payments = require("./business_logic/payments");
+var dalDb = require("./dal/dalDb");
 
 var domain = require("domain");
 
@@ -66,36 +67,44 @@ function isAuthenticated(req, res, next) {
 //----------------------------------------------------
 // API's that require authentication
 //----------------------------------------------------
-app.post("/user/logout", isAuthenticated, credentials.logout);
-app.post("/user/settings", sessionUtils.saveSettings);
-app.post("/user/toggleSound", sessionUtils.toggleSound);
-app.post("/quiz/start", isAuthenticated, quiz.start);
-app.post("/quiz/answer", isAuthenticated, quiz.answer);
-app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
-app.post("/contests/set", isAuthenticated, contests.setContest);
-app.post("/contests/remove", isAuthenticated, contests.removeContest);
-app.post("/contests/get", isAuthenticated, contests.getContests);
-app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
-app.post("/payments/validate", isAuthenticated, payments.validate);
+dalDb.loadSettings(function(err, data) {
 
-//----------------------------------------------------
-// API's that do NOT require authentication
-//----------------------------------------------------
-app.post("/user/facebookConnect", credentials.facebookConnect);
-app.post("/info/geo", generalUtils.geoInfo);
-app.post("/info/settings", generalUtils.getSettings);
+    //Block server listener until settings loaded from db
+    generalUtils.injectSettings(data.settings);
 
-//----------------------------------------------------
-// Start server listener
-//----------------------------------------------------
-app.use(function (err, req, res, next) {
-    var exception = new exceptions.UnhandledServerException(err);
-    res.status(exception.httpStatus).send(exception);
-    res.end();
-});
+    app.post("/user/logout", isAuthenticated, credentials.logout);
+    app.post("/user/settings", sessionUtils.saveSettings);
+    app.post("/user/toggleSound", sessionUtils.toggleSound);
+    app.post("/quiz/start", isAuthenticated, quiz.start);
+    app.post("/quiz/answer", isAuthenticated, quiz.answer);
+    app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
+    app.post("/contests/set", isAuthenticated, contests.setContest);
+    app.post("/contests/remove", isAuthenticated, contests.removeContest);
+    app.post("/contests/get", isAuthenticated, contests.getContests);
+    app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
+    app.post("/payments/validate", isAuthenticated, payments.validate);
 
-app.set("port", process.env.PORT || 7000);
+    //----------------------------------------------------
+    // API's that do NOT require authentication
+    //----------------------------------------------------
+    app.post("/user/facebookConnect", credentials.facebookConnect);
+    app.post("/info/geo", generalUtils.geoInfo);
+    app.post("/info/settings", generalUtils.getSettings);
 
-app.listen(app.get("port"), function () {
-    console.log("Express server listening on port " + app.get("port"));
-});
+    //----------------------------------------------------
+    // Start server listener
+    //----------------------------------------------------
+    app.use(function (err, req, res, next) {
+        var exception = new exceptions.UnhandledServerException(err);
+        res.status(exception.httpStatus).send(exception);
+        res.end();
+    });
+
+    app.set("port", process.env.PORT || 7000);
+
+    app.listen(app.get("port"), function () {
+        console.log("Express server listening on port " + app.get("port"));
+    });
+})
+
+
