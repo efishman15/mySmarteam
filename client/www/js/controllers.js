@@ -37,7 +37,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         });
 
         $rootScope.$on("whoSmarter-rankChanged", function (error, data) {
-            //TODO: nice popup celebrating new rank!
+            //TODO: get sound for new rank
             SoundService.play("audio/finish_great_1");
             $scope.xpProgress = data.xpProgress;
             $scope.callbackAfterNewRankModal = data.callback;
