@@ -78,11 +78,14 @@
   "SUCCESS_RATIO" : "({{correctRatio}}% success)",
   "NEW_RANK_TITLE" : "Congratulations!",
   "NEW_RANK_MESSAGE" : "You have reached level: {{rank}}",
-  "NEW_RANK_NEW_CONTEST_UNLOCKED" : "You can now create your own contests!",
+  "NEW_CONTEST_UNLOCKED" : "You can now create your own contests!",
   "FEATURE_LOCKED_NEW_CONTEST" : "Creating new contests is locked until level {{rank}}",
-  "UNLOCK_FEATURE" : "Unlock for {{cost}}",
+  "UNLOCK_FEATURE" : "Unlock for {{currency}} {{cost}}",
   "ENDS_IN" : "Ends in: ",
   "ENDS_IN_MINUTES" : "{{number}} Minutes",
   "ENDS_IN_HOURS" : "{{number}} Hours",
-  "ENDS_IN_DAYS" : "{{number}} Days"
+  "ENDS_IN_DAYS" : "{{number}} Days",
+  "PURCHASE_NEW_CONTEST_UNLOCK_KEY" : "New contest - unlock key",
+  "PURCHASE_CHALLENGE_FRIEND_CONTEST_UNLOCK_KEY" : "Challenge friend contest - unlock key",
+  "PAYMENT_THANKYOU" : "Congratulations!"
 }

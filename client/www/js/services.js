@@ -786,7 +786,7 @@ angular.module('whoSmarter.services', [])
         return service;
     })
 
-//Chart Service
+    //Chart Service
     .factory('XpService', function ($rootScope) {
 
         //----------------------------------------------
@@ -810,7 +810,7 @@ angular.module('whoSmarter.services', [])
                 service.context = context;
             }
 
-            service.context.clearRect(0,0,service.canvas.width, service.canvas.height);
+            service.context.clearRect(0, 0, service.canvas.width, service.canvas.height);
 
             centerX = service.canvas.width / 2;
             centerY = service.canvas.height / 2;
@@ -902,7 +902,10 @@ angular.module('whoSmarter.services', [])
             if (xpProgress.rankChanged === true) {
                 $rootScope.session.rank = xpProgress.rank;
                 service.initXp();
-                $rootScope.$broadcast("whoSmarter-rankChanged", {"xpProgress" : xpProgress, "callback" : callbackOnRankChange});
+                $rootScope.$broadcast("whoSmarter-rankChanged", {
+                    "xpProgress": xpProgress,
+                    "callback": callbackOnRankChange
+                });
             }
 
         };
@@ -916,4 +919,40 @@ angular.module('whoSmarter.services', [])
         }
 
         return service;
+    })
+
+    //Payment Service
+    .factory('PaymentService', function ($rootScope, ApiService, $translate) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+        var path = 'payments/';
+
+        service.buy = function (feature, callbackOnSuccess, callbackOnError, config) {
+
+            //TODO: determine payment method by current platform
+            var method = "paypal/buy";
+
+            switch (method) {
+                case "paypal/buy" :
+                    var productDisplayName = $translate.instant($rootScope.settings.purchaseProducts[feature.purchaseProductId].displayName);
+                    var postData = {"feature": feature, "productDisplayName": productDisplayName};
+                    return ApiService.post(path, method, postData, callbackOnSuccess, callbackOnError, config);
+                    break;
+
+                default:
+                    alert("TBD other payment methods");
+                    return;
+                    break;
+            }
+        }
+
+        service.validate = function (transactionData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "validate", transactionData, callbackOnSuccess, callbackOnError, config);
+        }
+
+        return service;
+
     });

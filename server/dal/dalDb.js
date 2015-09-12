@@ -475,7 +475,8 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "settings": data.user.settings,
                 "score": data.user.score,
                 "xp": data.user.xp,
-                "rank": data.user.rank
+                "rank": data.user.rank,
+                "assets" : data.user.assets
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -490,15 +491,32 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 return;
             }
 
-            if (session.nUpserted > 0) {
-                logAction({"DbHelper": data.DbHelper, "userId": data.user._id, "action": "login"});
-            }
-
-            checkToCloseDb(data);
-
             data.session = session.value;
 
-            callback(null, data);
+            if (session.nUpserted > 0) {
+                data.action = "login";
+                logAction(data, function(err, data) {
+
+                    if (err) {
+                        closeDb(data);
+
+                        callback(new exceptions.ServerException("Error inserting log record", {
+                            "action": data.action,
+                            "session" : data.session,
+                            "dbError": err
+                        }, "error"));
+                        return;
+                    }
+
+                    checkToCloseDb(data);
+
+                    callback(null, data);
+                })
+            }
+            else {
+                checkToCloseDb(data);
+                callback(null, data);
+            }
         })
 };
 
@@ -560,7 +578,7 @@ module.exports.logout = function (data, callback) {
 //
 // data:
 // -----
-// input: DbHelper, userId, action, actionData (optional)
+// input: DbHelper, session, action, actionData (optional)
 // output: <NA>
 //---------------------------------------------------------------------
 module.exports.logAction = logAction;
@@ -569,7 +587,8 @@ function logAction(data, callback) {
     var logCollection = data.DbHelper.getCollection("Log");
 
     var newAction = {
-        "userId": data.userId,
+        "userId": data.session.userId,
+        "sessionId" : data.session.userToken,
         "date": (new Date()).getTime(),
         "action": data.action
     };
@@ -579,7 +598,7 @@ function logAction(data, callback) {
     }
 
     logCollection.insert(newAction
-        , {}, function (err, logAction) {
+        , {}, function (err, actionRecord) {
             if (err) {
 
                 checkToCloseDb(data);
@@ -608,11 +627,9 @@ function logAction(data, callback) {
 module.exports.prepareQuestionCriteria = prepareQuestionCriteria;
 function prepareQuestionCriteria(data, callback) {
 
-    var randomTopic = random.rnd(0, data.session.quiz.serverData.topics.length - 1);
-
     var questionCriteria = {
         "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        "topicId": data.session.quiz.serverData.topics[randomTopic]
+        "topicId": {"$in" : data.session.quiz.serverData.topics}
     };
 
     //Filter by age if available

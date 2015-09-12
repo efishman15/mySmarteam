@@ -42,6 +42,20 @@ var triviaTopisPerLangage = {
     "es": [465]
 }
 
+var purchaseProducts = {
+    "sandbox_feature_newContest" : {
+        "displayName": "PURCHASE_NEW_CONTEST_UNLOCK_KEY",
+        "cost": "0.99",
+        "currency" : "$"
+    },
+    "sandbox_feature_challengeFriendContest" : {
+        "displayName": "PURCHASE_CHALLENGE_FRIEND_CONTEST_UNLOCK_KEY",
+        "cost": "0.99",
+        "currency" : "$"
+    }
+}
+module.exports.purchaseProducts = purchaseProducts;
+
 //-------------------------------------------------------------------------------
 // Features can be unlocked either by having a minimum rank or by purchasing an
 // item per that feature
@@ -50,20 +64,17 @@ var features = {
     "rankComputed": false,
     "list": {
         "newContest": {
+            "name" : "newContest",
             "lockText": "FEATURE_LOCKED_NEW_CONTEST",
-            "purchase": {
-                "productId": "sandbox.feature.newContest",
-                "productName": "PURCHASE_NEW_CONTEST_UNLOCK_KEY",
-                "cost": "$0.99"
-            }
+            "purchaseProductId": "sandbox_feature_newContest",
+            "unlockText" : "NEW_CONTEST_UNLOCKED",
+            "view" : {"name" : "contest", "isRoot" : true, "params" : {"mode" : "add"}}
         },
         "challengeFriendContest": {
+            "name" : "challengeFriendContest",
             "lockText": "FEATURE_CHALLENGE_FRIEND_CONTEST",
-            "purchase": {
-                "productId": "challengeFriendContest",
-                "productName": "PURCHASE_CHALLENGE_FRIEND_CONTEST_UNLOCK_KEY",
-                "cost": "$0.99"
-            }
+            "purchaseProductId": "sandbox_feature_challengeFriendContest",
+            "unlockText" : "CHALLENGE_FRIEND_CONTEST_UNLOCKED"
         }
     }
 }
@@ -73,7 +84,7 @@ var features = {
 //-------------------------------------------------------------------------------
 var rankByXp = [
     {"xp": 100, "rank": 1},
-    {"xp": 500, "rank": 2, "unlockFeature": "newContest", "unlockFeatureMessage": "NEW_RANK_NEW_CONTEST_UNLOCKED"},
+    {"xp": 500, "rank": 2, "unlockFeature": "newContest", "unlockFeatureMessage": "NEW_CONTEST_UNLOCKED"},
     {"xp": 1500, "rank": 3},
     {"xp": 3000, "rank": 4},
     {"xp": 5000, "rank": 5}
@@ -373,6 +384,7 @@ var generalSettings = {
         "textColor": "#444",
         "shadow": {"offsetX": 0, "offsetY": 0, blur: 10, color: "#656565'"}
     },
-    "db": {"sessionExpirationMilliseconds": 30 * 60 * 1000}
+    "db": {"sessionExpirationMilliseconds": 30 * 60 * 1000}, //TODO: split between client settings and server settings
+    "purchaseProducts" : purchaseProducts
 }
 module.exports.generalSettings = generalSettings;

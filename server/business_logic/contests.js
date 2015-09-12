@@ -23,7 +23,10 @@ function validateContestData(data, callback) {
         return;
     }
 
-    if (data.mode == "add" && (data.session.rank < generalUtils.featuresList().newContest.unlockRank || (data.session.assets && data.session.assets[generalUtils.featuresList().newContest.purchase.productId]))) {
+    if (data.mode == "add" &&
+        !data.session.isAdmin === true &&
+        data.session.rank < generalUtils.featuresList().newContest.unlockRank &&
+        (!data.session.assets || !data.session.assets[generalUtils.featuresList().newContest.name])) {
         callback(new exceptions.ServerException("Attempt to create a new contest without having an eligable rank or feature asset",{"session" : data.session, "contest" : data.contest}));
         return;
     }

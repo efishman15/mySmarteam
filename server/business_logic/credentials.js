@@ -17,7 +17,8 @@ function getSessionResponse(session) {
         "score" : session.score,
         "rank" : session.rank,
         "xpProgress" : new generalUtils.XpProgress(session.xp, session.rank),
-        "settings": session.settings
+        "settings": session.settings,
+        "assets" : session.assets
     };
 }
 

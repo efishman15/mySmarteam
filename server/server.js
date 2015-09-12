@@ -10,7 +10,10 @@ var contests = require("./business_logic/contests");
 var exceptions = require("./utils/exceptions")
 var generalUtils = require("./utils/general");
 var sessionUtils = require("./business_logic/session");
+var payments = require("./business_logic/payments");
+
 var domain = require("domain");
+
 
 var app = express();
 
@@ -72,6 +75,8 @@ app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
 app.post("/contests/set", isAuthenticated, contests.setContest);
 app.post("/contests/remove", isAuthenticated, contests.removeContest);
 app.post("/contests/get", isAuthenticated, contests.getContests);
+app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
+app.post("/payments/validate", isAuthenticated, payments.validate);
 
 //----------------------------------------------------
 // API's that do NOT require authentication

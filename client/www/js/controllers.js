@@ -489,7 +489,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         });
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService, $ionicPopup, $ionicPopover) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService, $ionicPopup, $ionicPopover, PaymentService) {
 
         var startDate = new Date();
         var endDate = new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000);
@@ -618,7 +618,14 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 return;
             }
 
-            viewData.enableBack = true;
+            if ($ionicHistory.backView() == null) {
+                $scope.enableBack = false;
+            }
+            else {
+                $scope.enableBack = true;
+            }
+
+            viewData.enableBack = $scope.enableBack;
 
             $scope.localViewData.totalParticipants = $scope.localViewData.participants + $scope.localViewData.manualParticipants;
             $scope.showAdminInfo = false;
@@ -635,7 +642,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             }
         };
 
-        $scope.getArrowDirection = function(stateClosed) {
+        $scope.getArrowDirection = function (stateClosed) {
             if (stateClosed === true) {
                 if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
                     return "►";
@@ -754,13 +761,44 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             }
         }
 
-        $scope.lockNewContest = function() {
-            return !($rootScope.session.isAdmin===true) && $rootScope.session.rank <  $rootScope.settings.features.newContest.unlockRank
+        $scope.lockNewContest = function () {
+            return (!$rootScope.session.isAdmin === true &&
+            $rootScope.session.rank < $rootScope.settings.features.newContest.unlockRank &&
+            (!$rootScope.session.assets || !$rootScope.session.assets[$rootScope.settings.features.newContest.name]));
         }
 
-        $scope.buyNewContestKey = function() {
-            ErrorService.alert("TODO: purchase new contest unlock key");
+        $scope.buyNewContestUnlockKey = function () {
+            $scope.buyInProgress = true;
+            PaymentService.buy($rootScope.settings.features.newContest, function (data) {
+                location.replace(data.url);
+            });
         }
 
     })
-;
+
+    .controller("PaymentCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, $translate, $ionicHistory) {
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+
+            var transactionData = {"method": $stateParams.purchaseMethod};
+            switch ($stateParams.purchaseMethod) {
+                case "paypal":
+                    transactionData.purchaseToken = $stateParams.token;
+                    transactionData.payerId = $stateParams.PayerID;
+                    PaymentService.validate(transactionData, function (data) {
+                        //Update local assets
+                        $rootScope.session.assets = data.assets;
+                        $scope.unlockFeature = data.unlockFeature;
+                        $scope.unlockText = $translate.instant($rootScope.settings.features[data.unlockFeature].unlockText);
+                    })
+                    break;
+                default:
+                    $scope.proceed();
+                    break;
+            }
+        });
+
+        $scope.proceed = function () {
+            $rootScope.gotoView($rootScope.settings.features[$scope.unlockFeature].view.name, $rootScope.settings.features[$scope.unlockFeature].view.isRoot, $rootScope.settings.features[$scope.unlockFeature].view.params);
+        }
+    });

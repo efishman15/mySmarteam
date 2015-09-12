@@ -78,11 +78,14 @@
   "SUCCESS_RATIO" : "({{correctRatio}}% éxito)",
   "NEW_RANK_TITLE" : "¡Felicidades",
   "NEW_RANK_MESSAGE" : "Has alcanzado el nivel : {{rank}}",
-  "NEW_RANK_NEW_CONTEST_UNLOCKED" : "Ahora puede crear sus propios concursos !",
+  "NEW_CONTEST_UNLOCKED" : "Ahora puede crear sus propios concursos !",
   "FEATURE_LOCKED_NEW_CONTEST" : "Creación de nuevos concursos se bloquea hasta que el nivel {{rank}}",
-  "UNLOCK_FEATURE" : "Desbloquear para {{cost}}",
+  "UNLOCK_FEATURE" : "Desbloquear para {{currency}} {{cost}}",
   "ENDS_IN" : "Termina en: ",
   "ENDS_IN_MINUTES" : "{{number}} Minutos",
   "ENDS_IN_HOURS" : "{{number}} Horas",
-  "ENDS_IN_DAYS" : "{{number}} Días"
+  "ENDS_IN_DAYS" : "{{number}} Días",
+  "PURCHASE_NEW_CONTEST_UNLOCK_KEY" : "Nuevo concurso - desbloquear clave",
+  "PURCHASE_CHALLENGE_FRIEND_CONTEST_UNLOCK_KEY" : "Desafía amigo concurso - tecla de desbloqueo",
+  "PAYMENT_THANKYOU" : "Felicidades!"
 }

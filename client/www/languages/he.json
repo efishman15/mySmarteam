@@ -78,12 +78,14 @@
   "SUCCESS_RATIO" : "({{correctRatio}}% הצלחה)",
   "NEW_RANK_TITLE" : "מזל טוב!",
   "NEW_RANK_MESSAGE" : "עליתם לרמה: {{rank}}",
-  "NEW_RANK_NEW_CONTEST_UNLOCKED" : "כעת תוכלו ליצור תחרויות משלכם!",
+  "NEW_CONTEST_UNLOCKED" : "כעת תוכלו ליצור תחרויות משלכם!",
   "FEATURE_LOCKED_NEW_CONTEST" : "יצירת תחרויות חדשות נעולה עד רמה {{rank}}",
-  "UNLOCK_FEATURE" : "שחררו עבור {{cost}}",
+  "UNLOCK_FEATURE" : "שחררו עבור {{cost}} {{currency}}",
   "ENDS_IN" : "מסתיימת בעוד: ",
   "ENDS_IN_MINUTES" : "{{number}} דקות",
   "ENDS_IN_HOURS" : "{{number}} שעות",
-  "ENDS_IN_DAYS" : "{{number}} ימים"
-
+  "ENDS_IN_DAYS" : "{{number}} ימים",
+  "PURCHASE_NEW_CONTEST_UNLOCK_KEY" : "מפתח ליצירת תחרות חדשה",
+  "PURCHASE_CHALLENGE_FRIEND_CONTEST_UNLOCK_KEY" : "מפתח להזמנת חבר לדו קרב",
+  "PAYMENT_THANKYOU" : "תודה רבה!"
 }

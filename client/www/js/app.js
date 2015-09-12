@@ -199,9 +199,22 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         return UserService.resolveAuthentication("contest");
                     }
                 },
+                cache: false,
                 templateUrl: "templates/contest.html",
                 controller: "ContestCtrl",
                 params: {mode: null, contest: null}
+            })
+
+            .state('payment', {
+                url: "/payment?purchaseMethod&purchaseSuccess&token&PayerID",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication("contest");
+                    }
+                },
+                templateUrl: "templates/payment.html",
+                controller: "PaymentCtrl",
+                params: {token: null, PayerID: null, productId: null, purchaseMethod: null, purchaseSuccess : null}
             })
 
             .state('settings', {
@@ -371,6 +384,38 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
             });
         }
     })
+
+    .directive('tabsSwipable', ['$ionicGesture', function($ionicGesture){
+        //
+        // make ionTabs swipable. leftswipe -> nextTab, rightswipe -> prevTab
+        // Usage: just add this as an attribute in the ionTabs tag
+        // <ion-tabs tabs-swipable> ... </ion-tabs>
+        //
+        return {
+            restrict: 'A',
+            require: 'ionTabs',
+            link: function(scope, elm, attrs, tabsCtrl){
+                var onSwipeLeft = function(){
+                    var target = tabsCtrl.selectedIndex() + 1;
+                    if(target < tabsCtrl.tabs.length){
+                        scope.$apply(tabsCtrl.select(target));
+                    }
+                };
+                var onSwipeRight = function(){
+                    var target = tabsCtrl.selectedIndex() - 1;
+                    if(target >= 0){
+                        scope.$apply(tabsCtrl.select(target));
+                    }
+                };
+
+                var swipeGesture = $ionicGesture.on('swipeleft', onSwipeLeft, elm).on('swiperight', onSwipeRight);
+                scope.$on('$destroy', function() {
+                    $ionicGesture.off(swipeGesture, 'swipeleft', onSwipeLeft);
+                    $ionicGesture.off(swipeGesture, 'swiperight', onSwipeRight);
+                });
+            }
+        };
+    }])
 
     .filter('orderObjectBy', function () {
         return function (items, field, reverse) {
