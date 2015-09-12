@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/contest.html" afterPath="$PROJECT_DIR$/client/www/templates/contest.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/contests.js" afterPath="$PROJECT_DIR$/server/business_logic/contests.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/credentials.js" afterPath="$PROJECT_DIR$/server/business_logic/credentials.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/dal/dalDb.js" afterPath="$PROJECT_DIR$/server/dal/dalDb.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/utils/general.js" afterPath="$PROJECT_DIR$/server/utils/general.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/he.json" afterPath="$PROJECT_DIR$/client/www/languages/he.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/payments.js" afterPath="$PROJECT_DIR$/server/business_logic/payments.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/quiz.js" afterPath="$PROJECT_DIR$/server/business_logic/quiz.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/server.js" afterPath="$PROJECT_DIR$/server/server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/services.js" afterPath="$PROJECT_DIR$/client/www/js/services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/session.js" afterPath="$PROJECT_DIR$/server/business_logic/session.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/SettingsBackup.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ionic-tutorial.iws" />
@@ -354,12 +343,6 @@
       <option name="number" value="Default" />
       <updated>1431500570423</updated>
     </task>
-    <task id="LOCAL-00011" summary="add seedrandom utility">
-      <created>1434630615549</created>
-      <option name="number" value="00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1434630615549</updated>
-    </task>
     <task id="LOCAL-00012" summary="Dynamic questions imported - study working.&#10;ToDo:&#10;1. Check all questions&#10;2. RTL&#10;3. Shuffle answers&#10;4. Import all quetions.&#10;5. Translations">
       <created>1435066860391</created>
       <option name="number" value="00012" />
@@ -648,7 +631,13 @@
       <option name="project" value="LOCAL" />
       <updated>1442076278297</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="1. Put all settings in db.&#10;2. Separate server/client settings.&#10;3. Move all features logic to server">
+      <created>1442092843105</created>
+      <option name="number" value="00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1442092843105</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TodoView">
@@ -718,8 +707,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="TODO:&#10;1. Check why error on server does not catch on domain.error&#10;2. Finish &quot;Setting&quot; with password protection.&#10;3. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;, Sound, List of subjects - if empty - user will pick a subject as today." />
-    <MESSAGE value="TODO:&#10;1. Finish &quot;Setting&quot; with password protection.&#10;2. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;, Sound, List of subjects - if empty - user will pick a subject as today." />
     <MESSAGE value="TODO:&#10;1. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;, Sound, List of subjects - if empty - user will pick a subject as today.&#10;2. on all errors - dbHelper - check if need to close the connection anyway" />
     <MESSAGE value="TODO:&#10;1. Profiles (each profile should have &quot;Year of Birth&quot; and &quot;QuestionsLanguage&quot;, Sound, List of subjects - if empty - user will pick a subject as today.&#10;2. on all errors - dbHelper - check if need to close the connection anyway&#10;3. Sound - should be removed from menu - add a small enable/disable sound icon in the quiz." />
     <MESSAGE value="TODO:&#10;1. Profile add/edit - Pick subjects based on quizLanguage. &#10;2. on all errors - dbHelper - check if need to close the connection anyway&#10;3. Sound - should be removed from menu - add a small enable/disable sound icon in the quiz.&#10;4. Separate Dal/BL - cleaner server code" />
@@ -743,7 +730,9 @@
     <MESSAGE value="Add billing support / google store upload for alpha&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
     <MESSAGE value="1. Fix settings screen.&#10;2. Fix contest screen:&#10;   a. remove cancel, item dividers&#10;   b. auto join to the first team&#10;" />
     <MESSAGE value="Paypal scenario working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Paypal scenario working" />
+    <MESSAGE value="1. Put all settings in db.&#10;2. Separate server/client settings.&#10;3. Move all features logic to server" />
+    <MESSAGE value="Backup settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Backup settings" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
