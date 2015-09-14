@@ -42,6 +42,24 @@ function setQuestionDirection(data, callback) {
 
     });
 }
+
+function addXp(data, action) {
+    if (!data.clientResponse) {
+        data.clientResponse = {};
+    }
+
+    if (!data.clientResponse.xpProgress) {
+        data.clientResponse.xpProgress = new generalUtils.XpProgress(data.session.xp, data.session.rank);
+    }
+
+    data.clientResponse.xpProgress.addXp(data.session, "joinContest");
+
+}
+
+//--------------------------------------------------------------------------
+//Public functions
+//--------------------------------------------------------------------------
+
 //--------------------------------------------------------------------------
 // start
 //
@@ -88,7 +106,7 @@ module.exports.start = function (req, res, next) {
                 //----------------------------------
                 //Not joined and passed a valid team
                 //----------------------------------
-                data.clientResponse.xpProgress.addXp(data.session, "joinContest");
+                addXp(data, "joinContest");
 
                 //Flagging for next function to do the join if necessary
                 data.joinTeam = true;
@@ -127,7 +145,6 @@ module.exports.start = function (req, res, next) {
 
             quiz.serverData = {
                 "previousQuestions": [],
-                "topics": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language],
                 "contestId": data.contestId,
                 "questionScore": (100 / quiz.clientData.totalQuestions), //Question score relational to 100
                 "score": 0
@@ -207,7 +224,7 @@ module.exports.answer = function (req, res, next) {
             if (answers[answerId - 1].correct) {
                 data.clientResponse.question.correct = true;
 
-                data.clientResponse.xpProgress.addXp(data.session, "correctAnswer");
+                addXp(data, "correctAnswer");
 
                 data.session.quiz.serverData.score += data.session.quiz.serverData.questionScore; //Question score relational to 100
             }
@@ -239,7 +256,7 @@ module.exports.answer = function (req, res, next) {
                 store = true;
             }
 
-            if (data.clientResponse.xpProgress.rankChanged === true) {
+            if (data.clientResponse.xpProgress && data.clientResponse.xpProgress.rankChanged === true) {
                 store = true;
                 data.session.features = sessionUtils.computeFeatures(data.session);
                 data.clientResponse.features = data.session.features;
@@ -247,7 +264,7 @@ module.exports.answer = function (req, res, next) {
 
             if (store == true) {
                 if (data.session.quiz.serverData.score == 100) {
-                    data.clientResponse.xpProgress.addXp(data.session, "quizFullScore");
+                    addXp(data, "quizFullScore");
                 }
 
                 dalDb.storeSession(data, callback);
@@ -259,7 +276,7 @@ module.exports.answer = function (req, res, next) {
 
         //Check to save the score into the users object as well - when quiz is finished or when got a correct answer (which gives score and/or xp
         function (data, callback) {
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex || data.clientResponse.xpProgress.addition > 0) {
+            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex || (data.clientResponse.xpProgress && data.clientResponse.xpProgress.addition > 0)) {
 
                 data.setData = {
                     "score": data.session.score,

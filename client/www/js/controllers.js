@@ -291,11 +291,11 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         $scope.buttonAnimationEnded = function (button, event) {
 
-            if ($scope.quiz.currentQuestion.xpProgress && $scope.quiz.currentQuestion.xpProgress.addition > 0) {
-                XpService.addXp($scope.quiz.currentQuestion.xpProgress, $scope.quizProceed);
+            if ($scope.quiz.xpProgress && $scope.quiz.xpProgress.addition > 0) {
+                XpService.addXp($scope.quiz.xpProgress, $scope.quizProceed);
             }
 
-            if (!$scope.quiz.currentQuestion.xpProgress.rankChanged && $scope.correctButtonId == button.id) {
+            if ((!$scope.quiz.xpProgress || !($scope.quiz.xpProgress.rankChanged===true)) && $scope.correctButtonId == button.id) {
                 $scope.quizProceed();
             }
         };
@@ -345,19 +345,20 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                         $rootScope.session.features = data.features;
                     }
 
-                    $scope.quiz.currentQuestion.xpProgress = data.xpProgress;
+                    if (data.xpProgress) {
+                        $scope.quiz.xpProgress = data.xpProgress;
+                    }
+                    else {
+                        $scope.quiz.xpProgress = null;
+                    }
 
                     if (data.question.correct == true) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
-                        if ($rootScope.session.settings.sound == true) {
-                            SoundService.play("audio/click_ok");
-                        }
+                        SoundService.play("audio/click_ok");
                     }
                     else {
-                        if ($rootScope.session.settings.sound == true) {
-                            SoundService.play("audio/click_wrong");
-                        }
+                        SoundService.play("audio/click_wrong");
                         correctAnswerId = data.question.correctAnswerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
                         $timeout(function () {
@@ -394,7 +395,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             $scope.contestCharts = [ContestsService.prepareContestChart($scope.results.contest, 0)];
 
             //Play sound only if enabled and not came by pressing back
-            if ($rootScope.session.settings.sound == true && (!$rootScope.lastPlayed || $rootScope.lastPlayed < $stateParams.results.contest.lastPlayed)) {
+            if (!$rootScope.lastPlayed || $rootScope.lastPlayed < $stateParams.results.contest.lastPlayed) {
                 SoundService.play($scope.results.sound);
             }
 

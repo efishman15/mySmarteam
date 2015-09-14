@@ -676,7 +676,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Sound Service
-    .factory('SoundService', function () {
+    .factory('SoundService', function ($rootScope) {
 
         //----------------------------------------------
         // Service Variables
@@ -688,6 +688,10 @@ angular.module('whoSmarter.services', [])
 
         //Play
         service.play = function (sound) {
+            if (!$rootScope.session.settings.sound || !$rootScope.session.settings.sound === false) {
+                return;
+            }
+
             if (playMp3) {
                 audio.src = sound + ".mp3";
                 audio.load();
@@ -899,6 +903,10 @@ angular.module('whoSmarter.services', [])
 
             //Add the actual xp to the client side
             $rootScope.session.xpProgress = xpProgress;
+
+            //Zero the addition
+            $rootScope.session.xpProgress.addition = 0;
+
             if (xpProgress.rankChanged === true) {
                 $rootScope.session.rank = xpProgress.rank;
                 service.initXp();
@@ -907,7 +915,6 @@ angular.module('whoSmarter.services', [])
                     "callback": callbackOnRankChange
                 });
             }
-
         };
 
         function animateXpAddition(startPoint, endPoint) {
@@ -937,7 +944,7 @@ angular.module('whoSmarter.services', [])
 
             switch (method) {
                 case "paypal/buy" :
-                    var postData = {"feature": feature, "language" : $rootScope.session.settings.language};
+                    var postData = {"feature": feature, "language": $rootScope.session.settings.language};
                     return ApiService.post(path, method, postData, callbackOnSuccess, callbackOnError, config);
                     break;
 

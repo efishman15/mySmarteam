@@ -158,14 +158,10 @@ label.item.valid-lr {
     height: 100%;
 }
 
-.button.item.quiz-normal-answer {
+.button.item.quiz-answer {
     margin-bottom: 30px;
     font-size: 18px;
-}
-
-.button.item.quiz-long-answer {
-    margin-bottom: 30px;
-    font-size: 14px;
+    line-height: 1em;
 }
 
 .menu-avatar-ltr {

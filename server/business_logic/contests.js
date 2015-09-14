@@ -2,7 +2,6 @@ var async = require("async");
 var dalDb = require("../dal/dalDb");
 var exceptions = require("../utils/exceptions");
 var mathjs = require("mathjs");
-var generalUtils = require('../utils/general');
 
 //---------------------------------------------------------------------
 // private functions

@@ -251,10 +251,6 @@ function retrieveSession(data, callback) {
             }
 
             data.session = session;
-            if (!data.clientResponse) {
-                data.clientResponse = {};
-            }
-            data.clientResponse.xpProgress = new generalUtils.XpProgress(session.xp, session.rank);
 
             checkToCloseDb(data);
 
@@ -611,7 +607,7 @@ function prepareQuestionCriteria(data, callback) {
 
     var questionCriteria = {
         "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        "topicId": {"$in" : data.session.quiz.serverData.topics}
+        "topicId": {"$in" : generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]}
     };
 
     //Filter by age if available
@@ -727,9 +723,6 @@ function getNextQuestion(data, callback) {
 
         for (var i = 0; i < question.answers.length; i++) {
             data.session.quiz.clientData.currentQuestion.answers.push({"id": i + 1, "text": question.answers[i].text})
-            if (question.answers[i].text.length > generalUtils.settings.server.quiz.longAnswerTreshold) {
-                data.session.quiz.clientData.currentQuestion.hasLongAnswers = true;
-            }
         }
 
         //Add this question id to the list of questions already asked during this quiz

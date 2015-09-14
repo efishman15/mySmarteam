@@ -8,7 +8,7 @@
             </div>
 
             <div class="padding center">
-                <h3>{{results.message | translate:{score : results.score} }}</h3>
+                <h3>{{results.message | translate:{score : results.score, myTeam : results.contest.teams[results.contest.myTeam].name} }}</h3>
             </div>
 
             <div class="padding center"
