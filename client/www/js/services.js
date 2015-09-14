@@ -238,7 +238,7 @@ angular.module('whoSmarter.services', [])
                                         params = {};
                                     }
 
-                                    if (isRootView == true) {
+                                    if (isRootView === true) {
 
                                         if (clearHistory == null) {
                                             clearHistory = true;

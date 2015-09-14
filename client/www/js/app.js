@@ -399,16 +399,25 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     var target = tabsCtrl.selectedIndex() + 1;
                     if(target < tabsCtrl.tabs.length){
                         scope.$apply(tabsCtrl.select(target));
+                        scope.$broadcast("whoSmarter-tabChanged");
                     }
                 };
                 var onSwipeRight = function(){
                     var target = tabsCtrl.selectedIndex() - 1;
                     if(target >= 0){
                         scope.$apply(tabsCtrl.select(target));
+                        scope.$broadcast("whoSmarter-tabChanged");
                     }
                 };
 
-                var swipeGesture = $ionicGesture.on('swipeleft', onSwipeLeft, elm).on('swiperight', onSwipeRight);
+                var swipeGesture;
+                if (attrs.dir === "rtl") {
+                    swipeGesture = $ionicGesture.on('swipeleft', onSwipeRight, elm).on('swiperight', onSwipeLeft);
+                }
+                else {
+                    swipeGesture = $ionicGesture.on('swipeleft', onSwipeLeft, elm).on('swiperight', onSwipeRight);
+                }
+
                 scope.$on('$destroy', function() {
                     $ionicGesture.off(swipeGesture, 'swipeleft', onSwipeLeft);
                     $ionicGesture.off(swipeGesture, 'swiperight', onSwipeRight);

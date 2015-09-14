@@ -1,5 +1,5 @@
-<ion-view view-title="{{getTitle()}}">
-    <ion-nav-bar class="bar-stable" align-title="center"
+<ion-view  title="{{getTitle()}}">
+    <ion-nav-bar class="bar-stable"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <ion-nav-buttons side="primary">
             <button class="button" ng-click="removeContest()" ng-hide="hideRemoveContest()">{{ 'REMOVE_CONTEST' |
@@ -24,7 +24,7 @@
                     <label class="item item-input"
                            ng-class="{ 'has-error' : contestForm.team0.$invalid && contestForm.team0.$touched, 'valid-lr' : contestForm.team0.$valid}"
                            ng-messages-include="templates/contest-error-list.html">
-                        <input ng-disabled="lockNewContest()" type="text" placeholder="{{ 'TEAM0' | translate }}"
+                        <input ng-disabled="$root.session.features.newContest.locked===true" type="text" placeholder="{{ 'TEAM0' | translate }}"
                                name="team0"
                                ng-model="localViewData.teams[0].name" autofocus
                                ng-minlength="2" ng-maxlength="15" maxlength="15" required>
@@ -43,7 +43,7 @@
                     <label class="item item-input"
                            ng-class="{ 'has-error' : contestForm.team1.$invalid && contestForm.team1.$touched, 'valid-lr' : contestForm.team1.$valid}"
                            ng-messages-include="templates/contest-error-list.html">
-                        <input ng-disabled="lockNewContest()" type="text" placeholder="{{ 'TEAM1' | translate }}"
+                        <input ng-disabled="$root.session.features.newContest.locked===true" type="text" placeholder="{{ 'TEAM1' | translate }}"
                                name="team1"
                                ng-model="localViewData.teams[1].name"
                                ng-minlength="2" ng-maxlength="15" maxlength="15" required

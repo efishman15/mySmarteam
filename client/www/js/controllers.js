@@ -126,7 +126,9 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     })
 
-    .controller("ContestsCtrl", function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout, ChartService) {
+    .controller("ContestsCtrl", function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout, ChartService, $ionicTabsDelegate) {
+
+        var tabs = ["app.contests.mine", "app.contests.running", "app.contests.recentlyFinished"];
 
         var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
 
@@ -137,6 +139,10 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             }
 
             $scope.doRefresh();
+        });
+
+        $scope.$on('whoSmarter-tabChanged', function () {
+            $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()]);
         });
 
         $scope.doRefresh = function () {
@@ -203,6 +209,12 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
             ContestsService.getContests(postData, function (contestsResult) {
                 $scope.totalContests = contestsResult.count;
+
+                if ($scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
+                    //If no "my contests" - switch to running contests
+                    $rootScope.gotoView(tabs[1]);
+                    return;
+                }
 
                 if (!$scope.contestCharts) {
                     $scope.contestCharts = [];
@@ -494,7 +506,10 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         });
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService, $ionicPopup, $ionicPopover, PaymentService) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
 
         var startDate = new Date();
         var endDate = new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000);
@@ -630,7 +645,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 $scope.enableBack = true;
             }
 
-            viewData.enableBack = $scope.enableBack;
+            viewData.enableBack = true;
 
             $scope.localViewData.totalParticipants = $scope.localViewData.participants + $scope.localViewData.manualParticipants;
             $scope.showAdminInfo = false;
@@ -737,12 +752,32 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 team0: $scope.localViewData.teams[0].name,
                 team1: $scope.localViewData.teams[1].name
             });
+
+            var okButton = {
+                text: $translate.instant("OK"),
+                type: 'button-positive',
+                onTap: function(e) {
+                    // Returning a value will cause the promise to resolve with the given value.
+                    return "OK";
+                }
+            };
+            var cancelButton = {
+                text: $translate.instant("CANCEL"),
+                type: 'button-default',
+                onTap: function(e) {
+                    return null;
+                }
+            };
+
+            var buttons = [];
+            buttons.push(okButton);
+            buttons.push(cancelButton);
+
             var confirmPopup = $ionicPopup.confirm({
                 title: $translate.instant("CONFIRM_REMOVE_TITLE", {name: contestName}),
                 template: $translate.instant("CONFIRM_REMOVE_TEMPLATE", {name: contestName}),
                 cssClass: $rootScope.settings.languages[$rootScope.session.settings.language].direction,
-                okText: $translate.instant("OK"),
-                cancelText: $translate.instant("CANCEL")
+                buttons: buttons
             });
 
             confirmPopup.then(function (res) {
