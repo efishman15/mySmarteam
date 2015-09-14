@@ -22,6 +22,7 @@
     <preference name="InAppBrowserStorageEnabled" value="true"/>
     <preference name="orientation" value="portrait"/>
     <preference name="android-permission" value="com.android.vending.BILLING" />
+    <preference name="Fullscreen" value="true" />
     <feature name="StatusBar">
         <param name="ios-package" value="CDVStatusBar" onload="true"/>
     </feature>
