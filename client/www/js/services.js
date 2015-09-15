@@ -291,7 +291,7 @@ angular.module('whoSmarter.services', [])
         var service = this;
         var path = 'info/';
 
-        var geoProviders = ["http://www.telize.com/geoip", "https://freegeoip.net/json"];
+        var geoProviders = ["https://www.telize.com/geoip", "https://freegeoip.net/json"];
 
         //----------------------------------------------
         // Service private functions
@@ -549,12 +549,13 @@ angular.module('whoSmarter.services', [])
     })
 
     //Api Service
-    .factory('ApiService', function ($http, ENDPOINT_URI) {
+    .factory('ApiService', function ($http, ENDPOINT_URI, ENDPOINT_URI_SECURED) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
+        var endPoint = (window.location.protocol != "https:" ? ENDPOINT_URI : ENDPOINT_URI_SECURED)
 
         //----------------------------------------------
         // Service Private functions
@@ -567,7 +568,7 @@ angular.module('whoSmarter.services', [])
 
         //Get Url
         function getUrl(path) {
-            return ENDPOINT_URI + path;
+            return endPoint + path;
         }
 
         //Get

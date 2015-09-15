@@ -6,7 +6,7 @@ var dalDb = require('../dal/dalDb');
 var generalUtils = require("../utils/general")
 var debug = true;
 var PaypalObject = require('paypal-express-checkout').Paypal;
-var paypal = require('paypal-express-checkout').init('testseller2_api1.whosmarter.com', '9VXL24PFJ9LX8GSS', 'AvYW0oSj.WW9Wh3OfTtEun4M6OFuApinXztzGPxJWkswTqZuwteL7KEV', 'http://studyb4.ddns.net:7000/#/payment?purchaseMethod=paypal&purchaseSuccess=1', 'http://studyb4.ddns.net:7000/#/cancelPaypal', debug);
+var paypal = require('paypal-express-checkout').init('testseller2_api1.whosmarter.com', '9VXL24PFJ9LX8GSS', 'AvYW0oSj.WW9Wh3OfTtEun4M6OFuApinXztzGPxJWkswTqZuwteL7KEV', 'https://www.whosmarter.com:8000/#/payment?purchaseMethod=paypal&purchaseSuccess=1', 'http://studyb4.ddns.net:7000/#/cancelPaypal', debug);
 
 PaypalObject.prototype.origParams = PaypalObject.prototype.params;
 PaypalObject.prototype.params = function () {

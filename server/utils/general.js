@@ -101,6 +101,12 @@ module.exports.getSettings = function (req, res, next) {
     res.json(settings.client);
 }
 
+module.exports.fb = function (req, res, next) {
+    console.log("body=" + JSON.stringify(req.body));
+    res.redirect("https://www.whosmarter.com:8000/#");
+}
+
+
 //---------------------------------------------------------------------------------------------------
 // XpProgress class
 //

@@ -5,7 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
-    .constant('ENDPOINT_URI', 'http://studyb4.ddns.net:7000/')
+    .constant('ENDPOINT_URI', 'http://www.whosmarter.com:7000/')
+    .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com:8000/')
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -13,6 +14,8 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
+
+
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
@@ -95,7 +98,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
      // Set custom cookie parameters for analytics.js
      AnalyticsProvider.setCookieConfig({
-     cookieDomain: 'studyb4.ddns.net',
+     cookieDomain: 'whosmarter.com',
      cookieName: 'whoSmarterAnalytics',
      cookieExpires: 20000
      });

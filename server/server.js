@@ -12,9 +12,11 @@ var generalUtils = require("./utils/general");
 var sessionUtils = require("./business_logic/session");
 var payments = require("./business_logic/payments");
 var dalDb = require("./dal/dalDb");
+var http = require("http");
+var https = require("https");
+var fs = require("fs");
 
 var domain = require("domain");
-
 
 var app = express();
 
@@ -67,7 +69,7 @@ function isAuthenticated(req, res, next) {
 //----------------------------------------------------
 // API's that require authentication
 //----------------------------------------------------
-dalDb.loadSettings(function(err, data) {
+dalDb.loadSettings(function (err, data) {
 
     //Block server listener until settings loaded from db
     generalUtils.injectSettings(data.settings);
@@ -90,6 +92,8 @@ dalDb.loadSettings(function(err, data) {
     app.post("/user/facebookConnect", credentials.facebookConnect);
     app.post("/info/geo", generalUtils.geoInfo);
     app.post("/info/settings", generalUtils.getSettings);
+    app.post("/fb", generalUtils.fb);
+    app.get("/fb", generalUtils.fb);
 
     //----------------------------------------------------
     // Start server listener
@@ -100,11 +104,17 @@ dalDb.loadSettings(function(err, data) {
         res.end();
     });
 
-    app.set("port", process.env.PORT || 7000);
+    var certificate = {
+        key: fs.readFileSync('./whosmarter.com.key'),
+        ca: [fs.readFileSync('./gd_bundle-g2-g1.crt')],
+        cert: fs.readFileSync('./whosmarter.crt')
+    }
 
-    app.listen(app.get("port"), function () {
-        console.log("Express server listening on port " + app.get("port"));
-    });
+    http.createServer(app).listen(7000);
+    https.createServer(certificate, app).listen(8000);
+
+    console.log("server up!");
+
 })
 
 
