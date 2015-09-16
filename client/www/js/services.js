@@ -9,7 +9,7 @@ angular.module('whoSmarter.services', [])
         var service = this;
         var path = 'user/';
         var resolveRequests = [];
-
+        var resolveEvents = [];
 
         //----------------------------------------------
         // Service private functions
@@ -30,34 +30,48 @@ angular.module('whoSmarter.services', [])
             service.initUser(callbackOnSuccess, callbackOnError);
         }
 
+        //Broadcasts events in queue if any
+        service.resolveEvents = function () {
+            while (resolveEvents.length > 0) {
+                var event = resolveEvents.pop();
+                $rootScope.$broadcast(event.name, event.data);
+            }
+        }
+
+        //Local init user - without server calls
+        service.localInitUser = function (callbackOnSuccess, language, geoInfo) {
+
+            $rootScope.user = {
+                "settings": {
+                    "language": language,
+                    "timezoneOffset": (new Date).getTimezoneOffset()
+                },
+            };
+
+            if (geoInfo) {
+                $rootScope.user.geoInfo = geoInfo;
+            }
+
+            $translate.use($rootScope.user.settings.language);
+
+            $rootScope.session = null;
+
+            if (callbackOnSuccess) {
+                callbackOnSuccess();
+            }
+        }
+
         //Init user
-        service.initUser = function (callbackOnSuccess) {
+        service.initUser = function (callbackOnSuccess, language, geoInfo) {
 
-            //Until real language will be resolved
-            var defaultLanguage = InfoService.getDefaultLanguage();
-            $translate.use(defaultLanguage.language);
-
-            InfoService.getGeoInfo(function (geoResult, geoInfo) {
-                    $rootScope.user = {
-                        "settings": {
-                            "language": geoResult.language,
-                            "timezoneOffset": (new Date).getTimezoneOffset()
-                        },
-                        "geoInfo": geoInfo //For registration on the server
-                    };
-
-                    if ($rootScope.user.settings.language != defaultLanguage) {
-                        $translate.use($rootScope.user.settings.language);
-                    }
-
-
-                    $rootScope.session = null;
-
-                    if (callbackOnSuccess) {
-                        callbackOnSuccess();
-                    }
-                }
-            )
+            if (geoInfo && language) {
+                service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
+            }
+            else {
+                InfoService.getGeoInfo(function (geoResult, geoInfo) {
+                    service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
+                });
+            }
         };
 
         //Set Facebook Credentials from the facebook response
@@ -66,7 +80,7 @@ angular.module('whoSmarter.services', [])
                 $rootScope.user.thirdParty = {};
             }
             $rootScope.user.thirdParty.type = "facebook";
-            $rootScope.user.thirdParty.id = parseInt(facebookAuthResponse.userID, 10);
+            $rootScope.user.thirdParty.id = facebookAuthResponse.userID;
             $rootScope.user.thirdParty.accessToken = facebookAuthResponse.accessToken;
         };
 
@@ -118,7 +132,9 @@ angular.module('whoSmarter.services', [])
                     callbackOnSuccess(session);
                 },
                 function (status, data) {
-                    callbackOnError(status, data);
+                    if (callbackOnError) {
+                        callbackOnError(status, data);
+                    }
                 }, config)
         };
 
@@ -148,7 +164,7 @@ angular.module('whoSmarter.services', [])
 
         //Resolve authentication - blocks all controllers until resolved
         //Handles multiple calls - with a queue
-        service.resolveAuthentication = function (source) {
+        service.resolveAuthentication = function (resolveData, source) {
 
             var deferred = $q.defer();
             resolveRequests.push(deferred);
@@ -169,64 +185,86 @@ angular.module('whoSmarter.services', [])
                     //------------------------------------------------------------------------------------
                     //-- Load languages from server - can be done without waiting for result
                     //------------------------------------------------------------------------------------
+
+                    //Define core events and functions to be used in the app
+                    $rootScope.$on("whoSmarter-httpRequest", function (error, config) {
+                        if (!config || config.blockUserInterface !== false) {
+                            var direction;
+                            if ($rootScope.settings) {
+                                direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
+                            }
+                            else if ($rootScope.user.settings.language == "he") {
+                                //First time loading before settings retrieved from server
+                                direction = "rtl";
+                            }
+                            $ionicLoading.show({
+                                    template: "<span dir='" + direction + "'>" + $translate.instant("LOADING") + "</span>"
+                                }
+                            )
+                        }
+                    });
+
+                    $rootScope.$on("whoSmarter-httpResponse", function (error, response) {
+                        if (!response.config || response.config.blockUserInterface !== false) {
+                            $ionicLoading.hide();
+                        }
+                        var event = {
+                            "name": "whoSmarter-serverPopup",
+                            "data": response.data.serverPopup
+                        };
+
+                        if (response.data.serverPopup) {
+                            if (resolveRequests.length > 0) {
+                                resolveEvents.push(event);
+                            }
+                            else {
+                                $rootScope.$broadcast(event.name, event.data);
+                            }
+                        }
+                    });
+
+                    $rootScope.$on("whoSmarter-httpResponseError", function (error, rejection) {
+                        if (!rejection.config || rejection.config.blockUserInterface !== false) {
+                            $ionicLoading.hide();
+                        }
+                        if (rejection.data instanceof Object && rejection.data.type && rejection.status != 401) {
+                            if (rejection.config && rejection.config.onServerErrors && rejection.data.type && rejection.config.onServerErrors[rejection.data.type]) {
+                                //Caller has set a function to be invoked after user presses ok on the alert
+                                rejection.data.onTap = rejection.config.onServerErrors[rejection.data.type].next;
+                                ErrorService.alert(rejection.data);
+                            }
+                            else {
+                                ErrorService.alert(rejection.data)
+                            }
+                        }
+                    });
+
+                    $rootScope.$on("event:auth-loginRequired", function (error, rejection) {
+                        service.getLoginStatus(function (success) {
+                                service.facebookServerConnect(
+                                    function (data) {
+                                        authService.loginConfirmed(null, function (config) {
+                                            return MyAuthService.confirmLogin(data.token, config);
+                                        });
+                                    },
+                                    function (status, error) {
+                                        $rootScope.gotoView("home");
+                                    }
+                                )
+                            },
+                            function (error) {
+                                $rootScope.gotoView("home");
+                            });
+                    });
+
+                    $rootScope.$on('$translateChangeEnd', function (data) {
+                        $rootScope.$broadcast("whoSmarter-languageChanged");
+                    });
+
                     if (!$rootScope.settings) {
                         InfoService.getSettings(
                             function (data) {
                                 $rootScope.settings = data;
-
-                                //Define core events and functions to be used in the app
-                                $rootScope.$on('$translateChangeEnd', function (data) {
-                                    $rootScope.$broadcast("whoSmarter-languageChanged");
-                                });
-
-                                $rootScope.$on("whoSmarter-httpRequest", function (error, config) {
-                                    if (!config || config.blockUserInterface !== false) {
-                                        $ionicLoading.show({
-                                                template: "<span dir='" + $rootScope.settings.languages[$rootScope.user.settings.language].direction + "'>" + $translate.instant("LOADING") + "</span>"
-                                            }
-                                        )
-                                    }
-                                });
-
-                                $rootScope.$on("whoSmarter-httpResponse", function (error, config) {
-                                    if (!config || config.blockUserInterface !== false) {
-                                        $ionicLoading.hide();
-                                    }
-                                });
-
-                                $rootScope.$on("whoSmarter-httpResponseError", function (error, rejection) {
-                                    if (!rejection.config || rejection.config.blockUserInterface !== false) {
-                                        $ionicLoading.hide();
-                                    }
-                                    if (rejection.data instanceof Object && rejection.data.type && rejection.status != 401) {
-                                        if (rejection.config && rejection.config.onServerErrors && rejection.data.type && rejection.config.onServerErrors[rejection.data.type]) {
-                                            //Caller has set a function to be invoked after user presses ok on the alert
-                                            rejection.data.onTap = rejection.config.onServerErrors[rejection.data.type].next;
-                                            ErrorService.alert(rejection.data);
-                                        }
-                                        else {
-                                            ErrorService.alert(rejection.data)
-                                        }
-                                    }
-                                });
-
-                                $rootScope.$on("event:auth-loginRequired", function (error, rejection) {
-                                    service.getLoginStatus(function (success) {
-                                            service.facebookServerConnect(
-                                                function (data) {
-                                                    authService.loginConfirmed(null, function (config) {
-                                                        return MyAuthService.confirmLogin(data.token, config);
-                                                    });
-                                                },
-                                                function (status, error) {
-                                                    $rootScope.gotoView("home");
-                                                }
-                                            )
-                                        },
-                                        function (error) {
-                                            $rootScope.gotoView("home");
-                                        });
-                                });
 
                                 $rootScope.gotoView = function (viewName, isRootView, params, clearHistory) {
 
@@ -257,13 +295,34 @@ angular.module('whoSmarter.services', [])
 
                                 };
 
-                                service.getLoginStatus(resolveQueue, resolveQueue);
-                            })
+                                $rootScope.gotoRootView = function () {
+                                    if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
+                                        $rootScope.gotoView("app.contests.mine");
+                                    }
+                                    else {
+                                        $rootScope.gotoView("home");
+                                    }
+                                };
+
+                                if (!resolveData) {
+                                    service.getLoginStatus(resolveQueue, resolveQueue);
+                                }
+                                else {
+                                    if (resolveData.connected === true) {
+                                        $rootScope.user.thirdParty = {"signedRequest": signedRequest}
+                                        service.facebookServerConnect(resolveQueue, resolveQueue);
+                                    }
+                                    else {
+                                        service.facebookClientConnect(resolveQueue, resolveQueue)
+                                    }
+                                }
+                            }
+                        )
                     }
                     else {
                         resolveQueue();
                     }
-                });
+                }, (resolveData && resolveData.language ? resolveData.language : null), null);
             }
 
             return deferred.promise;
@@ -315,7 +374,7 @@ angular.module('whoSmarter.services', [])
         //Get geo info - never fails - always has a default
         service.getGeoInfo = function (callbackOnSuccess, geoProviderId) {
             var config = {"timeout": 2000}
-            if (!geoProviderId) {
+            if (geoProviderId == null) {
                 geoProviderId = 0;
             }
 
@@ -346,7 +405,15 @@ angular.module('whoSmarter.services', [])
 
         //Get settings from server
         service.getSettings = function (callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "settings", null,
+            var postData = {};
+            if (window.cordova) {
+                postData.appVersion = $rootScope.appVersion;
+                postData.platform = ionic.Platform.platform();
+                postData.platformVersion = ionic.Platform.version();
+            }
+            postData.language = $rootScope.user.settings.language;
+
+            return ApiService.post(path, "settings", postData,
                 function (data) {
                     if (callbackOnSuccess) {
                         callbackOnSuccess(data);

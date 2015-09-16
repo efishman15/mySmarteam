@@ -7,7 +7,7 @@
 angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com:7000/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com:8000/')
-    .run(function ($ionicPlatform) {
+    .run(function ($ionicPlatform, $rootScope) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -15,13 +15,21 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
 
+            if (window.cordova) {
+                cordova.getAppVersion(function (version) {
+                    $rootScope.appVersion = version;
+                });
+
+                //Hook into window.open
+                window.open = cordova.InAppBrowser.open;
+            }
 
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
 
-            if((window.device && device.platform == "Android") && typeof inappbilling !== "undefined") {
+            if((ionic.Platform.platform() == "Android") && typeof inappbilling !== "undefined") {
                 inappbilling.init(function(resultInit) {
                         console.log("IAB Initialized");
                     },
@@ -42,7 +50,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     return config;
                 },
                 response: function (response) {
-                    $rootScope.$broadcast('whoSmarter-httpResponse', response.config)
+                    $rootScope.$broadcast('whoSmarter-httpResponse', response)
                     return response;
                 },
                 responseError: function (rejection) {
@@ -145,18 +153,37 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/home",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("home");
+                        return UserService.resolveAuthentication(null, "home");
                     }
                 },
                 controller: "HomeCtrl",
                 templateUrl: "templates/home.html"
             })
 
+            .state('serverPopup', {
+                url: "/serverPopup",
+                params : {serverPopup : null},
+                controller: "ServerPopupCtrl",
+                templateUrl: "templates/serverPopup.html"
+            })
+
+            .state('fbcanvas', {
+                url: "/fb?connected&signedRequest&language",
+                controller: "FBCanvasCtrl",
+                params: {connected: null, signedRequest: null, language : null},
+                resolve: {
+                    auth: function resolveAuthentication(UserService, $stateParams) {
+                        var data = {"connected" : $stateParams.connected, "signedRequest" : $stateParams.signedRequest, "language" : $stateParams.language};
+                        return UserService.resolveAuthentication(data, "fb");
+                    }
+                },
+            })
+
             .state("otherwise", {
                 url: "/otherwise",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("otherwise");
+                        return UserService.resolveAuthentication(null, "otherwise");
                     }
                 },
                 controller: "OtherwiseCtrl"
@@ -166,7 +193,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/quiz",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("quiz");
+                        return UserService.resolveAuthentication(null, "quiz");
                     }
                 },
                 params: {contestId: null, teamId: null},
@@ -182,7 +209,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/quizResult",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("quizResult");
+                        return UserService.resolveAuthentication(null, "app.quizResult");
                     }
                 },
                 cache: false,
@@ -199,7 +226,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/contest",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("contest");
+                        return UserService.resolveAuthentication(null, "contest");
                     }
                 },
                 cache: false,
@@ -212,7 +239,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/payment?purchaseMethod&purchaseSuccess&token&PayerID",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("contest");
+                        return UserService.resolveAuthentication(null, "payment");
                     }
                 },
                 templateUrl: "templates/payment.html",
@@ -224,7 +251,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/settings",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("settings");
+                        return UserService.resolveAuthentication(null, "settings");
                     }
                 },
                 templateUrl: "templates/settings.html",
@@ -235,7 +262,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/logout",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("logout");
+                        return UserService.resolveAuthentication(null, "logout");
                     }
                 },
                 controller: "LogoutCtrl"
@@ -245,7 +272,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/app",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("app");
+                        return UserService.resolveAuthentication(null, "menu");
                     }
                 },
                 abstract: true,
@@ -258,7 +285,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: "/contests",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("tab");
+                        return UserService.resolveAuthentication(null, "contests");
                     }
                 },
                 views: {
@@ -273,7 +300,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: '/mine',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("contests");
+                        return UserService.resolveAuthentication(null, "myContests");
                     }
                 },
                 views: {
@@ -289,7 +316,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: '/running',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("contests");
+                        return UserService.resolveAuthentication(null, "runningContests");
                     }
                 },
                 views: {
@@ -305,7 +332,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 url: '/recentlyFinished',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication("contests");
+                        return UserService.resolveAuthentication(null, "recentlyFinishedContests");
                     }
                 },
                 views: {

@@ -1,7 +1,7 @@
 var mathjs = require("mathjs");
 
 var settings;
-module.exports.injectSettings = function(dbSettings) {
+module.exports.injectSettings = function (dbSettings) {
     settings = dbSettings;
 
     //Compute unlockRank for each feature using the rankByXp settings
@@ -92,20 +92,46 @@ module.exports.geoInfo = function (req, res, next) {
     res.json({"language": language});
 }
 
-//-----------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
 // getSettings (client request)
 //
-// returns general server settings for each client
-//-----------------------------------------------------------------------
+// data: language, platform (optional), platformVersion (optional), appVersion (optional)
+//
+// returns general server settings for each client.
+// Optionally return a serverPopup to request to upgrade
+//------------------------------------------------------------------------------------------------
 module.exports.getSettings = function (req, res, next) {
-    res.json(settings.client);
-}
+    var data = req.body;
 
-module.exports.fb = function (req, res, next) {
-    console.log("body=" + JSON.stringify(req.body));
-    res.redirect("https://www.whosmarter.com:8000/#");
-}
+    var response;
+    if (data.appVersion) {
 
+        if (versionCompare(settings.server.versions.mustUpdate.minVersion, data.appVersion) === 1) {
+            response = JSON.parse(JSON.stringify(settings.client));
+            response.serverPopup = {};
+            response.serverPopup.title = settings.server.versions.mustUpdate.popup.title[data.language];
+            response.serverPopup.message = settings.server.versions.mustUpdate.popup.message[data.language];
+            response.serverPopup.buttons = [];
+            for(var i=0; i<settings.server.versions.mustUpdate.popup.buttons.length; i++) {
+                var button = {};
+                button.action = settings.server.versions.mustUpdate.popup.buttons[i].action;
+                button.text = settings.server.versions.mustUpdate.popup.buttons[i].text[data.language];
+                button.link = settings.server.versions.mustUpdate.popup.buttons[i].link[data.platform];
+                response.serverPopup.buttons.push(button);
+            }
+        }
+        else {
+            response = settings.client;
+        }
+    }
+    else {
+        response = settings.client;
+
+    }
+
+    res.json(response);
+
+}
 
 //---------------------------------------------------------------------------------------------------
 // XpProgress class
@@ -169,3 +195,60 @@ XpProgress.prototype.refresh = function () {
     this.current = xpAchievedInRank;
     this.max = xpDiff;
 };
+
+//---------------------------------------------------------------------------------------------------
+// versionCompare
+//
+// compares 2 software versions.
+// returns:
+// 1  if v1>v2
+// -1 if v1<v2
+// 0  if v1=v2
+//---------------------------------------------------------------------------------------------------
+module.exports.versionCompare = versionCompare;
+function versionCompare(v1, v2, options) {
+    var lexicographical = options && options.lexicographical,
+        zeroExtend = options && options.zeroExtend,
+        v1parts = v1.split('.'),
+        v2parts = v2.split('.');
+
+    function isValidPart(x) {
+        return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
+    }
+
+    if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+        return NaN;
+    }
+
+    if (zeroExtend) {
+        while (v1parts.length < v2parts.length) v1parts.push("0");
+        while (v2parts.length < v1parts.length) v2parts.push("0");
+    }
+
+    if (!lexicographical) {
+        v1parts = v1parts.map(Number);
+        v2parts = v2parts.map(Number);
+    }
+
+    for (var i = 0; i < v1parts.length; ++i) {
+        if (v2parts.length == i) {
+            return 1;
+        }
+
+        if (v1parts[i] == v2parts[i]) {
+            continue;
+        }
+        else if (v1parts[i] > v2parts[i]) {
+            return 1;
+        }
+        else {
+            return -1;
+        }
+    }
+
+    if (v1parts.length != v2parts.length) {
+        return -1;
+    }
+
+    return 0;
+}

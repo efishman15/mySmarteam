@@ -92,8 +92,8 @@ dalDb.loadSettings(function (err, data) {
     app.post("/user/facebookConnect", credentials.facebookConnect);
     app.post("/info/geo", generalUtils.geoInfo);
     app.post("/info/settings", generalUtils.getSettings);
-    app.post("/fb", generalUtils.fb);
-    app.get("/fb", generalUtils.fb);
+    app.post("/fbcanvas", credentials.fbcanvas);
+    app.get("/fbPayments", credentials.fbPayments);
 
     //----------------------------------------------------
     // Start server listener

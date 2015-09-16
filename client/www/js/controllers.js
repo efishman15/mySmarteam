@@ -1,10 +1,14 @@
 angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
-    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, ErrorService, SoundService, $ionicModal) {
+    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, ErrorService, SoundService, $ionicModal, UserService) {
 
         $rootScope.$on('whoSmarter-directionChanged', function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
         });
+
+        //-------------------------------------------------------
+        //Loading modal dialogs
+        //-------------------------------------------------------
 
         //-------------------------------------------------------
         // New rank modal form
@@ -14,7 +18,6 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         }, {
             scope: $scope,
             animation: 'slide-in-up'
-
         });
 
         $scope.openNewRankModal = function () {
@@ -25,14 +28,19 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             $scope.newRankModal.hide();
         };
 
-        //Cleanup the modal when we're done with it!
-        $scope.$on('$destroy', function () {
-            $scope.newRankModal.remove();
+        $rootScope.$on("whoSmarter-rankChanged", function (error, data) {
+
+            SoundService.play("audio/finish_great_1");
+            $scope.xpProgress = data.xpProgress;
+            $scope.callbackAfterModal = data.callback;
+
+            $scope.openNewRankModal();
+
         });
 
         $scope.$on('modal.hidden', function () {
-            if ($scope.callbackAfterNewRankModal) {
-                $scope.callbackAfterNewRankModal();
+            if ($scope.callbackAfterModal) {
+                $scope.callbackAfterModal();
             }
         });
 
@@ -40,9 +48,16 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
             SoundService.play("audio/finish_great_1");
             $scope.xpProgress = data.xpProgress;
-            $scope.callbackAfterNewRankModal = data.callback;
+            $scope.callbackAfterModal = data.callback;
 
             $scope.openNewRankModal();
+
+        });
+
+        $rootScope.$on("whoSmarter-serverPopup", function (error, data) {
+
+            $scope.callbackAfterModal = data.callback;
+            $rootScope.gotoView("serverPopup", false, {serverPopup: data})
 
         });
 
@@ -54,7 +69,9 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         angular.element(document.querySelector("#canvasWrapper")).append($scope.canvas);
 
-        XpService.initXp($scope.canvas, $scope.context);
+        if ($rootScope.session) {
+            XpService.initXp($scope.canvas, $scope.context);
+        }
 
         $scope.$watch(function () {
             return $ionicSideMenuDelegate.isOpen();
@@ -77,7 +94,12 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 $rootScope.gotoView("app.contests.mine");
             }
             else if (!$rootScope.user) {
-                UserService.initUser();
+                UserService.initUser(function() {
+                    UserService.resolveEvents();
+                });
+            }
+            else {
+                UserService.resolveEvents();
             }
         });
 
@@ -126,9 +148,11 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     })
 
-    .controller("ContestsCtrl", function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout, ChartService, $ionicTabsDelegate) {
+    .controller("ContestsCtrl", function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout, ChartService, $ionicTabsDelegate, UserService) {
 
         var tabs = ["app.contests.mine", "app.contests.running", "app.contests.recentlyFinished"];
+
+        UserService.resolveEvents();
 
         var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
 
@@ -295,7 +319,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 XpService.addXp($scope.quiz.xpProgress, $scope.quizProceed);
             }
 
-            if ((!$scope.quiz.xpProgress || !($scope.quiz.xpProgress.rankChanged===true)) && $scope.correctButtonId == button.id) {
+            if ((!$scope.quiz.xpProgress || !($scope.quiz.xpProgress.rankChanged === true)) && $scope.correctButtonId == button.id) {
                 $scope.quizProceed();
             }
         };
@@ -498,12 +522,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     .controller("OtherwiseCtrl", function ($scope, $rootScope, $state) {
         $scope.$on('$ionicView.beforeEnter', function () {
-            if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
-                $rootScope.gotoView("app.contests.mine");
-            }
-            else {
-                $rootScope.gotoView("home");
-            }
+            $rootScope.gotoRootView();
         });
     })
 
@@ -757,7 +776,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             var okButton = {
                 text: $translate.instant("OK"),
                 type: 'button-positive',
-                onTap: function(e) {
+                onTap: function (e) {
                     // Returning a value will cause the promise to resolve with the given value.
                     return "OK";
                 }
@@ -765,7 +784,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             var cancelButton = {
                 text: $translate.instant("CANCEL"),
                 type: 'button-default',
-                onTap: function(e) {
+                onTap: function (e) {
                     return null;
                 }
             };
@@ -836,4 +855,50 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         $scope.proceed = function () {
             $rootScope.gotoView($scope.nextView.name, $scope.nextView.isRoot, $scope.nextView.params);
         }
-    });
+    })
+
+    .controller("FBCanvasCtrl", function ($scope, $rootScope, $state, $stateParams, UserService) {
+        $rootScope.gotoRootView();
+    })
+
+    .controller("ServerPopupCtrl", function ($scope, $rootScope, $state, $stateParams, $ionicHistory, $timeout, $ionicPlatform) {
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+            if (!$stateParams.serverPopup) {
+                $rootScope.gotoRootView();
+            }
+
+            var deregister = $ionicPlatform.registerBackButtonAction(
+                function (e) {
+                    e.preventDefault();
+                }, 101
+            );
+
+            $scope.$on('$destroy', deregister);
+        });
+
+        $scope.serverPopup = $stateParams.serverPopup;
+
+        $scope.buttonAction = function(button) {
+            switch (button.action) {
+                case "dismiss" :
+                    $ionicHistory.goBack();
+                    break;
+
+                case "link" : {
+                    window.open(button.link, "_system", "location=yes");
+                    $ionicHistory.goBack();
+                    break;
+                }
+
+                case "linkExit" : {
+                    window.open(button.link, "_system", "location=yes");
+                    $timeout(function() {
+                        ionic.Platform.exitApp();
+                    },1500)
+                    break;
+                }
+            }
+
+        }
+   });
