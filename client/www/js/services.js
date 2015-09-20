@@ -1,7 +1,7 @@
 angular.module('whoSmarter.services', [])
 
     //User Service
-    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, $translate, MyAuthService, authService, ErrorService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig) {
+    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform) {
 
         //----------------------------------------------
         // Service Variables
@@ -182,158 +182,185 @@ angular.module('whoSmarter.services', [])
                 //-------------------------------------------------------------------------
                 service.initUser(function () {
 
-                    //------------------------------------------------------------------------------------
-                    //-- Load languages from server - can be done without waiting for result
-                    //------------------------------------------------------------------------------------
+                        $ionicPlatform.registerBackButtonAction(function (event) {
+                            if ($state.current.name.length >= 12 && $state.current.name.substring(0, 12) === "app.contests" && ionic.Platform.isAndroid()) {
+                                PopupService.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
+                                    ionic.Platform.exitApp();
+                                });
+                            }
+                            else if ($state.current.name == "serverPopup") {
+                                event.preventDefault();
+                            }
+                            else {
+                                if (navigator && navigator.app && navigator.app.backHistory) {
+                                    navigator.app.backHistory();
+                                }
+                            }
+                        }, 600);
 
-                    //Define core events and functions to be used in the app
-                    $rootScope.$on("whoSmarter-httpRequest", function (error, config) {
-                        if (!config || config.blockUserInterface !== false) {
-                            var direction;
-                            if ($rootScope.settings) {
-                                direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
+
+                        //------------------------------------------------------------------------------------
+                        //-- Load languages from server - can be done without waiting for result
+                        //------------------------------------------------------------------------------------
+
+                        //Define core events and functions to be used in the app
+                        $rootScope.$on("whoSmarter-httpRequest", function (error, config) {
+                            if (!config || config.blockUserInterface !== false) {
+                                var direction;
+                                if ($rootScope.settings) {
+                                    direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
+                                }
+                                else if ($rootScope.user.settings.language == "he") {
+                                    //First time loading before settings retrieved from server
+                                    direction = "rtl";
+                                }
+                                $ionicLoading.show({
+                                        animation: 'fade-in',
+                                        showBackdrop: true,
+                                        showDelay: 50
+                                    }
+                                )
                             }
-                            else if ($rootScope.user.settings.language == "he") {
-                                //First time loading before settings retrieved from server
-                                direction = "rtl";
+                        });
+
+                        $rootScope.$on("whoSmarter-httpResponse", function (error, response) {
+                            if (!response.config || response.config.blockUserInterface !== false) {
+                                $ionicLoading.hide();
                             }
-                            $ionicLoading.show({
-                                    template: "<span dir='" + direction + "'>" + $translate.instant("LOADING") + "</span>"
+                            if (response.data.serverPopup) {
+                                var event = {
+                                    "name": "whoSmarter-serverPopup",
+                                    "data": response.data.serverPopup
+                                };
+                                if (resolveRequests.length > 0) {
+                                    resolveEvents.push(event);
+                                }
+                                else {
+                                    $rootScope.$broadcast(event.name, event.data);
+                                }
+                            }
+                        });
+
+                        $rootScope.$on("whoSmarter-httpResponseError", function (error, rejection) {
+                            if (!rejection.config || rejection.config.blockUserInterface !== false) {
+                                $ionicLoading.hide();
+                            }
+                            if (rejection.data instanceof Object && rejection.data.type && rejection.status != 401) {
+                                if (rejection.config && rejection.config.onServerErrors && rejection.data.type && rejection.config.onServerErrors[rejection.data.type]) {
+                                    //Caller has set a function to be invoked after user presses ok on the alert
+                                    rejection.data.onTap = rejection.config.onServerErrors[rejection.data.type].next;
+                                    PopupService.alert(rejection.data);
+                                }
+                                else {
+                                    PopupService.alert(rejection.data)
+                                }
+                            }
+                        });
+
+                        $rootScope.$on("event:auth-loginRequired", function (error, rejection) {
+                            service.getLoginStatus(function (success) {
+                                    service.facebookServerConnect(
+                                        function (data) {
+                                            authService.loginConfirmed(null, function (config) {
+                                                return MyAuthService.confirmLogin(data.token, config);
+                                            });
+                                        },
+                                        function (status, error) {
+                                            $rootScope.gotoView("home");
+                                        }
+                                    )
+                                },
+                                function (error) {
+                                    $rootScope.gotoView("home");
+                                });
+                        });
+
+                        $rootScope.$on('$translateChangeEnd', function (data) {
+                            $rootScope.$broadcast("whoSmarter-languageChanged");
+                        });
+
+                        $rootScope.gotoView = function (viewName, isRootView, params, clearHistory) {
+
+                            if (isRootView == null) {
+                                isRootView = true;
+                            }
+
+                            if (!params) {
+                                params = {};
+                            }
+
+                            if (isRootView === true) {
+
+                                if (clearHistory == null) {
+                                    clearHistory = true;
+                                }
+
+                                if (clearHistory == true) {
+                                    $ionicHistory.clearHistory();
+                                }
+                                $ionicHistory.nextViewOptions({
+                                    disableBack: true,
+                                    historyRoot: clearHistory
+                                });
+                            }
+
+                            $state.go(viewName, params, {reload: true, inherit: true, location: true});
+
+                        };
+
+                        $rootScope.gotoRootView = function () {
+                            if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
+                                $rootScope.gotoView("app.contests.mine");
+                            }
+                            else {
+                                $rootScope.gotoView("home");
+                            }
+                        };
+
+
+                        $rootScope.$on("whoSmarter-serverPopup", function (error, data) {
+                            $rootScope.gotoView("serverPopup", false, {serverPopup: data})
+                        });
+
+                        if (!$rootScope.settings) {
+                            InfoService.getSettings(
+                                function (data) {
+                                    $rootScope.settings = data;
+
+                                    if (!resolveData) {
+                                        service.getLoginStatus(resolveQueue, resolveQueue);
+                                    }
+                                    else {
+                                        if (resolveData.connected === true) {
+                                            $rootScope.user.thirdParty = {"signedRequest": signedRequest}
+                                            service.facebookServerConnect(resolveQueue, resolveQueue);
+                                        }
+                                        else {
+                                            service.facebookClientConnect(resolveQueue, resolveQueue)
+                                        }
+                                    }
                                 }
                             )
                         }
-                    });
-
-                    $rootScope.$on("whoSmarter-httpResponse", function (error, response) {
-                        if (!response.config || response.config.blockUserInterface !== false) {
-                            $ionicLoading.hide();
+                        else {
+                            resolveQueue();
                         }
-                        var event = {
-                            "name": "whoSmarter-serverPopup",
-                            "data": response.data.serverPopup
-                        };
-
-                        if (response.data.serverPopup) {
-                            if (resolveRequests.length > 0) {
-                                resolveEvents.push(event);
-                            }
-                            else {
-                                $rootScope.$broadcast(event.name, event.data);
-                            }
-                        }
-                    });
-
-                    $rootScope.$on("whoSmarter-httpResponseError", function (error, rejection) {
-                        if (!rejection.config || rejection.config.blockUserInterface !== false) {
-                            $ionicLoading.hide();
-                        }
-                        if (rejection.data instanceof Object && rejection.data.type && rejection.status != 401) {
-                            if (rejection.config && rejection.config.onServerErrors && rejection.data.type && rejection.config.onServerErrors[rejection.data.type]) {
-                                //Caller has set a function to be invoked after user presses ok on the alert
-                                rejection.data.onTap = rejection.config.onServerErrors[rejection.data.type].next;
-                                ErrorService.alert(rejection.data);
-                            }
-                            else {
-                                ErrorService.alert(rejection.data)
-                            }
-                        }
-                    });
-
-                    $rootScope.$on("event:auth-loginRequired", function (error, rejection) {
-                        service.getLoginStatus(function (success) {
-                                service.facebookServerConnect(
-                                    function (data) {
-                                        authService.loginConfirmed(null, function (config) {
-                                            return MyAuthService.confirmLogin(data.token, config);
-                                        });
-                                    },
-                                    function (status, error) {
-                                        $rootScope.gotoView("home");
-                                    }
-                                )
-                            },
-                            function (error) {
-                                $rootScope.gotoView("home");
-                            });
-                    });
-
-                    $rootScope.$on('$translateChangeEnd', function (data) {
-                        $rootScope.$broadcast("whoSmarter-languageChanged");
-                    });
-
-                    if (!$rootScope.settings) {
-                        InfoService.getSettings(
-                            function (data) {
-                                $rootScope.settings = data;
-
-                                $rootScope.gotoView = function (viewName, isRootView, params, clearHistory) {
-
-                                    if (isRootView == null) {
-                                        isRootView = true;
-                                    }
-
-                                    if (!params) {
-                                        params = {};
-                                    }
-
-                                    if (isRootView === true) {
-
-                                        if (clearHistory == null) {
-                                            clearHistory = true;
-                                        }
-
-                                        if (clearHistory == true) {
-                                            $ionicHistory.clearHistory();
-                                        }
-                                        $ionicHistory.nextViewOptions({
-                                            disableBack: true,
-                                            historyRoot: clearHistory
-                                        });
-                                    }
-
-                                    $state.go(viewName, params, {reload: true, inherit: true, location: true});
-
-                                };
-
-                                $rootScope.gotoRootView = function () {
-                                    if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
-                                        $rootScope.gotoView("app.contests.mine");
-                                    }
-                                    else {
-                                        $rootScope.gotoView("home");
-                                    }
-                                };
-
-                                if (!resolveData) {
-                                    service.getLoginStatus(resolveQueue, resolveQueue);
-                                }
-                                else {
-                                    if (resolveData.connected === true) {
-                                        $rootScope.user.thirdParty = {"signedRequest": signedRequest}
-                                        service.facebookServerConnect(resolveQueue, resolveQueue);
-                                    }
-                                    else {
-                                        service.facebookClientConnect(resolveQueue, resolveQueue)
-                                    }
-                                }
-                            }
-                        )
                     }
-                    else {
-                        resolveQueue();
-                    }
-                }, (resolveData && resolveData.language ? resolveData.language : null), null);
+                    ,
+                    (resolveData && resolveData.language ? resolveData.language : null), null
+                )
+                ;
             }
 
             return deferred.promise;
         };
 
-        //Save settings to server
+//Save settings to server
         service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError, config) {
             ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError, config);
         }
 
-        //Toggle sound to server
+//Toggle sound to server
         service.toggleSound = function (callbackOnSuccess, callbackOnError, config) {
             ApiService.post(path, "toggleSound", null, callbackOnSuccess, callbackOnError, config);
         }
@@ -564,7 +591,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Error Service
-    .factory('ErrorService', function ($ionicPopup, $translate, $rootScope) {
+    .factory('PopupService', function ($ionicPopup, $translate, $rootScope) {
 
         //----------------------------------------------
         // Service Variables
@@ -595,6 +622,46 @@ angular.module('whoSmarter.services', [])
             }
         };
 
+        //ionic confirm popup
+        service.confirm = function (title, message, params, okFunction) {
+
+            var okButton = {
+                text: $translate.instant("OK"),
+                type: 'button-positive',
+                onTap: function (e) {
+                    // Returning a value will cause the promise to resolve with the given value.
+                    return "OK";
+                }
+            };
+            var cancelButton = {
+                text: $translate.instant("CANCEL"),
+                type: 'button-default',
+                onTap: function (e) {
+                    return null;
+                }
+            };
+
+            var buttons = [];
+            buttons.push(okButton);
+            buttons.push(cancelButton);
+
+            var confirmPopup = $ionicPopup.confirm({
+                title: $translate.instant(title, params),
+                template: $translate.instant(message, params),
+                cssClass: $rootScope.settings.languages[$rootScope.session.settings.language].direction,
+                buttons: buttons
+            });
+
+            confirmPopup.then(function (res) {
+                if (res) {
+                    if (okFunction) {
+                        okFunction();
+                    }
+                }
+            })
+        }
+
+
         return service;
     })
 
@@ -622,7 +689,8 @@ angular.module('whoSmarter.services', [])
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var endPoint = (window.location.protocol != "https:" ? ENDPOINT_URI : ENDPOINT_URI_SECURED)
+
+        service.endPoint = (window.location.protocol != "https:" ? ENDPOINT_URI : ENDPOINT_URI_SECURED)
 
         //----------------------------------------------
         // Service Private functions
@@ -635,7 +703,7 @@ angular.module('whoSmarter.services', [])
 
         //Get Url
         function getUrl(path) {
-            return endPoint + path;
+            return service.endPoint + path;
         }
 
         //Get
@@ -997,7 +1065,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Payment Service
-    .factory('PaymentService', function ($rootScope, ApiService, $translate) {
+    .factory('PaymentService', function ($rootScope, ApiService, $translate, ezfb) {
 
         //----------------------------------------------
         // Service Variables
@@ -1007,18 +1075,47 @@ angular.module('whoSmarter.services', [])
 
         service.buy = function (feature, callbackOnSuccess, callbackOnError, config) {
 
-            //TODO: determine payment method by current platform
-            var method = "paypal/buy";
+            var method;
+            if (ionic.Platform.isAndroid()) {
+                method = "android"
+            }
+            else if (ionic.Platform.isIOS()) {
+                method = "ios";
+            }
+            else if (window.self !== window.top) {
+                //running inside an iframe, e.g. facebook canvas
+                method = "facebook";
+            }
+            else {
+                method = "paypal";
+            }
 
             switch (method) {
-                case "paypal/buy" :
-                    var postData = {"feature": feature, "language": $rootScope.session.settings.language};
-                    return ApiService.post(path, method, postData, callbackOnSuccess, callbackOnError, config);
+                case "paypal" :
+                    var postData = {"feature": feature.name, "language": $rootScope.session.settings.language};
+                    return ApiService.post(path, method + "/buy", postData, callbackOnSuccess, callbackOnError, config);
                     break;
 
-                default:
-                    alert("TBD other payment methods");
-                    return;
+                case "android" :
+                    alert("TBD - purchase in android");
+                    break;
+
+                case "ios" :
+                    alert("TBD - purchase in ios");
+                    break;
+
+                case "facebook" :
+                    var productUrl = ApiService.endPoint + "fb/payments?productId=" + feature.purchaseData.productId + "&language=" + $rootScope.session.settings.language;
+                    console.log(productUrl);
+                    ezfb.ui({
+                            method: "pay",
+                            action: "purchaseitem",
+                            product: productUrl
+                        },
+                        function() {
+                            alert("after fb buy");
+                        }
+                    );
                     break;
             }
         }

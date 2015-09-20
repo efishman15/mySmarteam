@@ -4,9 +4,9 @@ var async = require('async');
 var exceptions = require('../utils/exceptions');
 var dalDb = require('../dal/dalDb');
 var generalUtils = require("../utils/general")
-var debug = true;
 var PaypalObject = require('paypal-express-checkout').Paypal;
-var paypal = require('paypal-express-checkout').init('testseller2_api1.whosmarter.com', '9VXL24PFJ9LX8GSS', 'AvYW0oSj.WW9Wh3OfTtEun4M6OFuApinXztzGPxJWkswTqZuwteL7KEV', 'https://www.whosmarter.com:8000/#/payment?purchaseMethod=paypal&purchaseSuccess=1', 'http://studyb4.ddns.net:7000/#/cancelPaypal', debug);
+var paypal;
+var paypalSettings;
 
 PaypalObject.prototype.origParams = PaypalObject.prototype.params;
 PaypalObject.prototype.params = function () {
@@ -26,6 +26,13 @@ PaypalObject.prototype.params = function () {
 //----------------------------------------------------
 module.exports.payPalBuy = function (req, res, next) {
 
+    if (!paypal) {
+        paypalSettings = generalUtils.settings.server.payments.paypal;
+
+        //returnUrl, cancelUrl will be set just before each buy
+        paypal = require('paypal-express-checkout').init(paypalSettings.user, paypalSettings.password, paypalSettings.signature, "", "", paypalSettings.debug);
+    }
+
     var token = req.headers.authorization;
     var data = req.body;
 
@@ -34,34 +41,74 @@ module.exports.payPalBuy = function (req, res, next) {
         return;
     }
 
-    //Invoice number will contain the product id which will be required later for validation
-    var invoiceNumber = uuid.v1() + "_" + data.feature;
+    var operations = [
 
-    var feature = generalUtils.settings.server.features[data.feature];
-    if (!feature) {
-        exceptions.ServerResponseException(res, "Invalid feature received during payPal buy", {"feature": data.feature}, "warn", 424);
-        return;
-    }
+        //getSession
+        function (callback) {
+            data.token = token;
+            sessionUtils.getSession(data, callback);
+        },
 
-    var purchaseProduct = generalUtils.settings.server.purchaseProducts[feature.purchaseProductId];
-    var purchaseProductDisplayName = purchaseProduct.displayNames[data.language];
-    if (!purchaseProductDisplayName) {
-        exceptions.ServerResponseException(res, "Unable to find product display name during payPal buy", {"data": data}, "warn", 424);
-        return;
-    }
+        //Validate the payment transaction based on method
+        function (data, callback) {
 
-    paypal.pay(invoiceNumber,
-        purchaseProduct.cost,
-        purchaseProductDisplayName, "USD", function (err, url) {
-            if (err) {
+            //Invoice number will contain the product id which will be required later for validation
+            var invoiceNumber = uuid.v1() + "_" + data.feature;
 
-                exceptions.ServerResponseException(res, err, null, "warn", 424);
+            var feature = generalUtils.settings.server.features[data.feature];
+            if (!feature) {
+                exceptions.ServerResponseException(res, "Invalid feature received during payPal buy", {"feature": data.feature}, "warn", 424);
                 return;
-
             }
 
-            res.json({"url": url});
-        });
+            var purchaseProduct = generalUtils.settings.server.purchaseProducts[feature.purchaseProductId];
+            var purchaseProductDisplayName = purchaseProduct.displayNames[data.language];
+            if (!purchaseProductDisplayName) {
+                exceptions.ServerResponseException(res, "Unable to find product display name during payPal buy", {"data": data}, "warn", 424);
+                return;
+            }
+
+            var urlPrefix;
+            if (req.connection.encrypted) {
+                urlPrefix = generalUtils.settings.server.general.baseUrlSecured;
+            }
+            else {
+                urlPrefix = generalUtils.settings.server.general.baseUrl;
+            }
+
+            paypal.returnUrl = urlPrefix + paypalSettings.successUrl;
+            paypal.cancelUrl = urlPrefix + paypalSettings.cancelUrl;
+
+            paypal.pay(invoiceNumber,
+                purchaseProduct.cost,
+                purchaseProductDisplayName, "USD", function (err, url) {
+                    if (err) {
+
+                        dalDb.closeDb(data);
+                        exceptions.ServerResponseException(res, err, null, "warn", 424);
+                        return;
+
+                    }
+
+                    data.response = {"url" : url};
+
+                    dalDb.closeDb(data);
+
+                    callback(null, data);
+
+                });
+        }
+
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            res.json(data.response);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    })
 };
 
 //--------------------------------------------------------------------------

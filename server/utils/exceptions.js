@@ -126,7 +126,7 @@ function ServerException(message, additionalInfo, severity, httpStatus) {
 module.exports.ServerResponseException = ServerResponseException ;
 function ServerResponseException(res, message, additionalInfo, severity, httpStatus) {
 
-    var exception = new ServerException(message, additionalInfo, serverity, httpStatus);
+    var exception = new ServerException(message, additionalInfo, severity, httpStatus);
 
     res.send(exception.httpStatus, exception);
 

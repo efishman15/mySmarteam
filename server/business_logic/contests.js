@@ -230,7 +230,7 @@ function joinToContestObject(contest, userId, teamId) {
     }
 
     //Increment participants only if I did not join this contest yet
-    if (contest.users[userId]) {
+    if (!contest.users[userId]) {
         contest.participants++;
         contest.lastParticipantJoinDate = now;
         newJoin = true;

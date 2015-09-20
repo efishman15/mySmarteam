@@ -1,19 +1,17 @@
 <ion-view>
-    <ion-header-bar class=  "bar-stable bar-assertive" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <h1 class="title">{{serverPopup.title}}</h1>
+    <ion-header-bar class="bar-stable bar-assertive" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+        <div ng-bind-html="serverPopup.title"></div>
     </ion-header-bar>
     <ion-content class="padding center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <image ng-show="serverPopup.image" class="padding" src="{{serverPopup.image}}"></image>
-        <h4 class="padding">{{serverPopup.message}}</h4>
-
+        <div class="padding" ng-bind-html="serverPopup.message"></div>
         <div class="button-bar padding">
+            <button
+                    ng-repeat="button in serverPopup.buttons"
+                    class="item button button-positive button-3d item-text-wrap"
+                    ng-click="buttonAction(button)" ng-bind-html="button.text">
+            </button>
         </div>
-
-        <button
-                ng-repeat="button in serverPopup.buttons"
-                class="item button button-stable button-positive button-3d item-text-wrap"
-                ng-click="buttonAction(button)">{{button.text}}
-        </button>
 
     </ion-content>
 </ion-view>

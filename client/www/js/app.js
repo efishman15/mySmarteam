@@ -7,7 +7,7 @@
 angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com:7000/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com:8000/')
-    .run(function ($ionicPlatform, $rootScope) {
+    .run(function ($ionicPlatform, $rootScope, $state, PopupService) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -29,7 +29,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 StatusBar.styleDefault();
             }
 
-            if((ionic.Platform.platform() == "Android") && typeof inappbilling !== "undefined") {
+            if(ionic.Platform.isAndroid() && typeof inappbilling !== "undefined") {
                 inappbilling.init(function(resultInit) {
                         console.log("IAB Initialized");
                     },
@@ -39,6 +39,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     {showLog: true},
                     ["productId1", "productId2", "productId3"]);
             }
+
         });
     })
 

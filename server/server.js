@@ -15,6 +15,7 @@ var dalDb = require("./dal/dalDb");
 var http = require("http");
 var https = require("https");
 var fs = require("fs");
+var facebookCanvas = require("./business_logic/facebookCanvas")
 
 var domain = require("domain");
 
@@ -23,6 +24,10 @@ var app = express();
 app.use(bodyParser());          // pull information from html in POST
 app.use(methodOverride());      // simulate DELETE and PUT
 app.use(express.static("../client/www"));
+
+//Jade
+app.set('views', "./views");
+app.set('view engine', 'jade');
 
 //----------------------------------------------------
 // Main request processor function
@@ -92,8 +97,8 @@ dalDb.loadSettings(function (err, data) {
     app.post("/user/facebookConnect", credentials.facebookConnect);
     app.post("/info/geo", generalUtils.geoInfo);
     app.post("/info/settings", generalUtils.getSettings);
-    app.post("/fbcanvas", credentials.fbcanvas);
-    app.get("/fbPayments", credentials.fbPayments);
+    app.post("/fb/canvas", facebookCanvas.canvas);
+    app.get("/fb/payments",facebookCanvas.payments);
 
     //----------------------------------------------------
     // Start server listener

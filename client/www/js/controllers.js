@@ -1,6 +1,6 @@
 angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
-    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, ErrorService, SoundService, $ionicModal, UserService) {
+    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, UserService) {
 
         $rootScope.$on('whoSmarter-directionChanged', function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
@@ -54,13 +54,6 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         });
 
-        $rootScope.$on("whoSmarter-serverPopup", function (error, data) {
-
-            $scope.callbackAfterModal = data.callback;
-            $rootScope.gotoView("serverPopup", false, {serverPopup: data})
-
-        });
-
         $scope.canvas = document.createElement("canvas");
         $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
         $scope.canvas.height = $rootScope.settings.xpControl.canvas.height;
@@ -86,7 +79,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     })
 
-    .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory, $ionicPopup, $translate, $window) {
+    .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, $window) {
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
@@ -148,7 +141,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     })
 
-    .controller("ContestsCtrl", function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, ErrorService, $timeout, ChartService, $ionicTabsDelegate, UserService) {
+    .controller("ContestsCtrl", function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, ChartService, $ionicTabsDelegate, UserService) {
 
         var tabs = ["app.contests.mine", "app.contests.running", "app.contests.recentlyFinished"];
 
@@ -198,7 +191,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         $scope.showParticipants = function () {
             //TODO: show top 10 contest participants!
-            ErrorService.alert("TODO: show top 10 contest participants!");
+            PopupService.alert("TODO: show top 10 contest participants!");
         }
 
         $scope.infiniteLoadMoreContests = function () {
@@ -265,14 +258,14 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 $rootScope.gotoView("app.quiz", false, {contestId: contest._id});
             }
             else {
-                ErrorService.alert({"type": "SERVER_ERROR_NOT_JOINED_TO_CONTEST"});
+                PopupService.alert({"type": "SERVER_ERROR_NOT_JOINED_TO_CONTEST"});
             }
         };
 
         ChartService.setEvents($scope);
     })
 
-    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, ErrorService, $ionicHistory, $translate, $timeout, SoundService, XpService) {
+    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService) {
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
@@ -444,17 +437,20 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     })
 
-    .controller("LogoutCtrl", function ($scope, $rootScope, $state, UserService, ErrorService, $ionicHistory, $translate) {
+    .controller("LogoutCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $translate) {
 
         $scope.$on('$ionicView.beforeEnter', function () {
+            var language = $rootScope.user.settings.language;
             UserService.logout(function () {
-                $translate.use($rootScope.user.settings.language);
+                if (language !== $rootScope.user.settings.language) {
+                    $translate.use($rootScope.user.settings.language);
+                }
                 $rootScope.gotoView("home");
             });
         });
     })
 
-    .controller("SettingsCtrl", function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, ErrorService, $translate, $ionicConfig) {
+    .controller("SettingsCtrl", function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, PopupService, $translate, $ionicConfig) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -526,7 +522,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         });
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, ErrorService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -793,23 +789,15 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             buttons.push(okButton);
             buttons.push(cancelButton);
 
-            var confirmPopup = $ionicPopup.confirm({
-                title: $translate.instant("CONFIRM_REMOVE_TITLE", {name: contestName}),
-                template: $translate.instant("CONFIRM_REMOVE_TEMPLATE", {name: contestName}),
-                cssClass: $rootScope.settings.languages[$rootScope.session.settings.language].direction,
-                buttons: buttons
-            });
+            PopupService.confirm("CONFIRM_REMOVE_TITLE", "CONFIRM_REMOVE_TEMPLATE", {name: contestName},function() {
+                var postData = {"contestId": $scope.localViewData._id};
+                ContestsService.removeContest(postData,
+                    function (data) {
+                        $rootScope.$broadcast("whoSmarter-contestRemoved");
+                        $scope.goBack();
+                    });
 
-            confirmPopup.then(function (res) {
-                if (res) {
-                    var postData = {"contestId": $scope.localViewData._id};
-                    ContestsService.removeContest(postData,
-                        function (data) {
-                            $rootScope.$broadcast("whoSmarter-contestRemoved");
-                            $scope.goBack();
-                        });
-                }
-            })
+            });
         };
 
         $scope.hideRemoveContest = function () {
@@ -823,7 +811,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         $scope.buyNewContestUnlockKey = function () {
             $scope.buyInProgress = true;
-            PaymentService.buy($rootScope.session.features.newContest.name, function (data) {
+            PaymentService.buy($rootScope.session.features.newContest, function (data) {
                 location.replace(data.url);
             });
         }
@@ -867,14 +855,6 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             if (!$stateParams.serverPopup) {
                 $rootScope.gotoRootView();
             }
-
-            var deregister = $ionicPlatform.registerBackButtonAction(
-                function (e) {
-                    e.preventDefault();
-                }, 101
-            );
-
-            $scope.$on('$destroy', deregister);
         });
 
         $scope.serverPopup = $stateParams.serverPopup;
@@ -895,9 +875,15 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                     window.open(button.link, "_system", "location=yes");
                     $timeout(function() {
                         ionic.Platform.exitApp();
-                    },1500)
+                    },1000)
                     break;
                 }
+
+                case "screen" : {
+                    $rootScope.gotoView(button.screen, button.isRootView, button.params, button.clearHistory);
+                    break;
+                }
+
             }
 
         }

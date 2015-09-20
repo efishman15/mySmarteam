@@ -111,12 +111,30 @@ module.exports.getSettings = function (req, res, next) {
             response.serverPopup = {};
             response.serverPopup.title = settings.server.versions.mustUpdate.popup.title[data.language];
             response.serverPopup.message = settings.server.versions.mustUpdate.popup.message[data.language];
+            if (settings.server.versions.mustUpdate.popup.image) {
+                response.serverPopup.image = settings.server.versions.mustUpdate.popup.image;
+            }
             response.serverPopup.buttons = [];
-            for(var i=0; i<settings.server.versions.mustUpdate.popup.buttons.length; i++) {
+            for (var i = 0; i < settings.server.versions.mustUpdate.popup.buttons.length; i++) {
                 var button = {};
                 button.action = settings.server.versions.mustUpdate.popup.buttons[i].action;
                 button.text = settings.server.versions.mustUpdate.popup.buttons[i].text[data.language];
-                button.link = settings.server.versions.mustUpdate.popup.buttons[i].link[data.platform];
+                if (settings.server.versions.mustUpdate.popup.buttons[i].link) {
+                    button.link = settings.server.versions.mustUpdate.popup.buttons[i].link[data.platform];
+                }
+                if (settings.server.versions.mustUpdate.popup.buttons[i].screen) {
+                    button.screen = settings.server.versions.mustUpdate.popup.buttons[i].screen;
+                }
+                if (settings.server.versions.mustUpdate.popup.buttons[i].isRootView) {
+                    button.isRootView = settings.server.versions.mustUpdate.popup.buttons[i].isRootView;
+                }
+                if (settings.server.versions.mustUpdate.popup.buttons[i].params) {
+                    button.params = settings.server.versions.mustUpdate.popup.buttons[i].params;
+                }
+                if (settings.server.versions.mustUpdate.popup.buttons[i].clearHistory) {
+                    button.clearHistory = settings.server.versions.mustUpdate.popup.buttons[i].clearHistory;
+                }
+
                 response.serverPopup.buttons.push(button);
             }
         }
