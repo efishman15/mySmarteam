@@ -98,7 +98,10 @@ dalDb.loadSettings(function (err, data) {
     app.post("/info/geo", generalUtils.geoInfo);
     app.post("/info/settings", generalUtils.getSettings);
     app.post("/fb/canvas", facebookCanvas.canvas);
-    app.get("/fb/payments",facebookCanvas.payments);
+    app.get("/fb/payments/:productId/:language",facebookCanvas.getProductDetails);
+    app.post("/fb/payments/dynamicPricing",facebookCanvas.dynamicPricing);
+    app.get("/fb/payments/flow",facebookCanvas.getChallenge);
+    app.post("/fb/payments/flow",facebookCanvas.paymentFlow);
 
     //----------------------------------------------------
     // Start server listener

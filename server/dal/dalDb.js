@@ -156,7 +156,10 @@ function loadSettings(callback) {
 
                 closeDb(data);
 
-                callback(new exceptions.ServerException("Error finding contest", {"data": data, "dbError": err}, "error"));
+                callback(new exceptions.ServerException("Error finding contest", {
+                    "data": data,
+                    "dbError": err
+                }, "error"));
 
                 return;
             }
@@ -224,6 +227,18 @@ module.exports.getTopic = function (data, callback) {
 module.exports.retrieveSession = retrieveSession;
 function retrieveSession(data, callback) {
 
+    var criteria;
+    if (data.token) {
+        criteria = {"userToken": data.token}
+    }
+    else if (data.facebookUserId) {
+        criteria = {"facebookUserId": data.facebookUserId}
+    }
+    else {
+        callback(new exceptions.ServerException("Error retrieving session - no session identifier was supplied", null, "info", 401));
+        return;
+    }
+
     //If no connection open - call recursively to this function from within the "connect' block
     if (!data.DbHelper) {
         connect(function (err, connectData) {
@@ -236,11 +251,9 @@ function retrieveSession(data, callback) {
     }
 
     var sessionsCollection = data.DbHelper.getCollection("Sessions");
+
     sessionsCollection.findOne(
-        {
-            "userToken": data.token
-        }
-        , {},
+        criteria, {},
         function (err, session) {
             if (err || !session) {
 
@@ -351,6 +364,8 @@ module.exports.facebookLogin = function (data, callback) {
     //Put the avatar back later on this fresh object
     var avatar = data.user.avatar;
 
+    var thirdParty = data.user.thirdParty;
+
     var now = (new Date()).getTime();
 
     usersCollection.findOne({"facebookUserId": data.user.thirdParty.id}, {}, function (err, user) {
@@ -402,6 +417,10 @@ module.exports.facebookLogin = function (data, callback) {
                 //restore the avatar back
                 data.user.avatar = avatar;
 
+                if (thirdParty) {
+                    data.user.thirdParty = thirdParty;
+                }
+
                 checkToCloseDb(data);
 
                 callback(null, data);
@@ -439,13 +458,13 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "ageRange": data.user.ageRange,
                 "avatar": data.user.avatar,
                 "created": nowEpoch,
-                "expires" : new Date(nowEpoch + generalUtils.settings.server.db.sessionExpirationMilliseconds), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
+                "expires": new Date(nowEpoch + generalUtils.settings.server.db.sessionExpirationMilliseconds), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
                 "userToken": userToken,
                 "settings": data.user.settings,
                 "score": data.user.score,
                 "xp": data.user.xp,
                 "rank": data.user.rank,
-                "features" : data.features
+                "features": data.features
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -470,14 +489,14 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 data.closeConnection = false;
 
                 //Do not close connection on an inner logAction
-                logAction(data, function(err, data) {
+                logAction(data, function (err, data) {
 
                     if (err) {
                         closeDb(data);
 
                         callback(new exceptions.ServerException("Error inserting log record", {
                             "action": data.action,
-                            "session" : data.session,
+                            "session": data.session,
                             "dbError": err
                         }, "error"));
                         return;
@@ -566,7 +585,7 @@ function logAction(data, callback) {
 
     var newAction = {
         "userId": data.session.userId,
-        "sessionId" : data.session.userToken,
+        "sessionId": data.session.userToken,
         "date": (new Date()).getTime(),
         "action": data.action
     };
@@ -607,7 +626,7 @@ function prepareQuestionCriteria(data, callback) {
 
     var questionCriteria = {
         "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        "topicId": {"$in" : generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]}
+        "topicId": {"$in": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]}
     };
 
     //Filter by age if available
@@ -668,7 +687,7 @@ module.exports.getNextQuestion = getNextQuestion;
 function getNextQuestion(data, callback) {
     var skip = random.rnd(0, data.questionsCount - 1);
     var questionsCollection = data.DbHelper.getCollection("Questions");
-    questionsCollection.findOne(data.questionCriteria, {skip : skip}, function (err, question) {
+    questionsCollection.findOne(data.questionCriteria, {skip: skip}, function (err, question) {
         if (err || !question) {
             callback(new exceptions.ServerException("Error retrieving next question from database", {
                 "data": data,
@@ -722,7 +741,10 @@ function getNextQuestion(data, callback) {
         }
 
         for (var i = 0; i < question.answers.length; i++) {
-            data.session.quiz.clientData.currentQuestion.answers.push({"id": i + 1, "text": question.answers[i].text})
+            data.session.quiz.clientData.currentQuestion.answers.push({
+                "id": i + 1,
+                "text": question.answers[i].text
+            })
         }
 
         //Add this question id to the list of questions already asked during this quiz
@@ -863,7 +885,10 @@ function getContest(data, callback) {
 
             closeDb(data);
 
-            callback(new exceptions.ServerException("Error finding contest", {"data": data, "dbError": err}, "error"));
+            callback(new exceptions.ServerException("Error finding contest", {
+                "data": data,
+                "dbError": err
+            }, "error"));
 
             return;
         }

@@ -198,6 +198,19 @@ angular.module('whoSmarter.services', [])
                             }
                         }, 600);
 
+                        if (ionic.Platform.isAndroid()) {
+                            $rootScope.platform = "android";
+                        }
+                        else if (ionic.Platform.isIOS()) {
+                            $rootScope.platform = "ios";
+                        }
+                        else if (window.self !== window.top) {
+                            //running inside an iframe, e.g. facebook canvas
+                            $rootScope.platform = "facebook";
+                        }
+                        else {
+                            $rootScope.platform = "web";
+                        }
 
                         //------------------------------------------------------------------------------------
                         //-- Load languages from server - can be done without waiting for result
@@ -328,11 +341,12 @@ angular.module('whoSmarter.services', [])
                                     $rootScope.settings = data;
 
                                     if (!resolveData) {
+                                        console.log(source + ":getLoginStatus");
                                         service.getLoginStatus(resolveQueue, resolveQueue);
                                     }
                                     else {
-                                        if (resolveData.connected === true) {
-                                            $rootScope.user.thirdParty = {"signedRequest": signedRequest}
+                                        if (resolveData.connected === "true") {
+                                            $rootScope.user.thirdParty = {"signedRequest": resolveData.signedRequest}
                                             service.facebookServerConnect(resolveQueue, resolveQueue);
                                         }
                                         else {
@@ -1073,47 +1087,50 @@ angular.module('whoSmarter.services', [])
         var service = this;
         var path = 'payments/';
 
-        service.buy = function (feature, callbackOnSuccess, callbackOnError, config) {
+        service.buy = function (feature, isMobile, callbackOnSuccess, callbackOnError, config) {
 
             var method;
-            if (ionic.Platform.isAndroid()) {
-                method = "android"
-            }
-            else if (ionic.Platform.isIOS()) {
-                method = "ios";
-            }
-            else if (window.self !== window.top) {
-                //running inside an iframe, e.g. facebook canvas
-                method = "facebook";
-            }
-            else {
-                method = "paypal";
-            }
 
-            switch (method) {
-                case "paypal" :
+            switch ($rootScope.platform) {
+                case "web" :
                     var postData = {"feature": feature.name, "language": $rootScope.session.settings.language};
-                    return ApiService.post(path, method + "/buy", postData, callbackOnSuccess, callbackOnError, config);
+                    method = "paypal";
+                    return ApiService.post(path, method + "/buy", postData, function(data) {
+                        if (callbackOnSuccess) {
+                            callbackOnSuccess({"method" : method, "data" : data})
+                        }
+
+                    }, callbackOnError, config);
                     break;
 
                 case "android" :
+                    method = "android";
                     alert("TBD - purchase in android");
                     break;
 
                 case "ios" :
+                    method = "ios";
                     alert("TBD - purchase in ios");
                     break;
 
                 case "facebook" :
-                    var productUrl = ApiService.endPoint + "fb/payments?productId=" + feature.purchaseData.productId + "&language=" + $rootScope.session.settings.language;
-                    console.log(productUrl);
-                    ezfb.ui({
-                            method: "pay",
-                            action: "purchaseitem",
-                            product: productUrl
-                        },
-                        function() {
-                            alert("after fb buy");
+                    method = "facebook";
+                    var productUrl = ApiService.endPoint + "fb/payments/" + feature.purchaseData.productId + "/" + $rootScope.session.settings.language;
+                    var facebookDialogData = {
+                        "method": "pay",
+                        "action": "purchaseitem",
+                        "product": productUrl,
+                        "request_id" : feature.name + "|" + $rootScope.session.thirdParty.id + "|" + (new Date()).getTime()
+                    };
+                    if (isMobile === true && $rootScope.session.features[feature.name].purchaseData.mobilePricepointId) {
+                        facebookDialogData.pricepoint_id = $rootScope.session.features[feature.name].purchaseData.mobilePricepointId;
+                    }
+
+                    ezfb.ui(facebookDialogData,
+                        function(data) {
+                            if (callbackOnSuccess) {
+                                callbackOnSuccess({"method" : method, "data" : data})
+                            }
                         }
                     );
                     break;

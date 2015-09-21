@@ -4,7 +4,7 @@ var exceptions = require('../utils/exceptions');
 var crypto = require('crypto');
 var generalUtils = require('../utils/general');
 
-//---------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------
 // getUserInfo
 //
 // Validates facebook access token and makes sure it matches the input user id
@@ -12,11 +12,16 @@ var generalUtils = require('../utils/general');
 // data:
 // -----
 // input: user (contains thirdParty.accessToken + thirdParty.id OR thirdParty.signedRequest if in canvas)
-// output: avatar
-//---------------------------------------------------------------------------------------------------------
+// output: user.avatar, user.name, user.email, user.ageRange, user.thirdParty.payment_mobile_pricepoints (in case of canvas)
+//---------------------------------------------------------------------------------------------------------------------------------
 module.exports.getUserInfo = function (data, callback) {
 
+    var fields = "id,name,email,age_range";
+
+    var facebookResponse = "";
+
     if (data.user.thirdParty.signedRequest) {
+        //Coming from canvas
         var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.user.thirdParty.signedRequest);
         if (verifier.verify === false) {
             new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest});
@@ -25,21 +30,30 @@ module.exports.getUserInfo = function (data, callback) {
 
         data.user.thirdParty.accessToken = verifier.data.oauth_token;
         data.user.thirdParty.id = verifier.data.user_id;
+        fields += ",payment_mobile_pricepoints,currency";
     }
 
-    https.get(FACEBOOK_GRAPH_URL + "/me?fields=id,name,email,age_range&access_token=" + data.user.thirdParty.accessToken, function (res) {
+    https.get(FACEBOOK_GRAPH_URL + "/me?fields=" + fields + "&access_token=" + data.user.thirdParty.accessToken, function (res) {
 
-        res.setEncoding('utf8');
+        res.setEncoding("utf8");
 
-        res.on('data', function (responseData) {
+        res.on('data', function (chunk) {
+            facebookResponse += chunk;
+        });
 
-            var facebookData = JSON.parse(responseData);
+        res.on('end', function () {
+
+            var facebookData = JSON.parse(facebookResponse);
             if (facebookData && facebookData.id) {
                 if (facebookData.id === data.user.thirdParty.id) {
                     data.user.avatar = getUserAvatar(data.user.thirdParty.id);
                     data.user.name = facebookData.name;
                     data.user.email = facebookData.email; //might be null if user removed
                     data.user.ageRange = facebookData.age_range;
+                    if (facebookData.payment_mobile_pricepoints) {
+                        data.user.thirdParty.paymentMobilePricepoints = facebookData.payment_mobile_pricepoints;
+                        data.user.thirdParty.currency = facebookData.currency;
+                    }
                     callback(null, data);
                 }
                 else {

@@ -809,10 +809,21 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             }
         }
 
-        $scope.buyNewContestUnlockKey = function () {
+        $scope.buyNewContestUnlockKey = function (isMobile) {
             $scope.buyInProgress = true;
-            PaymentService.buy($rootScope.session.features.newContest, function (data) {
-                location.replace(data.url);
+            PaymentService.buy($rootScope.session.features.newContest, isMobile, function (result) {
+                switch (result.method) {
+                    case "paypal":
+                        location.replace(result.data.url);
+                        break;
+
+                    case "facebook":
+                        console.log(JSON.stringify(result.data));
+                        break;
+                }
+
+                $scope.buyInProgress = false;
+
             });
         }
 

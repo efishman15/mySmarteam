@@ -61,7 +61,7 @@ module.exports.payPalBuy = function (req, res, next) {
                 return;
             }
 
-            var purchaseProduct = generalUtils.settings.server.purchaseProducts[feature.purchaseProductId];
+            var purchaseProduct = generalUtils.settings.server.payments.purchaseProducts[feature.purchaseProductId];
             var purchaseProductDisplayName = purchaseProduct.displayNames[data.language];
             if (!purchaseProductDisplayName) {
                 exceptions.ServerResponseException(res, "Unable to find product display name during payPal buy", {"data": data}, "warn", 424);
@@ -111,11 +111,13 @@ module.exports.payPalBuy = function (req, res, next) {
     })
 };
 
-//--------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------
 // validate
 //
-// data: method (paypal, google, ios, facebook), purchaseToken, payerId
-//--------------------------------------------------------------------------
+// data: method (paypal, google, ios, facebook)
+// For paypal - purchaseToken, payerId
+// For facebook - payment_id, amount, currency, quantity, request_id, status, signed_request
+//-----------------------------------------------------------------------------------------------
 module.exports.validate = function (req, res, next) {
 
     var token = req.headers.authorization;
@@ -130,6 +132,8 @@ module.exports.validate = function (req, res, next) {
 
         //Validate the payment transaction based on method
         function (data, callback) {
+
+            var now = (new Date()).getTime();
 
             switch (data.method) {
                 case "paypal":
@@ -153,8 +157,8 @@ module.exports.validate = function (req, res, next) {
 
                         data.response = {};
 
-                        var featurePurchased = invoiceNumberParts[1];
-                        data.session.assets[featurePurchased] = true;
+                        data.featurePurchased = invoiceNumberParts[1];
+                        data.session.assets[featurePurchased] = {"purchaseDate" : now};
                         data.session.features = sessionUtils.computeFeatures(data.session);
 
                         data.response.features = data.session.features;

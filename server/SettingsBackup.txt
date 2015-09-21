@@ -5,7 +5,7 @@
       "newContest" : {
         "name" : "newContest",
         "lockText" : "FEATURE_LOCKED_NEW_CONTEST",
-        "purchaseProductId" : "sandbox_feature_newContest",
+        "purchaseProductId" : "s1000",
         "unlockText" : "NEW_CONTEST_UNLOCKED",
         "view" : {
           "name" : "contest",
@@ -18,7 +18,7 @@
       "challengeFriendContest" : {
         "name" : "challengeFriendContest",
         "lockText" : "FEATURE_CHALLENGE_FRIEND_CONTEST",
-        "purchaseProductId" : "sandbox_feature_challengeFriendContest",
+        "purchaseProductId" : "s1001",
         "unlockText" : "CHALLENGE_FRIEND_CONTEST_UNLOCKED"
       }
     },
@@ -27,9 +27,7 @@
         "rank" : 1
       }, {
         "xp" : 500,
-        "rank" : 2,
-        "unlockFeature" : "newContest",
-        "unlockFeatureMessage" : "NEW_CONTEST_UNLOCKED"
+        "rank" : 2
       }, {
         "xp" : 1500,
         "rank" : 3
@@ -37,8 +35,10 @@
         "xp" : 3000,
         "rank" : 4
       }, {
-        "xp" : 5000,
-        "rank" : 5
+        "xp" : 200000,
+        "rank" : 5,
+        "unlockFeature" : "newContest",
+        "unlockFeatureMessage" : "NEW_CONTEST_UNLOCKED"
       }],
     "xpCredits" : {
       "login" : 5,
@@ -77,33 +77,87 @@
     "db" : {
       "sessionExpirationMilliseconds" : 1800000
     },
-    "purchaseProducts" : {
-      "sandbox_feature_newContest" : {
-        "cost" : "0.99",
-        "currency" : "$",
-        "displayNames" : {
-          "en" : "New contest - unlock key",
-          "es" : "Nuevo concurso - desbloquear clave",
-          "he" : "מפתח ליצירת תחרות חדשה"
-        }
-      },
-      "sandbox_feature_challengeFriendContest" : {
-        "cost" : "0.99",
-        "currency" : "$",
-        "displayNames" : {
-          "en" : "Challenge friend contest - unlock key",
-          "es" : "Desafía amigo concurso - tecla de desbloqueo",
-          "he" : "מפתח להזמנת חבר לדו קרב"
-        }
-      }
-    },
     "triviaTopicsPerLanguage" : {
       "en" : [10],
       "he" : [5, 270],
       "es" : [465]
     },
-    "quiz" : {
-      "longAnswerTreshold" : 30
+    "facebook" : {
+      "secretKey" : "9ddb5d54c189bbf740967e6a6c18ccbb",
+      "signedRequestRedirectUrl" : "https://www.whosmarter.com:8000/#/fb",
+      "appAccessToken" : "344342552056|QiE5jBhMjOyz7XxV93voCQf553A"
+    },
+    "versions" : {
+      "mustUpdate" : {
+        "minVersion" : "0.0.11",
+        "popup" : {
+          "buttons" : [{
+              "action" : "linkExit",
+              "text" : {
+                "en" : "OK",
+                "es" : "OK",
+                "he" : "אישור"
+              },
+              "link" : {
+                "android" : "https://play.google.com/store/apps/details?id=com.fplabs.whosmarter",
+                "ios" : "http://www.apple.com"
+              }
+            }],
+          "title" : {
+            "en" : "<h1 class=\"title\">New version</h1>",
+            "es" : "<h1 class=\"title\">Nueva versión</h1>",
+            "he" : "<h1 class=\"title\">גירסה חדשה</h1>"
+          },
+          "message" : {
+            "en" : "<h3>Please update to our newest version - your account and rank will be preserved</h3>",
+            "es" : "<h3>Por favor, actualice a nuestra nueva versión - su cuenta y el rango será preservado</h3>",
+            "he" : "<h3>אנא עדכנו לגירסה החדשה שלנו - חשבונכם ורמתכם במשחק יישמרו</h3>"
+          },
+          "image" : "http://www.whosmarter.com:7000/images/info.png"
+        }
+      }
+    },
+    "payments" : {
+      "paypal" : {
+        "successUrl" : "#/payment?purchaseMethod=paypal&purchaseSuccess=1",
+        "cancelUrl" : "#/cancelPaypal",
+        "user" : "testseller2_api1.whosmarter.com",
+        "password" : "9VXL24PFJ9LX8GSS",
+        "signature" : "AvYW0oSj.WW9Wh3OfTtEun4M6OFuApinXztzGPxJWkswTqZuwteL7KEV",
+        "debug" : true
+      },
+      "currencies" : {
+        "ILS" : "₪",
+        "USD" : "$",
+        "EUR" : "€",
+        "GBP" : "£"
+      },
+      "purchaseProducts" : {
+        "s1000" : {
+          "cost" : "0.99",
+          "currency" : "USD",
+          "displayNames" : {
+            "en" : "New contest - unlock key",
+            "es" : "Nuevo concurso - desbloquear clave",
+            "he" : "מפתח ליצירת תחרות חדשה"
+          },
+          "productId" : "s1000"
+        },
+        "s1001" : {
+          "cost" : "0.99",
+          "currency" : "USD",
+          "displayNames" : {
+            "en" : "Challenge friend contest - unlock key",
+            "es" : "Desafía amigo concurso - tecla de desbloqueo",
+            "he" : "מפתח להזמנת חבר לדו קרב"
+          },
+          "productId" : "s1001"
+        }
+      }
+    },
+    "general" : {
+      "baseUrl" : "http://www.whosmarter.com:7000/",
+      "baseUrlSecured" : "https://www.whosmarter.com:8000/"
     }
   },
   "client" : {
@@ -198,7 +252,7 @@
           "numberScaleUnit" : "%",
           "showYAxisValues" : 0,
           "valueFontSize" : 12,
-          "labelFontSize" : "14",
+          "labelFontSize" : "13",
           "chartBottomMargin" : 25,
           "valuePadding" : 0,
           "labelPadding" : 10,
