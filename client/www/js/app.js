@@ -245,7 +245,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 },
                 templateUrl: "templates/payment.html",
                 controller: "PaymentCtrl",
-                params: {token: null, PayerID: null, productId: null, purchaseMethod: null, purchaseSuccess : null}
+                params: {token: null, PayerID: null, productId: null, purchaseMethod: null, purchaseSuccess : null, nextView : null, featurePurchased : null}
             })
 
             .state('settings', {

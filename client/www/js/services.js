@@ -1137,8 +1137,8 @@ angular.module('whoSmarter.services', [])
             }
         }
 
-        service.validate = function (transactionData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "validate", transactionData, callbackOnSuccess, callbackOnError, config);
+        service.fulfill = function (transactionData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "fulfill", transactionData, callbackOnSuccess, callbackOnError, config);
         }
 
         return service;

@@ -1,8 +1,10 @@
-var FACEBOOK_GRAPH_URL = "https://graph.facebook.com";
+var FACEBOOK_GRAPH_DOMAIN = "graph.facebook.com";
+var FACEBOOK_GRAPH_URL = "https://" + FACEBOOK_GRAPH_DOMAIN;
 var https = require("https");
 var exceptions = require('../utils/exceptions');
 var crypto = require('crypto');
 var generalUtils = require('../utils/general');
+var querystring = require("querystring");
 
 //---------------------------------------------------------------------------------------------------------------------------------
 // getUserInfo
@@ -24,7 +26,7 @@ module.exports.getUserInfo = function (data, callback) {
         //Coming from canvas
         var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.user.thirdParty.signedRequest);
         if (verifier.verify === false) {
-            new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest});
+            callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
             return;
         }
 
@@ -100,7 +102,6 @@ function getUserAvatar(facebookUserId) {
 // Returns the data behind facebook's signed request
 //-------------------------------------------------------------------------------------
 module.exports.SignedRequest = SignedRequest;
-
 function SignedRequest(secret, request) {
     this.secret = secret;
     this.request = request;
@@ -136,4 +137,160 @@ SignedRequest.prototype.base64decode = function (data) {
     }
     data = data.replace(/-/g, '+').replace(/_/g, '/');
     return new Buffer(data, 'base64').toString('utf-8');
+};
+
+//---------------------------------------------------------------------------------------------------------------------------------
+// getPaymentInfo
+//
+// Retrieves payment info from facebook using the app access token
+//
+// data:
+// -----
+// input: paymentId
+// output: purchaseData, featurePurchased, facebookUserId
+//---------------------------------------------------------------------------------------------------------------------------------
+module.exports.getPaymentInfo = function (data, callback) {
+
+    var fields = "id,actions,items,disputes,request_id";
+
+    var facebookResponse = "";
+
+    var url = FACEBOOK_GRAPH_URL + "/" + data.paymentId + "?fields=" + fields + "&access_token=" + generalUtils.settings.server.facebook.appAccessToken;
+    https.get(url, function (res) {
+
+        res.setEncoding("utf8");
+
+        res.on('data', function (chunk) {
+            facebookResponse += chunk;
+        });
+
+        res.on('end', function () {
+
+            var facebookData = JSON.parse(facebookResponse);
+
+            //request_id in the format: "featureName|facebookUserId|timeStamp"
+            var requestIdParts = facebookData.request_id.split("|");
+
+            if (data.signed_request) {
+                var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.signed_request);
+                if (verifier.verify === false) {
+                    callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
+                    return;
+                }
+
+                if (verifier.data.user_id != requestIdParts[1]) {
+                    callback(new exceptions.ServerException("Error validating payment, payment belongs to someone else", {
+                        "facebookResponse": facebookResponse,
+                        "actualFacebookId": verifier.data.user_id,
+                        "paymentFacebookId": requestIdParts[1]
+                    }));
+                    return;
+                }
+            }
+
+            data.purchaseData = facebookData;
+            data.purchaseData.clientTimestamp = parseInt(requestIdParts[2], 10);
+            data.featurePurchased = requestIdParts[0];
+            data.facebookUserId = requestIdParts[1];
+
+            if (!data.thirdPartyServerCall || data.entry[0].changed_fields.contains("actions")) {
+                //Coming from facebook server notification
+                var lastAction = facebookData.actions[facebookData.actions.length - 1];
+                if (lastAction.type === "charge") {
+                    if (lastAction.status === "completed") {
+                        data.proceedPayment = true;
+                    }
+                    else {
+                        //refund, chargeback, decline
+                        data.revokeAsset = true;
+                    }
+                }
+            }
+
+            if (data.thirdPartyServerCall) {
+
+                if (data.entry[0].changed_fields.contains("disputes")) {
+                    var lastDispute = facebookData.disputes[facebookData.disputes.length - 1];
+                    if (lastDispute.status === "pending") {
+                        data.dispute = true;
+                        for (var i = 0; i < facebookData.actions.length; i++) {
+                            if (facebookData.actions[i].type === "charge" && facebookData.actions[i].status === "completed") {
+                                data.itemCharged = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            callback(null, data);
+        });
+
+    }).on('error', function (error) {
+        callback(new exceptions.ServerException("Error recevied from facebook while retrieving payment id", {
+            "paymentId": data.paymentId,
+            "error": error
+        }));
+    });
+};
+
+//---------------------------------------------------------------------------------------------------------------------------------
+// denyDispute
+//
+// posts to facebook a deny for a dispute using the app access token
+//
+// data:
+// -----
+// input: paymentId
+// output: na
+//---------------------------------------------------------------------------------------------------------------------------------
+module.exports.denyDispute = function (data, callback) {
+
+    var fields = "id,actions,items,disputes,request_id";
+
+    var facebookResponse = "";
+
+    var postData = querystring.stringify({
+            "access_token": generalUtils.settings.server.facebook.appAccessToken,
+            "reason": "DENIED_REFUND"
+        }
+    )
+
+    var options = {
+        host: FACEBOOK_GRAPH_DOMAIN,
+        port: 443,
+        path: data.paymentId + "/dispute",
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': postData.length
+        }
+    };
+
+    https.request(options, function (res) {
+
+        res.setEncoding("utf8");
+
+        res.on('data', function (chunk) {
+            facebookResponse += chunk;
+        });
+
+        res.on('end', function () {
+
+            var facebookData = JSON.parse(facebookResponse);
+            if (!facebookData || !facebookData.success) {
+                callback(new exceptions.ServerException("Error recevied from facebook while disputing payment id", {
+                    "paymentId": data.paymentId,
+                    "facebookResponse": facebookResponse
+                }));
+            }
+
+            callback(null, data);
+        });
+
+    }).on('error', function (error) {
+        callback(new exceptions.ServerException("Error recevied from facebook while disputing payment id", {
+            "paymentId": data.paymentId,
+            "error": error
+        }));
+    });
 };

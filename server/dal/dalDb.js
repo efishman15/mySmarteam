@@ -255,7 +255,7 @@ function retrieveSession(data, callback) {
     sessionsCollection.findOne(
         criteria, {},
         function (err, session) {
-            if (err || !session) {
+            if (!data.sessionOptional &&  (err || !session)) {
 
                 closeDb(data);
 
@@ -318,9 +318,14 @@ module.exports.storeSession = function (data, callback) {
 // output: <NA>
 //---------------------------------------------------------------------
 module.exports.setUser = function (data, callback) {
+
     var usersCollection = data.DbHelper.getCollection('Users');
 
-    usersCollection.findAndModify({"_id": ObjectId(data.session.userId)}, {},
+    if (!data.setUserWhereClause) {
+        data.setUserWhereClause = {"_id" : ObjectId(data.session.userId)};
+    }
+
+    usersCollection.findAndModify(data.setUserWhereClause, {},
         {
             $set: data.setData
         }, {w: 1}, function (err, user) {
@@ -482,13 +487,13 @@ module.exports.createOrUpdateSession = function (data, callback) {
             data.session = session.value;
 
             if (session.lastErrorObject.upserted) {
-                data.action = "login";
 
                 var closeConnection = data.closeConnection;
 
                 data.closeConnection = false;
 
                 //Do not close connection on an inner logAction
+                data.logAction = {"action" : "login", "userId" : data.session.userId, "sessionId" : data.session.userToken};
                 logAction(data, function (err, data) {
 
                     if (err) {
@@ -583,25 +588,16 @@ function logAction(data, callback) {
 
     var logCollection = data.DbHelper.getCollection("Log");
 
-    var newAction = {
-        "userId": data.session.userId,
-        "sessionId": data.session.userToken,
-        "date": (new Date()).getTime(),
-        "action": data.action
-    };
+    data.logAction.date = (new Date()).getTime();
 
-    if (data.actionData) {
-        newAction.data = data.actionData;
-    }
-
-    logCollection.insert(newAction
+    logCollection.insert(data.logAction
         , {}, function (err, actionRecord) {
             if (err) {
 
                 checkToCloseDb(data);
 
                 callback(new exceptions.ServerException("Error inserting record to log", {
-                    "action": newAction,
+                    "action": data.logAction,
                     "dbError": err
                 }, "error"));
                 return;

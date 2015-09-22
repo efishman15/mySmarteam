@@ -4,6 +4,7 @@ var exceptions = require("../utils/exceptions");
 var generalUtils = require("../utils/general");
 var sessionUtils = require("./session");
 var dalDb = require("../dal/dalDb");
+var paymentUtils = require("./payments");
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // fbcanvas
@@ -120,7 +121,7 @@ module.exports.dynamicPricing = function (req, res, next) {
             sessionUtils.getSession(data, callback);
         },
 
-        function(data, callback) {
+        function (data, callback) {
             if (!data.session.features[featureName]) {
                 dalDb.closeDb(data);
                 callback(new exceptions.ServerResponseException(res, "Invalid signed request received from facebook", {"facebookData": data}, "warn", 403));
@@ -155,7 +156,15 @@ module.exports.dynamicPricing = function (req, res, next) {
 module.exports.paymentFlow = function (req, res, next) {
 
     var data = req.body;
+    data.method = "facebook";
+    data.thirdPartyServerCall = true;
     console.log("facebook payment flow...data=" + JSON.stringify(data));
-    res.send(200);
-
+    paymentUtils.fulfillOrder(data, function (err, response) {
+        if (!err) {
+            res.send(200);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    });
 }

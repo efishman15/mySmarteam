@@ -270,3 +270,16 @@ function versionCompare(v1, v2, options) {
 
     return 0;
 }
+
+//---------------------------------------------------------------------------------------------------
+// add "contains" function to an array to check if an item exists in an array
+//---------------------------------------------------------------------------------------------------
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}

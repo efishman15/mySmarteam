@@ -89,7 +89,7 @@ dalDb.loadSettings(function (err, data) {
     app.post("/contests/remove", isAuthenticated, contests.removeContest);
     app.post("/contests/get", isAuthenticated, contests.getContests);
     app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
-    app.post("/payments/validate", isAuthenticated, payments.validate);
+    app.post("/payments/fulfill", isAuthenticated, payments.fulfill);
 
     //----------------------------------------------------
     // API's that do NOT require authentication

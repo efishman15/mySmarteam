@@ -87,7 +87,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 $rootScope.gotoView("app.contests.mine");
             }
             else if (!$rootScope.user) {
-                UserService.initUser(function() {
+                UserService.initUser(function () {
                     UserService.resolveEvents();
                 });
             }
@@ -789,7 +789,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             buttons.push(okButton);
             buttons.push(cancelButton);
 
-            PopupService.confirm("CONFIRM_REMOVE_TITLE", "CONFIRM_REMOVE_TEMPLATE", {name: contestName},function() {
+            PopupService.confirm("CONFIRM_REMOVE_TITLE", "CONFIRM_REMOVE_TEMPLATE", {name: contestName}, function () {
                 var postData = {"contestId": $scope.localViewData._id};
                 ContestsService.removeContest(postData,
                     function (data) {
@@ -818,37 +818,52 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                         break;
 
                     case "facebook":
-                        console.log(JSON.stringify(result.data));
+                        if (result.data.status === "completed") {
+                            var transactionData = {"method": "facebook"};
+                            transactionData.purchaseData = result.data;
+                            PaymentService.fulfill(transactionData, function (data) {
+                                //Update local assets
+                                $rootScope.session.features = data.features
+                                $rootScope.gotoView("payment", false, {
+                                    "purchaseMethod": "facebook",
+                                    "featurePurchased" : data.featurePurchased,
+                                    "nextView": data.nextView
+                                });
+                                $scope.buyInProgress = false;
+                            }, function (status, data) {
+                                $scope.buyInProgress = false;
+                            });
+                        }
                         break;
                 }
-
-                $scope.buyInProgress = false;
-
             });
-        }
-
+        };
     })
 
-    .controller("PaymentCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, $translate, $ionicHistory) {
+    .controller("PaymentCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, $translate) {
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
-            var transactionData = {"method": $stateParams.purchaseMethod};
             switch ($stateParams.purchaseMethod) {
                 case "paypal":
-                    transactionData.purchaseToken = $stateParams.token;
-                    transactionData.payerId = $stateParams.PayerID;
-                    PaymentService.validate(transactionData, function (data) {
+                    var transactionData = {"method": $stateParams.purchaseMethod};
+                    transactionData.purchaseData = {};
+                    transactionData.purchaseData.purchaseToken = $stateParams.token;
+                    transactionData.purchaseData.payerId = $stateParams.PayerID;
+
+                    PaymentService.fulfill(transactionData, function (data) {
                         //Update local assets
-                        $rootScope.session.features = data.features
+                        $rootScope.session.features = data.features;
                         $scope.unlockText = $translate.instant($rootScope.session.features[data.featurePurchased].unlockText);
-                        $scope.nextView = data.nextView;
-                    })
+                        $scope.nextView = $stateParams.nextView;
+                    });
                     break;
-                default:
-                    $scope.proceed();
+                case "facebook":
+                    $scope.nextView = $stateParams.nextView;
+                    $scope.unlockText = $translate.instant($rootScope.session.features[$stateParams.featurePurchased].unlockText);
                     break;
             }
+
         });
 
         $scope.proceed = function () {
@@ -870,27 +885,30 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         $scope.serverPopup = $stateParams.serverPopup;
 
-        $scope.buttonAction = function(button) {
+        $scope.buttonAction = function (button) {
             switch (button.action) {
                 case "dismiss" :
                     $ionicHistory.goBack();
                     break;
 
-                case "link" : {
+                case "link" :
+                {
                     window.open(button.link, "_system", "location=yes");
                     $ionicHistory.goBack();
                     break;
                 }
 
-                case "linkExit" : {
+                case "linkExit" :
+                {
                     window.open(button.link, "_system", "location=yes");
-                    $timeout(function() {
+                    $timeout(function () {
                         ionic.Platform.exitApp();
-                    },1000)
+                    }, 1000)
                     break;
                 }
 
-                case "screen" : {
+                case "screen" :
+                {
                     $rootScope.gotoView(button.screen, button.isRootView, button.params, button.clearHistory);
                     break;
                 }
@@ -898,4 +916,4 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             }
 
         }
-   });
+    });
