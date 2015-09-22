@@ -55,7 +55,7 @@ module.exports.payPalBuy = function (req, res, next) {
         function (data, callback) {
 
             //Invoice number will contain the product id which will be required later for validation
-            var invoiceNumber = uuid.v1() + "_" + data.feature;
+            var invoiceNumber = uuid.v1() + "|" + data.feature;
 
             var feature = generalUtils.settings.server.features[data.feature];
             if (!feature) {
@@ -135,12 +135,12 @@ module.exports.payPalBuy = function (req, res, next) {
 //      entry[0].id is the payment id,
 //      entry[0].changed_fields are the fields changed that raised the call
 //-----------------------------------------------------------------------------------------------
-module.exports.fulfill = function (req, res, next) {
+module.exports.processPayment = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
     data.token = token;
 
-    fulfillOrder(data, function (err, data) {
+    innerProcessPayment(data, function (err, data) {
         if (!err) {
             if (data.clientResponse) {
                 res.json(data.clientResponse);
@@ -162,8 +162,8 @@ module.exports.fulfill = function (req, res, next) {
 // like fullFill - but can also be called from Paypal IPN or facebook payments callback
 // In this case - can be offline - and session is not required
 //-----------------------------------------------------------------------------------------------
-module.exports.fulfillOrder = fulfillOrder;
-function fulfillOrder(data, callback) {
+module.exports.innerProcessPayment = innerProcessPayment;
+function innerProcessPayment(data, callback) {
 
     var now = (new Date()).getTime();
     var operations = [
@@ -179,15 +179,6 @@ function fulfillOrder(data, callback) {
                 }
                 else {
                     data.paymentId = data.entry[0].id; //Coming from facebook server
-                }
-
-                if (data.purchaseData && data.purchaseData.signed_request) {
-                    var verifier = new dalFacebook.SignedRequest(generalUtils.settings.server.facebook.secretKey, data.purchaseData.signed_request);
-                    if (verifier.verify === false) {
-                        callback(new exceptions.ServerResponseException(res, "Invalid signed request received from facebook", {"facebookData": data.purchaseData}));
-                        return;
-                    }
-                    data.facebookUserId = verifier.data.user_id;
                 }
 
                 dalFacebook.getPaymentInfo(data, callback);
@@ -219,15 +210,26 @@ function fulfillOrder(data, callback) {
                         }
 
                         //invoiceNumber is in the format InvoiceNumner_featureName
-                        var invoiceNumberParts = invoiceNumber.split("_");
+                        var invoiceNumberParts = invoiceNumber.split("|");
                         data.featurePurchased = invoiceNumberParts[1];
-                        data.purchaseData = payPalData;
+                        data.paymentData = payPalData;
                         data.proceedPayment = true;
+                        callback(null, data);
                     });
                     break;
 
                 case "facebook":
-                    //Nothing to do here - validtation occured at the payment retrieval above
+                    //Double check - if client tries to hack without a signed request
+                    //Make sure the purchase belongs to him
+                    if (data.session && data.purchaseData && !data.purchaseData.signed_request && data.paymentData.user && data.paymentData.user.id !== data.session.facebookUserId) {
+                        callback(new exceptions.ServerException("Error validating payment, payment belongs to someone else", {
+                            "purchaseData": data.purchaseData,
+                            "paymentData" : data.paymentData,
+                            "actualFacebookId": data.session.facebookUserId
+                        }));
+                        return;
+                    }
+
                     callback(null, data);
                     break;
 
@@ -240,15 +242,24 @@ function fulfillOrder(data, callback) {
         //Store the asset at the user's level
         function (data, callback) {
 
-            if ((data.proceedPayment || (data.dispute && data.itemCharged)) &&
-                data.session && (!data.session.assets || !data.session.assets[data.featurePurchased])) {
+            if ((data.proceedPayment || data.revokeAsset || (data.dispute && data.itemCharged)) &&
+                data.session) {
 
-                if (!data.session.assets) {
-                    data.session.assets = {};
+                if (data.revokeAsset) {
+                    //Revoke the asset if it has been bought within the same purchase method
+                    if (data.session.assets && data.session.assets[data.featurePurchased] && data.session.assets[data.featurePurchased].method === data.method) {
+                        delete data.session.assets[data.featurePurchased];
+                    }
                 }
+                else {
+                    //Give the asset
+                    if (!data.session.assets) {
+                        data.session.assets = {};
+                    }
 
-                data.session.assets[data.featurePurchased] = {"purchaseDate": now};
-                data.session.features = sessionUtils.computeFeatures(data.session);
+                    data.session.assets[data.featurePurchased] = {"purchaseDate": now, "method": data.method};
+                    data.session.features = sessionUtils.computeFeatures(data.session);
+                }
 
                 if (!data.thirdPartyServerCall) {
                     data.clientResponse = {};
@@ -267,9 +278,7 @@ function fulfillOrder(data, callback) {
         //Store the asset at the user's level
         function (data, callback) {
 
-            if ((data.proceedPayment || (data.dispute && data.itemCharged))) {
-                data.setData = {};
-                data.setData["assets." + data.featurePurchased] = {"purchaseDate": now};
+            if ((data.proceedPayment || data.revokeAsset || (data.dispute && data.itemCharged))) {
                 if (!data.session) {
                     data.setUserWhereClause = {"facebookUserId": data.facebookUserId};
                 }
@@ -277,8 +286,17 @@ function fulfillOrder(data, callback) {
                     data.setUserWhereClause = {"_id": ObjectId(data.session.userId)};
                 }
 
-                //Update only if asset does not exist yet
-                data.setUserWhereClause["assets." + data.featurePurchased] = {$exists: false};
+                if (data.revokeAsset) {
+                    data.unsetData = {};
+                    data.unsetData["assets." + data.featurePurchased] = "";
+                }
+                else {
+                    data.setData = {};
+                    data.setData["assets." + data.featurePurchased] = {"purchaseDate": now, "method": data.method};
+
+                    //Update only if asset does not exist yet
+                    data.setUserWhereClause["assets." + data.featurePurchased] = {$exists: false};
+                }
 
                 dalDb.setUser(data, callback);
             }
@@ -292,23 +310,20 @@ function fulfillOrder(data, callback) {
 
             if (data.dispute) {
                 //At this time - asset must already exist from previous steps
-                //Deny the dispute
+                //Deny the dispute - currently dispute supported on facebook only
                 dalFacebook.denyDispute(data, callback);
-            }
-            else if (data.revokeAsset) {
-                console.log("TBD...revoke the asset")
-                callback(null, data);
             }
             else {
                 callback(null, data);
             }
         },
+
         //Log the purchase and close db
         function (data, callback) {
 
             data.closeConnection = true;
 
-            data.logAction = {"action": "payment", "extraData": data.purchaseData};
+            data.logAction = {"action": "payment", "extraData": data.paymentData};
             if (!data.session) {
                 data.logAction.facebookUserId = data.facebookUserId;
             }

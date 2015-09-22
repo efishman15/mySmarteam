@@ -35,7 +35,7 @@ module.exports.getUserInfo = function (data, callback) {
         fields += ",payment_mobile_pricepoints,currency";
     }
 
-    https.get(FACEBOOK_GRAPH_URL + "/me?fields=" + fields + "&access_token=" + data.user.thirdParty.accessToken, function (res) {
+    var req = https.get(FACEBOOK_GRAPH_URL + "/me?fields=" + fields + "&access_token=" + data.user.thirdParty.accessToken, function (res) {
 
         res.setEncoding("utf8");
 
@@ -76,14 +76,16 @@ module.exports.getUserInfo = function (data, callback) {
             }
 
         });
+    });
 
-
-    }).on('error', function (error) {
+    req.on("error", function (error) {
         callback(new exceptions.ServerException("Error recevied from facebook while validating access token", {
             "facebookAccessToken": data.user.thirdParty.accessToken,
             "error": error
         }));
     });
+
+    req.end();
 };
 
 //-------------------------------------------------------------------------------------
@@ -147,16 +149,16 @@ SignedRequest.prototype.base64decode = function (data) {
 // data:
 // -----
 // input: paymentId
-// output: purchaseData, featurePurchased, facebookUserId
+// output: paymentData, featurePurchased, facebookUserId
 //---------------------------------------------------------------------------------------------------------------------------------
 module.exports.getPaymentInfo = function (data, callback) {
 
-    var fields = "id,actions,items,disputes,request_id";
+    var fields = "id,actions,items,disputes,request_id,user";
 
     var facebookResponse = "";
 
     var url = FACEBOOK_GRAPH_URL + "/" + data.paymentId + "?fields=" + fields + "&access_token=" + generalUtils.settings.server.facebook.appAccessToken;
-    https.get(url, function (res) {
+    var req = https.get(url, function (res) {
 
         res.setEncoding("utf8");
 
@@ -171,25 +173,25 @@ module.exports.getPaymentInfo = function (data, callback) {
             //request_id in the format: "featureName|facebookUserId|timeStamp"
             var requestIdParts = facebookData.request_id.split("|");
 
-            if (data.signed_request) {
-                var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.signed_request);
+            if (data.purchaseData && data.purchaseData.signed_request) {
+                var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.purchaseData.signed_request);
                 if (verifier.verify === false) {
                     callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
                     return;
                 }
 
-                if (verifier.data.user_id != requestIdParts[1]) {
+                if (verifier.data.request_id !== facebookData.request_id) {
                     callback(new exceptions.ServerException("Error validating payment, payment belongs to someone else", {
-                        "facebookResponse": facebookResponse,
-                        "actualFacebookId": verifier.data.user_id,
+                        "facebookData": facebookData,
+                        "verifier.data": verifier.data,
                         "paymentFacebookId": requestIdParts[1]
                     }));
                     return;
                 }
             }
 
-            data.purchaseData = facebookData;
-            data.purchaseData.clientTimestamp = parseInt(requestIdParts[2], 10);
+            data.paymentData = facebookData;
+            data.paymentData.clientTimestamp = parseInt(requestIdParts[2], 10);
             data.featurePurchased = requestIdParts[0];
             data.facebookUserId = requestIdParts[1];
 
@@ -200,10 +202,10 @@ module.exports.getPaymentInfo = function (data, callback) {
                     if (lastAction.status === "completed") {
                         data.proceedPayment = true;
                     }
-                    else {
-                        //refund, chargeback, decline
-                        data.revokeAsset = true;
-                    }
+                }
+                else {
+                    //refund, chargeback, decline
+                    data.revokeAsset = true;
                 }
             }
 
@@ -224,13 +226,16 @@ module.exports.getPaymentInfo = function (data, callback) {
 
             callback(null, data);
         });
+    });
 
-    }).on('error', function (error) {
+    req.on("error", function (error) {
         callback(new exceptions.ServerException("Error recevied from facebook while retrieving payment id", {
             "paymentId": data.paymentId,
             "error": error
         }));
     });
+
+    req.end();
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -266,7 +271,7 @@ module.exports.denyDispute = function (data, callback) {
         }
     };
 
-    https.request(options, function (res) {
+    var req = https.request(options, function (res) {
 
         res.setEncoding("utf8");
 
@@ -286,11 +291,16 @@ module.exports.denyDispute = function (data, callback) {
 
             callback(null, data);
         });
+    });
 
-    }).on('error', function (error) {
+    req.on("error", function (error) {
         callback(new exceptions.ServerException("Error recevied from facebook while disputing payment id", {
             "paymentId": data.paymentId,
             "error": error
         }));
     });
+
+    req.write(postData);
+
+    req.end();
 };

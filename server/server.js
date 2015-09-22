@@ -15,7 +15,8 @@ var dalDb = require("./dal/dalDb");
 var http = require("http");
 var https = require("https");
 var fs = require("fs");
-var facebookCanvas = require("./business_logic/facebookCanvas")
+var facebookCanvas = require("./api/facebookCanvas");
+var paypalIPN = require("./api/paypalPN");
 
 var domain = require("domain");
 
@@ -89,7 +90,7 @@ dalDb.loadSettings(function (err, data) {
     app.post("/contests/remove", isAuthenticated, contests.removeContest);
     app.post("/contests/get", isAuthenticated, contests.getContests);
     app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
-    app.post("/payments/fulfill", isAuthenticated, payments.fulfill);
+    app.post("/payments/process", isAuthenticated, payments.processPayment);
 
     //----------------------------------------------------
     // API's that do NOT require authentication
@@ -97,11 +98,12 @@ dalDb.loadSettings(function (err, data) {
     app.post("/user/facebookConnect", credentials.facebookConnect);
     app.post("/info/geo", generalUtils.geoInfo);
     app.post("/info/settings", generalUtils.getSettings);
-    app.post("/fb/canvas", facebookCanvas.canvas);
-    app.get("/fb/payments/:productId/:language",facebookCanvas.getProductDetails);
-    app.post("/fb/payments/dynamicPricing",facebookCanvas.dynamicPricing);
-    app.get("/fb/payments/flow",facebookCanvas.getChallenge);
-    app.post("/fb/payments/flow",facebookCanvas.paymentFlow);
+    app.post("/facebook/canvas", facebookCanvas.canvas);
+    app.get("/facebook/product/:productId/:language",facebookCanvas.getProductDetails);
+    app.post("/facebook/dynamicPricing",facebookCanvas.dynamicPricing);
+    app.get("/facebook/ipn",facebookCanvas.getChallenge);
+    app.post("/facebook/ipn",facebookCanvas.ipn);
+    app.post("/paypal/ipn",paypalIPN.ipn);
 
     //----------------------------------------------------
     // Start server listener

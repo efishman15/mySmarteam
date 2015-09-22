@@ -2,12 +2,12 @@ var async = require('async');
 var dalFacebook = require("../dal/dalFacebook");
 var exceptions = require("../utils/exceptions");
 var generalUtils = require("../utils/general");
-var sessionUtils = require("./session");
+var sessionUtils = require("./../business_logic/session");
 var dalDb = require("../dal/dalDb");
-var paymentUtils = require("./payments");
+var paymentUtils = require("./../business_logic/payments");
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-// fbcanvas
+// canvas
 //
 // Comming from facebook canvas post
 //
@@ -149,11 +149,12 @@ module.exports.dynamicPricing = function (req, res, next) {
     });
 }
 
-//----------------------------------------------------
-// paymentFlow
+//---------------------------------------------------------
+// ipn
 //
-//----------------------------------------------------
-module.exports.paymentFlow = function (req, res, next) {
+// Request coming from facebook servers about ta payment
+//---------------------------------------------------------
+module.exports.ipn = function (req, res, next) {
 
     var data = req.body;
     data.method = "facebook";

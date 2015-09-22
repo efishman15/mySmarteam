@@ -341,7 +341,6 @@ angular.module('whoSmarter.services', [])
                                     $rootScope.settings = data;
 
                                     if (!resolveData) {
-                                        console.log(source + ":getLoginStatus");
                                         service.getLoginStatus(resolveQueue, resolveQueue);
                                     }
                                     else {
@@ -1115,7 +1114,7 @@ angular.module('whoSmarter.services', [])
 
                 case "facebook" :
                     method = "facebook";
-                    var productUrl = ApiService.endPoint + "fb/payments/" + feature.purchaseData.productId + "/" + $rootScope.session.settings.language;
+                    var productUrl = ApiService.endPoint + "facebook/product/" + feature.purchaseData.productId + "/" + $rootScope.session.settings.language;
                     var facebookDialogData = {
                         "method": "pay",
                         "action": "purchaseitem",
@@ -1137,8 +1136,8 @@ angular.module('whoSmarter.services', [])
             }
         }
 
-        service.fulfill = function (transactionData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "fulfill", transactionData, callbackOnSuccess, callbackOnError, config);
+        service.processPayment = function (transactionData, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "process", transactionData, callbackOnSuccess, callbackOnError, config);
         }
 
         return service;

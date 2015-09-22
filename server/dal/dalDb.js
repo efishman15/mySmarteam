@@ -255,7 +255,7 @@ function retrieveSession(data, callback) {
     sessionsCollection.findOne(
         criteria, {},
         function (err, session) {
-            if (!data.sessionOptional &&  (err || !session)) {
+            if (!data.sessionOptional && (err || !session)) {
 
                 closeDb(data);
 
@@ -319,24 +319,38 @@ module.exports.storeSession = function (data, callback) {
 //---------------------------------------------------------------------
 module.exports.setUser = function (data, callback) {
 
+    if (!data.setData && !data.unsetData) {
+        callback(new exceptions.ServerException("Cannot updating user, either setData or unsetData must be supplied", {
+            "setUserWhereClause": data.setUserWhereClause,
+            "dbError": err
+        }, "error"));
+    }
+
     var usersCollection = data.DbHelper.getCollection('Users');
 
     if (!data.setUserWhereClause) {
-        data.setUserWhereClause = {"_id" : ObjectId(data.session.userId)};
+        data.setUserWhereClause = {"_id": ObjectId(data.session.userId)};
     }
 
-    usersCollection.findAndModify(data.setUserWhereClause, {},
-        {
-            $set: data.setData
-        }, {w: 1}, function (err, user) {
+    var updateClause = {};
+    if (data.setData) {
+        updateClause = {$set: data.setData};
+    }
+    if (data.unsetData) {
+        updateClause = {$unset: data.unsetData};
+    }
 
-            if (err) {
+    usersCollection.updateOne(data.setUserWhereClause, updateClause,
+        function (err, results) {
+
+            if (err || results.nModified < 1) {
 
                 closeDb(data);
 
                 callback(new exceptions.ServerException("Error updating user", {
-                    "userId": ObjectId(data.session.userId),
+                    "setUserWhereClause": data.setUserWhereClause,
                     "setData": data.setData,
+                    "unsetData": data.unsetData,
                     "dbError": err
                 }, "error"));
 
@@ -493,7 +507,11 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 data.closeConnection = false;
 
                 //Do not close connection on an inner logAction
-                data.logAction = {"action" : "login", "userId" : data.session.userId, "sessionId" : data.session.userToken};
+                data.logAction = {
+                    "action": "login",
+                    "userId": data.session.userId,
+                    "sessionId": data.session.userToken
+                };
                 logAction(data, function (err, data) {
 
                     if (err) {

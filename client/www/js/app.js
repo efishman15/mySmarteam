@@ -236,6 +236,17 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 params: {mode: null, contest: null}
             })
 
+            .state('payPalPaymentSuccess', {
+                url: "/payPalPaymentSuccess?token&PayerID",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "payPalPaymentSuccess");
+                    }
+                },
+                controller: "PayPalPaymentSuccessCtrl",
+                params: {token: null, PayerID: null}
+            })
+
             .state('payment', {
                 url: "/payment?purchaseMethod&purchaseSuccess&token&PayerID",
                 resolve: {

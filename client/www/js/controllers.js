@@ -821,12 +821,12 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                         if (result.data.status === "completed") {
                             var transactionData = {"method": "facebook"};
                             transactionData.purchaseData = result.data;
-                            PaymentService.fulfill(transactionData, function (data) {
+                            PaymentService.processPayment(transactionData, function (data) {
                                 //Update local assets
                                 $rootScope.session.features = data.features
                                 $rootScope.gotoView("payment", false, {
                                     "purchaseMethod": "facebook",
-                                    "featurePurchased" : data.featurePurchased,
+                                    "featurePurchased": data.featurePurchased,
                                     "nextView": data.nextView
                                 });
                                 $scope.buyInProgress = false;
@@ -840,29 +840,36 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         };
     })
 
+    .controller("PayPalPaymentSuccessCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, PopupService) {
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+
+            var transactionData = {"method": "paypal"};
+            transactionData.purchaseData = {};
+            transactionData.purchaseData.purchaseToken = $stateParams.token;
+            transactionData.purchaseData.payerId = $stateParams.PayerID;
+
+            PaymentService.processPaymentl(transactionData, function (data) {
+                $rootScope.session.features = data.features
+                $rootScope.gotoView("payment", false, {
+                    "featurePurchased": data.featurePurchased,
+                    "nextView": data.nextView
+                });
+            },
+            function(status, error, headers) {
+                PopupService.alert(error).then(function() {
+                    $rootScope.gotoRootView();
+                });
+            });
+        });
+    })
+
     .controller("PaymentCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, $translate) {
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
-            switch ($stateParams.purchaseMethod) {
-                case "paypal":
-                    var transactionData = {"method": $stateParams.purchaseMethod};
-                    transactionData.purchaseData = {};
-                    transactionData.purchaseData.purchaseToken = $stateParams.token;
-                    transactionData.purchaseData.payerId = $stateParams.PayerID;
-
-                    PaymentService.fulfill(transactionData, function (data) {
-                        //Update local assets
-                        $rootScope.session.features = data.features;
-                        $scope.unlockText = $translate.instant($rootScope.session.features[data.featurePurchased].unlockText);
-                        $scope.nextView = $stateParams.nextView;
-                    });
-                    break;
-                case "facebook":
-                    $scope.nextView = $stateParams.nextView;
-                    $scope.unlockText = $translate.instant($rootScope.session.features[$stateParams.featurePurchased].unlockText);
-                    break;
-            }
+            $scope.nextView = $stateParams.nextView;
+            $scope.unlockText = $translate.instant($rootScope.session.features[$stateParams.featurePurchased].unlockText);
 
         });
 
