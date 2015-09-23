@@ -69,7 +69,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         $scope.$watch(function () {
             return $ionicSideMenuDelegate.isOpen();
         }, function (value) {
-            if (value === false) {
+            if (!value) {
                 $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
             }
             else {
@@ -196,7 +196,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         $scope.infiniteLoadMoreContests = function () {
             $timeout(function () {
-                if (shouldTriggerScrollInfiniteRealFunction == false) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
+                if (!shouldTriggerScrollInfiniteRealFunction) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
                     shouldTriggerScrollInfiniteRealFunction = true; // set the boolean to true so that the real load function is called next time infinite scrolling triggers
                     $scope.$broadcast('scroll.infiniteScrollComplete');
                 }
@@ -247,7 +247,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
                 $scope.$broadcast('scroll.infiniteScrollComplete');
 
-                if (fullRefresh == true) {
+                if (fullRefresh) {
                     $scope.$broadcast('scroll.refreshComplete');
                 }
             }, null, config);
@@ -312,13 +312,13 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 XpService.addXp($scope.quiz.xpProgress, $scope.quizProceed);
             }
 
-            if ((!$scope.quiz.xpProgress || !($scope.quiz.xpProgress.rankChanged === true)) && $scope.correctButtonId == button.id) {
+            if ((!$scope.quiz.xpProgress || !($scope.quiz.xpProgress.rankChanged)) && $scope.correctButtonId == button.id) {
                 $scope.quizProceed();
             }
         };
 
         $scope.quizProceed = function () {
-            if ($scope.quiz.finished == true) {
+            if ($scope.quiz.finished) {
                 $rootScope.session.score += $scope.quiz.results.score;
                 $rootScope.gotoView("app.quizResult", true, {results: $scope.quiz.results}, false);
             }
@@ -369,7 +369,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                         $scope.quiz.xpProgress = null;
                     }
 
-                    if (data.question.correct == true) {
+                    if (data.question.correct) {
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
                         SoundService.play("audio/click_ok");
@@ -570,7 +570,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             callback: endDateCallback
         };
 
-        if (!$rootScope.session.isAdmin || !$rootScope.session.isAdmin === false) {
+        if (!$rootScope.session.isAdmin) {
             //Only Admins are allowed to set past dates
             $scope.contestStartDatePicker.from = startDate;
             $scope.contestEndDatePicker.from = startDate;
@@ -680,7 +680,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         };
 
         $scope.getArrowDirection = function (stateClosed) {
-            if (stateClosed === true) {
+            if (stateClosed) {
                 if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
                     return "►";
                 }
@@ -802,7 +802,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         };
 
         $scope.hideRemoveContest = function () {
-            if ($stateParams.mode == 'add' || !$rootScope.session.isAdmin || $rootScope.session.isAdmin === false) {
+            if ($stateParams.mode == 'add' || !$rootScope.session.isAdmin) {
                 return true;
             }
             else {
@@ -835,6 +835,10 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                                 $scope.buyInProgress = false;
                             });
                         }
+                        else if (result.data.status === "initiated") {
+                            //Payment might come later from server
+                            PopupService.alert({"type": "SERVER_ERROR_PURCHASE_IN_PROGRESS"});
+                        }
                         break;
                 }
             });
@@ -850,18 +854,18 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             transactionData.purchaseData.purchaseToken = $stateParams.token;
             transactionData.purchaseData.payerId = $stateParams.PayerID;
 
-            PaymentService.processPaymentl(transactionData, function (data) {
-                $rootScope.session.features = data.features
-                $rootScope.gotoView("payment", false, {
-                    "featurePurchased": data.featurePurchased,
-                    "nextView": data.nextView
+            PaymentService.processPayment(transactionData, function (data) {
+                    $rootScope.session.features = data.features
+                    $rootScope.gotoView("payment", false, {
+                        "featurePurchased": data.featurePurchased,
+                        "nextView": data.nextView
+                    });
+                },
+                function (status, error, headers) {
+                    PopupService.alert(error).then(function () {
+                        $rootScope.gotoRootView();
+                    });
                 });
-            },
-            function(status, error, headers) {
-                PopupService.alert(error).then(function() {
-                    $rootScope.gotoRootView();
-                });
-            });
         });
     })
 

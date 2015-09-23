@@ -23,7 +23,7 @@ var logger = require("../utils/logger");
 module.exports.canvas = function (req, res, next) {
     var data = req.body;
     var verifier = new dalFacebook.SignedRequest(generalUtils.settings.server.facebook.secretKey, data.signed_request);
-    if (verifier.verify === false) {
+    if (!verifier.verify) {
         new exceptions.ServerResponseException(res, "Invalid signed request received from facebook", {"facebookData": data});
         return;
     }
@@ -101,7 +101,7 @@ module.exports.dynamicPricing = function (req, res, next) {
 
     var data = req.body;
     var verifier = new dalFacebook.SignedRequest(generalUtils.settings.server.facebook.secretKey, data.signed_request);
-    if (verifier.verify === false) {
+    if (!verifier.verify) {
         new exceptions.ServerResponseException(res, "Invalid signed request received from facebook", {"facebookData": data}, "warn", 403);
         return;
     }
@@ -167,13 +167,17 @@ module.exports.ipn = function (req, res, next) {
     data.sessionOptional = true;
     data.paymentId = data.entry[0].id; //Coming from facebook server
 
-
     paymentUtils.innerProcessPayment(data, function (err, response) {
         if (!err) {
             res.send(200);
         }
+        else if (err.message === "DuplicatePurchase") {
+            logger.facebookIPN.info(data, "Duplicate purchase - already credited online");
+            res.send(200);
+        }
         else {
-            res.send(err.httpStatus, err);
+            logger.facebookIPN.info(err, "Error during processing facebook ipn message");
+            res.send(500);
         }
     });
 }

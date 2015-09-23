@@ -37,7 +37,7 @@ DbHelper.prototype.close = function () {
 // checkToCloseDb
 //---------------------------------------------------------------------
 function checkToCloseDb(data) {
-    if (data.closeConnection && data.closeConnection == true) {
+    if (data.closeConnection && data.closeConnection) {
         closeDb(data);
     }
 }
@@ -230,6 +230,9 @@ function retrieveSession(data, callback) {
     var criteria;
     if (data.token) {
         criteria = {"userToken": data.token}
+    }
+    else if (data.userId) {
+        criteria = {"userId": ObjectId(data.userId)}
     }
     else if (data.facebookUserId) {
         criteria = {"facebookUserId": data.facebookUserId}
@@ -1058,7 +1061,7 @@ function updateQuestionStatistics(data, callback) {
 
         var correctAnswers = question.correctAnswers;
         var wrongAnswers = question.wrongAnswers;
-        if (data.clientResponse.question.correct === true) {
+        if (data.clientResponse.question.correct) {
             correctAnswers++;
         }
         else {
@@ -1104,6 +1107,18 @@ function updateQuestionStatistics(data, callback) {
 //--------------------------------------------------------------------------------------------------------------
 module.exports.insertPurchase = insertPurchase;
 function insertPurchase(data, callback) {
+
+    if (!data.DbHelper) {
+
+        connect(function (err, connectData) {
+
+            data.DbHelper = connectData.DbHelper;
+
+            insertPurchase(data, callback);
+        });
+        return;
+    }
+
     var purchasesCollection = data.DbHelper.getCollection("Purchases");
 
     data.newPurchase.created = (new Date()).getTime();
@@ -1111,13 +1126,14 @@ function insertPurchase(data, callback) {
     purchasesCollection.insert(data.newPurchase
         , {}, function (err, result) {
             if (err) {
-                if (err.code != 11000) {
+                if (err.code !== 11000) {
+
+                    closeDb(data);
+
                     callback(new exceptions.ServerException("Error inserting purchase record", {
                         "purchaseRecord": data.newPurchase,
                         "dbError": err
                     }, "error"));
-
-                    closeDb(data);
 
                     return;
                 }

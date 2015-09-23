@@ -25,7 +25,7 @@ module.exports.getUserInfo = function (data, callback) {
     if (data.user.thirdParty.signedRequest) {
         //Coming from canvas
         var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.user.thirdParty.signedRequest);
-        if (verifier.verify === false) {
+        if (!verifier.verify) {
             callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
             return;
         }
@@ -175,7 +175,7 @@ module.exports.getPaymentInfo = function (data, callback) {
 
             if (data.purchaseData && data.purchaseData.signed_request) {
                 var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.purchaseData.signed_request);
-                if (verifier.verify === false) {
+                if (!verifier.verify) {
                     callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
                     return;
                 }

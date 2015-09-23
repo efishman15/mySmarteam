@@ -218,7 +218,7 @@ angular.module('whoSmarter.services', [])
 
                         //Define core events and functions to be used in the app
                         $rootScope.$on("whoSmarter-httpRequest", function (error, config) {
-                            if (!config || config.blockUserInterface !== false) {
+                            if (!config || config.blockUserInterface) {
                                 var direction;
                                 if ($rootScope.settings) {
                                     direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
@@ -237,7 +237,7 @@ angular.module('whoSmarter.services', [])
                         });
 
                         $rootScope.$on("whoSmarter-httpResponse", function (error, response) {
-                            if (!response.config || response.config.blockUserInterface !== false) {
+                            if (!response.config || response.config.blockUserInterface) {
                                 $ionicLoading.hide();
                             }
                             if (response.data.serverPopup) {
@@ -255,7 +255,7 @@ angular.module('whoSmarter.services', [])
                         });
 
                         $rootScope.$on("whoSmarter-httpResponseError", function (error, rejection) {
-                            if (!rejection.config || rejection.config.blockUserInterface !== false) {
+                            if (!rejection.config || rejection.config.blockUserInterface) {
                                 $ionicLoading.hide();
                             }
                             if (rejection.data instanceof Object && rejection.data.type && rejection.status != 401) {
@@ -302,13 +302,13 @@ angular.module('whoSmarter.services', [])
                                 params = {};
                             }
 
-                            if (isRootView === true) {
+                            if (isRootView) {
 
                                 if (clearHistory == null) {
                                     clearHistory = true;
                                 }
 
-                                if (clearHistory == true) {
+                                if (clearHistory) {
                                     $ionicHistory.clearHistory();
                                 }
                                 $ionicHistory.nextViewOptions({
@@ -837,7 +837,7 @@ angular.module('whoSmarter.services', [])
 
         //Play
         service.play = function (sound) {
-            if (!$rootScope.session.settings.sound || !$rootScope.session.settings.sound === false) {
+            if (!$rootScope.session.settings.sound) {
                 return;
             }
 
@@ -913,7 +913,7 @@ angular.module('whoSmarter.services', [])
                     });
                 },
                 "annotationClick": function (eventObj, dataObj) {
-                    if ($rootScope.session.isAdmin === true) {
+                    if ($rootScope.session.isAdmin) {
                         $rootScope.gotoView("contest", false, {
                             mode: "edit",
                             contest: eventObj.sender.args.dataSource.contest
@@ -921,7 +921,7 @@ angular.module('whoSmarter.services', [])
                     }
                 },
                 "drawComplete": function (eventObj, dataObj) {
-                    if (scope.teamChanged == true) {
+                    if (scope.teamChanged) {
                         scope.teamChanged = false;
 
                         //Let the chart animation finish
@@ -1001,7 +1001,7 @@ angular.module('whoSmarter.services', [])
 
             //Rank Text
             var font = "";
-            if ($rootScope.settings.xpControl.font.bold === true) {
+            if ($rootScope.settings.xpControl.font.bold) {
                 font += "bold ";
             }
 
@@ -1056,7 +1056,7 @@ angular.module('whoSmarter.services', [])
             //Zero the addition
             $rootScope.session.xpProgress.addition = 0;
 
-            if (xpProgress.rankChanged === true) {
+            if (xpProgress.rankChanged) {
                 $rootScope.session.rank = xpProgress.rank;
                 service.initXp();
                 $rootScope.$broadcast("whoSmarter-rankChanged", {
@@ -1121,7 +1121,7 @@ angular.module('whoSmarter.services', [])
                         "product": productUrl,
                         "request_id" : feature.name + "|" + $rootScope.session.thirdParty.id + "|" + (new Date()).getTime()
                     };
-                    if (isMobile === true && $rootScope.session.features[feature.name].purchaseData.mobilePricepointId) {
+                    if (isMobile && $rootScope.session.features[feature.name].purchaseData.mobilePricepointId) {
                         facebookDialogData.pricepoint_id = $rootScope.session.features[feature.name].purchaseData.mobilePricepointId;
                     }
 

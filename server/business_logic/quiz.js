@@ -125,7 +125,7 @@ module.exports.start = function (req, res, next) {
 
         //Check to join contest team because of switch teams
         function (data, callback) {
-            if (data.joinTeam && data.joinTeam === true) {
+            if (data.joinTeam && data.joinTeam) {
                 contestsBusinessLogic.joinContestTeam(data, callback);
             }
             else {
@@ -231,7 +231,7 @@ module.exports.answer = function (req, res, next) {
             else {
                 data.clientResponse.question.correct = false;
                 for (i = 0; i < answers.length; i++) {
-                    if (answers[i].correct && answers[i].correct == true) {
+                    if (answers[i].correct && answers[i].correct) {
                         data.clientResponse.question.correctAnswerId = i + 1;
                         break;
                     }
@@ -251,18 +251,18 @@ module.exports.answer = function (req, res, next) {
                 data.session.score += data.session.quiz.serverData.score;
                 store = true;
             }
-            else if (data.clientResponse.question.correct == true) {
+            else if (data.clientResponse.question.correct) {
                 //store temporary score of quiz
                 store = true;
             }
 
-            if (data.clientResponse.xpProgress && data.clientResponse.xpProgress.rankChanged === true) {
+            if (data.clientResponse.xpProgress && data.clientResponse.xpProgress.rankChanged) {
                 store = true;
                 data.session.features = sessionUtils.computeFeatures(data.session);
                 data.clientResponse.features = data.session.features;
             }
 
-            if (store == true) {
+            if (store) {
                 if (data.session.quiz.serverData.score == 100) {
                     addXp(data, "quizFullScore");
                 }

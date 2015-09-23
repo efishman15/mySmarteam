@@ -10,7 +10,7 @@
     </ion-nav-bar>
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
-        <div class="padding" ng-show="$root.session.features.newContest.locked">
+        <div class="padding" ng-if="$root.session.features.newContest.locked">
             <span class="featureLockedText">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.session.features.newContest.unlockRank} }}</span>
             <button class="button button-full button-small button-3d button-3d-balanced"
                     ng-click="buyNewContestUnlockKey(false)" ng-disabled="buyInProgress">
@@ -20,7 +20,7 @@
                 $root.session.features.newContest.purchaseData.currencySymbol} }}
             </button>
             <button class="button button-full button-small button-3d button-3d-balanced"
-                    ng-show="$root.platform==='facebook' && $root.session.features.newContest.purchaseData.mobilePricepointId"
+                    ng-if="$root.platform==='facebook' && $root.session.features.newContest.purchaseData.mobilePricepointId"
                     ng-click="buyNewContestUnlockKey(true)" ng-disabled="buyInProgress">
                 {{'UNLOCK_FEATURE_MOBILE' |
                 translate:{cost :
@@ -91,11 +91,11 @@
                 </div>
             </div>
 
-            <div class="padding" ng-hide="!$root.session.isAdmin || $root.session.isAdmin == false">
+            <div class="padding" ng-if="$root.session.isAdmin">
                 <span class="pointer" ng-click="toggleAdminInfo()">{{'CONTEST_ADMIN_INFO' | translate}} {{getArrowDirection(!showAdminInfo)}}</span>
 
                 <div ng-hide="showAdminInfo==false && contestForm.team0 && contestForm.team1">
-                    <div class="padding" ng-show="showStartDate===true">
+                    <div class="padding" ng-show="showStartDate">
                         <span>{{'CONTEST_START' | translate}}</span>
 
                         <div ng-if="datePickerLoaded">

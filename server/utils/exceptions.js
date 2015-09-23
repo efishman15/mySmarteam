@@ -37,8 +37,8 @@ module.exports.UnhandledServerException = UnhandledServerException;
 function UnhandledServerException(err) {
 
     var exception = new ServerMessageException("SERVER_ERROR_GENERAL", null, 500);
-    logger.server.fatal(error);
-    logger.console.fatal(error);
+    logger.server.fatal(err);
+    logger.console.fatal(err);
 
     //TODO: send an email to the operator
 
@@ -96,6 +96,23 @@ function ServerResponseException(res, message, additionalInfo, severity, httpSta
     var exception = new ServerException(message, additionalInfo, severity, httpStatus);
 
     res.send(exception.httpStatus, exception);
+
+    return exception;
+}
+
+//-------------------------------------------------------------------------------------
+// Class InternalServerException
+// Exception returned back between 2 server calls
+// Do not write to the log - just construct the exception object
+//-------------------------------------------------------------------------------------
+module.exports.InternalServerException = InternalServerException;
+function InternalServerException(message, additionalInfo) {
+
+    var exception = {"message" : message};
+
+    if (additionalInfo) {
+        exception.additionalInfo = additionalInfo;
+    }
 
     return exception;
 }

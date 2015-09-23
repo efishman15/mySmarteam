@@ -19,14 +19,16 @@ module.exports.ipn = function (req, res, next) {
     var payPalData = req.body;
     var data = {};
 
-    logger.paypalIPN.info(data, "incoming paypal ipn");
+    logger.paypalIPN.info(payPalData, "incoming paypal ipn");
 
     res.send(200); //Instantly respond
 
-    data.cmd = "_notify-validate";
     var postData = querystring.stringify(payPalData);
 
-    var paypalResponse = "";
+    //Very important - paypal needs the exact same query string, and stringify escapes characters...
+    postData = querystring.unescape(postData);
+
+    postData = "cmd=_notify-validate&" + postData;
 
     //Set up the request to paypal
     var options = {
@@ -37,15 +39,16 @@ module.exports.ipn = function (req, res, next) {
         headers: {'Content-Length': postData.length}
     };
 
-    var req = https.request(options, function (res) {
+    var paypalResponse = "";
+    var validateRequest = https.request(options, function (validateResponse) {
 
-        res.setEncoding("utf8");
+        validateResponse.setEncoding("utf8");
 
-        res.on("data", function (chunk) {
+        validateResponse.on("data", function (chunk) {
             paypalResponse += chunk;
         });
 
-        res.on("end", function () {
+        validateResponse.on("end", function () {
 
             if (paypalResponse === "VERIFIED") {
                 logger.paypalIPN.info(null, "ipn verified");
@@ -57,8 +60,11 @@ module.exports.ipn = function (req, res, next) {
 
                 paymentUtils.innerProcessPayment(data, function (err, response) {
                     if (err) {
-                        logger.paypalIPN.error(err, "error during processing paypal ipn");
+                        logger.paypalIPN.error(err, "Error in innerProcessPayment");
                     }
+
+                    res.end();
+
                 });
             }
             else {
@@ -67,14 +73,14 @@ module.exports.ipn = function (req, res, next) {
         });
     });
 
-    req.on('error', function (error) {
+    validateRequest.on('error', function (error) {
         callback(new exceptions.ServerException("Error recevied from paypal while processing ipn", {
             "data": data,
             "error": error
         }));
     });
 
-    req.write(postData);
+    validateRequest.write(postData);
 
-    req.end();
+    validateRequest.end();
 }

@@ -190,7 +190,7 @@ module.exports.computeFeatures = function (userOrSession) {
 
             switch (property) {
                 case "newContest":
-                    features[property].locked = !(userOrSession.isAdmin === true) &&
+                    features[property].locked = !(userOrSession.isAdmin) &&
                         userOrSession.rank < serverFeature.unlockRank &&
                         (!userOrSession.assets || !userOrSession.assets[property])
                     break;

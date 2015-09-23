@@ -22,7 +22,7 @@ function validateContestData(data, callback) {
         return;
     }
 
-    if (data.mode == "add" && data.session.features.newContest.locked === true) {
+    if (data.mode == "add" && data.session.features.newContest.locked) {
         callback(new exceptions.ServerException("Attempt to create a new contest without having an eligable rank or feature asset",{"session" : data.session, "contest" : data.contest}));
         return;
     }
@@ -54,7 +54,7 @@ function validateContestData(data, callback) {
 
 
     if ((data.contest.teams[0].score || data.contest.teams[1].score) &&
-        (!data.session.isAdmin || data.session.isAdmin == false)) {
+        (!data.session.isAdmin)) {
         callback(new exceptions.ServerException("Only admins are allowed to set team scores"));
         return;
     }
@@ -83,7 +83,7 @@ function validateContestData(data, callback) {
     }
 
     if (data.contest.manualParticipants) {
-        if (!data.session.isAdmin || data.session.isAdmin == false) {
+        if (!data.session.isAdmin) {
             //Allowed only for admins
             delete data.contest.manualParticipants;
         }
@@ -95,7 +95,7 @@ function validateContestData(data, callback) {
     }
 
     if (data.contest.manualRating) {
-        if (!data.session.isAdmin || data.session.isAdmin == false) {
+        if (!data.session.isAdmin) {
             //Allowed only for admins
             delete data.contest.manualRating;
         }
@@ -133,7 +133,7 @@ function prepareContestForClient(contest, myTeamId, addLastPlayedStamp) {
         contest.status = "running";
     }
 
-    if (addLastPlayedStamp == true) {
+    if (addLastPlayedStamp) {
         contest.lastPlayed = now;
     }
 
@@ -204,7 +204,7 @@ function joinContestTeam(data, callback) {
     data.setData = {};
 
     //Increment participants only if I did not join this contest yet
-    if (joinToContestObject(data.contest, data.session.userId, data.teamId) === true) {
+    if (joinToContestObject(data.contest, data.session.userId, data.teamId)) {
         data.setData.participants = data.contest.participants;
         data.setData.lastParticipantJoinDate = (new Date()).getTime();
     }
@@ -329,7 +329,7 @@ module.exports.removeContest = function (req, res, next) {
 
         //Check that only admins are allowed to remove a contest
         function (data, callback) {
-            if (!data.session.isAdmin || data.session.isAdmin == false) {
+            if (!data.session.isAdmin) {
                 callback(new exceptions.ServerException("Removing contest is allowed only for administrators", data));
                 return;
             }
