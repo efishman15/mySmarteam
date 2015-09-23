@@ -171,7 +171,7 @@ function loadSettings(callback) {
             callback(null, data);
         })
     })
-}
+};
 
 //---------------------------------------------------------------------
 // getTopic
@@ -612,7 +612,7 @@ function logAction(data, callback) {
         , {}, function (err, actionRecord) {
             if (err) {
 
-                checkToCloseDb(data);
+                closeDb(data);
 
                 callback(new exceptions.ServerException("Error inserting record to log", {
                     "action": data.logAction,
@@ -1090,5 +1090,44 @@ function updateQuestionStatistics(data, callback) {
             });
 
     })
+}
 
+//--------------------------------------------------------------------------------------------------------------
+// insertPurchase
+//
+// Inserts a new purchase record - duplicates are catched and switches data.duplicatePurchase to true
+//
+// data:
+// -----
+// input: DbHelper, newPurchase
+// output: possibly duplicatePurchase=true
+//--------------------------------------------------------------------------------------------------------------
+module.exports.insertPurchase = insertPurchase;
+function insertPurchase(data, callback) {
+    var purchasesCollection = data.DbHelper.getCollection("Purchases");
+
+    data.newPurchase.created = (new Date()).getTime();
+
+    purchasesCollection.insert(data.newPurchase
+        , {}, function (err, result) {
+            if (err) {
+                if (err.code != 11000) {
+                    callback(new exceptions.ServerException("Error inserting purchase record", {
+                        "purchaseRecord": data.newPurchase,
+                        "dbError": err
+                    }, "error"));
+
+                    closeDb(data);
+
+                    return;
+                }
+                else {
+                    data.duplicatePurchase = true;
+                }
+            }
+
+            checkToCloseDb(data);
+
+            callback(null, data);
+        });
 }

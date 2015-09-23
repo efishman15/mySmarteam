@@ -115,13 +115,13 @@ dalDb.loadSettings(function (err, data) {
     });
 
     var certificate = {
-        key: fs.readFileSync('./whosmarter.com.key'),
-        ca: [fs.readFileSync('./gd_bundle-g2-g1.crt')],
-        cert: fs.readFileSync('./whosmarter.crt')
+        key: fs.readFileSync('./certificates/whosmarter.com.key'),
+        ca: [fs.readFileSync('./certificates/gd_bundle-g2-g1.crt')],
+        cert: fs.readFileSync('./certificates/whosmarter.crt')
     }
 
-    http.createServer(app).listen(7000);
-    https.createServer(certificate, app).listen(8000);
+    http.createServer(app).listen(80);
+    https.createServer(certificate, app).listen(443);
 
     console.log("server up!");
 

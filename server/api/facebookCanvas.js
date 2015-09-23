@@ -5,6 +5,7 @@ var generalUtils = require("../utils/general");
 var sessionUtils = require("./../business_logic/session");
 var dalDb = require("../dal/dalDb");
 var paymentUtils = require("./../business_logic/payments");
+var logger = require("../utils/logger");
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // canvas
@@ -157,10 +158,17 @@ module.exports.dynamicPricing = function (req, res, next) {
 module.exports.ipn = function (req, res, next) {
 
     var data = req.body;
+
+    logger.facebookIPN.info(data, "incoming facebook ipn");
+
     data.method = "facebook";
     data.thirdPartyServerCall = true;
-    console.log("facebook payment flow...data=" + JSON.stringify(data));
-    paymentUtils.fulfillOrder(data, function (err, response) {
+
+    data.sessionOptional = true;
+    data.paymentId = data.entry[0].id; //Coming from facebook server
+
+
+    paymentUtils.innerProcessPayment(data, function (err, response) {
         if (!err) {
             res.send(200);
         }

@@ -198,6 +198,9 @@ module.exports.getPaymentInfo = function (data, callback) {
             if (!data.thirdPartyServerCall || data.entry[0].changed_fields.contains("actions")) {
                 //Coming from facebook server notification
                 var lastAction = facebookData.actions[facebookData.actions.length - 1];
+
+                data.paymentData.status = lastAction.type + "." + lastAction.status;
+
                 if (lastAction.type === "charge") {
                     if (lastAction.status === "completed") {
                         data.proceedPayment = true;
@@ -213,6 +216,9 @@ module.exports.getPaymentInfo = function (data, callback) {
 
                 if (data.entry[0].changed_fields.contains("disputes")) {
                     var lastDispute = facebookData.disputes[facebookData.disputes.length - 1];
+
+                    data.paymentData.status = "dispute." + lastDispute.status;
+
                     if (lastDispute.status === "pending") {
                         data.dispute = true;
                         for (var i = 0; i < facebookData.actions.length; i++) {

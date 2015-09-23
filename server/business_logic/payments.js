@@ -19,6 +19,44 @@ PaypalObject.prototype.params = function () {
     return myParams;
 };
 
+PaypalObject.prototype.getExpressCheckoutDetails = function (token, payer, callback) {
+    var params = this.params();
+    params.TOKEN = token;
+    params.METHOD = 'GetExpressCheckoutDetails';
+
+    this.request(this.url, "POST", params, function (err, data) {
+        if (err) {
+            callback(err, data);
+        }
+        callback(null, data);
+    })
+};
+
+PaypalObject.prototype.doExpressCheckoutPayment = function (token, payer, amount, currency, callback) {
+    var params = this.params();
+    params.PAYMENTACTION = 'Sale';
+    params.PAYERID = payer;
+    params.TOKEN = token;
+    params.AMT = amount;
+    params.CURRENCYCODE = currency;
+    params.METHOD = 'DoExpressCheckoutPayment';
+
+    this.request(this.url, "POST", params, function (err, data) {
+        if (err) {
+            callback(err, data);
+        }
+        callback(null, data);
+    })
+};
+
+
+function prepareClientResponse(data) {
+    data.clientResponse = {};
+    data.clientResponse.features = data.session.features;
+    data.clientResponse.featurePurchased = data.featurePurchased;
+    data.clientResponse.nextView = generalUtils.settings.server.features[data.featurePurchased].view;
+}
+
 //----------------------------------------------------
 // payPalBuy
 //
@@ -55,7 +93,7 @@ module.exports.payPalBuy = function (req, res, next) {
         function (data, callback) {
 
             //Invoice number will contain the product id which will be required later for validation
-            var invoiceNumber = uuid.v1() + "|" + data.feature;
+            var invoiceNumber = uuid.v1() + "_" + data.feature;
 
             var feature = generalUtils.settings.server.features[data.feature];
             if (!feature) {
@@ -114,7 +152,7 @@ module.exports.payPalBuy = function (req, res, next) {
 };
 
 //-----------------------------------------------------------------------------------------------
-// fulfill
+// processPayment
 //
 // data: method (paypal, google, ios, facebook)
 //
@@ -140,26 +178,33 @@ module.exports.processPayment = function (req, res, next) {
     var data = req.body;
     data.token = token;
 
+    data.paymentId = data.purchaseData.payment_id;
+
     innerProcessPayment(data, function (err, data) {
         if (!err) {
-            if (data.clientResponse) {
-                res.json(data.clientResponse);
-            }
-            else {
-                //Coming from server (paypal/facebook) callback
-                res.status(200);
-            }
+            res.json(data.clientResponse);
+        }
+        else if (!data) {
+            res.send(err.httpStatus, err);
         }
         else {
-            res.send(err.httpStatus, err);
+            if (data.newPurchase.status.toLowerCase() === "completed") {
+                //This is an intentional stop - data contains client response
+                //A duplicate purchase which has completed successfully by another thread
+                res.json(data.clientResponse)
+
+            }
+            else {
+                res.send(err.httpStatus, err);
+            }
         }
     });
 }
 
 //-----------------------------------------------------------------------------------------------
-// fulfillOrder
+// innerProcessPayment
 //
-// like fullFill - but can also be called from Paypal IPN or facebook payments callback
+// like processPayment - but can also be called from Paypal IPN or facebook payments callback
 // In this case - can be offline - and session is not required
 //-----------------------------------------------------------------------------------------------
 module.exports.innerProcessPayment = innerProcessPayment;
@@ -169,22 +214,72 @@ function innerProcessPayment(data, callback) {
     var operations = [
 
         function (callback) {
-            if (data.method === "facebook") {
 
-                //Retrieve payment info from facebook
-                data.sessionOptional = true;
+            data.newPurchase = {"method": data.method};
 
-                if (data.purchaseData && data.purchaseData.payment_id) {
-                    data.paymentId = data.purchaseData.payment_id; //Coming from client at the end of a successful purchase
-                }
-                else {
-                    data.paymentId = data.entry[0].id; //Coming from facebook server
-                }
+            switch (data.method) {
+                case "paypal":
+                    if (!data.thirdPartyServerCall) {
+                        //comming from client
+                        paypal.getExpressCheckoutDetails(data.purchaseData.purchaseToken, data.purchaseData.payerId, function (err, paypalData) {
+                            if (err) {
+                                callback(new exceptions.ServerException("Error getting paypal express checkout details", {
+                                    "error": err,
+                                    "purchaseData": data
+                                }, 403));
+                            }
 
-                dalFacebook.getPaymentInfo(data, callback);
-            }
-            else {
-                callback(null, data);
+                            data.paymentData = paypalData;
+
+                            console.log("paypalData=" + JSON.stringify(paypalData));
+
+                            data.newPurchase.transactionId = paypalData.PAYMENTREQUEST_0_TRANSACTIONID;
+                            var serverErrorType;
+                            switch (paypalData.CHECKOUTSTATUS) {
+                                case "PaymentActionNotInitiated":
+                                    data.newPurchase.status = "NotInitiated";
+                                    serverErrorType = "SERVER_ERROR_PURCHASE_FAILED";
+                                    break;
+                                case "PaymentActionFailed":
+                                    data.newPurchase.status = "Failed";
+                                    serverErrorType = "SERVER_ERROR_PURCHASE_FAILED";
+                                    break;
+                                case "PaymentActionInProgress":
+                                    data.newPurchase.status = "InProgress";
+                                    serverErrorType = "SERVER_ERROR_PURCHASE_IN_PROGRESS";
+                                    break;
+                                case "PaymentActionCompleted":
+                                    data.newPurchase.status = "Completed";
+                                    break;
+                            }
+
+                            //invoiceNumber is in the format InvoiceNumner_featureName
+                            data.featurePurchased = data.paymentData.INVNUM.split("_")[1];
+
+                            if (data.newPurchase.status === "Completed") {
+                                dalDb.insertPurchase(data, callback);
+                            }
+                            else {
+                                callback(new exceptions.ServerMessageException(serverErrorType, null, 424));
+                            }
+                        })
+                    }
+                    else {
+                        //Server call
+                        data.newPurchase.transactionId = data.paymentData.txn_id;
+                        data.newPurchase.status = data.paymentData.payment_status;
+                        data.featurePurchased = data.paymentData.invoice.split("_")[1];
+                        dalDb.insertPurchase(data, callback);
+                    }
+                    break;
+
+                case "facebook":
+                    dalFacebook.getPaymentInfo(data, function () {
+                        data.newPurchase.transactionId = data.paymentData.id;
+                        data.newPurchase.status = data.paymentData.status;
+                        dalDb.insertPurchase(data, callback);
+                    });
+                    break;
             }
         },
 
@@ -193,29 +288,39 @@ function innerProcessPayment(data, callback) {
             sessionUtils.getSession(data, callback);
         },
 
+        //check for duplicate purchase (client and server occur at the same time or hacking)
+        function (data, callback) {
+            if (data.duplicatePurchase) {
+                if (!data.thirdPartyServerCall) {
+                    prepareClientResponse(data);
+                }
+                callback(new exceptions.ServerException("Duplicate purchase", data, "info", 424), data);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
         //Validate the payment transaction based on method
         function (data, callback) {
 
             switch (data.method) {
                 case "paypal":
-                    paypal.detail(data.purchaseData.purchaseToken, data.purchaseData.payerId, function (err, payPalData, invoiceNumber, price) {
-                        if (err) {
-                            callback(new exceptions.ServerException("Error verifying paypal transacion", {
-                                "error": err,
-                                "payPalData": payPalData,
-                                "invoiceNumber": invoiceNumber,
-                                "price": price
-                            }, 403));
-                            return;
-                        }
+                    if (!data.thirdPartyServerCall) {
+                        paypal.doExpressCheckoutPayment(data.purchaseData.purchaseToken, data.purchaseData.payerId, data.paymentData.PAYMENTREQUEST_0_AMT, data.paymentData.PAYMENTREQUEST_n_CURRENCYCODE, function (err, resultData, invoiceNumber, price) {
+                            if (err) {
+                                callback(new exceptions.ServerException("Error verifying paypal transacion", {
+                                    "error": err,
+                                    "purchaseData": data.purchaseData,
+                                    "paymentData": data.paymentData
+                                }, 403));
+                                return;
+                            }
 
-                        //invoiceNumber is in the format InvoiceNumner_featureName
-                        var invoiceNumberParts = invoiceNumber.split("|");
-                        data.featurePurchased = invoiceNumberParts[1];
-                        data.paymentData = payPalData;
-                        data.proceedPayment = true;
-                        callback(null, data);
-                    });
+                            data.proceedPayment = true;
+                            callback(null, data);
+                        });
+                    }
                     break;
 
                 case "facebook":
@@ -224,7 +329,7 @@ function innerProcessPayment(data, callback) {
                     if (data.session && data.purchaseData && !data.purchaseData.signed_request && data.paymentData.user && data.paymentData.user.id !== data.session.facebookUserId) {
                         callback(new exceptions.ServerException("Error validating payment, payment belongs to someone else", {
                             "purchaseData": data.purchaseData,
-                            "paymentData" : data.paymentData,
+                            "paymentData": data.paymentData,
                             "actualFacebookId": data.session.facebookUserId
                         }));
                         return;
@@ -262,10 +367,7 @@ function innerProcessPayment(data, callback) {
                 }
 
                 if (!data.thirdPartyServerCall) {
-                    data.clientResponse = {};
-                    data.clientResponse.features = data.session.features;
-                    data.clientResponse.featurePurchased = data.featurePurchased;
-                    data.clientResponse.nextView = generalUtils.settings.server.features[data.featurePurchased].view;
+                    prepareClientResponse(data);
                 }
 
                 dalDb.storeSession(data, callback);

@@ -573,12 +573,12 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         if (!$rootScope.session.isAdmin || !$rootScope.session.isAdmin === false) {
             //Only Admins are allowed to set past dates
             $scope.contestStartDatePicker.from = startDate;
-            $scope.contestStartDatePicker.from = startDate;
+            $scope.contestEndDatePicker.from = startDate;
         }
         else {
             var pastDate = new Date(1970, 0, 1);
             $scope.contestStartDatePicker.from = pastDate;
-            $scope.contestStartDatePicker.from = pastDate;
+            $scope.contestEndDatePicker.from = pastDate;
         }
 
         $scope.contestEndOptions = {
@@ -668,7 +668,8 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
             //Bug - currently not working - issue opened
             $scope.contestStartDatePicker.inputDate = startDate;
-            $scope.contestStartDatePicker.inputDate = endDate;
+            $scope.contestEndDatePicker.inputDate = endDate;
+            $scope.datePickerLoaded = true;
 
         });
 
@@ -878,7 +879,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
         }
     })
 
-    .controller("FBCanvasCtrl", function ($scope, $rootScope, $state, $stateParams, UserService) {
+    .controller("FacebookCanvasCtrl", function ($scope, $rootScope, $state, $stateParams, UserService) {
         $rootScope.gotoRootView();
     })
 

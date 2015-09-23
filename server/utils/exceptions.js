@@ -1,37 +1,4 @@
-var logger = require("bunyan");
-
-var logConsole = logger.createLogger({
-    name: "whoSmarterConsole",
-    streams: [{
-        stream: process.stderr
-        // `type: 'stream'` is implied
-    }]
-});
-
-var logFile = logger.createLogger({
-    name: "whoSmarterLogFile",
-    streams: [{
-        type: 'rotating-file',
-        path: './logs/whoSmarter.log',
-        period: '1d',   // daily rotation
-        count: 30        // keep 3 back copies
-    }],
-    serializers: {
-        req: reqSerializer
-    }
-});
-
-//-------------------------------------------------------------------------------------
-// Private functions
-//-------------------------------------------------------------------------------------
-function reqSerializer(req) {
-    return {
-        method: req.method,
-        url: req.url,
-        headers: req.headers,
-        body: req.body
-    }
-}
+var logger = require("./logger");
 
 //-------------------------------------------------------------------------------------
 // Class ServerMessageException
@@ -70,8 +37,8 @@ module.exports.UnhandledServerException = UnhandledServerException;
 function UnhandledServerException(err) {
 
     var exception = new ServerMessageException("SERVER_ERROR_GENERAL", null, 500);
-    logFile.fatal(err);
-    logConsole.fatal(err);
+    logger.server.fatal(error);
+    logger.console.fatal(error);
 
     //TODO: send an email to the operator
 
@@ -103,16 +70,16 @@ function ServerException(message, additionalInfo, severity, httpStatus) {
 
     switch (severity) {
         case "info":
-            logFile.info(additionalInfo, message);
-            logConsole.info(additionalInfo, message);
+            logger.server.info(additionalInfo, message);
+            logger.console.info(additionalInfo, message);
             break;
         case "warn":
-            logFile.warn(additionalInfo, message);
-            logConsole.info(additionalInfo, message);
+            logger.server.warn(additionalInfo, message);
+            logger.console.info(additionalInfo, message);
             break;
         case "error":
-            logFile.error(additionalInfo, message);
-            logConsole.info(additionalInfo, message);
+            logger.server.error(additionalInfo, message);
+            logger.console.info(additionalInfo, message);
             break;
     }
 

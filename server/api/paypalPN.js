@@ -1,11 +1,10 @@
 var async = require('async');
 var exceptions = require("../utils/exceptions");
-var generalUtils = require("../utils/general");
-var sessionUtils = require("./../business_logic/session");
 var dalDb = require("../dal/dalDb");
+var logger = require("../utils/logger");
 var paymentUtils = require("./../business_logic/payments");
 var https = require('https');
-var qs = require('querystring');
+var querystring = require('querystring');
 
 var SANDBOX_URL = 'www.sandbox.paypal.com';
 var LIVE_URL = 'www.paypal.com';
@@ -17,11 +16,15 @@ var LIVE_URL = 'www.paypal.com';
 //----------------------------------------------------
 module.exports.ipn = function (req, res, next) {
 
-    console.log("incoming paypal ipn...");
-    var data = req.body;
-    data = "cmd=_notify-validate&" + data;
-    console.log("data=" + data);
-    res.send(200);
+    var payPalData = req.body;
+    var data = {};
+
+    logger.paypalIPN.info(data, "incoming paypal ipn");
+
+    res.send(200); //Instantly respond
+
+    data.cmd = "_notify-validate";
+    var postData = querystring.stringify(payPalData);
 
     var paypalResponse = "";
 
@@ -31,7 +34,7 @@ module.exports.ipn = function (req, res, next) {
         port: 443,
         method: "POST",
         path: '/cgi-bin/webscr',
-        headers: {'Content-Length': data.length}
+        headers: {'Content-Length': postData.length}
     };
 
     var req = https.request(options, function (res) {
@@ -44,11 +47,22 @@ module.exports.ipn = function (req, res, next) {
 
         res.on("end", function () {
 
-            if (paypalResponse == "VERIFIED") {
-                console.log("ipn response verified...");
+            if (paypalResponse === "VERIFIED") {
+                logger.paypalIPN.info(null, "ipn verified");
+
+                data.method = "paypal";
+                data.thirdPartyServerCall = true;
+                data.sessionOptional = true;
+                data.paymentData = payPalData;
+
+                paymentUtils.innerProcessPayment(data, function (err, response) {
+                    if (err) {
+                        logger.paypalIPN.error(err, "error during processing paypal ipn");
+                    }
+                });
             }
             else {
-                console.log("ipn response not verified...result=" + paypalResponse);
+                logger.paypalIPN.error(null, "ipn response not verified, result=" + paypalResponse);
             }
         });
     });
@@ -60,8 +74,7 @@ module.exports.ipn = function (req, res, next) {
         }));
     });
 
-    req.write(data);
+    req.write(postData);
 
     req.end();
-
 }
