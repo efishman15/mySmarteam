@@ -293,3 +293,6 @@ label.item.valid-lr {
     padding-top: 4px;
 }
 
+.hide-vertical-scrollbar {
+    overflow-y: hidden;
+}

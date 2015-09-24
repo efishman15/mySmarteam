@@ -271,8 +271,10 @@ function innerProcessPayment(data, callback) {
 
                             data.paymentData = paypalData;
 
-                            data.newPurchase.transactionId = paypalData.TRANSACTIONID;
-                            data.newPurchase.status = paypalData.PAYMENTSTATUS;
+                            data.newPurchase.transactionId = paypalData.PAYMENTINFO_0_TRANSACTIONID;
+                            data.newPurchase.status = paypalData.PAYMENTINFO_0_PAYMENTSTATUS;
+                            data.newPurchase.amount = paypalData.PAYMENTINFO_0_AMT;
+                            data.newPurchase.currency = paypalData.PAYMENTINFO_0_CURRENCYCODE
                             data.newPurchase.extraData = data.paymentData;
 
                             //invoiceNumber is in the format InvoiceNumner_userId_featureName
@@ -287,10 +289,13 @@ function innerProcessPayment(data, callback) {
                         //Server call
                         data.newPurchase.transactionId = data.paymentData.txn_id;
                         data.newPurchase.status = data.paymentData.payment_status;
+                        data.newPurchase.amount = data.paymentData.mc_gross;
+                        data.newPurchase.currency = data.paymentData.mc_currency;
+                        data.newPurchase.extraData = data.paymentData;
 
                         analyzePaypalStatus(data);
 
-                        data.newPurchase.extraData = data.paymentData;
+
                         var invoiceNumberParts = data.paymentData.invoice.split("_");
 
                         data.userId = invoiceNumberParts[1];
@@ -304,6 +309,8 @@ function innerProcessPayment(data, callback) {
                     dalFacebook.getPaymentInfo(data, function () {
                         data.newPurchase.transactionId = data.paymentData.id;
                         data.newPurchase.status = data.paymentData.status;
+                        data.newPurchase.amount = data.paymentData.actions[0].amount;
+                        data.newPurchase.currency = data.paymentData.actions[0].currency;
                         data.newPurchase.extraData = data.paymentData;
                         dalDb.insertPurchase(data, callback);
                     });

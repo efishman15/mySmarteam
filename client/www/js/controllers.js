@@ -6,6 +6,36 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
         });
 
+        $scope.$on("whoSmarter-windowResize", function () {
+            resizeCanvas();
+        });
+
+        function resizeCanvas() {
+
+            var CANVAS_WIDTH = 640;
+
+            if ($rootScope.platform !== "facebook") {
+                return;
+            }
+
+            var containerWidth = window.innerWidth;
+
+            var hostingView = document.getElementById("myHostingView");
+            if (hostingView) {
+
+                if (containerWidth > CANVAS_WIDTH) {
+                    hostingView.style.width = CANVAS_WIDTH + "px";
+                    hostingView.style.marginLeft = (containerWidth - CANVAS_WIDTH) / 2 + "px";
+                }
+                else {
+                    hostingView.style.width = CANVAS_WIDTH + "px";
+                    hostingView.style.marginLeft = "0px";
+                }
+            }
+        }
+
+        resizeCanvas();
+
         //-------------------------------------------------------
         //Loading modal dialogs
         //-------------------------------------------------------

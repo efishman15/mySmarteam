@@ -5,7 +5,7 @@
     <!-- button to show the previous view title only from the ion-nav-title
     <!------------------------------------------------------------------------------>
     <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}"
-                 overflow-scroll="true">
+                 overflow-scroll="true" class="hide-vertical-scrollbar">
         <ion-scroll class="contests-scroll">
             <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
                            pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
