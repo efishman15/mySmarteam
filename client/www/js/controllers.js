@@ -491,7 +491,9 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
-            $scope.languagePopover.remove();
+            if ($scope.languagePopover) {
+                $scope.languagePopover.remove();
+            }
         });
 
         $scope.$on('$ionicView.beforeLeave', function () {
@@ -609,7 +611,9 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
-            $scope.contestEndsInPopover.remove();
+            if ($scope.contestEndsInPopover) {
+                $scope.contestEndsInPopover.remove();
+            }
         });
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {

@@ -217,9 +217,9 @@ label.item.valid-lr {
     -o-transition: all .1s ease;
     -ms-transition: all .1s ease;
     transition: all .1s ease;
-    font-family: Arial;
     color: #ffffff !important;
     font-size: 14px;
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
 }
 
 .button-3d:hover {
@@ -229,9 +229,11 @@ label.item.valid-lr {
     background: -ms-linear-gradient(top, #468CCF, #63B8EE);
     background: -webkit-gradient(linear, left top, left bottom, from(#468CCF), to(#63B8EE));
     background: -moz-linear-gradient(top, #468CCF, #63B8EE);
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
 }
 
 .button-3d-assertive {
+    color: #FFFFFF !important;
     -webkit-box-shadow: 1px 1px 1px #BEE2F9;
     -moz-box-shadow: 1px 1px 1px #BEE2F9;
     background: #EF473A;
@@ -239,45 +241,12 @@ label.item.valid-lr {
     background: -ms-linear-gradient(top, #EF473A, #A33028);
     background: -webkit-gradient(linear, left top, left bottom, from(#EF473A), to(#A33028));
     background: -moz-linear-gradient(top, #EF473A, #A33028);
-}
-
-.button-3d-positive {
-    color: #000000 !important;
-    box-shadow: 1px 1px 1px #BEE2F9;
-    -webkit-box-shadow: 1px 1px 1px #BEE2F9;
-    -moz-box-shadow: 1px 1px 1px #BEE2F9;
-    padding: 6px 5px !important;
-    border: 1px solid #3866A3;
-    background: #EF473A;
-    background: linear-gradient(top, #F5EE87, #C7C16D);
-    background: -ms-linear-gradient(top, #F5EE87, #C7C16D);
-    background: -webkit-gradient(linear, left top, left bottom, from(#F5EE87), to(#C7C16D));
-    background: -moz-linear-gradient(top, #F5EE87, #C7C16D);
-}
-
-.button-3d-calm {
-    box-shadow: 1px 1px 1px #BEE2F9;
-    -webkit-box-shadow: 1px 1px 1px #BEE2F9;
-    -moz-box-shadow: 1px 1px 1px #BEE2F9;
-    background: #EF473A;
-    background: linear-gradient(top, #878787, #4F4F4F);
-    background: -ms-linear-gradient(top, #878787, #4F4F4F);
-    background: -webkit-gradient(linear, left top, left bottom, from(#878787), to(#4F4F4F));
-    background: -moz-linear-gradient(top, #878787, #4F4F4F);
-}
-
-.button-3d-normal {
-    box-shadow: 1px 1px 1px #BEE2F9;
-    -webkit-box-shadow: 1px 1px 1px #BEE2F9;
-    -moz-box-shadow: 1px 1px 1px #BEE2F9;
-    background: #EF473A;
-    background: linear-gradient(top, #C4C4C4, #878787);
-    background: -ms-linear-gradient(top, #C4C4C4, #878787);
-    background: -webkit-gradient(linear, left top, left bottom, from(#C4C4C4), to(#878787));
-    background: -moz-linear-gradient(top, #C4C4C4, #878787);
+    font-size: 14px;
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
 }
 
 .button-3d-balanced {
+    color: #FFFFFF !important;
     box-shadow: 1px 1px 1px #BEE2F9;
     -webkit-box-shadow: 1px 1px 1px #BEE2F9;
     -moz-box-shadow: 1px 1px 1px #BEE2F9;
@@ -291,6 +260,8 @@ label.item.valid-lr {
     background: -ms-linear-gradient(top, #33CD5F, #2DB554);
     background: -webkit-gradient(linear, left top, left bottom, from(#33CD5F), to(#2DB554));
     background: -moz-linear-gradient(top, #33CD5F, #2DB554);
+    font-size: 14px;
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
 }
 
 .featureLockedText {

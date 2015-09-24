@@ -223,14 +223,15 @@ module.exports.processPayment = function (req, res, next) {
         if (!err) {
             res.json(data.clientResponse);
         }
-        else if (!data) {
+        else if (err.httpStatus) {
             res.send(err.httpStatus, err);
         }
         else {
-            if (data.newPurchase.status.toLowerCase() === "completed") {
+            if (err.message === "DuplicatePurchase") {
                 //This is an intentional stop - data contains client response
                 //A duplicate purchase which has completed successfully by another thread
-                res.json(data.clientResponse)
+                //The "additionalInfo" of the err object is the data
+                res.json(err.additionalInfo.clientResponse)
 
             }
             else {
