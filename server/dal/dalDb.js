@@ -387,6 +387,7 @@ module.exports.facebookLogin = function (data, callback) {
     var avatar = data.user.avatar;
 
     var thirdParty = data.user.thirdParty;
+    var clientInfo = data.user.clientInfo;
 
     var now = (new Date()).getTime();
 
@@ -443,6 +444,10 @@ module.exports.facebookLogin = function (data, callback) {
                     data.user.thirdParty = thirdParty;
                 }
 
+                if (clientInfo) {
+                    data.user.clientInfo = clientInfo;
+                }
+
                 checkToCloseDb(data);
 
                 callback(null, data);
@@ -463,6 +468,7 @@ module.exports.facebookLogin = function (data, callback) {
 // output: <NA>
 //---------------------------------------------------------------------
 module.exports.createOrUpdateSession = function (data, callback) {
+
     var userToken = uuid.v1();
     var sessionsCollection = data.DbHelper.getCollection('Sessions');
 
@@ -486,7 +492,8 @@ module.exports.createOrUpdateSession = function (data, callback) {
                 "score": data.user.score,
                 "xp": data.user.xp,
                 "rank": data.user.rank,
-                "features": data.features
+                "features": data.features,
+                "clientInfo": data.user.clientInfo
             }
         }, {upsert: true, new: true}, function (err, session) {
 
@@ -503,42 +510,63 @@ module.exports.createOrUpdateSession = function (data, callback) {
 
             data.session = session.value;
 
-            if (session.lastErrorObject.upserted) {
+            //Write to session history
+            var sessionsHistoryCollection = data.DbHelper.getCollection('SessionHistory');
+            var sessionHistoryRecord = JSON.parse(JSON.stringify(data.session));
+            sessionHistoryRecord.sessionId = sessionHistoryRecord._id;
+            delete sessionHistoryRecord._id;
 
-                var closeConnection = data.closeConnection;
+            sessionsHistoryCollection.insert(sessionHistoryRecord
+                , {}, function (sessionHistoryError, insertedRecord) {
+                    if (sessionHistoryError) {
 
-                data.closeConnection = false;
-
-                //Do not close connection on an inner logAction
-                data.logAction = {
-                    "action": "login",
-                    "userId": data.session.userId,
-                    "sessionId": data.session.userToken
-                };
-                logAction(data, function (err, data) {
-
-                    if (err) {
                         closeDb(data);
 
-                        callback(new exceptions.ServerException("Error inserting log record", {
-                            "action": data.action,
+                        callback(new exceptions.ServerException("Error inserting session history record", {
                             "session": data.session,
-                            "dbError": err
+                            "dbError": sessionHistoryError
                         }, "error"));
                         return;
                     }
 
-                    data.closeConnection = closeConnection;
+                    if (session.lastErrorObject.upserted) {
 
-                    checkToCloseDb(data);
+                        var closeConnection = data.closeConnection;
 
-                    callback(null, data);
-                })
-            }
-            else {
-                checkToCloseDb(data);
-                callback(null, data);
-            }
+                        data.closeConnection = false;
+
+                        //Do not close connection on an inner logAction
+                        data.logAction = {
+                            "action": "login",
+                            "userId": data.session.userId,
+                            "sessionId": data.session.userToken
+                        };
+
+                        logAction(data, function (err, data) {
+
+                            if (err) {
+                                closeDb(data);
+
+                                callback(new exceptions.ServerException("Error inserting log record", {
+                                    "action": data.action,
+                                    "session": data.session,
+                                    "dbError": err
+                                }, "error"));
+                                return;
+                            }
+
+                            data.closeConnection = closeConnection;
+
+                            checkToCloseDb(data);
+
+                            callback(null, data);
+                        })
+                    }
+                    else {
+                        checkToCloseDb(data);
+                        callback(null, data);
+                    }
+                });
         })
 };
 

@@ -23,11 +23,13 @@ function getSessionResponse(session) {
     };
 }
 
-//--------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
 // facebookConnect
 //
-// data: user (should contain user.thirdParty (id, type, accessToken)
-//--------------------------------------------------------------------------
+// data: user - should contain:
+//          thirdParty (id, type, accessToken)
+//          clientInfo (platform, appVersion (optional for apps), platformVersion (optional for apps)
+//-----------------------------------------------------------------------------------------------------------
 module.exports.facebookConnect = function (req, res, next) {
     var data = req.body;
 

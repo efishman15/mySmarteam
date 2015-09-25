@@ -185,6 +185,27 @@ angular.module('whoSmarter.services', [])
                 //-------------------------------------------------------------------------
                 service.initUser(function () {
 
+                        $rootScope.user.clientInfo = {};
+
+                        if (ionic.Platform.isAndroid()) {
+                            $rootScope.user.clientInfo.platform = "android";
+                        }
+                        else if (ionic.Platform.isIOS()) {
+                            $rootScope.user.clientInfo.platform = "ios";
+                        }
+                        else if (window.self !== window.top) {
+                            //running inside an iframe, e.g. facebook canvas
+                            $rootScope.user.clientInfo.platform = "facebook";
+                        }
+                        else {
+                            $rootScope.user.clientInfo.platform = "web";
+                        }
+
+                        if (window.cordova) {
+                            $rootScope.user.clientInfo.appVersion = $rootScope.appVersion;
+                            $rootScope.user.clientInfo.platformVersion = ionic.Platform.version();
+                        }
+
                         $ionicPlatform.registerBackButtonAction(function (event) {
                             if ($state.current.name.length >= 12 && $state.current.name.substring(0, 12) === "app.contests" && ionic.Platform.isAndroid()) {
                                 PopupService.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
@@ -201,18 +222,11 @@ angular.module('whoSmarter.services', [])
                             }
                         }, 600);
 
-                        if (ionic.Platform.isAndroid()) {
-                            $rootScope.platform = "android";
-                        }
-                        else if (ionic.Platform.isIOS()) {
-                            $rootScope.platform = "ios";
-                        }
-                        else if (window.self !== window.top) {
-                            //running inside an iframe, e.g. facebook canvas
-                            $rootScope.platform = "facebook";
-                        }
-                        else {
-                            $rootScope.platform = "web";
+
+                        if (window.cordova) {
+                            postData.appVersion = $rootScope.appVersion;
+                            postData.platform = ionic.Platform.platform();
+                            postData.platformVersion = ionic.Platform.version();
                         }
 
                         //------------------------------------------------------------------------------------
@@ -338,6 +352,8 @@ angular.module('whoSmarter.services', [])
                             $rootScope.gotoView("serverPopup", false, {serverPopup: data})
                         });
 
+
+
                         if (!$rootScope.settings) {
                             InfoService.getSettings(
                                 function (data) {
@@ -449,12 +465,9 @@ angular.module('whoSmarter.services', [])
         //Get settings from server
         service.getSettings = function (callbackOnSuccess, callbackOnError, config) {
             var postData = {};
-            if (window.cordova) {
-                postData.appVersion = $rootScope.appVersion;
-                postData.platform = ionic.Platform.platform();
-                postData.platformVersion = ionic.Platform.version();
-            }
+
             postData.language = $rootScope.user.settings.language;
+            postData.clientInfo = $rootScope.user.clientInfo;
 
             return ApiService.post(path, "settings", postData,
                 function (data) {
@@ -1113,7 +1126,7 @@ angular.module('whoSmarter.services', [])
 
             var method;
 
-            switch ($rootScope.platform) {
+            switch ($rootScope.user.clientInfo.platform) {
                 case "web" :
                     var postData = {"feature": feature.name, "language": $rootScope.session.settings.language};
                     method = "paypal";

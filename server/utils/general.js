@@ -104,9 +104,9 @@ module.exports.getSettings = function (req, res, next) {
     var data = req.body;
 
     var response;
-    if (data.appVersion) {
+    if (data.clientInfo && data.clientInfo.appVersion) {
 
-        if (versionCompare(settings.server.versions.mustUpdate.minVersion, data.appVersion) === 1) {
+        if (versionCompare(settings.server.versions.mustUpdate.minVersion, data.clientInfo.appVersion) === 1) {
             response = JSON.parse(JSON.stringify(settings.client));
             response.serverPopup = {};
             response.serverPopup.title = settings.server.versions.mustUpdate.popup.title[data.language];
@@ -120,7 +120,7 @@ module.exports.getSettings = function (req, res, next) {
                 button.action = settings.server.versions.mustUpdate.popup.buttons[i].action;
                 button.text = settings.server.versions.mustUpdate.popup.buttons[i].text[data.language];
                 if (settings.server.versions.mustUpdate.popup.buttons[i].link) {
-                    button.link = settings.server.versions.mustUpdate.popup.buttons[i].link[data.platform];
+                    button.link = settings.server.versions.mustUpdate.popup.buttons[i].link[data.clientInfo.platform];
                 }
                 if (settings.server.versions.mustUpdate.popup.buttons[i].screen) {
                     button.screen = settings.server.versions.mustUpdate.popup.buttons[i].screen;

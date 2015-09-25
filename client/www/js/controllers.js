@@ -14,7 +14,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
             var CANVAS_WIDTH = 640;
 
-            if ($rootScope.platform !== "facebook") {
+            if ($rootScope.user.clientInfo.platform !== "facebook") {
                 return;
             }
 
@@ -696,7 +696,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             //-------------------------------------------------------------------------------------------------------------
             //Android Billing
             //-------------------------------------------------------------------------------------------------------------
-            if ($rootScope.platform === "android" && $rootScope.session.features.newContest.locked) {
+            if ($rootScope.user.clientInfo.platform === "android" && $rootScope.session.features.newContest.locked) {
                 if (!$rootScope.session.features.newContest.purchaseData.retrieved) {
 
                     //-------------------------------------------------------------------------------------------------------------
