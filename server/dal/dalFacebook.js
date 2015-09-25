@@ -45,7 +45,18 @@ module.exports.getUserInfo = function (data, callback) {
 
         res.on('end', function () {
 
-            var facebookData = JSON.parse(facebookResponse);
+            var facebookData;
+            try {
+                facebookData = JSON.parse(facebookResponse);
+            }
+            catch(e) {
+                callback(new exceptions.ServerException("Error parsing facebook response", {
+                    "facebookResponse": facebookResponse,
+                    "facebookAccessToken": data.user.thirdParty.accessToken,
+                    "facebookUserId": data.user.thirdParty.id
+                }));
+            }
+
             if (facebookData && facebookData.id) {
                 if (facebookData.id === data.user.thirdParty.id) {
                     data.user.avatar = getUserAvatar(data.user.thirdParty.id);

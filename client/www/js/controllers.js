@@ -1,6 +1,6 @@
 angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
-    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, UserService) {
+    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, StoreService) {
 
         $rootScope.$on('whoSmarter-directionChanged', function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
@@ -128,6 +128,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         $scope.changeLanguage = function (language) {
             $rootScope.user.settings.language = language.value;
+            StoreService.setLanguage(language.value);
             $translate.use(language.value);
         };
 
@@ -474,13 +475,14 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             UserService.logout(function () {
                 if (language !== $rootScope.user.settings.language) {
                     $translate.use($rootScope.user.settings.language);
+                    StoreService.setLanguage($rootScope.user.settings.language);
                 }
                 $rootScope.gotoView("home");
             });
         });
     })
 
-    .controller("SettingsCtrl", function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, PopupService, $translate, $ionicConfig) {
+    .controller("SettingsCtrl", function ($scope, $rootScope, $ionicPopover, $ionicSideMenuDelegate, UserService, PopupService, $translate, $ionicConfig, StoreService) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -537,6 +539,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                         $rootScope.session.settings = $scope.localViewData;
                         if ($scope.localViewData.language != prevLanguage) {
                             $translate.use($scope.localViewData.language);
+                            StoreService.setLanguage($scope.localViewData.language);
 
                             //Check to fire directionChanged event
                             if ($rootScope.settings.languages[$scope.localViewData.language].direction != $rootScope.settings.languages[prevLanguage].direction) {
@@ -686,6 +689,54 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             else {
                 $rootScope.gotoView("app.contests.mine");
                 return;
+            }
+
+            $rootScope.session.features.newContest.purchaseData.retrieved = false;
+
+            //-------------------------------------------------------------------------------------------------------------
+            //Android Billing
+            //-------------------------------------------------------------------------------------------------------------
+            if ($rootScope.platform === "android" && $rootScope.session.features.newContest.locked) {
+                if (!$rootScope.session.features.newContest.purchaseData.retrieved) {
+
+                    //-------------------------------------------------------------------------------------------------------------
+                    //pricing - replace cost/currency with the google store pricing (local currency, etc.)
+                    //-------------------------------------------------------------------------------------------------------------
+                    inappbilling.getProductDetails(function (products) {
+                            //In android - the price already contains the symbol
+                            $rootScope.session.features.newContest.purchaseData.formattedCost = products[0].price;
+                            $rootScope.session.features.newContest.purchaseData.cost = products[0].price_amount_micros / 1000000;
+                            $rootScope.session.features.newContest.purchaseData.currency = products[0].price_currency_code;
+
+                            $rootScope.session.features.newContest.purchaseData.retrieved = true;
+
+                            //-------------------------------------------------------------------------------------------------------------
+                            //Retrieve unconsumed items - and checking if user has an unconsumed "new contest unlock key"
+                            //-------------------------------------------------------------------------------------------------------------
+                            inappbilling.getPurchases(function (unconsumedItems) {
+                                    if (unconsumedItems.RESPONSE_CODE == 0 && unconsumedItems.INAPP_PURCHASE_ITEM_LIST && INAPP_PURCHASE_ITEM_LIST.length > 0) {
+                                        for (var i = 0; i < unconsumedItems.INAPP_PURCHASE_ITEM_LIST.length; i++) {
+                                            if (unconsumedItems.INAPP_PURCHASE_ITEM_LIST[i] === $rootScope.session.features.newContest.purchaseData.productId) {
+                                                processAndroidPurchase(unconsumedItems.INAPP_PURCHASE_DATA_LIST[i]);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                },
+                                function (error) {
+                                    alert("Error retrieving unconsumed items: " + error);
+                                });
+
+                        },
+                        function (msg) {
+                            alert("error getting product details: " + msg);
+                        }, $rootScope.session.features.newContest.purchaseData.productId);
+
+
+                }
+            }
+            else {
+                $rootScope.session.features.newContest.purchaseData.retrieved = false;
             }
 
             if ($ionicHistory.backView() == null) {
@@ -856,15 +907,10 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                         if (result.data.status === "completed") {
                             var transactionData = {"method": "facebook"};
                             transactionData.purchaseData = result.data;
-                            PaymentService.processPayment(transactionData, function (data) {
+                            PaymentService.processPayment(transactionData, function (serverPurchaseData) {
                                 //Update local assets
-                                $rootScope.session.features = data.features
-                                $rootScope.gotoView("payment", false, {
-                                    "purchaseMethod": "facebook",
-                                    "featurePurchased": data.featurePurchased,
-                                    "nextView": data.nextView
-                                });
                                 $scope.buyInProgress = false;
+                                PaymentService.showPurchaseSuccess(serverPurchaseData);
                             }, function (status, data) {
                                 $scope.buyInProgress = false;
                             });
@@ -874,9 +920,45 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                             PopupService.alert({"type": "SERVER_ERROR_PURCHASE_IN_PROGRESS"});
                         }
                         break;
+
+                    case "android":
+                        processAndroidPurchase(result.data, function (data) {
+                                $scope.buyInProgress = false;
+                            },
+                            function (status, error) {
+                                $scope.buyInProgress = false;
+                            })
+                        break;
                 }
+            }, function (error) {
+                $scope.$apply(function () {
+                    $scope.buyInProgress = false;
+                })
             });
         };
+
+        function processAndroidPurchase(purchaseData, callbackOnSuccess) {
+            var transactionData = {
+                "method": "android",
+                "purchaseData": purchaseData,
+                "extraPurchaseData": {
+                    "actualCost": $rootScope.session.features.newContest.purchaseData.cost,
+                    "actualCurrency": $rootScope.session.features.newContest.purchaseData.currency,
+                    "featurePurchased" : $rootScope.session.features.newContest.name
+                }
+            };
+            PaymentService.processPayment(transactionData, function (serverPurchaseData) {
+                inappbilling.consumePurchase(function (purchaseData) {
+                    if (callbackOnSuccess) {
+                        callbackOnSuccess(purchaseData);
+                    }
+                    PaymentService.showPurchaseSuccess(serverPurchaseData);
+                }, function(error) {
+                    alert("Error consuming product: " + error)
+                },
+                purchaseData.productId);
+            });
+        }
     })
 
     .controller("PayPalPaymentSuccessCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, PopupService) {
@@ -888,12 +970,8 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             transactionData.purchaseData.purchaseToken = $stateParams.token;
             transactionData.purchaseData.payerId = $stateParams.PayerID;
 
-            PaymentService.processPayment(transactionData, function (data) {
-                    $rootScope.session.features = data.features
-                    $rootScope.gotoView("payment", false, {
-                        "featurePurchased": data.featurePurchased,
-                        "nextView": data.nextView
-                    });
+            PaymentService.processPayment(transactionData, function (serverPurchaseData) {
+                    PaymentService.showPurcaseSuccess(serverPurchaseData);
                 },
                 function (status, error, headers) {
                     PopupService.alert(error).then(function () {

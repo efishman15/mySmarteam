@@ -182,7 +182,7 @@ module.exports.computeFeatures = function (userOrSession) {
                 currencySymbol = features[property].purchaseData.currency;
             }
 
-            features[property].purchaseData.currencySymbol = currencySymbol;
+            features[property].purchaseData.formattedCost = currencySymbol + features[property].purchaseData.cost;
 
             if (!features[property].purchaseData.mobilePricepointId && userOrSession.thirdParty && userOrSession.thirdParty.paymentMobilePricepoints && !features[property].mobilePricepointId) {
                 adjustMobileClosestCost(userOrSession,features[property]);

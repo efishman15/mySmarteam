@@ -4,46 +4,52 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker'])
+angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
     .run(function ($ionicPlatform, $rootScope, $state, PopupService) {
         $ionicPlatform.ready(function () {
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
-            if (window.cordova && window.cordova.plugins.Keyboard) {
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+                // for form inputs)
+                if (window.cordova && window.cordova.plugins.Keyboard) {
+                    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                }
+
+                if (window.cordova) {
+                    cordova.getAppVersion(function (version) {
+                        $rootScope.appVersion = version;
+                    });
+
+                    //Hook into window.open
+                    window.open = cordova.InAppBrowser.open;
+                }
+
+                if (window.StatusBar) {
+                    // org.apache.cordova.statusbar required
+                    StatusBar.styleDefault();
+                }
+
+                if (ionic.Platform.isAndroid() && typeof inappbilling !== "undefined") {
+                    inappbilling.init(function (resultInit) {
+                            console.log("IAB Initialized");
+                        },
+                        function (errorInit) {
+                            console.log("ERROR -> " + errorInit);
+                        }
+                        ,
+                        {
+                            showLog: true
+                        }
+                        ,
+                        ["productId1", "productId2", "productId3"]
+                    );
+                }
             }
-
-            if (window.cordova) {
-                cordova.getAppVersion(function (version) {
-                    $rootScope.appVersion = version;
-                });
-
-                //Hook into window.open
-                window.open = cordova.InAppBrowser.open;
-            }
-
-            if (window.StatusBar) {
-                // org.apache.cordova.statusbar required
-                StatusBar.styleDefault();
-            }
-
-            if(ionic.Platform.isAndroid() && typeof inappbilling !== "undefined") {
-                inappbilling.init(function(resultInit) {
-                        console.log("IAB Initialized");
-                    },
-                    function(errorInit) {
-                        console.log("ERROR -> " + errorInit);
-                    },
-                    {showLog: true},
-                    ["productId1", "productId2", "productId3"]);
-            }
-
-        });
+        );
     })
 
-    .config(function ($httpProvider, $translateProvider) {
+    .
+    config(function ($httpProvider, $translateProvider) {
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
@@ -62,7 +68,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         })
     })
 
-    .config(function($ionicConfigProvider) {
+    .config(function ($ionicConfigProvider) {
         $ionicConfigProvider.backButton.text("");
         $ionicConfigProvider.backButton.previousTitleText("");
         $ionicConfigProvider.tabs.position('bottom');
@@ -163,7 +169,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             .state('serverPopup', {
                 url: "/serverPopup",
-                params : {serverPopup : null},
+                params: {serverPopup: null},
                 controller: "ServerPopupCtrl",
                 templateUrl: "templates/serverPopup.html"
             })
@@ -171,10 +177,14 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
             .state('facebookCanvas', {
                 url: "/facebook?connected&signedRequest&language",
                 controller: "FacebookCanvasCtrl",
-                params: {connected: null, signedRequest: null, language : null},
+                params: {connected: null, signedRequest: null, language: null},
                 resolve: {
                     auth: function resolveAuthentication(UserService, $stateParams) {
-                        var data = {"connected" : $stateParams.connected, "signedRequest" : $stateParams.signedRequest, "language" : $stateParams.language};
+                        var data = {
+                            "connected": $stateParams.connected,
+                            "signedRequest": $stateParams.signedRequest,
+                            "language": $stateParams.language
+                        };
                         return UserService.resolveAuthentication(data, "fb");
                     }
                 },
@@ -256,7 +266,15 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 },
                 templateUrl: "templates/payment.html",
                 controller: "PaymentCtrl",
-                params: {token: null, PayerID: null, productId: null, purchaseMethod: null, purchaseSuccess : null, nextView : null, featurePurchased : null}
+                params: {
+                    token: null,
+                    PayerID: null,
+                    productId: null,
+                    purchaseMethod: null,
+                    purchaseSuccess: null,
+                    nextView: null,
+                    featurePurchased: null
+                }
             })
 
             .state('settings', {
@@ -321,7 +339,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab" : "mine", "showPlay" : true, "showParticipants" : false}
+                appData: {"serverTab": "mine", "showPlay": true, "showParticipants": false}
             })
 
             .state('app.contests.running', {
@@ -337,7 +355,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab" : "running", "showPlay" : true, "showParticipants" : false}
+                appData: {"serverTab": "running", "showPlay": true, "showParticipants": false}
             })
 
             .state('app.contests.recentlyFinished', {
@@ -353,7 +371,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab" : "recentlyFinished", "showPlay" : false, "showParticipants" : true}
+                appData: {"serverTab": "recentlyFinished", "showPlay": false, "showParticipants": true}
             });
 
 
@@ -427,7 +445,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         }
     })
 
-    .directive('tabsSwipable', ['$ionicGesture', function($ionicGesture){
+    .directive('tabsSwipable', ['$ionicGesture', function ($ionicGesture) {
         //
         // make ionTabs swipable. leftswipe -> nextTab, rightswipe -> prevTab
         // Usage: just add this as an attribute in the ionTabs tag
@@ -436,17 +454,17 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         return {
             restrict: 'A',
             require: 'ionTabs',
-            link: function(scope, elm, attrs, tabsCtrl){
-                var onSwipeLeft = function(){
+            link: function (scope, elm, attrs, tabsCtrl) {
+                var onSwipeLeft = function () {
                     var target = tabsCtrl.selectedIndex() + 1;
-                    if(target < tabsCtrl.tabs.length){
+                    if (target < tabsCtrl.tabs.length) {
                         scope.$apply(tabsCtrl.select(target));
                         scope.$broadcast("whoSmarter-tabChanged");
                     }
                 };
-                var onSwipeRight = function(){
+                var onSwipeRight = function () {
                     var target = tabsCtrl.selectedIndex() - 1;
-                    if(target >= 0){
+                    if (target >= 0) {
                         scope.$apply(tabsCtrl.select(target));
                         scope.$broadcast("whoSmarter-tabChanged");
                     }
@@ -460,7 +478,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     swipeGesture = $ionicGesture.on('swipeleft', onSwipeLeft, elm).on('swiperight', onSwipeRight);
                 }
 
-                scope.$on('$destroy', function() {
+                scope.$on('$destroy', function () {
                     $ionicGesture.off(swipeGesture, 'swipeleft', onSwipeLeft);
                     $ionicGesture.off(swipeGesture, 'swiperight', onSwipeRight);
                 });

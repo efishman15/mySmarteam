@@ -10,14 +10,12 @@
     </ion-nav-bar>
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
-        <div class="padding" ng-if="$root.session.features.newContest.locked">
+        <div class="padding" ng-if="$root.session.features.newContest.locked && $root.session.features.newContest.purchaseData.retrieved">
             <span class="featureLockedText">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.session.features.newContest.unlockRank} }}</span>
             <button class="button button-full button-small button-3d button-3d-balanced"
                     ng-click="buyNewContestUnlockKey(false)" ng-disabled="buyInProgress">
                 {{'UNLOCK_FEATURE' |
-                translate:{cost :
-                $root.session.features.newContest.purchaseData.cost, currency :
-                $root.session.features.newContest.purchaseData.currencySymbol} }}
+                translate:{formattedCost : $root.session.features.newContest.purchaseData.formattedCost} }}
             </button>
             <button class="button button-full button-small button-3d button-3d-balanced"
                     ng-if="$root.platform==='facebook' && $root.session.features.newContest.purchaseData.mobilePricepointId"

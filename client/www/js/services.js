@@ -1,7 +1,7 @@
 angular.module('whoSmarter.services', [])
 
     //User Service
-    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform) {
+    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform, StoreService) {
 
         //----------------------------------------------
         // Service Variables
@@ -64,11 +64,14 @@ angular.module('whoSmarter.services', [])
         //Init user
         service.initUser = function (callbackOnSuccess, language, geoInfo) {
 
-            if (geoInfo && language) {
-                service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
+            language = StoreService.getLanguage();
+
+            if (language) {
+                service.localInitUser(callbackOnSuccess, language, geoInfo);
             }
             else {
                 InfoService.getGeoInfo(function (geoResult, geoInfo) {
+                    StoreService.setLanguage(geoResult.language);
                     service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
                 });
             }
@@ -368,12 +371,12 @@ angular.module('whoSmarter.services', [])
             return deferred.promise;
         };
 
-//Save settings to server
+        //Save settings to server
         service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError, config) {
             ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError, config);
         }
 
-//Toggle sound to server
+        //Toggle sound to server
         service.toggleSound = function (callbackOnSuccess, callbackOnError, config) {
             ApiService.post(path, "toggleSound", null, callbackOnSuccess, callbackOnError, config);
         }
@@ -1077,6 +1080,26 @@ angular.module('whoSmarter.services', [])
         return service;
     })
 
+    //Store Service
+    .factory('StoreService', function (ApiService, store) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+
+        service.getLanguage = function () {
+            return store.get("whoSmarter-language");
+        }
+
+        service.setLanguage = function (language) {
+            store.set("whoSmarter-language", language);
+        }
+
+        return service;
+
+    })
+
     //Payment Service
     .factory('PaymentService', function ($rootScope, ApiService, $translate, ezfb) {
 
@@ -1104,7 +1127,14 @@ angular.module('whoSmarter.services', [])
 
                 case "android" :
                     method = "android";
-                    alert("TBD - purchase in android");
+                    inappbilling.buy(function(purchaseData) {
+                            callbackOnSuccess(purchaseData);
+                        },
+                        function(error) {
+                            //Error messages will be displayed inside google
+                            callbackOnError(error);
+                        },
+                        feature.purchaseData.productId);
                     break;
 
                 case "ios" :
@@ -1137,7 +1167,20 @@ angular.module('whoSmarter.services', [])
         }
 
         service.processPayment = function (transactionData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "process", transactionData, callbackOnSuccess, callbackOnError, config);
+            return ApiService.post(path, "process", transactionData, function(serverPurchaseData) {
+                if (callbackOnSuccess) {
+                    callbackOnSuccess(serverPurchaseData);
+                }
+            }, callbackOnError, config);
+        };
+
+        service.showPurchaseSuccess = function(serverPurchaseData) {
+            $rootScope.session.features = serverPurchaseData.features
+            $rootScope.gotoView("payment", false, {
+                "purchaseMethod": "facebook",
+                "featurePurchased": serverPurchaseData.featurePurchased,
+                "nextView": serverPurchaseData.nextView
+            });
         }
 
         return service;

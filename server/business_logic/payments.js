@@ -6,6 +6,12 @@ var ObjectId = require("mongodb").ObjectID;
 var dalDb = require('../dal/dalDb');
 var dalFacebook = require('../dal/dalFacebook');
 var generalUtils = require("../utils/general")
+var GoogleVerifier = require('google-play-purchase-validator');
+var googleVerifierOptions = {
+    "email" : "738730548407-bi9shjugluubofp58m1dnjvg6klpprhq@developer.gserviceaccount.com",
+    "keyFile" : "../certificates/whosmarter.com.googlebilling.key"
+};
+
 var PaypalObject = require('paypal-express-checkout').Paypal;
 var paypal;
 var paypalSettings;
@@ -295,7 +301,6 @@ function innerProcessPayment(data, callback) {
 
                         analyzePaypalStatus(data);
 
-
                         var invoiceNumberParts = data.paymentData.invoice.split("_");
 
                         data.userId = invoiceNumberParts[1];
@@ -313,6 +318,48 @@ function innerProcessPayment(data, callback) {
                         data.newPurchase.currency = data.paymentData.actions[0].currency;
                         data.newPurchase.extraData = data.paymentData;
                         dalDb.insertPurchase(data, callback);
+                    });
+                    break;
+
+                case "android":
+                    var googleVerifier = new GoogleVerifier(googleVerifierOptions);
+                    var googleReceipt = {
+                        packageName: data.purchaseData.packageName,
+                        productId: data.purchaseData.productId,
+                        purchaseToken: data.purchaseData.purchaseToken
+                    };
+
+                    googleVerifier.verify(googleReceipt, function (err, response) {
+                        if (!err) {
+                            data.newPurchase.transactionId = data.purchaseData.orderId;
+                            data.newPurchase.amount = data.extraPurchaseData.actualCost;
+                            data.newPurchase.currency = data.extraPurchaseData.actualCurrency;
+                            data.newPurchase.extraData = data.purchaseData;
+
+                            data.featurePurchased = data.extraPurchaseData.featurePurchased;
+                            data.paymentData = data.purchaseData;
+
+                            switch (data.purchaseData.purchaseState) {
+                                case 0: //completed
+                                    data.newPurchase.status = "completed";
+                                    data.proceedPayment = true;
+                                    break;
+                                case 1: //canceled
+                                    data.newPurchase.status = "canceled";
+                                    data.revokeAsset = true;
+                                    break;
+                                case 2: //refunded
+                                    data.newPurchase.status = "refunded";
+                                    data.proceedPayment = true;
+                                    break;
+                            }
+
+                            dalDb.insertPurchase(data, callback);
+                        }
+                        else {
+                            callback(new exceptions.ServerException("Invalid google purchase data - not verified", {"purchaseData": data.purchaseData, "googleError" : err}));
+                            return;
+                        }
                     });
                     break;
             }
@@ -342,6 +389,7 @@ function innerProcessPayment(data, callback) {
 
             switch (data.method) {
                 case "paypal":
+                case "android":
                     callback(null, data);
                     break;
 
