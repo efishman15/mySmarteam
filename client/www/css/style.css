@@ -25,6 +25,44 @@ label.item.valid-lr {
     color: red;
 }
 
+.questionAnimationLtr {
+    position: relative;
+    left: -100%;
+    -webkit-animation: slideQuestionLtr 1s forwards;
+    animation: slideQuestionLtr 1s forwards;
+}
+
+@-webkit-keyframes slideQuestionLtr {
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes slideQuestionLtr {
+    100% {
+        left: 0;
+    }
+}
+
+.questionAnimationRtl {
+    position: relative;
+    right: -100%;
+    -webkit-animation: slideQuestionRtl 1s forwards;
+    animation: slideQuestionRtl 1s forwards;
+}
+
+@-webkit-keyframes slideQuestionRtl {
+    100% {
+        right: 0;
+    }
+}
+
+@keyframes slideQuestionRtl {
+    100% {
+        right: 0;
+    }
+}
+
 .blink {
     -webkit-animation-name: blink;
     -webkit-animation-duration: 1s;

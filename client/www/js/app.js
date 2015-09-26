@@ -17,7 +17,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
                 if (window.cordova) {
                     cordova.getAppVersion(function (version) {
-                        $rootScope.appVersion = version;
+                        if ($rootScope.user && $rootScope.user.clientInfo) {
+                            $rootScope.user.clientInfo.appVersion = version;
+                        }
+                        else {
+                            $rootScope.appVersion = version;
+                        }
                     });
 
                     //Hook into window.open

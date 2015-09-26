@@ -5,12 +5,600 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/config.xml" afterPath="$PROJECT_DIR$/client/config.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/images/boom.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/facebook/facebookIPN.log.0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/images/hawk.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/images/hoek.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/images/logo.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/paypal/paypalIPN.log.0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/paypal/paypalIPN.log.2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/download/whoSmarter.apk" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/.bowerrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/.dir-locals.el" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/.editorconfig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/.editorconfig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/.eslintignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/.jscs.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tunnel-agent/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/node_modules/ms/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/string_decoder/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/node_modules/delayed-stream/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/node_modules/graceful-readlink/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-function/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/node_modules/is-property/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/cryptiles/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/stringstream/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/.npmignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/process-nextick-args/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/node_modules/graceful-readlink/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-function/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/jsonpointer/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/cryptiles/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/stringstream/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/.travis.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/.yo-rc.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/.zuul.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/doc/wg-meetings/2015-01-30.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/node_modules/async/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/CHANGELOG" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/CHANGELOG" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/CONTRIBUTING.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/certificates/Google Play Android Developer-b1b274d5eee1.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/HISTORY.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/node_modules/mime-db/HISTORY.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/History.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/History.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/node_modules/ms/History.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/util-deprecate/History.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/History.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/LICENCE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/LICENSE.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/LICENSE.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/stringstream/LICENSE.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/node_modules/ms/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/aws-sign2/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/inherits/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/string_decoder/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/util-deprecate/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/caseless/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/forever-agent/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/node_modules/async/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/node_modules/graceful-readlink/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/node_modules/is-property/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/cryptiles/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/node_modules/mime-db/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/oauth-sign/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tunnel-agent/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/License" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/node_modules/delayed-stream/License" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/License" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/node_modules/delayed-stream/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/Makefile" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/node_modules/ms/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/examples/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/aws-sign2/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/core-util-is/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/inherits/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/isarray/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/string_decoder/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/util-deprecate/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/caseless/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/forever-agent/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/node_modules/graceful-readlink/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-function/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/node_modules/is-property/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/jsonpointer/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/cryptiles/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/assert-plus/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/node_modules/mime-db/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/oauth-sign/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/stringstream/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tunnel-agent/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/README.old" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/README" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/Readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/Readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/node_modules/delayed-stream/Readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/Readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/Readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/backup/SettingsBackup.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/lib/_stream_duplex.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/lib/_stream_passthrough.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/lib/_stream_readable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/lib/_stream_transform.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/lib/_stream_writable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/additionalItems.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/additionalProperties.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/allOf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/dist/angular-storage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/dist/angular-storage.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/angularStorage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/angularStorage.prefix" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/angularStorage.suffix" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/test/unit/angularStorage/angularStorageSpec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/any.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/anyOf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/api_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/assert.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/assert-plus/assert.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/node_modules/async/lib/async.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/async.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/lib/auth.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/auth.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/test/basic-test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/bignum.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/bind.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/bl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/browser/bluebird.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/bluebird.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/browser/bluebird.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/bower.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/util-deprecate/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/lib/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/lib/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/ietf_data/dates/bsd-examples.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/isarray/build/build.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/cache.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/cacheEntry.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/call_get.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/cancel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/captured_trace.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/catch_filter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/changelog.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/lib/client.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/client.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/lib/combined_stream.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/component.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/isarray/component.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/component.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/component.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/component.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/content.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/context.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/lib/cookie.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/cookie.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/services/cookieStorage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/cookie_jar_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/cookie_sorting_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/cookie_to_json_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/cookie_to_string_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/cookies.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/fixtures/cosmic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/creator.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/lib/crypto.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/crypto.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/ctf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/man/man3ctype/ctio.3ctype" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/ctio.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/ctype.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/date_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/node_modules/mime-db/db.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/debug.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/debuggability.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/default.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/definitions.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/node_modules/delayed-stream/lib/delayed_stream.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/dependencies.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/direct_resolve.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/disabled.appveyor.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/domain_and_path_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/duplex.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/each.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/entry.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/enum.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/error.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/errors.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/lib/ber/errors.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/es5.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/lib/escape.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/test/escaper.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/example.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/example.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-function/example.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/stringstream/example.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/ietf_data/dates/examples.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/facebook/facebookIPN.log.1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/facebook/facebookIPN.log.2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/filter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/finally.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/core-util-is/float.patch" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/lib/form_data.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/format.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/formats.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/certificates/gd_bundle-g2-g1.crt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/generate-pubsuffix.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/generators.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/getProxyFromURI.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/gulpfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/.bin/har-validator.cmd" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/.bin/har-validator" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/bin/har-validator" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/har.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/har.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/helpers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/http_signing.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/ietf_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/test/modules/ignore.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/immutable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/node_modules/ms/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/aws-sign2/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/isarray/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/process-nextick-args/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/string_decoder/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/caseless/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/forever-agent/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/ansi-styles/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/escape-string-regexp/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/node_modules/ansi-regex/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/node_modules/ansi-regex/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/supports-color/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/node_modules/graceful-readlink/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-function/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/test/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/cryptiles/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/cryptiles/test/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/test/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/test/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/lib/ber/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/node_modules/mime-db/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/oauth-sign/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/lib/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tunnel-agent/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/inherits/inherits.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/inherits/inherits_browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/services/internalStore.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/node_modules/is-property/is-property.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/isstream.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/items.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/jar_serialization_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/join.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/tools/jsl.conf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/jsonpointer/jsonpointer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/tools/jsstyle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/test/jwt-settings.json.sample" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/karma-dist-concatenated.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/karma-dist-minified.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/karma-src-all.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/karma-src.conf.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/process-nextick-args/license.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/ansi-styles/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/escape-string-regexp/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/node_modules/ansi-regex/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/node_modules/ansi-regex/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/supports-color/license" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/lifetime_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/services/localStorage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/log.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/map.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/maxItems.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/maxLength.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/maxProperties.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/maximum.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/lib/memstore.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/method.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/minItems.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/minLength.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/minProperties.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/minimum.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/misc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/test/mocha.opts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/multipart.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/multipleOf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/mutable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/node.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/util-deprecate/node.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/nodeify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/not.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/nullAndFormat.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/nullAndObject.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/oauth.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/examples/offset.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/oneOf.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/debug/node_modules/ms/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/aws-sign2/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/core-util-is/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/inherits/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/isarray/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/process-nextick-args/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/string_decoder/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/util-deprecate/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/caseless/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/combined-stream/node_modules/delayed-stream/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/extend/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/forever-agent/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/form-data/node_modules/async/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/ansi-styles/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/escape-string-regexp/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/node_modules/ansi-regex/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/node_modules/ansi-regex/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/supports-color/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/commander/node_modules/graceful-readlink/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-function/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/node_modules/is-property/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/jsonpointer/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/boom/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/cryptiles/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/assert-plus/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/ctype/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/mime-types/node_modules/mime-db/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/oauth-sign/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/stringstream/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tunnel-agent/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/page.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/pageTimings.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/lib/parse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/test/parse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/lib/parser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/ietf_data/parser.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/parsing_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/passthrough.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/lib/pathMatch.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/pattern.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/patternProperties.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/paypal/paypalIPN.log.1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/lib/permuteDomain.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/postData.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/progress.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/promise.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/promise_array.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/promise_resolver.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/promisify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/properties.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/props.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/public-suffix.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/lib/pubsuffix.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/dist/qs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/querystring.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/queue.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/race.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/readable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/lib/ber/reader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/tst/ber/reader.test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/readme.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/process-nextick-args/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/ansi-styles/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/escape-string-regexp/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/has-ansi/node_modules/ansi-regex/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/strip-ansi/node_modules/ansi-regex/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/chalk/node_modules/supports-color/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/record.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/redirect.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/reduce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/ref.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/refRemote.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/test/regression_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/release.sh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/lib/request-jwt.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/request.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/request.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/require.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/required.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/response.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/test/sauce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/schedule.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/lib/server.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/server.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/server.log.0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/server.log.1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/logs/server.log.2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/services/sessionStorage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/settle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/lib/signer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/some.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/src/angularStorage/services/store.js.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/tough-cookie/lib/store.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/client/www/lib/angular-storage/test/unit/angularStorage/services/storeSpec.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/doc/stream.markdown" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/stringify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/lib/stringify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/test/stringify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/json-stringify-safe/test/stringify_test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/stringstream/stringstream.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/synchronous_inspection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/test/test-google-oauth-jwt.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/inherits/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/process-nextick-args/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/test/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/caseless/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-function/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/generate-object-property/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/jsonpointer/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/node_modules/xtend/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/isstream/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/oauth-sign/test.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/test/modules/test1.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/test/modules/test2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/hoek/test/modules/test3.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/thenables.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/node_modules/sntp/examples/time.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/timers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/lib/schemas/timings.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/lib/token-cache.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/transform.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/lib/tunnel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/type.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/lib/ber/types.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/is-my-json-valid/test/json-schema-draft4/uniqueItems.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/uri.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/example/usage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/using.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/core-util-is/util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/node_modules/core-util-is/lib/util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/har-validator/node_modules/bluebird/js/main/util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/lib/util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/lib/utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/hawk/test/utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/lib/utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/qs/test/utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/lib/verify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/certificates/whosmarter.com.csr" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/certificates/whosmarter.com.googlebilling.key" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/certificates/whosmarter.com.key" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/certificates/whosmarter.crt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/bl/node_modules/readable-stream/writable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/lib/ber/writer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/node_modules/google-oauth-jwt/node_modules/request/node_modules/http-signature/node_modules/asn1/tst/ber/writer.test.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/app.js" afterPath="$PROJECT_DIR$/client/www/js/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/credentials.js" afterPath="$PROJECT_DIR$/server/business_logic/credentials.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/dal/dalDb.js" afterPath="$PROJECT_DIR$/server/dal/dalDb.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/utils/general.js" afterPath="$PROJECT_DIR$/server/utils/general.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/services.js" afterPath="$PROJECT_DIR$/client/www/js/services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/css/style.css" afterPath="$PROJECT_DIR$/client/www/css/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ionic-tutorial.iws" />
@@ -31,7 +619,300 @@
     <favorites_list name="ionic-tutorial" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="services.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="460" column="8" selection-start-line="460" selection-start-column="8" selection-end-line="460" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="controllers.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="732" column="0" selection-start-line="732" selection-start-column="0" selection-end-line="732" selection-end-column="0" />
+              <folding>
+                <element signature="e#227#3689#0" expanded="false" />
+                <element signature="e#296#434#0" expanded="false" />
+                <element signature="e#496#535#0" expanded="false" />
+                <element signature="e#571#1299#0" expanded="false" />
+                <element signature="e#679#718#0" expanded="false" />
+                <element signature="e#874#1289#0" expanded="false" />
+                <element signature="e#928#1109#0" expanded="false" />
+                <element signature="e#1131#1275#0" expanded="false" />
+                <element signature="e#1334#1391#0" expanded="false" />
+                <element signature="e#1499#1556#0" expanded="false" />
+                <element signature="e#1740#1799#0" expanded="false" />
+                <element signature="e#1801#1876#0" expanded="false" />
+                <element signature="e#1926#1977#0" expanded="false" />
+                <element signature="e#2027#2078#0" expanded="false" />
+                <element signature="e#2153#2365#0" expanded="false" />
+                <element signature="e#2416#2531#0" expanded="false" />
+                <element signature="e#2461#2521#0" expanded="false" />
+                <element signature="e#2607#2819#0" expanded="false" />
+                <element signature="e#3212#3284#0" expanded="false" />
+                <element signature="e#3320#3383#0" expanded="false" />
+                <element signature="e#3402#3680#0" expanded="false" />
+                <element signature="e#3428#3574#0" expanded="false" />
+                <element signature="e#3592#3670#0" expanded="false" />
+                <element signature="e#3834#5705#0" expanded="false" />
+                <element signature="e#3894#4269#0" expanded="false" />
+                <element signature="e#3933#4006#0" expanded="false" />
+                <element signature="e#4046#4181#0" expanded="false" />
+                <element signature="e#4097#4165#0" expanded="false" />
+                <element signature="e#4199#4259#0" expanded="false" />
+                <element signature="e#4325#4498#0" expanded="false" />
+                <element signature="e#4550#5124#0" expanded="false" />
+                <element signature="e#4675#4882#0" expanded="false" />
+                <element signature="e#4738#4793#0" expanded="false" />
+                <element signature="e#4815#4868#0" expanded="false" />
+                <element signature="e#4900#5114#0" expanded="false" />
+                <element signature="e#4963#5023#0" expanded="false" />
+                <element signature="e#5045#5100#0" expanded="false" />
+                <element signature="e#5185#5307#0" expanded="false" />
+                <element signature="e#5375#5497#0" expanded="false" />
+                <element signature="e#5546#5697#0" expanded="false" />
+                <element signature="e#5613#5686#0" expanded="false" />
+                <element signature="e#5893#10449#0" expanded="false" />
+                <element signature="e#6213#6379#0" expanded="false" />
+                <element signature="e#6252#6336#0" expanded="false" />
+                <element signature="e#6439#6525#0" expanded="false" />
+                <element signature="e#6568#6890#0" expanded="false" />
+                <element signature="e#6609#6673#0" expanded="false" />
+                <element signature="e#6931#7022#0" expanded="false" />
+                <element signature="e#7078#7177#0" expanded="false" />
+                <element signature="e#7226#7478#0" expanded="false" />
+                <element signature="e#7527#7667#0" expanded="false" />
+                <element signature="e#7723#8371#0" expanded="false" />
+                <element signature="e#7758#8354#0" expanded="false" />
+                <element signature="e#7822#8204#0" expanded="false" />
+                <element signature="e#8226#8340#0" expanded="false" />
+                <element signature="e#8431#10065#0" expanded="false" />
+                <element signature="e#8509#8590#0" expanded="false" />
+                <element signature="e#8608#8663#0" expanded="false" />
+                <element signature="e#8846#8916#0" expanded="false" />
+                <element signature="e#8994#10039#0" expanded="false" />
+                <element signature="e#9150#9318#0" expanded="false" />
+                <element signature="e#9363#9429#0" expanded="false" />
+                <element signature="e#9633#9837#0" expanded="false" />
+                <element signature="e#9941#10025#0" expanded="false" />
+                <element signature="e#10115#10401#0" expanded="false" />
+                <element signature="e#10177#10274#0" expanded="false" />
+                <element signature="e#10292#10391#0" expanded="false" />
+                <element signature="e#10709#10787#0" expanded="false" />
+                <element signature="e#10820#11665#0" expanded="false" />
+                <element signature="e#10864#10961#0" expanded="false" />
+                <element signature="e#11099#11169#0" expanded="false" />
+                <element signature="e#11243#11653#0" expanded="false" />
+                <element signature="e#11471#11568#0" expanded="false" />
+                <element signature="e#12979#13169#0" expanded="false" />
+                <element signature="e#13046#13157#0" expanded="false" />
+                <element signature="e#13307#13653#0" expanded="false" />
+                <element signature="e#13343#13639#0" expanded="false" />
+                <element signature="e#13474#13621#0" expanded="false" />
+                <element signature="e#13520#13599#0" expanded="false" />
+                <element signature="e#13737#15367#0" expanded="false" />
+                <element signature="e#13819#13964#0" expanded="false" />
+                <element signature="e#14082#14174#0" expanded="false" />
+                <element signature="e#14217#14306#0" expanded="false" />
+                <element signature="e#14332#14410#0" expanded="false" />
+                <element signature="e#14459#14695#0" expanded="false" />
+                <element signature="e#14721#15269#0" expanded="false" />
+                <element signature="e#15006#15239#0" expanded="false" />
+                <element signature="e#15062#15212#0" expanded="false" />
+                <element signature="e#15561#16968#0" expanded="false" />
+                <element signature="e#15599#15651#0" expanded="false" />
+                <element signature="e#15725#16565#0" expanded="false" />
+                <element signature="e#15767#15864#0" expanded="false" />
+                <element signature="e#16405#16477#0" expanded="false" />
+                <element signature="e#16626#16685#0" expanded="false" />
+                <element signature="e#16728#16919#0" expanded="false" />
+                <element signature="e#16782#16906#0" expanded="false" />
+                <element signature="e#17093#17580#0" expanded="false" />
+                <element signature="e#17153#17572#0" expanded="false" />
+                <element signature="e#17260#17560#0" expanded="false" />
+                <element signature="e#17330#17501#0" expanded="false" />
+                <element signature="e#17751#20788#0" expanded="false" />
+                <element signature="e#17860#17964#0" expanded="false" />
+                <element signature="e#18103#18691#0" expanded="false" />
+                <element signature="e#18426#18494#0" expanded="false" />
+                <element signature="e#18512#18581#0" expanded="false" />
+                <element signature="e#18703#18760#0" expanded="false" />
+                <element signature="e#18933#18970#0" expanded="false" />
+                <element signature="e#19004#19069#0" expanded="false" />
+                <element signature="e#19128#19188#0" expanded="false" />
+                <element signature="e#19249#19303#0" expanded="false" />
+                <element signature="e#19404#19520#0" expanded="false" />
+                <element signature="e#19446#19510#0" expanded="false" />
+                <element signature="e#19581#20780#0" expanded="false" />
+                <element signature="e#19684#20770#0" expanded="false" />
+                <element signature="e#19898#20754#0" expanded="false" />
+                <element signature="e#20198#20732#0" expanded="false" />
+                <element signature="e#20589#20706#0" expanded="false" />
+                <element signature="e#20862#20979#0" expanded="false" />
+                <element signature="e#20921#20971#0" expanded="false" />
+                <element signature="e#21907#22482#0" expanded="false" />
+                <element signature="e#22523#23152#0" expanded="false" />
+                <element signature="e#23196#23381#0" expanded="false" />
+                <element signature="e#23395#23571#0" expanded="false" />
+                <element signature="e#23608#24057#0" expanded="false" />
+                <element signature="e#24067#24124#0" expanded="false" />
+                <element signature="e#24306#24343#0" expanded="false" />
+                <element signature="e#24382#24457#0" expanded="false" />
+                <element signature="e#24521#24586#0" expanded="false" />
+                <element signature="e#24663#25001#0" expanded="false" />
+                <element signature="e#25102#25228#0" expanded="false" />
+                <element signature="e#25149#25218#0" expanded="false" />
+                <element signature="e#25341#26887#0" expanded="false" />
+                <element signature="e#25441#26292#0" expanded="false" />
+                <element signature="e#25489#26152#0" expanded="false" />
+                <element signature="e#25931#26016#0" expanded="false" />
+                <element signature="e#26046#26130#0" expanded="false" />
+                <element signature="e#26178#26274#0" expanded="false" />
+                <element signature="e#26314#26873#0" expanded="false" />
+                <element signature="e#26420#26804#0" expanded="false" />
+                <element signature="e#26905#27002#0" expanded="false" />
+                <element signature="e#27100#27211#0" expanded="false" />
+                <element signature="e#27591#27702#0" expanded="false" />
+                <element signature="e#28593#28704#0" expanded="false" />
+                <element signature="e#29934#30037#0" expanded="false" />
+                <element signature="e#30307#30365#0" expanded="false" />
+                <element signature="e#30383#30440#0" expanded="false" />
+                <element signature="e#30942#31121#0" expanded="false" />
+                <element signature="e#31034#31111#0" expanded="false" />
+                <element signature="e#31182#31532#0" expanded="false" />
+                <element signature="e#31213#31461#0" expanded="false" />
+                <element signature="e#31323#31374#0" expanded="false" />
+                <element signature="e#31396#31447#0" expanded="false" />
+                <element signature="e#31479#31522#0" expanded="false" />
+                <element signature="e#31570#31617#0" expanded="false" />
+                <element signature="e#31657#32022#0" expanded="false" />
+                <element signature="e#31703#31823#0" expanded="false" />
+                <element signature="e#31874#31950#0" expanded="false" />
+                <element signature="e#31968#32012#0" expanded="false" />
+                <element signature="e#32065#32248#0" expanded="false" />
+                <element signature="e#32088#32238#0" expanded="false" />
+                <element signature="e#32147#32224#0" expanded="false" />
+                <element signature="e#32288#32684#0" expanded="false" />
+                <element signature="e#32311#32674#0" expanded="false" />
+                <element signature="e#32372#32660#0" expanded="false" />
+                <element signature="e#32394#32439#0" expanded="false" />
+                <element signature="e#32726#34494#0" expanded="false" />
+                <element signature="e#32907#33100#0" expanded="false" />
+                <element signature="e#33229#33285#0" expanded="false" />
+                <element signature="e#33675#34418#0" expanded="false" />
+                <element signature="e#33959#34220#0" expanded="false" />
+                <element signature="e#34247#34402#0" expanded="false" />
+                <element signature="e#34436#34484#0" expanded="false" />
+                <element signature="e#34540#35852#0" expanded="false" />
+                <element signature="e#34608#34740#0" expanded="false" />
+                <element signature="e#34771#35061#0" expanded="false" />
+                <element signature="e#34898#35047#0" expanded="false" />
+                <element signature="e#35094#35290#0" expanded="false" />
+                <element signature="e#35224#35276#0" expanded="false" />
+                <element signature="e#35517#35840#0" expanded="false" />
+                <element signature="e#35683#35823#0" expanded="false" />
+                <element signature="e#35902#36096#0" expanded="false" />
+                <element signature="e#35979#36023#0" expanded="false" />
+                <element signature="e#36041#36086#0" expanded="false" />
+                <element signature="e#36158#38073#0" expanded="false" />
+                <element signature="e#36300#37914#0" expanded="false" />
+                <element signature="e#36318#37900#0" expanded="false" />
+                <element signature="e#36570#37205#0" expanded="false" />
+                <element signature="e#36823#37058#0" expanded="false" />
+                <element signature="e#37084#37177#0" expanded="false" />
+                <element signature="e#37275#37464#0" expanded="false" />
+                <element signature="e#37609#37702#0" expanded="false" />
+                <element signature="e#37757#37850#0" expanded="false" />
+                <element signature="e#37933#38061#0" expanded="false" />
+                <element signature="e#37977#38046#0" expanded="false" />
+                <element signature="e#38149#39198#0" expanded="false" />
+                <element signature="e#38185#38616#0" expanded="false" />
+                <element signature="e#38307#38602#0" expanded="false" />
+                <element signature="e#38707#39186#0" expanded="false" />
+                <element signature="e#38778#39017#0" expanded="false" />
+                <element signature="e#38827#38915#0" expanded="false" />
+                <element signature="e#39036#39126#0" expanded="false" />
+                <element signature="e#39739#39833#0" expanded="false" />
+                <element signature="e#40178#40588#0" expanded="false" />
+                <element signature="e#40238#40427#0" expanded="false" />
+                <element signature="e#40468#40582#0" expanded="false" />
+                <element signature="e#40694#40736#0" expanded="false" />
+                <element signature="e#40867#42033#0" expanded="false" />
+                <element signature="e#40927#41040#0" expanded="false" />
+                <element signature="e#40972#41030#0" expanded="false" />
+                <element signature="e#41148#42027#0" expanded="false" />
+                <element signature="e#41162#42016#0" expanded="false" />
+                <element signature="e#41338#41501#0" expanded="false" />
+                <element signature="e#41553#41794#0" expanded="false" />
+                <element signature="e#41669#41742#0" expanded="false" />
+                <element signature="e#41844#42001#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="336" column="0" selection-start-line="336" selection-start-column="0" selection-end-line="336" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="quiz.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/quiz.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-5.8846154">
+              <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+              <folding>
+                <marker date="1443297964880" expanded="true" signature="787:913" placeholder="{...}" />
+                <marker date="1443297964880" expanded="true" signature="1606:1965" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="contest.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.8461537">
+              <caret line="12" column="136" selection-start-line="12" selection-start-column="80" selection-end-line="12" selection-end-column="136" />
+              <folding>
+                <marker date="1443181446194" expanded="true" signature="1639:1805" placeholder="{...}" />
+                <marker date="1443181446194" expanded="true" signature="4671:4755" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/www/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-24.076923">
+              <caret line="39" column="63" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="63" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.1877213">
+              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -80,11 +961,8 @@
         <option value="$PROJECT_DIR$/server/utils/exceptions.js" />
         <option value="$PROJECT_DIR$/server/api/paypalPN.js" />
         <option value="$PROJECT_DIR$/server/api/facebookCanvas.js" />
-        <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
-        <option value="$PROJECT_DIR$/client/www/css/style.css" />
         <option value="$PROJECT_DIR$/client/www/templates/contests.html" />
         <option value="$PROJECT_DIR$/client/www/templates/menu.html" />
-        <option value="$PROJECT_DIR$/client/www/js/app.js" />
         <option value="$PROJECT_DIR$/client/www/index.html" />
         <option value="$PROJECT_DIR$/server/dal/dalFacebook.js" />
         <option value="$PROJECT_DIR$/server/business_logic/session.js" />
@@ -93,12 +971,15 @@
         <option value="$PROJECT_DIR$/client/www/languages/es.json" />
         <option value="$PROJECT_DIR$/client/www/languages/he.json" />
         <option value="$PROJECT_DIR$/client/www/templates/contest.html" />
-        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
-        <option value="$PROJECT_DIR$/client/www/js/services.js" />
         <option value="$PROJECT_DIR$/server/utils/general.js" />
         <option value="$PROJECT_DIR$/server/business_logic/credentials.js" />
         <option value="$PROJECT_DIR$/server/dal/dalDb.js" />
         <option value="$PROJECT_DIR$/client/config.xml" />
+        <option value="$PROJECT_DIR$/client/www/js/app.js" />
+        <option value="$PROJECT_DIR$/client/www/js/services.js" />
+        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
+        <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
+        <option value="$PROJECT_DIR$/client/www/css/style.css" />
       </list>
     </option>
   </component>
@@ -170,25 +1051,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="business_logic" />
+              <option name="myItemId" value="client" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -203,6 +1066,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="www" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whoSmarter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whoSmarter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="www" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -326,12 +1215,6 @@
       <created>1431500570423</created>
       <option name="number" value="Default" />
       <updated>1431500570423</updated>
-    </task>
-    <task id="LOCAL-00029" summary="TODO:&#10;1. on all errors - dbHelper - check if need to close the connection anyway&#10;2. Separate Dal/BL - cleaner server code&#10;">
-      <created>1439386004615</created>
-      <option name="number" value="00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1439386004615</updated>
     </task>
     <task id="LOCAL-00030" summary="TODO:&#10;1. on all errors - dbHelper - check if need to close the connection anyway&#10;2. Separate Dal/BL - cleaner server code&#10;">
       <created>1439392401027</created>
@@ -621,7 +1504,13 @@
       <option name="project" value="LOCAL" />
       <updated>1443182588631</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="FB Canvas - TODO:&#10;1. Check disputes, refunds, declines + revoke asset&#10;&#10;Added SessionHistory recording in server.&#10;Added clientInfo (platform, appVersion, platformVersion), to Sessions ans SessionHistory">
+      <created>1443199126722</created>
+      <option name="number" value="00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1443199126722</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TodoView">
@@ -938,29 +1827,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/quiz.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35200974">
-          <caret line="17" column="38" selection-start-line="17" selection-start-column="38" selection-end-line="17" selection-end-column="38" />
-          <folding>
-            <marker date="1443072461868" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1443072461868" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/utils/exceptions.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6587958">
           <caret line="107" column="0" selection-start-line="107" selection-start-column="0" selection-end-line="107" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="295" column="24" selection-start-line="295" selection-start-column="1" selection-end-line="295" selection-end-column="24" />
           <folding />
         </state>
       </provider>
@@ -988,14 +1858,6 @@
           <folding>
             <element signature="n#!!doc" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.115385">
-          <caret line="18" column="60" selection-start-line="18" selection-start-column="60" selection-end-line="18" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1083,207 +1945,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.230769">
-          <caret line="13" column="136" selection-start-line="13" selection-start-column="136" selection-end-line="13" selection-end-column="136" />
-          <folding>
-            <marker date="1443181446194" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1443181446194" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1443181446194" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="24" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="698" column="51" selection-start-line="698" selection-start-column="51" selection-end-line="698" selection-end-column="51" />
-          <folding>
-            <element signature="e#296#434#0" expanded="false" />
-            <element signature="e#496#535#0" expanded="false" />
-            <element signature="e#874#1289#0" expanded="false" />
-            <element signature="e#928#1109#0" expanded="false" />
-            <element signature="e#1131#1275#0" expanded="false" />
-            <element signature="e#1334#1391#0" expanded="false" />
-            <element signature="e#1499#1556#0" expanded="false" />
-            <element signature="e#1740#1799#0" expanded="false" />
-            <element signature="e#1801#1876#0" expanded="false" />
-            <element signature="e#1926#1977#0" expanded="false" />
-            <element signature="e#2027#2078#0" expanded="false" />
-            <element signature="e#2416#2531#0" expanded="false" />
-            <element signature="e#2461#2521#0" expanded="false" />
-            <element signature="e#2607#2819#0" expanded="false" />
-            <element signature="e#3212#3284#0" expanded="false" />
-            <element signature="e#3320#3383#0" expanded="false" />
-            <element signature="e#3402#3680#0" expanded="false" />
-            <element signature="e#3428#3574#0" expanded="false" />
-            <element signature="e#3592#3670#0" expanded="false" />
-            <element signature="e#3894#4269#0" expanded="false" />
-            <element signature="e#3933#4006#0" expanded="false" />
-            <element signature="e#4046#4181#0" expanded="false" />
-            <element signature="e#4097#4165#0" expanded="false" />
-            <element signature="e#4199#4259#0" expanded="false" />
-            <element signature="e#4325#4498#0" expanded="false" />
-            <element signature="e#4675#4882#0" expanded="false" />
-            <element signature="e#4738#4793#0" expanded="false" />
-            <element signature="e#4815#4868#0" expanded="false" />
-            <element signature="e#4963#5023#0" expanded="false" />
-            <element signature="e#5045#5100#0" expanded="false" />
-            <element signature="e#5185#5307#0" expanded="false" />
-            <element signature="e#5375#5497#0" expanded="false" />
-            <element signature="e#5546#5697#0" expanded="false" />
-            <element signature="e#5613#5686#0" expanded="false" />
-            <element signature="e#6213#6379#0" expanded="false" />
-            <element signature="e#6252#6336#0" expanded="false" />
-            <element signature="e#6439#6525#0" expanded="false" />
-            <element signature="e#6568#6890#0" expanded="false" />
-            <element signature="e#6609#6673#0" expanded="false" />
-            <element signature="e#6931#7022#0" expanded="false" />
-            <element signature="e#7078#7177#0" expanded="false" />
-            <element signature="e#7226#7478#0" expanded="false" />
-            <element signature="e#7527#7667#0" expanded="false" />
-            <element signature="e#7758#8354#0" expanded="false" />
-            <element signature="e#7822#8204#0" expanded="false" />
-            <element signature="e#8226#8340#0" expanded="false" />
-            <element signature="e#8509#8590#0" expanded="false" />
-            <element signature="e#8608#8663#0" expanded="false" />
-            <element signature="e#8846#8916#0" expanded="false" />
-            <element signature="e#8994#10039#0" expanded="false" />
-            <element signature="e#9150#9318#0" expanded="false" />
-            <element signature="e#9363#9429#0" expanded="false" />
-            <element signature="e#9633#9837#0" expanded="false" />
-            <element signature="e#9941#10025#0" expanded="false" />
-            <element signature="e#10115#10401#0" expanded="false" />
-            <element signature="e#10177#10274#0" expanded="false" />
-            <element signature="e#10292#10391#0" expanded="false" />
-            <element signature="e#10709#10787#0" expanded="false" />
-            <element signature="e#10820#11665#0" expanded="false" />
-            <element signature="e#10864#10961#0" expanded="false" />
-            <element signature="e#11099#11169#0" expanded="false" />
-            <element signature="e#11243#11653#0" expanded="false" />
-            <element signature="e#11471#11568#0" expanded="false" />
-            <element signature="e#11709#11889#0" expanded="false" />
-            <element signature="e#11764#11877#0" expanded="false" />
-            <element signature="e#12253#12306#0" expanded="false" />
-            <element signature="e#12360#12668#0" expanded="false" />
-            <element signature="e#12400#12586#0" expanded="false" />
-            <element signature="e#12604#12658#0" expanded="false" />
-            <element signature="e#12711#12901#0" expanded="false" />
-            <element signature="e#12778#12889#0" expanded="false" />
-            <element signature="e#12954#15125#0" expanded="false" />
-            <element signature="e#13039#13385#0" expanded="false" />
-            <element signature="e#13075#13371#0" expanded="false" />
-            <element signature="e#13206#13353#0" expanded="false" />
-            <element signature="e#13252#13331#0" expanded="false" />
-            <element signature="e#13469#15099#0" expanded="false" />
-            <element signature="e#13551#13696#0" expanded="false" />
-            <element signature="e#13814#13906#0" expanded="false" />
-            <element signature="e#13949#14038#0" expanded="false" />
-            <element signature="e#14064#14142#0" expanded="false" />
-            <element signature="e#14191#14427#0" expanded="false" />
-            <element signature="e#14453#15001#0" expanded="false" />
-            <element signature="e#14738#14971#0" expanded="false" />
-            <element signature="e#14794#14944#0" expanded="false" />
-            <element signature="e#15292#16699#0" expanded="false" />
-            <element signature="e#15330#15382#0" expanded="false" />
-            <element signature="e#15456#16296#0" expanded="false" />
-            <element signature="e#15498#15595#0" expanded="false" />
-            <element signature="e#16136#16208#0" expanded="false" />
-            <element signature="e#16357#16416#0" expanded="false" />
-            <element signature="e#16459#16650#0" expanded="false" />
-            <element signature="e#16513#16637#0" expanded="false" />
-            <element signature="e#17061#17232#0" expanded="false" />
-            <element signature="e#17591#17695#0" expanded="false" />
-            <element signature="e#18157#18225#0" expanded="false" />
-            <element signature="e#18243#18312#0" expanded="false" />
-            <element signature="e#18434#18491#0" expanded="false" />
-            <element signature="e#18664#18701#0" expanded="false" />
-            <element signature="e#18735#18800#0" expanded="false" />
-            <element signature="e#19135#19251#0" expanded="false" />
-            <element signature="e#19177#19241#0" expanded="false" />
-            <element signature="e#19312#20511#0" expanded="false" />
-            <element signature="e#19415#20501#0" expanded="false" />
-            <element signature="e#19629#20485#0" expanded="false" />
-            <element signature="e#19929#20463#0" expanded="false" />
-            <element signature="e#20320#20437#0" expanded="false" />
-            <element signature="e#20652#20702#0" expanded="false" />
-            <element signature="e#21638#22213#0" expanded="false" />
-            <element signature="e#22254#22883#0" expanded="false" />
-            <element signature="e#22927#23112#0" expanded="false" />
-            <element signature="e#23126#23302#0" expanded="false" />
-            <element signature="e#23339#23788#0" expanded="false" />
-            <element signature="e#23798#23855#0" expanded="false" />
-            <element signature="e#24037#24074#0" expanded="false" />
-            <element signature="e#24113#24188#0" expanded="false" />
-            <element signature="e#24252#24317#0" expanded="false" />
-            <element signature="e#24394#24732#0" expanded="false" />
-            <element signature="e#24833#24959#0" expanded="false" />
-            <element signature="e#24880#24949#0" expanded="false" />
-            <element signature="e#25220#25883#0" expanded="false" />
-            <element signature="e#25662#25747#0" expanded="false" />
-            <element signature="e#25777#25861#0" expanded="false" />
-            <element signature="e#25909#26005#0" expanded="false" />
-            <element signature="e#26151#26535#0" expanded="false" />
-            <element signature="e#30170#30228#0" expanded="false" />
-            <element signature="e#30246#30303#0" expanded="false" />
-            <element signature="e#30805#30984#0" expanded="false" />
-            <element signature="e#30897#30974#0" expanded="false" />
-            <element signature="e#31045#31395#0" expanded="false" />
-            <element signature="e#31076#31324#0" expanded="false" />
-            <element signature="e#31186#31237#0" expanded="false" />
-            <element signature="e#31259#31310#0" expanded="false" />
-            <element signature="e#31342#31385#0" expanded="false" />
-            <element signature="e#31433#31480#0" expanded="false" />
-            <element signature="e#31520#31885#0" expanded="false" />
-            <element signature="e#31566#31686#0" expanded="false" />
-            <element signature="e#31737#31813#0" expanded="false" />
-            <element signature="e#31831#31875#0" expanded="false" />
-            <element signature="e#31928#32111#0" expanded="false" />
-            <element signature="e#31951#32101#0" expanded="false" />
-            <element signature="e#32010#32087#0" expanded="false" />
-            <element signature="e#32151#32547#0" expanded="false" />
-            <element signature="e#32174#32537#0" expanded="false" />
-            <element signature="e#32235#32523#0" expanded="false" />
-            <element signature="e#32257#32302#0" expanded="false" />
-            <element signature="e#32770#32963#0" expanded="false" />
-            <element signature="e#34110#34265#0" expanded="false" />
-            <element signature="e#34299#34347#0" expanded="false" />
-            <element signature="e#34403#35715#0" expanded="false" />
-            <element signature="e#34471#34603#0" expanded="false" />
-            <element signature="e#34634#34924#0" expanded="false" />
-            <element signature="e#34761#34910#0" expanded="false" />
-            <element signature="e#34957#35153#0" expanded="false" />
-            <element signature="e#35087#35139#0" expanded="false" />
-            <element signature="e#35380#35703#0" expanded="false" />
-            <element signature="e#35546#35686#0" expanded="false" />
-            <element signature="e#35765#35959#0" expanded="false" />
-            <element signature="e#35842#35886#0" expanded="false" />
-            <element signature="e#35904#35949#0" expanded="false" />
-            <element signature="e#37138#37327#0" expanded="false" />
-            <element signature="e#37796#37924#0" expanded="false" />
-            <element signature="e#37840#37909#0" expanded="false" />
-            <element signature="e#40299#40413#0" expanded="false" />
-            <element signature="e#40758#40871#0" expanded="false" />
-            <element signature="e#40803#40861#0" expanded="false" />
-            <element signature="e#40979#41858#0" expanded="false" />
-            <element signature="e#40993#41847#0" expanded="false" />
-            <element signature="e#41169#41332#0" expanded="false" />
-            <element signature="e#41384#41625#0" expanded="false" />
-            <element signature="e#41500#41573#0" expanded="false" />
-            <element signature="e#41675#41832#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/utils/general.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1307,14 +1968,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="117" column="54" selection-start-line="117" selection-start-column="42" selection-end-line="117" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1335,6 +1988,284 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.82290435">
           <caret line="41" column="66" selection-start-line="41" selection-start-column="66" selection-end-line="41" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-24.076923">
+          <caret line="39" column="63" selection-start-line="39" selection-start-column="30" selection-end-line="39" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="460" column="8" selection-start-line="460" selection-start-column="8" selection-end-line="460" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.8461537">
+          <caret line="12" column="136" selection-start-line="12" selection-start-column="80" selection-end-line="12" selection-end-column="136" />
+          <folding>
+            <marker date="1443181446194" expanded="true" signature="1639:1805" placeholder="{...}" />
+            <marker date="1443181446194" expanded="true" signature="4671:4755" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="732" column="0" selection-start-line="732" selection-start-column="0" selection-end-line="732" selection-end-column="0" />
+          <folding>
+            <element signature="e#227#3689#0" expanded="false" />
+            <element signature="e#296#434#0" expanded="false" />
+            <element signature="e#496#535#0" expanded="false" />
+            <element signature="e#571#1299#0" expanded="false" />
+            <element signature="e#679#718#0" expanded="false" />
+            <element signature="e#874#1289#0" expanded="false" />
+            <element signature="e#928#1109#0" expanded="false" />
+            <element signature="e#1131#1275#0" expanded="false" />
+            <element signature="e#1334#1391#0" expanded="false" />
+            <element signature="e#1499#1556#0" expanded="false" />
+            <element signature="e#1740#1799#0" expanded="false" />
+            <element signature="e#1801#1876#0" expanded="false" />
+            <element signature="e#1926#1977#0" expanded="false" />
+            <element signature="e#2027#2078#0" expanded="false" />
+            <element signature="e#2153#2365#0" expanded="false" />
+            <element signature="e#2416#2531#0" expanded="false" />
+            <element signature="e#2461#2521#0" expanded="false" />
+            <element signature="e#2607#2819#0" expanded="false" />
+            <element signature="e#3212#3284#0" expanded="false" />
+            <element signature="e#3320#3383#0" expanded="false" />
+            <element signature="e#3402#3680#0" expanded="false" />
+            <element signature="e#3428#3574#0" expanded="false" />
+            <element signature="e#3592#3670#0" expanded="false" />
+            <element signature="e#3834#5705#0" expanded="false" />
+            <element signature="e#3894#4269#0" expanded="false" />
+            <element signature="e#3933#4006#0" expanded="false" />
+            <element signature="e#4046#4181#0" expanded="false" />
+            <element signature="e#4097#4165#0" expanded="false" />
+            <element signature="e#4199#4259#0" expanded="false" />
+            <element signature="e#4325#4498#0" expanded="false" />
+            <element signature="e#4550#5124#0" expanded="false" />
+            <element signature="e#4675#4882#0" expanded="false" />
+            <element signature="e#4738#4793#0" expanded="false" />
+            <element signature="e#4815#4868#0" expanded="false" />
+            <element signature="e#4900#5114#0" expanded="false" />
+            <element signature="e#4963#5023#0" expanded="false" />
+            <element signature="e#5045#5100#0" expanded="false" />
+            <element signature="e#5185#5307#0" expanded="false" />
+            <element signature="e#5375#5497#0" expanded="false" />
+            <element signature="e#5546#5697#0" expanded="false" />
+            <element signature="e#5613#5686#0" expanded="false" />
+            <element signature="e#5893#10449#0" expanded="false" />
+            <element signature="e#6213#6379#0" expanded="false" />
+            <element signature="e#6252#6336#0" expanded="false" />
+            <element signature="e#6439#6525#0" expanded="false" />
+            <element signature="e#6568#6890#0" expanded="false" />
+            <element signature="e#6609#6673#0" expanded="false" />
+            <element signature="e#6931#7022#0" expanded="false" />
+            <element signature="e#7078#7177#0" expanded="false" />
+            <element signature="e#7226#7478#0" expanded="false" />
+            <element signature="e#7527#7667#0" expanded="false" />
+            <element signature="e#7723#8371#0" expanded="false" />
+            <element signature="e#7758#8354#0" expanded="false" />
+            <element signature="e#7822#8204#0" expanded="false" />
+            <element signature="e#8226#8340#0" expanded="false" />
+            <element signature="e#8431#10065#0" expanded="false" />
+            <element signature="e#8509#8590#0" expanded="false" />
+            <element signature="e#8608#8663#0" expanded="false" />
+            <element signature="e#8846#8916#0" expanded="false" />
+            <element signature="e#8994#10039#0" expanded="false" />
+            <element signature="e#9150#9318#0" expanded="false" />
+            <element signature="e#9363#9429#0" expanded="false" />
+            <element signature="e#9633#9837#0" expanded="false" />
+            <element signature="e#9941#10025#0" expanded="false" />
+            <element signature="e#10115#10401#0" expanded="false" />
+            <element signature="e#10177#10274#0" expanded="false" />
+            <element signature="e#10292#10391#0" expanded="false" />
+            <element signature="e#10709#10787#0" expanded="false" />
+            <element signature="e#10820#11665#0" expanded="false" />
+            <element signature="e#10864#10961#0" expanded="false" />
+            <element signature="e#11099#11169#0" expanded="false" />
+            <element signature="e#11243#11653#0" expanded="false" />
+            <element signature="e#11471#11568#0" expanded="false" />
+            <element signature="e#12979#13169#0" expanded="false" />
+            <element signature="e#13046#13157#0" expanded="false" />
+            <element signature="e#13307#13653#0" expanded="false" />
+            <element signature="e#13343#13639#0" expanded="false" />
+            <element signature="e#13474#13621#0" expanded="false" />
+            <element signature="e#13520#13599#0" expanded="false" />
+            <element signature="e#13737#15367#0" expanded="false" />
+            <element signature="e#13819#13964#0" expanded="false" />
+            <element signature="e#14082#14174#0" expanded="false" />
+            <element signature="e#14217#14306#0" expanded="false" />
+            <element signature="e#14332#14410#0" expanded="false" />
+            <element signature="e#14459#14695#0" expanded="false" />
+            <element signature="e#14721#15269#0" expanded="false" />
+            <element signature="e#15006#15239#0" expanded="false" />
+            <element signature="e#15062#15212#0" expanded="false" />
+            <element signature="e#15561#16968#0" expanded="false" />
+            <element signature="e#15599#15651#0" expanded="false" />
+            <element signature="e#15725#16565#0" expanded="false" />
+            <element signature="e#15767#15864#0" expanded="false" />
+            <element signature="e#16405#16477#0" expanded="false" />
+            <element signature="e#16626#16685#0" expanded="false" />
+            <element signature="e#16728#16919#0" expanded="false" />
+            <element signature="e#16782#16906#0" expanded="false" />
+            <element signature="e#17093#17580#0" expanded="false" />
+            <element signature="e#17153#17572#0" expanded="false" />
+            <element signature="e#17260#17560#0" expanded="false" />
+            <element signature="e#17330#17501#0" expanded="false" />
+            <element signature="e#17751#20788#0" expanded="false" />
+            <element signature="e#17860#17964#0" expanded="false" />
+            <element signature="e#18103#18691#0" expanded="false" />
+            <element signature="e#18426#18494#0" expanded="false" />
+            <element signature="e#18512#18581#0" expanded="false" />
+            <element signature="e#18703#18760#0" expanded="false" />
+            <element signature="e#18933#18970#0" expanded="false" />
+            <element signature="e#19004#19069#0" expanded="false" />
+            <element signature="e#19128#19188#0" expanded="false" />
+            <element signature="e#19249#19303#0" expanded="false" />
+            <element signature="e#19404#19520#0" expanded="false" />
+            <element signature="e#19446#19510#0" expanded="false" />
+            <element signature="e#19581#20780#0" expanded="false" />
+            <element signature="e#19684#20770#0" expanded="false" />
+            <element signature="e#19898#20754#0" expanded="false" />
+            <element signature="e#20198#20732#0" expanded="false" />
+            <element signature="e#20589#20706#0" expanded="false" />
+            <element signature="e#20862#20979#0" expanded="false" />
+            <element signature="e#20921#20971#0" expanded="false" />
+            <element signature="e#21907#22482#0" expanded="false" />
+            <element signature="e#22523#23152#0" expanded="false" />
+            <element signature="e#23196#23381#0" expanded="false" />
+            <element signature="e#23395#23571#0" expanded="false" />
+            <element signature="e#23608#24057#0" expanded="false" />
+            <element signature="e#24067#24124#0" expanded="false" />
+            <element signature="e#24306#24343#0" expanded="false" />
+            <element signature="e#24382#24457#0" expanded="false" />
+            <element signature="e#24521#24586#0" expanded="false" />
+            <element signature="e#24663#25001#0" expanded="false" />
+            <element signature="e#25102#25228#0" expanded="false" />
+            <element signature="e#25149#25218#0" expanded="false" />
+            <element signature="e#25341#26887#0" expanded="false" />
+            <element signature="e#25441#26292#0" expanded="false" />
+            <element signature="e#25489#26152#0" expanded="false" />
+            <element signature="e#25931#26016#0" expanded="false" />
+            <element signature="e#26046#26130#0" expanded="false" />
+            <element signature="e#26178#26274#0" expanded="false" />
+            <element signature="e#26314#26873#0" expanded="false" />
+            <element signature="e#26420#26804#0" expanded="false" />
+            <element signature="e#26905#27002#0" expanded="false" />
+            <element signature="e#27100#27211#0" expanded="false" />
+            <element signature="e#27591#27702#0" expanded="false" />
+            <element signature="e#28593#28704#0" expanded="false" />
+            <element signature="e#29934#30037#0" expanded="false" />
+            <element signature="e#30307#30365#0" expanded="false" />
+            <element signature="e#30383#30440#0" expanded="false" />
+            <element signature="e#30942#31121#0" expanded="false" />
+            <element signature="e#31034#31111#0" expanded="false" />
+            <element signature="e#31182#31532#0" expanded="false" />
+            <element signature="e#31213#31461#0" expanded="false" />
+            <element signature="e#31323#31374#0" expanded="false" />
+            <element signature="e#31396#31447#0" expanded="false" />
+            <element signature="e#31479#31522#0" expanded="false" />
+            <element signature="e#31570#31617#0" expanded="false" />
+            <element signature="e#31657#32022#0" expanded="false" />
+            <element signature="e#31703#31823#0" expanded="false" />
+            <element signature="e#31874#31950#0" expanded="false" />
+            <element signature="e#31968#32012#0" expanded="false" />
+            <element signature="e#32065#32248#0" expanded="false" />
+            <element signature="e#32088#32238#0" expanded="false" />
+            <element signature="e#32147#32224#0" expanded="false" />
+            <element signature="e#32288#32684#0" expanded="false" />
+            <element signature="e#32311#32674#0" expanded="false" />
+            <element signature="e#32372#32660#0" expanded="false" />
+            <element signature="e#32394#32439#0" expanded="false" />
+            <element signature="e#32726#34494#0" expanded="false" />
+            <element signature="e#32907#33100#0" expanded="false" />
+            <element signature="e#33229#33285#0" expanded="false" />
+            <element signature="e#33675#34418#0" expanded="false" />
+            <element signature="e#33959#34220#0" expanded="false" />
+            <element signature="e#34247#34402#0" expanded="false" />
+            <element signature="e#34436#34484#0" expanded="false" />
+            <element signature="e#34540#35852#0" expanded="false" />
+            <element signature="e#34608#34740#0" expanded="false" />
+            <element signature="e#34771#35061#0" expanded="false" />
+            <element signature="e#34898#35047#0" expanded="false" />
+            <element signature="e#35094#35290#0" expanded="false" />
+            <element signature="e#35224#35276#0" expanded="false" />
+            <element signature="e#35517#35840#0" expanded="false" />
+            <element signature="e#35683#35823#0" expanded="false" />
+            <element signature="e#35902#36096#0" expanded="false" />
+            <element signature="e#35979#36023#0" expanded="false" />
+            <element signature="e#36041#36086#0" expanded="false" />
+            <element signature="e#36158#38073#0" expanded="false" />
+            <element signature="e#36300#37914#0" expanded="false" />
+            <element signature="e#36318#37900#0" expanded="false" />
+            <element signature="e#36570#37205#0" expanded="false" />
+            <element signature="e#36823#37058#0" expanded="false" />
+            <element signature="e#37084#37177#0" expanded="false" />
+            <element signature="e#37275#37464#0" expanded="false" />
+            <element signature="e#37609#37702#0" expanded="false" />
+            <element signature="e#37757#37850#0" expanded="false" />
+            <element signature="e#37933#38061#0" expanded="false" />
+            <element signature="e#37977#38046#0" expanded="false" />
+            <element signature="e#38149#39198#0" expanded="false" />
+            <element signature="e#38185#38616#0" expanded="false" />
+            <element signature="e#38307#38602#0" expanded="false" />
+            <element signature="e#38707#39186#0" expanded="false" />
+            <element signature="e#38778#39017#0" expanded="false" />
+            <element signature="e#38827#38915#0" expanded="false" />
+            <element signature="e#39036#39126#0" expanded="false" />
+            <element signature="e#39739#39833#0" expanded="false" />
+            <element signature="e#40178#40588#0" expanded="false" />
+            <element signature="e#40238#40427#0" expanded="false" />
+            <element signature="e#40468#40582#0" expanded="false" />
+            <element signature="e#40694#40736#0" expanded="false" />
+            <element signature="e#40867#42033#0" expanded="false" />
+            <element signature="e#40927#41040#0" expanded="false" />
+            <element signature="e#40972#41030#0" expanded="false" />
+            <element signature="e#41148#42027#0" expanded="false" />
+            <element signature="e#41162#42016#0" expanded="false" />
+            <element signature="e#41338#41501#0" expanded="false" />
+            <element signature="e#41553#41794#0" expanded="false" />
+            <element signature="e#41669#41742#0" expanded="false" />
+            <element signature="e#41844#42001#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="336" column="0" selection-start-line="336" selection-start-column="0" selection-end-line="336" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/quiz.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.8846154">
+          <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
+          <folding>
+            <marker date="1443297964880" expanded="true" signature="787:913" placeholder="{...}" />
+            <marker date="1443297964880" expanded="true" signature="1606:1965" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.1877213">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding />
         </state>
       </provider>

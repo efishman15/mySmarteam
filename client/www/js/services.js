@@ -202,7 +202,9 @@ angular.module('whoSmarter.services', [])
                         }
 
                         if (window.cordova) {
-                            $rootScope.user.clientInfo.appVersion = $rootScope.appVersion;
+                            if (!$rootScope.user.clientInfo.appVersion) {
+                                $rootScope.user.clientInfo.appVersion = $rootScope.appVersion;
+                            }
                             $rootScope.user.clientInfo.platformVersion = ionic.Platform.version();
                         }
 
@@ -221,13 +223,6 @@ angular.module('whoSmarter.services', [])
                                 }
                             }
                         }, 600);
-
-
-                        if (window.cordova) {
-                            postData.appVersion = $rootScope.appVersion;
-                            postData.platform = ionic.Platform.platform();
-                            postData.platformVersion = ionic.Platform.version();
-                        }
 
                         //------------------------------------------------------------------------------------
                         //-- Load languages from server - can be done without waiting for result
@@ -352,8 +347,6 @@ angular.module('whoSmarter.services', [])
                             $rootScope.gotoView("serverPopup", false, {serverPopup: data})
                         });
 
-
-
                         if (!$rootScope.settings) {
                             InfoService.getSettings(
                                 function (data) {
@@ -464,6 +457,7 @@ angular.module('whoSmarter.services', [])
 
         //Get settings from server
         service.getSettings = function (callbackOnSuccess, callbackOnError, config) {
+
             var postData = {};
 
             postData.language = $rootScope.user.settings.language;

@@ -334,7 +334,12 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             QuizService.nextQuestion(function (data) {
                 $scope.quiz = data;
                 $scope.quiz.currentQuestion.answered = false;
+                $scope.quiz.currentQuestion.animation = true; //Animation end will trigger quiz proceed
             });
+        }
+
+        $scope.questionAnimationEnd = function () {
+            $scope.quiz.currentQuestion.animation = false; //Animation end will trigger quiz proceed
         }
 
         $scope.buttonAnimationEnded = function (button, event) {
@@ -419,6 +424,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                     $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
                 }, null, config);
         }
+
     })
 
     .controller("QuizResultCtrl", function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory, ContestsService, SoundService, ChartService) {
@@ -714,17 +720,17 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                             //Retrieve unconsumed items - and checking if user has an unconsumed "new contest unlock key"
                             //-------------------------------------------------------------------------------------------------------------
                             inappbilling.getPurchases(function (unconsumedItems) {
-                                    if (unconsumedItems.RESPONSE_CODE == 0 && unconsumedItems.INAPP_PURCHASE_ITEM_LIST && INAPP_PURCHASE_ITEM_LIST.length > 0) {
-                                        for (var i = 0; i < unconsumedItems.INAPP_PURCHASE_ITEM_LIST.length; i++) {
-                                            if (unconsumedItems.INAPP_PURCHASE_ITEM_LIST[i] === $rootScope.session.features.newContest.purchaseData.productId) {
-                                                processAndroidPurchase(unconsumedItems.INAPP_PURCHASE_DATA_LIST[i]);
+                                    if (unconsumedItems && unconsumedItems.length > 0) {
+                                        for (var i = 0; i < unconsumedItems.length; i++) {
+                                            if (unconsumedItems[i].productId === $rootScope.session.features.newContest.purchaseData.productId) {
+                                                processAndroidPurchase(unconsumedItems[i]);
                                                 break;
                                             }
                                         }
                                     }
                                 },
                                 function (error) {
-                                    alert("Error retrieving unconsumed items: " + error);
+                                    console.log("Error retrieving unconsumed items: " + error);
                                 });
 
                         },
@@ -736,7 +742,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 }
             }
             else {
-                $rootScope.session.features.newContest.purchaseData.retrieved = false;
+                $rootScope.session.features.newContest.purchaseData.retrieved = true;
             }
 
             if ($ionicHistory.backView() == null) {
@@ -944,19 +950,19 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 "extraPurchaseData": {
                     "actualCost": $rootScope.session.features.newContest.purchaseData.cost,
                     "actualCurrency": $rootScope.session.features.newContest.purchaseData.currency,
-                    "featurePurchased" : $rootScope.session.features.newContest.name
+                    "featurePurchased": $rootScope.session.features.newContest.name
                 }
             };
             PaymentService.processPayment(transactionData, function (serverPurchaseData) {
                 inappbilling.consumePurchase(function (purchaseData) {
-                    if (callbackOnSuccess) {
-                        callbackOnSuccess(purchaseData);
-                    }
-                    PaymentService.showPurchaseSuccess(serverPurchaseData);
-                }, function(error) {
-                    alert("Error consuming product: " + error)
-                },
-                purchaseData.productId);
+                        if (callbackOnSuccess) {
+                            callbackOnSuccess(purchaseData);
+                        }
+                        PaymentService.showPurchaseSuccess(serverPurchaseData);
+                    }, function (error) {
+                        alert("Error consuming product: " + error)
+                    },
+                    purchaseData.productId);
             });
         }
     })
