@@ -1,4 +1,4 @@
-angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
+﻿angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, StoreService) {
 
@@ -298,12 +298,106 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
     .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService) {
 
+        var quizCanvas;
+        var quizContext;
+        if (!quizCanvas) {
+            quizCanvas = document.getElementById("quizCanvas");
+            quizContext = quizCanvas.getContext("2d");
+        }
+
+        var imgCorrect = document.createElement('img');
+        imgCorrect.src = '../images/correct.png';
+        var imgError = document.createElement('img');
+        imgError.src = '../images/error.png';
+
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
             viewData.enableBack = true;
             startQuiz();
 
         });
+
+        $scope.$on("whoSmarter-windowResize", function () {
+            drawQuizProgress();
+        });
+
+        function drawQuizProgress() {
+
+            var topOffset = 10;
+            var radius = 20;
+            var inactiveColor = "#5f5f5f";
+            var activeColor = "#b8128f";
+
+            quizCanvas.width = quizCanvas.clientWidth;
+            quizContext.beginPath();
+            quizContext.moveTo(0, radius + topOffset);
+            quizContext.lineTo(quizCanvas.width, radius + topOffset);
+            quizContext.lineWidth = 7;
+
+            // set line color
+            quizContext.strokeStyle = inactiveColor
+            quizContext.stroke();
+            quizContext.fill();
+            quizContext.closePath();
+
+            var currentX;
+            if ($rootScope.settings.languages[$rootScope.user.settings.language].direction === "ltr") {
+                currentX = radius;
+            }
+            else {
+                currentX = quizCanvas.width - radius;
+            }
+
+            var circleOffsets = (quizCanvas.width - $scope.quiz.totalQuestions * radius * 2) / ($scope.quiz.totalQuestions - 1);
+            for (var i = 0; i < $scope.quiz.totalQuestions; i++) {
+
+                quizContext.beginPath();
+                quizContext.fillStyle = inactiveColor;
+                quizContext.arc(currentX, radius + topOffset, radius, 0, Math.PI * 2, false);
+                quizContext.fill();
+                quizContext.closePath();
+
+                quizContext.beginPath();
+                if (i === $scope.quiz.currentQuestionIndex - 1 && $scope.questionHistory.length < $scope.quiz.totalQuestions) {
+                    quizContext.fillStyle = activeColor;
+                    quizContext.arc(currentX, radius + topOffset, radius, 0, Math.PI * 2, false);
+                    quizContext.fill();
+                }
+                else {
+                    if ($scope.questionHistory.length > 0 && i < $scope.questionHistory.length) {
+                        var x = currentX - radius;
+
+                        if ($scope.questionHistory[i]) {
+                            quizContext.drawImage(imgCorrect, x, topOffset, radius * 2, radius * 2);
+                        }
+                        else {
+                            quizContext.drawImage(imgError, x, topOffset, radius * 2, radius * 2);
+                        }
+                    }
+                }
+                quizContext.closePath();
+
+                if ($rootScope.settings.languages[$rootScope.user.settings.language].direction === "ltr") {
+                    if (i < $scope.quiz.totalQuestions - 1) {
+                        currentX += circleOffsets + radius * 2;
+                    }
+                    else {
+                        currentX = quizCanvas.width - radius;
+                    }
+                }
+                else {
+                    if (i < $scope.quiz.totalQuestions - 1) {
+                        currentX = currentX - circleOffsets - (radius * 2);
+                    }
+                    else {
+                        currentX = radius;
+                    }
+                }
+            }
+
+            quizContext.closePath();
+
+        };
 
         function startQuiz() {
 
@@ -320,6 +414,8 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             QuizService.start(postData,
                 function (data) {
                     $scope.quiz = data.quiz;
+                    $scope.questionHistory = [];
+                    drawQuizProgress();
 
                     //Might get xp if starting quiz by pressing a new team (joining contest)
                     if ($scope.quiz.xpProgress && $scope.quiz.xpProgress.addition > 0) {
@@ -335,6 +431,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                 $scope.quiz = data;
                 $scope.quiz.currentQuestion.answered = false;
                 $scope.quiz.currentQuestion.animation = true; //Animation end will trigger quiz proceed
+                drawQuizProgress();
             });
         }
 
@@ -355,6 +452,7 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
         $scope.quizProceed = function () {
             if ($scope.quiz.finished) {
+                drawQuizProgress();
                 $rootScope.session.score += $scope.quiz.results.score;
                 $rootScope.gotoView("app.quizResult", true, {results: $scope.quiz.results}, false);
             }
@@ -387,6 +485,8 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
             QuizService.answer({"id": answerId},
                 function (data) {
                     var correctAnswerId;
+
+                    $scope.questionHistory.push(data.question.correct);
 
                     if (data.results) {
                         //Will get here when quiz is finished
@@ -1042,7 +1142,6 @@ angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
                     $rootScope.gotoView(button.screen, button.isRootView, button.params, button.clearHistory);
                     break;
                 }
-
             }
 
         }

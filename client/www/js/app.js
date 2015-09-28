@@ -207,6 +207,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             .state('app.quiz', {
                 url: "/quiz",
+                cache: false,
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "quiz");

@@ -1,21 +1,14 @@
 <ion-view view-title="{{ 'QUIZ' | translate}}" class="bgQuestionMarks">
+
     <ion-content dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
 
-        <div class="row">
-            <div class="col-80" align="{{$root.settings.languages[$root.session.settings.language].align}}">
-                <span>{{ 'QUESTION_INDEX' | translate:{ index : quiz.currentQuestionIndex, total : quiz.totalQuestions} }}</span>
-                <span ng-show="quiz.currentQuestion.correctRatio"> {{ 'SUCCESS_RATIO' | translate:{correctRatio : quiz.currentQuestion.correctRatio} }}</span>
-            </div>
-            <div class="col-20" align="{{$root.settings.languages[$root.session.settings.language].oppositeAlign}}">
-                <button
-                        ng-class="{'ion-volume-high' :  $root.session.settings.sound,
-                        'ion-volume-mute' : !$root.session.settings.sound}"
-                        ng-click="toggleSound()">
-                </button>
-            </div>
-        </div>
+        <canvas id="quizCanvas" height="50" style="width: 90%; height: 50px; margin-top: 5px; margin-left: 5%; margin-right: 5%;">
+        </canvas>
 
-        <div dir="{{quiz.currentQuestion.direction}}">
+        <div dir="{{quiz.currentQuestion.direction}}"
+             animationend="questionAnimationEnd"
+             ng-class="{'questionAnimationLtr' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
+                        'questionAnimationRtl' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}">
 
             <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
 

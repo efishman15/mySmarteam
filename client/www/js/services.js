@@ -120,6 +120,8 @@ angular.module('whoSmarter.services', [])
                     $http.defaults.headers.common.Authorization = session.token;
                     if ($rootScope.user.settings.language != session.settings.language) {
                         $translate.use(session.settings.language);
+                        $rootScope.user.settings.language = session.settings.language;
+                        StoreService.setLanguage(session.settings.language);
                     }
                     $rootScope.user.settings = session.settings;
 
@@ -394,7 +396,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Info service
-    .factory('InfoService', function ($http, ApiService, $rootScope) {
+    .factory('InfoService', function ($http, ApiService, $rootScope, $timeout) {
 
         //----------------------------------------------
         // Service Variables
@@ -457,6 +459,14 @@ angular.module('whoSmarter.services', [])
 
         //Get settings from server
         service.getSettings = function (callbackOnSuccess, callbackOnError, config) {
+
+            //Wait until appVersion is set (in app.js)
+            if (window.cordova && !$rootScope.user.clientInfo.appVersion) {
+                $timeout(function() {
+                    service.getSettings(callbackOnSuccess, callbackOnError, config)
+                },100);
+                return;
+            }
 
             var postData = {};
 
