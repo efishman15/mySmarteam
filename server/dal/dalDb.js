@@ -781,8 +781,9 @@ function getNextQuestion(data, callback) {
             "text": question.text,
             "answers": []
         };
+
         if (question.correctAnswers > 0 || question.wrongAnswers > 0) {
-            data.session.quiz.clientData.currentQuestion.correctRatio = 100 * mathjs.round(question.correctRatio, 2)
+            data.session.quiz.clientData.currentQuestion.correctRatio = question.correctRatio;
         }
 
         for (var i = 0; i < question.answers.length; i++) {

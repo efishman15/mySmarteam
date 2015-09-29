@@ -138,7 +138,7 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": 5,
+                "totalQuestions": generalUtils.settings.client.quiz.questions.score.length,
                 "currentQuestionIndex": 0,
                 "finished": false
             };
@@ -146,7 +146,6 @@ module.exports.start = function (req, res, next) {
             quiz.serverData = {
                 "previousQuestions": [],
                 "contestId": data.contestId,
-                "questionScore": (100 / quiz.clientData.totalQuestions), //Question score relational to 100
                 "score": 0
             };
 
@@ -226,7 +225,7 @@ module.exports.answer = function (req, res, next) {
 
                 addXp(data, "correctAnswer");
 
-                data.session.quiz.serverData.score += data.session.quiz.serverData.questionScore; //Question score relational to 100
+                data.session.quiz.serverData.score += generalUtils.settings.client.quiz.questions.score[data.session.quiz.clientData.currentQuestionIndex-1];
             }
             else {
                 data.clientResponse.question.correct = false;

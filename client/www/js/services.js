@@ -530,7 +530,7 @@ angular.module('whoSmarter.services', [])
 
         service.prepareContestChart = function (contest, contestIndex) {
             var contestCaption = $translate.instant("WHO_IS_SMARTER");
-            var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.chartObject));
+            var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.contest));
             contestChart.contest = contest;
 
             contestChart.data = [];
@@ -577,7 +577,6 @@ angular.module('whoSmarter.services', [])
                 "value": contest.teams[teamsOrder[1]].chartValue
             });
 
-            var labelRootProperty;
             if (contest.myTeam == 0 || contest.myTeam == 1) {
                 contestChart.data[teamsOrder[contest.myTeam]].labelFontBold = true;
             }

@@ -296,15 +296,71 @@
         ChartService.setEvents($scope);
     })
 
-    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService) {
+    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, ContestsService) {
 
         var quizCanvas;
         var quizContext;
         if (!quizCanvas) {
             quizCanvas = document.getElementById("quizCanvas");
             quizContext = quizCanvas.getContext("2d");
+            quizContext.font = $rootScope.settings.quiz.canvas.font;
         }
 
+        //-------------------------------------------------------
+        // Question stats Popover
+        //-------------------------------------------------------
+        $ionicModal.fromTemplateUrl('templates/questionStatistics.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function (questionStatsModal) {
+            $scope.questionStatsModal = questionStatsModal;
+        });
+
+        $scope.openQuestionStatsModal = function () {
+            $scope.questionStatsModal.show();
+        };
+
+        $scope.closeQuestionStatsModal = function () {
+            $scope.questionStatsModal.hide();
+        };
+
+        $scope.$on('modal.hidden', function () {
+            $scope.questionChart = null;
+        });
+
+        //Cleanup the modal when we're done with it!
+        $scope.$on('$destroy', function () {
+            if ($scope.questionStatsModal) {
+                $scope.questionStatsModal.remove();
+            }
+        });
+
+        $scope.canvasClick = function (event) {
+            if ($scope.currentQuestionCircle &&
+                event.offsetX <= $scope.currentQuestionCircle.right &&
+                event.offsetX >= $scope.currentQuestionCircle.left &&
+                event.offsetY >= $scope.currentQuestionCircle.top &&
+                event.offsetY <= $scope.currentQuestionCircle.bottom) {
+                $scope.questionChart = JSON.parse(JSON.stringify($rootScope.settings.charts.questionStats));
+
+                $scope.questionChart.chart.caption = $translate.instant("QUESTION_STATS_CHART_CAPTION");
+
+                $scope.questionChart.chart.paletteColors = $rootScope.settings.quiz.canvas.correctRatioColor + "," + $rootScope.settings.quiz.canvas.incorrectRatioColor;
+
+                $scope.questionChart.data = [];
+                $scope.questionChart.data.push({
+                    "label": $translate.instant("ANSWERED_CORRECT"),
+                    "value": $scope.quiz.currentQuestion.correctRatio
+                });
+                $scope.questionChart.data.push({
+                    "label": $translate.instant("ANSWERED_INCORRECT"),
+                    "value": (1 - $scope.quiz.currentQuestion.correctRatio)
+                });
+                $scope.openQuestionStatsModal(event);
+            }
+        };
+
+        //Correct/error images
         var imgCorrect = document.createElement('img');
         imgCorrect.src = '../images/correct.png';
         var imgError = document.createElement('img');
@@ -314,7 +370,6 @@
 
             viewData.enableBack = true;
             startQuiz();
-
         });
 
         $scope.$on("whoSmarter-windowResize", function () {
@@ -323,80 +378,123 @@
 
         function drawQuizProgress() {
 
-            var topOffset = 10;
-            var radius = 20;
-            var inactiveColor = "#5f5f5f";
-            var activeColor = "#b8128f";
-
             quizCanvas.width = quizCanvas.clientWidth;
             quizContext.beginPath();
-            quizContext.moveTo(0, radius + topOffset);
-            quizContext.lineTo(quizCanvas.width, radius + topOffset);
-            quizContext.lineWidth = 7;
+            quizContext.moveTo(0, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset);
+            quizContext.lineTo(quizCanvas.width, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset);
+            quizContext.lineWidth = $rootScope.settings.quiz.canvas.lineWidth;
 
             // set line color
-            quizContext.strokeStyle = inactiveColor
+            quizContext.strokeStyle = $rootScope.settings.quiz.canvas.inactiveColor
             quizContext.stroke();
             quizContext.fill();
             quizContext.closePath();
 
             var currentX;
             if ($rootScope.settings.languages[$rootScope.user.settings.language].direction === "ltr") {
-                currentX = radius;
+                currentX = $rootScope.settings.quiz.canvas.radius;
             }
             else {
-                currentX = quizCanvas.width - radius;
+                currentX = quizCanvas.width - $rootScope.settings.quiz.canvas.radius;
             }
 
-            var circleOffsets = (quizCanvas.width - $scope.quiz.totalQuestions * radius * 2) / ($scope.quiz.totalQuestions - 1);
+            $scope.currentQuestionCircle = null;
+            var circleOffsets = (quizCanvas.width - $scope.quiz.totalQuestions * $rootScope.settings.quiz.canvas.radius * 2) / ($scope.quiz.totalQuestions - 1);
             for (var i = 0; i < $scope.quiz.totalQuestions; i++) {
 
-                quizContext.beginPath();
-                quizContext.fillStyle = inactiveColor;
-                quizContext.arc(currentX, radius + topOffset, radius, 0, Math.PI * 2, false);
-                quizContext.fill();
-                quizContext.closePath();
+                //Draw question score
+                var questionScore = $rootScope.settings.quiz.questions.score[i];
+                var textWidth = quizContext.measureText(questionScore).width;
+                var scoreColor = $rootScope.settings.quiz.canvas.inactiveColor;
 
-                quizContext.beginPath();
                 if (i === $scope.quiz.currentQuestionIndex - 1 && $scope.questionHistory.length < $scope.quiz.totalQuestions) {
-                    quizContext.fillStyle = activeColor;
-                    quizContext.arc(currentX, radius + topOffset, radius, 0, Math.PI * 2, false);
-                    quizContext.fill();
+
+                    //Current question has statistics about success ratio
+                    if ($scope.quiz.currentQuestion.correctRatio || $scope.quiz.currentQuestion.correctRatio == 0) {
+                        //Draw the correct ratio
+
+                        $scope.currentQuestionCircle = {
+                            "top": $rootScope.settings.quiz.canvas.topOffset,
+                            "left": currentX - $rootScope.settings.quiz.canvas.radius,
+                            "bottom": $rootScope.settings.quiz.canvas.topOffset + 2 * $rootScope.settings.quiz.canvas.radius,
+                            "right": currentX + $rootScope.settings.quiz.canvas.radius
+                        };
+
+                        //Draw the correct ratio
+                        if ($scope.quiz.currentQuestion.correctRatio > 0) {
+                            quizContext.beginPath();
+                            quizContext.moveTo(currentX, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset);
+                            quizContext.fillStyle = $rootScope.settings.quiz.canvas.correctRatioColor;
+                            quizContext.arc(currentX, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius, 0, -$scope.quiz.currentQuestion.correctRatio * Math.PI * 2, true);
+                            quizContext.fill();
+                            quizContext.closePath();
+                        }
+
+                        //Draw the incorrect ratio
+                        if ($scope.quiz.currentQuestion.correctRatio < 1) {
+                            quizContext.beginPath();
+                            quizContext.moveTo(currentX, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset);
+                            quizContext.fillStyle = $rootScope.settings.quiz.canvas.incorrectRatioColor;
+                            quizContext.arc(currentX, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius, -$scope.quiz.currentQuestion.correctRatio * Math.PI * 2, Math.PI * 2, true);
+                            quizContext.fill();
+                            quizContext.closePath();
+                        }
+                    }
+                    else {
+                        //Question has no statistics about success ratio
+                        quizContext.beginPath();
+                        quizContext.fillStyle = $rootScope.settings.quiz.canvas.activeColor;
+                        quizContext.arc(currentX, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius, 0, Math.PI * 2, false);
+                        quizContext.fill();
+                        quizContext.closePath();
+                    }
                 }
                 else {
+                    quizContext.beginPath();
+                    quizContext.fillStyle = $rootScope.settings.quiz.canvas.inactiveColor;
+                    quizContext.arc(currentX, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius, 0, Math.PI * 2, false);
+                    quizContext.fill();
+                    quizContext.closePath();
+
                     if ($scope.questionHistory.length > 0 && i < $scope.questionHistory.length) {
-                        var x = currentX - radius;
+
+
+                        var x = currentX - $rootScope.settings.quiz.canvas.radius;
 
                         if ($scope.questionHistory[i]) {
-                            quizContext.drawImage(imgCorrect, x, topOffset, radius * 2, radius * 2);
+                            scoreColor = $rootScope.settings.quiz.canvas.correctRatioColor;
+                            quizContext.drawImage(imgCorrect, x, $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius * 2, $rootScope.settings.quiz.canvas.radius * 2);
                         }
                         else {
-                            quizContext.drawImage(imgError, x, topOffset, radius * 2, radius * 2);
+                            quizContext.drawImage(imgError, x, $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius * 2, $rootScope.settings.quiz.canvas.radius * 2);
                         }
                     }
                 }
+                quizContext.closePath();
+
+                //Draw the score at the top of the circle
+                quizContext.beginPath();
+                quizContext.fillStyle = scoreColor;
+                quizContext.fillText(questionScore, currentX+textWidth/2, $rootScope.settings.quiz.canvas.scores.top);
                 quizContext.closePath();
 
                 if ($rootScope.settings.languages[$rootScope.user.settings.language].direction === "ltr") {
                     if (i < $scope.quiz.totalQuestions - 1) {
-                        currentX += circleOffsets + radius * 2;
+                        currentX += circleOffsets + $rootScope.settings.quiz.canvas.radius * 2;
                     }
                     else {
-                        currentX = quizCanvas.width - radius;
+                        currentX = quizCanvas.width - $rootScope.settings.quiz.canvas.radius;
                     }
                 }
                 else {
                     if (i < $scope.quiz.totalQuestions - 1) {
-                        currentX = currentX - circleOffsets - (radius * 2);
+                        currentX = currentX - circleOffsets - ($rootScope.settings.quiz.canvas.radius * 2);
                     }
                     else {
-                        currentX = radius;
+                        currentX = $rootScope.settings.quiz.canvas.radius;
                     }
                 }
             }
-
-            quizContext.closePath();
-
         };
 
         function startQuiz() {

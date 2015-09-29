@@ -2,7 +2,7 @@
 
     <ion-content dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
 
-        <canvas id="quizCanvas" height="50" style="width: 90%; height: 50px; margin-top: 5px; margin-left: 5%; margin-right: 5%;">
+        <canvas id="quizCanvas" height="{{$root.settings.quiz.canvas.height}}" class="quizCanvas" ng-click="canvasClick($event)">
         </canvas>
 
         <div dir="{{quiz.currentQuestion.direction}}"

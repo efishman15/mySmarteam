@@ -334,3 +334,10 @@ label.item.valid-lr {
 .hide-vertical-scrollbar {
     overflow-y: hidden;
 }
+
+.quizCanvas {
+    width: 90%;
+    margin-top: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
