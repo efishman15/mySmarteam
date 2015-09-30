@@ -1,0 +1,40 @@
+<ion-modal-view>
+    <ion-header-bar align-title="center" class="bar-dark bar-stable">
+        <h1 class="title">{{'QUESTION_STATS_TITLE' | translate}}</h1>
+        <div class="button button-clear" ng-click="closeQuestionInfoModal()">
+            <span class="icon ion-close"></span>
+        </div>
+    </ion-header-bar>
+    <ion-content class="padding center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+
+        <div class="padding center" dir="{{quiz.currentQuestion.direction}}">
+            <h5 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h5>
+        </div>
+
+        <div class="center padding" ng-if="questionChart">
+            <div fusioncharts
+                 type="pie2d"
+                 dataSource="{{questionChart}}"
+                 width="300"
+                 height="220">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-10">
+            </div>
+            <div class="col-80">
+                <button ng-if="quiz.currentQuestion.wikipediaHint" class="padding button button-small button-3d button-3d-balanced item-wrap-text"
+                        ng-click="assistWithHint()">{{ 'HINT_FOR_SCORE' | translate:{score : quiz.currentQuestion.hintCost} }}
+                </button>
+                <button ng-if="quiz.currentQuestion.wikipediaAnswer" class="padding button button-small button-3d button-3d-assertive item-wrap-text"
+                        ng-click="assistWithAnswer()">{{ 'ANSWER_FOR_SCORE' | translate:{score : quiz.currentQuestion.answerCost} }}
+                </button>
+            </div>
+            <div class="col-10">
+            </div>
+        </div>
+
+
+    </ion-content>
+</ion-modal-view>
