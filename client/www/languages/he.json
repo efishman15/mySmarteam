@@ -40,8 +40,8 @@
   "CONTEST_START": "תאריך תחילה",
   "CONTEST_END": "תאריך סיום",
   "DATE_PICKER_TODAY": "היום",
-  "DATE_PICKER_CLOSE": "ביטול",
-  "DATE_PICKER_SET": "אישור",
+  "CLOSE": "סגירה",
+  "SET": "אישור",
   "DATE_PICKER_ERROR_MESSAGE": "אנא בחרו תאריך",
   "DATE_PICKER_WEEK_DAYS": "א,ב,ג,ד,ה,ו,ש",
   "DATE_PICKER_MONTHS": "ינואר,פברואר,מרץ,אפריל,מאי,יוני,יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר",
@@ -52,6 +52,7 @@
   "DAYS" : "ימים",
   "HOURS" : "שעות",
   "MINUTES" : "דקות",
+  "BECAME_CONTEST_LEADER_TITLE" : "כל הכבוד, עברת להוביל את התחרות!",
   "EXCELLENT_SCORE_TITLE" : "כל הכבוד, תוצאה מושלמת!",
   "POSITIVE_SCORE_TITLE" : "כל הכבוד!",
   "ZERO_SCORE_TITLE" : "נסו שוב",
@@ -93,8 +94,11 @@
   "PAYMENT_THANKYOU" : "תודה רבה!",
   "EXIT_APP_TITLE" : "יציאה מהמערכת",
   "EXIT_APP_MESSAGE" : "האם אתם בטוחים שברצונכם לצאת מהמערכת?",
-  "QUESTION_STATS_TITLE" : "סטטיסטיקת שאלה",
+  "QUESTION_STATS_TITLE" : "נתוני שאלה",
   "QUESTION_STATS_CHART_CAPTION" : "התפלגות התשובות",
   "ANSWERED_CORRECT" : "הצליחו",
-  "ANSWERED_INCORRECT" : "טעו"
+  "ANSWERED_INCORRECT" : "טעו",
+  "HINT_FOR_SCORE" : "רמז ({{score}} נקודות)",
+  "ANSWER_FOR_SCORE" : "תשובה ({{score}} נקודות)",
+  "CONTEST_LEADER" : "מקום ראשון בתחרות"
 }

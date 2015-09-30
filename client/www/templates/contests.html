@@ -31,6 +31,11 @@
                         </button>
                     </div>
                 </div>
+                <div class="center">
+                    <image ng-class="{'contests-avatar-leader-ltr' : $root.settings.languages[$root.user.settings.language].direction === 'ltr', 'contests-avatar-leader-rtl' :  $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                           ng-src="{{contestChart.contest.leaderAvatar}}" title="{{'CONTEST_LEADER' | translate}}"></image>
+                </div>
+
             </ion-list>
         </ion-scroll>
         <ion-infinite-scroll

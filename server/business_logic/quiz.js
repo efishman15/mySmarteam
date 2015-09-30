@@ -139,14 +139,15 @@ module.exports.start = function (req, res, next) {
             var quiz = {};
             quiz.clientData = {
                 "totalQuestions": generalUtils.settings.client.quiz.questions.score.length,
-                "currentQuestionIndex": 0,
+                "currentQuestionIndex": -1, //First question will be incremented to 0
                 "finished": false
             };
 
             quiz.serverData = {
                 "previousQuestions": [],
                 "contestId": data.contestId,
-                "score": 0
+                "score": 0,
+                "correctAnswers" : 0
             };
 
             data.session.quiz = quiz;
@@ -189,7 +190,7 @@ module.exports.start = function (req, res, next) {
 //--------------------------------------------------------------------------
 // answer
 //
-// data: id (answerId)
+// data: id (answerId), hintUsed (optional), answerUsed (optional)
 //--------------------------------------------------------------------------
 module.exports.answer = function (req, res, next) {
     var token = req.headers.authorization;
@@ -223,9 +224,19 @@ module.exports.answer = function (req, res, next) {
             if (answers[answerId - 1].correct) {
                 data.clientResponse.question.correct = true;
 
+                data.session.quiz.serverData.correctAnswers++;
+
                 addXp(data, "correctAnswer");
 
-                data.session.quiz.serverData.score += generalUtils.settings.client.quiz.questions.score[data.session.quiz.clientData.currentQuestionIndex-1];
+                var questionScore = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex].score;
+                if (data.answerUsed && data.session.quiz.clientData.currentQuestion.answerCost) {
+                    questionScore -= data.session.quiz.clientData.currentQuestion.answerCost;
+                }
+                else if (data.hintUsed && data.session.quiz.clientData.currentQuestion.hintCost) {
+                    questionScore -= data.session.quiz.clientData.currentQuestion.hintCost;
+                }
+
+                data.session.quiz.serverData.score += questionScore;
             }
             else {
                 data.clientResponse.question.correct = false;
@@ -244,7 +255,7 @@ module.exports.answer = function (req, res, next) {
         function (data, callback) {
 
             var store = false;
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.finished) {
 
                 //Update total score in profile
                 data.session.score += data.session.quiz.serverData.score;
@@ -262,7 +273,7 @@ module.exports.answer = function (req, res, next) {
             }
 
             if (store) {
-                if (data.session.quiz.serverData.score == 100) {
+                if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
                     addXp(data, "quizFullScore");
                 }
 
@@ -275,7 +286,7 @@ module.exports.answer = function (req, res, next) {
 
         //Check to save the score into the users object as well - when quiz is finished or when got a correct answer (which gives score and/or xp
         function (data, callback) {
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex || (data.clientResponse.xpProgress && data.clientResponse.xpProgress.addition > 0)) {
+            if (data.session.quiz.clientData.finished || (data.clientResponse.xpProgress && data.clientResponse.xpProgress.addition > 0)) {
 
                 data.setData = {
                     "score": data.session.score,
@@ -291,7 +302,7 @@ module.exports.answer = function (req, res, next) {
 
         //Retrieve the contest object - when quiz is finished
         function (data, callback) {
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.finished) {
                 data.contestId = data.session.quiz.serverData.contestId;
                 dalDb.getContest(data, callback);
             }
@@ -302,16 +313,39 @@ module.exports.answer = function (req, res, next) {
 
         //Check to save the quiz score into the contest object - when quiz is finished
         function (data, callback) {
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.finished) {
+
+                var myTeam = data.contest.users[data.session.userId].team;
+                var myContestUser = data.contest.users[data.session.userId];
+
+                myContestUser.score += data.session.quiz.serverData.score;
+                myContestUser.teamScores[myTeam] += data.session.quiz.serverData.score;
 
                 //Update:
                 // 1. contest general score
                 // 2. My score in this contest + lastPlayed
-                // 3. My team's score in this contest
+                // 3. My score in my teams contribution
+                // 4. My team's score in this contest
                 data.setData = {};
-                data.setData["users." + data.session.userId + ".score"] = data.contest.users[data.session.userId].score + data.session.quiz.serverData.score;
+                data.setData["users." + data.session.userId + ".score"] = myContestUser.score;
+                data.setData["users." + data.session.userId + ".teamScores." + myTeam] = myContestUser.teamScores[myTeam];
                 data.setData["users." + data.session.userId + ".lastPlayed"] = (new Date()).getTime();
                 data.setData.score = data.contest.score + data.session.quiz.serverData.score;
+
+                // Check if need to replace the contest leader
+                // Leader is the participant that has contributed max points for the contest regardless of teams)
+                if (myContestUser.score > data.contest.users[data.contest.leader].score) {
+                    data.setData["leader"] = data.session.userId;
+                    data.clientResponse.becameContestLeader = true;
+                }
+
+                // Check if need to replace the my team's leader
+                // Team leader is the participant that has contributed max points for his/her team)
+
+                if (!data.contest.teams[myTeam].leader || myContestUser.teamScores[myTeam] > data.contest.users[data.contest.teams[myTeam].leader].teamScores[myTeam]) {
+                    data.setData["teams." + myTeam + ".leader"] = data.session.userId;
+                    data.clientResponse.becameTeamLeader = true;
+                }
 
                 data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
                 data.setData["teams." + data.contest.users[data.session.userId].team + ".score"] = data.contest.teams[data.contest.users[data.session.userId].team].score;
@@ -328,7 +362,7 @@ module.exports.answer = function (req, res, next) {
         //Set contest status fields (required for client only),
         //AFTER contest has been saved to db
         function (data, callback) {
-            if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+            if (data.session.quiz.clientData.finished) {
 
                 data.clientResponse.results = {"contest": data.contest};
 
@@ -336,7 +370,12 @@ module.exports.answer = function (req, res, next) {
 
                 data.clientResponse.results.score = data.session.quiz.serverData.score;
 
-                if (data.clientResponse.results.score == 100) {
+                if (data.clientResponse.becameContestLeader) {
+                    data.clientResponse.results.sound = random.pick(quizSounds.finish.great);
+                    data.clientResponse.results.title = "BECAME_CONTEST_LEADER_TITLE";
+                    data.clientResponse.results.message = "POSITIVE_SCORE_MESSAGE";
+                }
+                else if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
                     data.clientResponse.results.sound = random.pick(quizSounds.finish.great);
                     data.clientResponse.results.title = "EXCELLENT_SCORE_TITLE";
                     data.clientResponse.results.message = "POSITIVE_SCORE_MESSAGE";

@@ -40,8 +40,8 @@
   "CONTEST_START": "Start Date",
   "CONTEST_END" : "End Date",
   "DATE_PICKER_TODAY" : "Today",
-  "DATE_PICKER_CLOSE" : "Close",
-  "DATE_PICKER_SET" : "Set",
+  "CLOSE" : "Close",
+  "SET" : "Set",
   "DATE_PICKER_ERROR_MESSAGE" : "Please select a date",
   "DATE_PICKER_WEEK_DAYS" : "S,M,T,W,T,F,S",
   "DATE_PICKER_MONTHS" : "January,February,March,April,May,June,July,August,September,October,November,December",
@@ -52,6 +52,7 @@
   "DAYS" : "days",
   "HOURS" : "hours",
   "MINUTES" : "minutes",
+  "BECAME_CONTEST_LEADER_TITLE" : "Congratulations, you became the leader!",
   "EXCELLENT_SCORE_TITLE" : "Congratulations, perfect score!",
   "POSITIVE_SCORE_TITLE" : "Congratulations, well done",
   "ZERO_SCORE_TITLE" : "Try again",
@@ -94,8 +95,11 @@
   "PAYMENT_THANKYOU" : "Congratulations!",
   "EXIT_APP_TITLE" : "Exit Application",
   "EXIT_APP_MESSAGE" : "Are you sure you would like to exit?",
-  "QUESTION_STATS_TITLE" : "Question Statistics",
+  "QUESTION_STATS_TITLE" : "Question Data",
   "QUESTION_STATS_CHART_CAPTION" : "Reponse distribution",
   "ANSWERED_CORRECT" : "Succeeded",
-  "ANSWERED_INCORRECT" : "Failed"
+  "ANSWERED_INCORRECT" : "Failed",
+  "HINT_FOR_SCORE" : "Hint ({{score}} smartpoints)",
+  "ANSWER_FOR_SCORE" : "Answer ({{score}} smartpoints)",
+  "CONTEST_LEADER" : "Contest Leader"
 }

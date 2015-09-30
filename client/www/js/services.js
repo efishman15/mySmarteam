@@ -211,12 +211,13 @@ angular.module('whoSmarter.services', [])
                         }
 
                         $ionicPlatform.registerBackButtonAction(function (event) {
+
                             if ($state.current.name.length >= 12 && $state.current.name.substring(0, 12) === "app.contests" && ionic.Platform.isAndroid()) {
                                 PopupService.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
                                     ionic.Platform.exitApp();
                                 });
                             }
-                            else if ($state.current.name == "serverPopup") {
+                            else if ($state.current.name === "serverPopup" || ($state.current.name === "app.quiz" && $rootScope.preventBack)) {
                                 event.preventDefault();
                             }
                             else {

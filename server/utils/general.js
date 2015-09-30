@@ -104,6 +104,15 @@ module.exports.getSettings = function (req, res, next) {
     var data = req.body;
 
     var response;
+
+    //Generate the "client visible" part of the server settings about the question scores
+    if (!settings.client.quiz.questions) {
+        settings.client.quiz.questions = {"score" : []};
+        for (var i=0; i<settings.server.quiz.questions.levels.length; i++) {
+            settings.client.quiz.questions.score.push(settings.server.quiz.questions.levels[i].score);
+        }
+    }
+
     if (data.clientInfo && data.clientInfo.appVersion) {
 
         if (versionCompare(settings.server.versions.mustUpdate.minVersion, data.clientInfo.appVersion) === 1) {
@@ -144,7 +153,6 @@ module.exports.getSettings = function (req, res, next) {
     }
     else {
         response = settings.client;
-
     }
 
     res.json(response);

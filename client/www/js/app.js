@@ -179,6 +179,13 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 templateUrl: "templates/serverPopup.html"
             })
 
+            .state('questionStats', {
+                url: "/questionStats",
+                params: {serverPopup: null},
+                controller: "ServerPopupCtrl",
+                templateUrl: "templates/serverPopup.html"
+            })
+
             .state('facebookCanvas', {
                 url: "/facebook?connected&signedRequest&language",
                 controller: "FacebookCanvasCtrl",

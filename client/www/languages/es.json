@@ -40,8 +40,8 @@
   "CONTEST_START": "Fecha de inicio",
   "CONTEST_END" : "Fecha final",
   "DATE_PICKER_TODAY" : "Ahora",
-  "DATE_PICKER_CLOSE" : "Cerca",
-  "DATE_PICKER_SET" : "Set",
+  "CLOSE" : "Cerca",
+  "SET" : "Set",
   "DATE_PICKER_ERROR_MESSAGE" : "Por favor, seleccione una fecha",
   "DATE_PICKER_WEEK_DAYS" : "D,L,M,M,J,V,S",
   "DATE_PICKER_MONTHS" : "Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre",
@@ -52,6 +52,7 @@
   "DAYS" : "días",
   "HOURS" : "horas",
   "MINUTES" : "minutos",
+  "BECAME_CONTEST_LEADER_TITLE" : "Felicitaciones, usted se convirtió en el líder!",
   "EXCELLENT_SCORE_TITLE" : "Felicidades , puntaje perfecto !",
   "POSITIVE_SCORE_TITLE" : "Enhorabuena , bien hecho",
   "ZERO_SCORE_TITLE" : "Inténtalo de nuevo",
@@ -94,8 +95,11 @@
   "PAYMENT_THANKYOU" : "Felicidades!",
   "EXIT_APP_TITLE" : "Salir de la aplicación",
   "EXIT_APP_MESSAGE" : "¿Está seguro de que desea salir?",
-  "QUESTION_STATS_TITLE" : "Pregunta Estadísticas",
+  "QUESTION_STATS_TITLE" : "Cuestión de datos",
   "QUESTION_STATS_CHART_CAPTION" : "Distribución respuesta",
   "ANSWERED_CORRECT" : "Sucedido",
-  "ANSWERED_INCORRECT" : "Falló"
+  "ANSWERED_INCORRECT" : "Falló",
+  "HINT_FOR_SCORE" : "Sugerencia ({{score}} puntoligentes)",
+  "ANSWER_FOR_SCORE" : "Respuesta ({{score}} puntoligentes)",
+  "CONTEST_LEADER" : "líder del Concurso"
 }

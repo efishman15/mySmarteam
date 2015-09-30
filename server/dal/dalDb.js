@@ -669,9 +669,19 @@ function logAction(data, callback) {
 module.exports.prepareQuestionCriteria = prepareQuestionCriteria;
 function prepareQuestionCriteria(data, callback) {
 
+    data.session.quiz.clientData.currentQuestionIndex++;
+
+    var questionLevel = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex];
+
     var questionCriteria = {
         "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        "topicId": {"$in": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]}
+        "topicId": {"$in": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]},
+        "$or" : [
+            {"correctAnswers" : 0, "wrongAnswers" : 0},
+            {"$and" : [
+                {"correctRatio" : {$gte : questionLevel.minCorrectRatio}},
+                {"correctRatio" : {$lt : questionLevel.maxCorrectRatio}}
+            ]}]
     };
 
     //Filter by age if available
@@ -741,8 +751,7 @@ function getNextQuestion(data, callback) {
             return;
         }
 
-        data.session.quiz.clientData.currentQuestionIndex++;
-        if (data.session.quiz.clientData.totalQuestions == data.session.quiz.clientData.currentQuestionIndex) {
+        if (data.session.quiz.clientData.totalQuestions === (data.session.quiz.clientData.currentQuestionIndex+1)) {
             data.session.quiz.clientData.finished = true;
         }
 
@@ -781,6 +790,16 @@ function getNextQuestion(data, callback) {
             "text": question.text,
             "answers": []
         };
+
+        if (question.wikipediaHint) {
+            data.session.quiz.clientData.currentQuestion.wikipediaHint = question.wikipediaHint;
+            data.session.quiz.clientData.currentQuestion.hintCost = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex].score * generalUtils.settings.server.quiz.hintCost;
+        }
+
+        if (question.wikipediaAnswer) {
+            data.session.quiz.clientData.currentQuestion.wikipediaAnswer = question.wikipediaAnswer;
+            data.session.quiz.clientData.currentQuestion.answerCost = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex].score * generalUtils.settings.server.quiz.answerCost;
+        }
 
         if (question.correctAnswers > 0 || question.wrongAnswers > 0) {
             data.session.quiz.clientData.currentQuestion.correctRatio = question.correctRatio;

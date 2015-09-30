@@ -5,7 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/whoSmarter.iml" afterPath="$PROJECT_DIR$/.idea/whoSmarter.iml" />
+      <change type="DELETED" beforePath="C:\Dev\whoSmarter\client\www\templates\questionStatistics.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/app.js" afterPath="$PROJECT_DIR$/client/www/js/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/contests.html" afterPath="$PROJECT_DIR$/client/www/templates/contests.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/contests.js" afterPath="$PROJECT_DIR$/server/business_logic/contests.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/dal/dalDb.js" afterPath="$PROJECT_DIR$/server/dal/dalDb.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/en.json" afterPath="$PROJECT_DIR$/client/www/languages/en.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/es.json" afterPath="$PROJECT_DIR$/client/www/languages/es.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/utils/general.js" afterPath="$PROJECT_DIR$/server/utils/general.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/he.json" afterPath="$PROJECT_DIR$/client/www/languages/he.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/quiz.js" afterPath="$PROJECT_DIR$/server/business_logic/quiz.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/templates/quizResult.html" afterPath="$PROJECT_DIR$/client/www/templates/quizResult.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/services.js" afterPath="$PROJECT_DIR$/client/www/js/services.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/css/style.css" afterPath="$PROJECT_DIR$/client/www/css/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ionic-tutorial.iws" />
@@ -26,111 +39,7 @@
     <favorites_list name="ionic-tutorial" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="services.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1064" column="37" selection-start-line="1064" selection-start-column="37" selection-end-line="1064" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="es.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-27.0">
-              <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="he.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-27.0">
-              <caret line="95" column="23" selection-start-line="95" selection-start-column="23" selection-end-line="95" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="controllers.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.553719">
-              <caret line="497" column="10" selection-start-line="497" selection-start-column="10" selection-end-line="497" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="quiz.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/templates/quiz.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6153846">
-              <caret line="4" column="77" selection-start-line="4" selection-start-column="77" selection-end-line="4" selection-end-column="77" />
-              <folding>
-                <marker date="1443539335161" expanded="true" signature="445:741" placeholder="{...}" />
-                <marker date="1443539335161" expanded="true" signature="1269:1628" placeholder="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="259" column="27" selection-start-line="259" selection-start-column="18" selection-end-line="259" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="quiz.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="227" column="103" selection-start-line="227" selection-start-column="67" selection-end-line="227" selection-end-column="103" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dalDb.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/dal/dalDb.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="804" column="2" selection-start-line="804" selection-start-column="2" selection-end-line="804" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="questionStatistics.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/templates/questionStatistics.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.384615">
-              <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="newRank.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/www/templates/newRank.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.65384614">
-              <caret line="1" column="51" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -147,7 +56,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/client/bower.json" />
         <option value="$PROJECT_DIR$/client/plugins/fetch.json" />
         <option value="$PROJECT_DIR$/client/info.txt" />
         <option value="$PROJECT_DIR$/client/plugins/android.json" />
@@ -162,7 +70,6 @@
         <option value="$PROJECT_DIR$/client/www/templates/chooseEndsIn.html" />
         <option value="$PROJECT_DIR$/client/www/templates/payment.html" />
         <option value="$PROJECT_DIR$/client/www/templates/tabs.html" />
-        <option value="$PROJECT_DIR$/client/www/templates/quizResult.html" />
         <option value="$PROJECT_DIR$/client/www/templates/serverPopup.html" />
         <option value="$PROJECT_DIR$/server/business_logic/facebookPayments.js" />
         <option value="$PROJECT_DIR$/server/views/fbproduct.jade" />
@@ -170,34 +77,36 @@
         <option value="$PROJECT_DIR$/server/server.js" />
         <option value="$PROJECT_DIR$/server/utils/logger.js" />
         <option value="$PROJECT_DIR$/client/www/templates/settings.html" />
-        <option value="$PROJECT_DIR$/server/business_logic/contests.js" />
         <option value="$PROJECT_DIR$/server/utils/exceptions.js" />
         <option value="$PROJECT_DIR$/server/api/paypalPN.js" />
         <option value="$PROJECT_DIR$/server/api/facebookCanvas.js" />
-        <option value="$PROJECT_DIR$/client/www/templates/contests.html" />
         <option value="$PROJECT_DIR$/client/www/templates/menu.html" />
         <option value="$PROJECT_DIR$/server/dal/dalFacebook.js" />
         <option value="$PROJECT_DIR$/server/business_logic/session.js" />
         <option value="$PROJECT_DIR$/client/www/templates/contest.html" />
         <option value="$PROJECT_DIR$/server/business_logic/credentials.js" />
-        <option value="$PROJECT_DIR$/server/utils/general.js" />
         <option value="$PROJECT_DIR$/client/config.xml" />
         <option value="$PROJECT_DIR$/server/business_logic/payments.js" />
-        <option value="$PROJECT_DIR$/client/www/js/app.js" />
         <option value="$PROJECT_DIR$/client/www/lib/angular-fusioncharts-3.1/dist/angular-fusioncharts.min.js" />
         <option value="$PROJECT_DIR$/client/www/lib/fusioncharts/js/fusioncharts.js" />
         <option value="$PROJECT_DIR$/client/www/index.html" />
+        <option value="$PROJECT_DIR$/client/www/templates/newRank.html" />
+        <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
+        <option value="$PROJECT_DIR$/server/utils/general.js" />
+        <option value="$PROJECT_DIR$/client/www/templates/questionStatistics.html" />
+        <option value="$PROJECT_DIR$/client/www/js/app.js" />
         <option value="$PROJECT_DIR$/client/www/js/services.js" />
+        <option value="$PROJECT_DIR$/client/www/css/style.css" />
+        <option value="$PROJECT_DIR$/client/www/templates/contests.html" />
+        <option value="$PROJECT_DIR$/client/www/templates/quizResult.html" />
+        <option value="$PROJECT_DIR$/server/business_logic/contests.js" />
+        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
+        <option value="$PROJECT_DIR$/server/business_logic/quiz.js" />
+        <option value="$PROJECT_DIR$/server/dal/dalDb.js" />
+        <option value="$PROJECT_DIR$/client/www/languages/es.json" />
         <option value="$PROJECT_DIR$/client/www/languages/en.json" />
         <option value="$PROJECT_DIR$/client/www/languages/he.json" />
-        <option value="$PROJECT_DIR$/client/www/languages/es.json" />
-        <option value="$PROJECT_DIR$/client/www/templates/newRank.html" />
-        <option value="$PROJECT_DIR$/client/www/templates/questionStatistics.html" />
-        <option value="$PROJECT_DIR$/client/www/templates/quiz.html" />
-        <option value="$PROJECT_DIR$/client/www/css/style.css" />
-        <option value="$PROJECT_DIR$/server/dal/dalDb.js" />
-        <option value="$PROJECT_DIR$/server/business_logic/quiz.js" />
-        <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
+        <option value="$PROJECT_DIR$/client/www/templates/questionInfo.html" />
       </list>
     </option>
   </component>
@@ -269,39 +178,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -790,7 +667,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="menu/navbar - rank element&#10;&#10;TODO:&#10;- RankByXp - nice dialog (general popup from server - with image and ok buttons?)&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
     <MESSAGE value="New contest - set as &quot;Feature&quot;&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
     <MESSAGE value="Add billing support / google store upload for alpha&#10;&#10;TODO:&#10;- InApp purchases&#10;- Facebook Canvas - signedRequest&#10;- Facebook Posts.&#10;&#10;" />
     <MESSAGE value="1. Fix settings screen.&#10;2. Fix contest screen:&#10;   a. remove cancel, item dividers&#10;   b. auto join to the first team&#10;" />
@@ -815,7 +691,8 @@
     <MESSAGE value="FB Canvas - TODO:&#10;1. Check disputes, refunds, declines + revoke asset&#10;&#10;Added SessionHistory recording in server.&#10;Added clientInfo (platform, appVersion, platformVersion), to Sessions ans SessionHistory" />
     <MESSAGE value="FB Canvas - TODO:&#10;1. Check disputes, refunds, declines + revoke asset&#10;&#10;Quiz progress working.&#10;TBD: purple circle --&gt; pie chart, all colors / styles to server settings&#10;" />
     <MESSAGE value="FB Canvas - TODO:&#10;1. Check disputes, refunds, declines + revoke asset&#10;&#10;Quiz progress fully working (consider animation on correct score)&#10;&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="FB Canvas - TODO:&#10;1. Check disputes, refunds, declines + revoke asset&#10;&#10;Quiz progress fully working (consider animation on correct score)&#10;&#10;" />
+    <MESSAGE value="FB Canvas - TODO:&#10;1. Check disputes, refunds, declines + revoke asset&#10;&#10;Contest leader working.&#10;Fixed quiz progress:&#10;1. Inactive+active color of circles are the same.&#10;2. Increased the inner circle radius.&#10;3. Question info - buttons smaller and centered&#10;&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="FB Canvas - TODO:&#10;1. Check disputes, refunds, declines + revoke asset&#10;&#10;Contest leader working.&#10;Fixed quiz progress:&#10;1. Inactive+active color of circles are the same.&#10;2. Increased the inner circle radius.&#10;3. Question info - buttons smaller and centered&#10;&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -831,13 +708,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/server/views/fbproduct.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.1875">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/plugins/com.smartmobilesoftware.androidinappbilling/src/android/com/android/vending/billing/IInAppBillingService.aidl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -888,14 +758,6 @@
             <marker date="1443024733696" expanded="true" signature="-1:-1" placeholder="{...}" />
             <marker date="1443024733696" expanded="true" signature="-1:-1" placeholder="{...}" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="206" column="75" selection-start-line="206" selection-start-column="75" selection-end-line="206" selection-end-column="75" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -983,29 +845,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/utils/general.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="105" column="0" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
-          <folding>
-            <element signature="e#510#591#0" expanded="false" />
-            <element signature="e#696#777#0" expanded="false" />
-            <element signature="e#1146#1358#0" expanded="false" />
-            <element signature="e#1257#1296#0" expanded="false" />
-            <element signature="e#1310#1352#0" expanded="false" />
-            <element signature="e#1385#1458#0" expanded="false" />
-            <element signature="e#1944#2017#0" expanded="false" />
-            <element signature="e#2508#2581#0" expanded="false" />
-            <element signature="e#2758#2908#0" expanded="false" />
-            <element signature="n#!!block;n#XpProgress#0" expanded="false" />
-            <element signature="e#6767#7009#0" expanded="false" />
-            <element signature="e#6875#6963#0" expanded="false" />
-            <element signature="e#7023#7072#0" expanded="false" />
-            <element signature="e#7282#7312#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/node_modules/google-play-purchase-validator/example.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.020070838">
@@ -1078,26 +917,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-25.692308">
-          <caret line="50" column="22" selection-start-line="50" selection-start-column="9" selection-end-line="50" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/chooseLanguage.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.961538">
-          <caret line="166" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="166" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1144,14 +967,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="209" column="28" selection-start-line="209" selection-start-column="28" selection-end-line="209" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/serverPopup.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20706455">
@@ -1168,30 +983,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contests.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.115385">
-          <caret line="17" column="27" selection-start-line="17" selection-start-column="27" selection-end-line="17" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/en.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-27.0">
-          <caret line="96" column="23" selection-start-line="96" selection-start-column="3" selection-end-line="96" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-27.0">
-          <caret line="96" column="23" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/newRank.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.65384614">
@@ -1200,53 +991,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/questionStatistics.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.384615">
-          <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-27.0">
-          <caret line="95" column="23" selection-start-line="95" selection-start-column="23" selection-end-line="95" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/templates/quiz.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.6153846">
-          <caret line="4" column="77" selection-start-line="4" selection-start-column="77" selection-end-line="4" selection-end-column="77" />
+          <caret line="4" column="33" selection-start-line="4" selection-start-column="33" selection-end-line="4" selection-end-column="33" />
           <folding>
-            <marker date="1443539335161" expanded="true" signature="445:741" placeholder="{...}" />
-            <marker date="1443539335161" expanded="true" signature="1269:1628" placeholder="{...}" />
+            <marker date="1443539335161" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1443539335161" expanded="true" signature="-1:-1" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
+    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="227" column="103" selection-start-line="227" selection-start-column="67" selection-end-line="227" selection-end-column="103" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/dal/dalDb.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="804" column="2" selection-start-line="804" selection-start-column="2" selection-end-line="804" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="259" column="27" selection-start-line="259" selection-start-column="18" selection-end-line="259" selection-end-column="27" />
+          <caret line="230" column="0" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1254,15 +1013,325 @@
     <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="1064" column="37" selection-start-line="1064" selection-start-column="37" selection-end-line="1064" selection-end-column="37" />
+          <caret line="221" column="29" selection-start-line="221" selection-start-column="29" selection-end-line="221" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.8461537">
+          <caret line="12" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="237" column="11" selection-start-line="237" selection-start-column="11" selection-end-line="237" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/utils/general.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="111" column="0" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+          <folding>
+            <element signature="e#510#591#0" expanded="false" />
+            <element signature="e#696#777#0" expanded="false" />
+            <element signature="e#1146#1358#0" expanded="false" />
+            <element signature="e#1257#1296#0" expanded="false" />
+            <element signature="e#1310#1352#0" expanded="false" />
+            <element signature="e#1385#1458#0" expanded="false" />
+            <element signature="e#1944#2017#0" expanded="false" />
+            <element signature="e#2508#2581#0" expanded="false" />
+            <element signature="e#2758#2908#0" expanded="false" />
+            <element signature="n#!!block;n#XpProgress#0" expanded="false" />
+            <element signature="e#7154#7396#0" expanded="false" />
+            <element signature="e#7262#7350#0" expanded="false" />
+            <element signature="e#7410#7459#0" expanded="false" />
+            <element signature="e#7669#7699#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/quizResult.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.038462">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/contests.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.230769">
+          <caret line="27" column="52" selection-start-line="27" selection-start-column="52" selection-end-line="27" selection-end-column="52" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.553719">
-          <caret line="497" column="10" selection-start-line="497" selection-start-column="10" selection-end-line="497" selection-end-column="10" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="454" column="112" selection-start-line="454" selection-start-column="112" selection-end-line="454" selection-end-column="112" />
+          <folding>
+            <element signature="e#496#535#0" expanded="false" />
+            <element signature="e#571#1299#0" expanded="false" />
+            <element signature="e#679#718#0" expanded="false" />
+            <element signature="e#874#1289#0" expanded="false" />
+            <element signature="e#928#1109#0" expanded="false" />
+            <element signature="e#1131#1275#0" expanded="false" />
+            <element signature="e#1499#1556#0" expanded="false" />
+            <element signature="e#1740#1799#0" expanded="false" />
+            <element signature="e#1801#1876#0" expanded="false" />
+            <element signature="e#1926#1977#0" expanded="false" />
+            <element signature="e#2153#2365#0" expanded="false" />
+            <element signature="e#2416#2531#0" expanded="false" />
+            <element signature="e#2461#2521#0" expanded="false" />
+            <element signature="e#2607#2819#0" expanded="false" />
+            <element signature="e#3212#3284#0" expanded="false" />
+            <element signature="e#3320#3383#0" expanded="false" />
+            <element signature="e#3402#3680#0" expanded="false" />
+            <element signature="e#3428#3574#0" expanded="false" />
+            <element signature="e#3592#3670#0" expanded="false" />
+            <element signature="e#4046#4181#0" expanded="false" />
+            <element signature="e#4097#4165#0" expanded="false" />
+            <element signature="e#4199#4259#0" expanded="false" />
+            <element signature="e#4325#4498#0" expanded="false" />
+            <element signature="e#4550#5124#0" expanded="false" />
+            <element signature="e#4675#4882#0" expanded="false" />
+            <element signature="e#4738#4793#0" expanded="false" />
+            <element signature="e#4815#4868#0" expanded="false" />
+            <element signature="e#4900#5114#0" expanded="false" />
+            <element signature="e#4963#5023#0" expanded="false" />
+            <element signature="e#5045#5100#0" expanded="false" />
+            <element signature="e#5185#5307#0" expanded="false" />
+            <element signature="e#5613#5686#0" expanded="false" />
+            <element signature="e#6213#6379#0" expanded="false" />
+            <element signature="e#6252#6336#0" expanded="false" />
+            <element signature="e#6439#6525#0" expanded="false" />
+            <element signature="e#6609#6673#0" expanded="false" />
+            <element signature="e#6931#7022#0" expanded="false" />
+            <element signature="e#7078#7177#0" expanded="false" />
+            <element signature="e#7226#7478#0" expanded="false" />
+            <element signature="e#7527#7667#0" expanded="false" />
+            <element signature="e#8226#8340#0" expanded="false" />
+            <element signature="e#8509#8590#0" expanded="false" />
+            <element signature="e#8608#8663#0" expanded="false" />
+            <element signature="e#8846#8916#0" expanded="false" />
+            <element signature="e#9150#9318#0" expanded="false" />
+            <element signature="e#9941#10025#0" expanded="false" />
+            <element signature="e#10292#10391#0" expanded="false" />
+            <element signature="e#13947#14024#0" expanded="false" />
+            <element signature="e#23488#23558#0" expanded="false" />
+            <element signature="e#24149#24246#0" expanded="false" />
+            <element signature="e#24442#24695#0" expanded="false" />
+            <element signature="e#25018#25110#0" expanded="false" />
+            <element signature="e#25796#25907#0" expanded="false" />
+            <element signature="e#26057#26403#0" expanded="false" />
+            <element signature="e#26093#26389#0" expanded="false" />
+            <element signature="e#26224#26371#0" expanded="false" />
+            <element signature="e#26270#26349#0" expanded="false" />
+            <element signature="e#27024#27169#0" expanded="false" />
+            <element signature="e#27287#27379#0" expanded="false" />
+            <element signature="e#27422#27511#0" expanded="false" />
+            <element signature="e#27537#27615#0" expanded="false" />
+            <element signature="e#27664#27900#0" expanded="false" />
+            <element signature="e#27926#28474#0" expanded="false" />
+            <element signature="e#28211#28444#0" expanded="false" />
+            <element signature="e#28267#28417#0" expanded="false" />
+            <element signature="e#30778#30850#0" expanded="false" />
+            <element signature="e#30999#31058#0" expanded="false" />
+            <element signature="e#31101#31292#0" expanded="false" />
+            <element signature="e#31155#31279#0" expanded="false" />
+            <element signature="e#31466#31953#0" expanded="false" />
+            <element signature="e#31526#31945#0" expanded="false" />
+            <element signature="e#31633#31933#0" expanded="false" />
+            <element signature="e#31703#31874#0" expanded="false" />
+            <element signature="e#32233#32337#0" expanded="false" />
+            <element signature="e#32799#32867#0" expanded="false" />
+            <element signature="e#32885#32954#0" expanded="false" />
+            <element signature="e#33076#33133#0" expanded="false" />
+            <element signature="e#33306#33343#0" expanded="false" />
+            <element signature="e#33377#33442#0" expanded="false" />
+            <element signature="e#33501#33561#0" expanded="false" />
+            <element signature="e#33622#33676#0" expanded="false" />
+            <element signature="e#33777#33893#0" expanded="false" />
+            <element signature="e#33819#33883#0" expanded="false" />
+            <element signature="e#33954#35153#0" expanded="false" />
+            <element signature="e#34057#35143#0" expanded="false" />
+            <element signature="e#34271#35127#0" expanded="false" />
+            <element signature="e#34571#35105#0" expanded="false" />
+            <element signature="e#34962#35079#0" expanded="false" />
+            <element signature="e#36872#37501#0" expanded="false" />
+            <element signature="e#37545#37730#0" expanded="false" />
+            <element signature="e#37744#37920#0" expanded="false" />
+            <element signature="e#37957#38406#0" expanded="false" />
+            <element signature="e#38416#38473#0" expanded="false" />
+            <element signature="e#38655#38692#0" expanded="false" />
+            <element signature="e#38731#38806#0" expanded="false" />
+            <element signature="e#38870#38935#0" expanded="false" />
+            <element signature="e#39451#39577#0" expanded="false" />
+            <element signature="e#39498#39567#0" expanded="false" />
+            <element signature="e#39690#41236#0" expanded="false" />
+            <element signature="e#39790#40641#0" expanded="false" />
+            <element signature="e#39838#40501#0" expanded="false" />
+            <element signature="e#40280#40365#0" expanded="false" />
+            <element signature="e#40395#40479#0" expanded="false" />
+            <element signature="e#40527#40623#0" expanded="false" />
+            <element signature="e#40663#41222#0" expanded="false" />
+            <element signature="e#40769#41153#0" expanded="false" />
+            <element signature="e#41254#41351#0" expanded="false" />
+            <element signature="e#41449#41560#0" expanded="false" />
+            <element signature="e#41831#44485#0" expanded="false" />
+            <element signature="e#41917#44471#0" expanded="false" />
+            <element signature="e#41940#42051#0" expanded="false" />
+            <element signature="e#42362#44242#0" expanded="false" />
+            <element signature="e#42942#43053#0" expanded="false" />
+            <element signature="e#43397#44031#0" expanded="false" />
+            <element signature="e#43486#43997#0" expanded="false" />
+            <element signature="e#43577#43959#0" expanded="false" />
+            <element signature="e#43723#43917#0" expanded="false" />
+            <element signature="e#44082#44213#0" expanded="false" />
+            <element signature="e#44283#44386#0" expanded="false" />
+            <element signature="e#44503#44604#0" expanded="false" />
+            <element signature="e#44656#44714#0" expanded="false" />
+            <element signature="e#44732#44789#0" expanded="false" />
+            <element signature="e#45291#45470#0" expanded="false" />
+            <element signature="e#45383#45460#0" expanded="false" />
+            <element signature="e#45531#45881#0" expanded="false" />
+            <element signature="e#45562#45810#0" expanded="false" />
+            <element signature="e#45672#45723#0" expanded="false" />
+            <element signature="e#45745#45796#0" expanded="false" />
+            <element signature="e#45828#45871#0" expanded="false" />
+            <element signature="e#45919#45966#0" expanded="false" />
+            <element signature="e#46006#46371#0" expanded="false" />
+            <element signature="e#46052#46172#0" expanded="false" />
+            <element signature="e#46223#46299#0" expanded="false" />
+            <element signature="e#46317#46361#0" expanded="false" />
+            <element signature="e#46414#46597#0" expanded="false" />
+            <element signature="e#46437#46587#0" expanded="false" />
+            <element signature="e#46496#46573#0" expanded="false" />
+            <element signature="e#46637#47033#0" expanded="false" />
+            <element signature="e#46660#47023#0" expanded="false" />
+            <element signature="e#46721#47009#0" expanded="false" />
+            <element signature="e#46743#46788#0" expanded="false" />
+            <element signature="e#47075#48843#0" expanded="false" />
+            <element signature="e#47256#47449#0" expanded="false" />
+            <element signature="e#47578#47634#0" expanded="false" />
+            <element signature="e#48024#48767#0" expanded="false" />
+            <element signature="e#48308#48569#0" expanded="false" />
+            <element signature="e#48596#48751#0" expanded="false" />
+            <element signature="e#48785#48833#0" expanded="false" />
+            <element signature="e#48957#49089#0" expanded="false" />
+            <element signature="e#49120#49410#0" expanded="false" />
+            <element signature="e#49247#49396#0" expanded="false" />
+            <element signature="e#49443#49639#0" expanded="false" />
+            <element signature="e#49573#49625#0" expanded="false" />
+            <element signature="e#49866#50189#0" expanded="false" />
+            <element signature="e#50032#50172#0" expanded="false" />
+            <element signature="e#50251#50445#0" expanded="false" />
+            <element signature="e#50328#50372#0" expanded="false" />
+            <element signature="e#50390#50435#0" expanded="false" />
+            <element signature="e#50507#52422#0" expanded="false" />
+            <element signature="e#50649#52263#0" expanded="false" />
+            <element signature="e#50667#52249#0" expanded="false" />
+            <element signature="e#50919#51554#0" expanded="false" />
+            <element signature="e#51172#51407#0" expanded="false" />
+            <element signature="e#51433#51526#0" expanded="false" />
+            <element signature="e#51624#51813#0" expanded="false" />
+            <element signature="e#51958#52051#0" expanded="false" />
+            <element signature="e#52106#52199#0" expanded="false" />
+            <element signature="e#52282#52410#0" expanded="false" />
+            <element signature="e#52326#52395#0" expanded="false" />
+            <element signature="e#52498#53547#0" expanded="false" />
+            <element signature="e#52534#52965#0" expanded="false" />
+            <element signature="e#52656#52951#0" expanded="false" />
+            <element signature="e#53056#53535#0" expanded="false" />
+            <element signature="e#53127#53366#0" expanded="false" />
+            <element signature="e#53176#53264#0" expanded="false" />
+            <element signature="e#53385#53475#0" expanded="false" />
+            <element signature="e#53682#54413#0" expanded="false" />
+            <element signature="e#53742#54405#0" expanded="false" />
+            <element signature="e#54088#54182#0" expanded="false" />
+            <element signature="e#54234#54393#0" expanded="false" />
+            <element signature="e#54299#54373#0" expanded="false" />
+            <element signature="e#55043#55085#0" expanded="false" />
+            <element signature="e#55276#55389#0" expanded="false" />
+            <element signature="e#55321#55379#0" expanded="false" />
+            <element signature="e#55902#56143#0" expanded="false" />
+            <element signature="e#56018#56091#0" expanded="false" />
+            <element signature="e#56193#56350#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7343566">
+          <caret line="244" column="5" selection-start-line="244" selection-start-column="5" selection-end-line="244" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="235" column="88" selection-start-line="235" selection-start-column="82" selection-end-line="235" selection-end-column="88" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/dal/dalDb.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="800" column="0" selection-start-line="800" selection-start-column="0" selection-end-line="800" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/es.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8550548">
+          <caret line="102" column="59" selection-start-line="102" selection-start-column="59" selection-end-line="102" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/en.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-26.346153">
+          <caret line="102" column="14" selection-start-line="102" selection-start-column="14" selection-end-line="102" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8343484">
+          <caret line="101" column="48" selection-start-line="101" selection-start-column="48" selection-end-line="101" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8282582">
+          <caret line="173" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
+          <folding>
+            <marker date="1443181446194" expanded="true" signature="-1:-1" placeholder="{...}" />
+            <marker date="1443181446194" expanded="true" signature="-1:-1" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/questionInfo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.683313">
+          <caret line="33" column="30" selection-start-line="33" selection-start-column="30" selection-end-line="33" selection-end-column="30" />
           <folding />
         </state>
       </provider>

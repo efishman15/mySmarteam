@@ -202,6 +202,43 @@ label.item.valid-lr {
     line-height: 1em;
 }
 
+.contests-avatar-leader-ltr {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: relative;
+    top: -265px;
+    left: 130px;
+}
+
+.contests-avatar-leader-rtl {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: relative;
+    top: -265px;
+    left: -130px;
+}
+
+.quiz-results-avatar-leader-ltr {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: relative;
+    top: -205px;
+    left: 130px;
+}
+
+.quiz-results-avatar-leader-rtl {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: relative;
+    top: -205px;
+    left: -130px;
+}
+
+
 .menu-avatar-ltr {
     width: 36px;
     height: 36px;

@@ -19,6 +19,10 @@
                  dataSource="{{contestCharts[0]}}"
                  events="fcEvents">
             </div>
+            <div class="center">
+                <image ng-class="{'quiz-results-avatar-leader-ltr' : $root.settings.languages[$root.user.settings.language].direction === 'ltr', 'quiz-results-avatar-leader-rtl' :  $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                       ng-src="{{contestCharts[0].contest.leaderAvatar}}" title="{{'CONTEST_LEADER' | translate}}"></image>
+            </div>
 
             <div class="padding center">
                 <button class="item button button-stable button-small button-3d button-3d-assertive nowrapText" ng-click="playAgain()">{{ 'PLAY_AGAIN' | translate}}</button>
