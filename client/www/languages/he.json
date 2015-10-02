@@ -86,7 +86,7 @@
   "NEW_CONTEST_UNLOCKED" : "כעת תוכלו ליצור תחרויות משלכם!",
   "FEATURE_LOCKED_NEW_CONTEST" : "יצירת תחרויות חדשות תתאפשר מרמה {{rank}}",
   "UNLOCK_FEATURE" : "שחררו עבור {{formattedCost}}",
-  "UNLOCK_FEATURE_MOBILE" : "שחררו באמצעות תשלום סלולרי של {{cost}} {{currency}}",
+  "UNLOCK_FEATURE_MOBILE" : "שחררו באמצעות תשלום סלולרי של {{cost}}{{currency}}",
   "ENDS_IN" : "מסתיימת בעוד: ",
   "ENDS_IN_MINUTES" : "{{number}} דקות",
   "ENDS_IN_HOURS" : "{{number}} שעות",
@@ -100,5 +100,12 @@
   "ANSWERED_INCORRECT" : "טעו",
   "HINT_FOR_SCORE" : "רמז ({{score}} נקודות)",
   "ANSWER_FOR_SCORE" : "תשובה ({{score}} נקודות)",
-  "CONTEST_LEADER" : "מקום ראשון בתחרות"
+  "CONTEST_LEADER" : "מקום ראשון בתחרות",
+  "SHARE_WITH_FRIENDS_TITLE" : "שתפו חברים",
+  "CLICK_LIKE" : "לחצו לייק לדף הפייסבוק שלנו לקבלת עדכונים על תחרויות בהשתתפותכם",
+  "LIKE" : "Like",
+  "SHARE_WITH_FRIENDS_MESSAGE" : "הזמינו חברים לסייע",
+  "SHARE_SUBJECT" : "בואו לשחק איתי 'מי יותר חכם?'",
+  "SHARE_BODY" : "אתם חייבים להסתכל על המשחק המגניב הזה: {{url}}",
+  "SHARE_BODY_NO_URL" : "אתם חייבים להסתכל על המשחק המגניב הזה"
 }
