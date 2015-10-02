@@ -28,6 +28,8 @@ function adjustMobileClosestCost(session, feature) {
                 currencySymbol = feature.purchaseData.currency;
             }
             feature.purchaseData.currencySymbol = currencySymbol;
+
+            feature.purchaseData.formattedCost = currencySymbol + feature.purchaseData.cost;
             break;
         }
     }

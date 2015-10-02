@@ -1,5 +1,5 @@
 <ion-view title="{{getTitle()}}">
-    <ion-nav-bar class="bar-stable"
+    <ion-nav-bar class="bar-stable bar-dark"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <ion-nav-buttons side="primary">
             <button class="button" ng-click="removeContest()" ng-hide="hideRemoveContest()">{{ 'REMOVE_CONTEST' |
@@ -10,7 +10,7 @@
     </ion-nav-bar>
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
-        <div class="padding" ng-if="$root.session.features.newContest.locked && $root.session.features.newContest.purchaseData.retrieved">
+        <div class="padding" ng-if="$root.session.features.newContest.locked">
             <span class="featureLockedText">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.session.features.newContest.unlockRank} }}</span>
             <button class="button button-full button-small button-3d button-3d-balanced"
                     ng-click="buyNewContestUnlockKey(false)" ng-disabled="buyInProgress">
@@ -18,7 +18,7 @@
                 translate:{formattedCost : $root.session.features.newContest.purchaseData.formattedCost} }}
             </button>
             <button class="button button-full button-small button-3d button-3d-balanced"
-                    ng-if="$root.platform==='facebook' && $root.session.features.newContest.purchaseData.mobilePricepointId"
+                    ng-if="$root.user.clientInfo.platform ==='facebook' && $root.session.features.newContest.purchaseData.mobilePricepointId"
                     ng-click="buyNewContestUnlockKey(true)" ng-disabled="buyInProgress">
                 {{'UNLOCK_FEATURE_MOBILE' |
                 translate:{cost :
@@ -80,29 +80,25 @@
             <div class="padding" ng-show="mode==='edit'">
                 <span>{{'CONTEST_END' | translate}}</span>
 
-                <div ng-if="datePickerLoaded">
-                    <ionic-datepicker input-obj="contestEndDatePicker" dir="ltr">
-                        <button class="button button-block button-positive">{{localViewData.endDate |
-                            date:'dd-MM-yyyy'}}
-                        </button>
-                    </ionic-datepicker>
-                </div>
+                <div ng-if=""
+                <ionic-datepicker input-obj="contestEndDatePicker" dir="ltr">
+                    <button class="button button-block button-positive">{{localViewData.endDate |
+                        date:'dd-MM-yyyy'}}
+                    </button>
+                </ionic-datepicker>
             </div>
 
-            <div class="padding" ng-if="$root.session.isAdmin">
+            <div class="padding" ng-hide="!$root.session.isAdmin || $root.session.isAdmin == false">
                 <span class="pointer" ng-click="toggleAdminInfo()">{{'CONTEST_ADMIN_INFO' | translate}} {{getArrowDirection(!showAdminInfo)}}</span>
 
                 <div ng-hide="showAdminInfo==false && contestForm.team0 && contestForm.team1">
-                    <div class="padding" ng-show="showStartDate">
+                    <div class="padding" ng-show="showStartDate===true">
                         <span>{{'CONTEST_START' | translate}}</span>
-
-                        <div ng-if="datePickerLoaded">
-                            <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
-                                <button class="button button-block button-positive">{{localViewData.startDate |
-                                    date:'dd-MM-yyyy'}}
-                                </button>
-                            </ionic-datepicker>
-                        </div>
+                        <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
+                            <button class="button button-block button-positive">{{localViewData.startDate |
+                                date:'dd-MM-yyyy'}}
+                            </button>
+                        </ionic-datepicker>
                     </div>
                     <div class="row">
                         <div class="padding contest-team">
@@ -164,10 +160,10 @@
             </div>
 
             <div class="button-bar padding">
-                <button class="button button-bar button-calm" translate="OK"
+                <button class="button padding button-bar button-calm" translate="OK"
                         ng-click="contestForm.$valid && setContest()">
                 </button>
-                <button class="button button-bar button-stable padding" translate="CANCEL"
+                <button class="button padding button-bar button-stable" translate="CANCEL"
                         ng-click="$root.gotoView('app.contests.mine')" ng-show="!enableBack">
                 </button>
             </div>

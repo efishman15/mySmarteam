@@ -367,13 +367,58 @@
             }
         };
 
-        //Correct/error images
-        var imgCorrect = document.createElement('img');
-        imgCorrect.src = '../images/correct.png';
-        var imgError = document.createElement('img');
-        imgError.src = '../images/error.png';
-        var imgInfo = document.createElement('img');
-        imgInfo.src = '../images/info_question.png';
+        //Hash map - each item's key is the img.src and the value is an object like this:
+        // loaded: true/false
+        // drawRequests: array of drawRequest objects that each contain:
+        //img, x, y, width, height
+        var drawImageQueue = {};
+
+        function initDrawImageQueue(src) {
+
+            var img = document.createElement("img");
+            drawImageQueue[src] = {"img": img, "loaded": false, "drawRequests": []};
+
+            img.onload = function () {
+                processDrawImageRequests(src);
+            }
+            img.src = src;
+        }
+
+        function drawImageAsync(imgSrc, x, y, width, height) {
+
+            //If image loaded - draw right away
+            if (drawImageQueue[imgSrc].loaded) {
+                quizContext.drawImage(drawImageQueue[imgSrc].img, x, y, width, height);
+                return;
+            }
+
+            var drawRequest = {
+                "x": x,
+                "y": y,
+                "width": width,
+                "height": height
+            }
+
+            //Add request to queue
+            drawImageQueue[imgSrc].drawRequests.push(drawRequest);
+        }
+
+        function processDrawImageRequests(imgSrc) {
+
+            drawImageQueue[imgSrc].loaded = true;
+            while (drawImageQueue[imgSrc].drawRequests.length > 0) {
+                var drawRequest = drawImageQueue[imgSrc].drawRequests.pop();
+                quizContext.drawImage(drawImageQueue[imgSrc].img, drawRequest.x, drawRequest.y, drawRequest.width, drawRequest.height);
+            }
+        }
+
+        var imgCorrectSrc = "images/correct.png";
+        var imgErrorSrc = "images/error.png";
+        var imgQuestionInfoSrc = "images/info_question.png";
+
+        initDrawImageQueue(imgCorrectSrc);
+        initDrawImageQueue(imgErrorSrc);
+        initDrawImageQueue(imgQuestionInfoSrc);
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
@@ -452,7 +497,7 @@
                     }
                     else {
                         //Question has no stats - draw an info icon inside to make user press
-                        quizContext.drawImage(imgInfo, currentX - $rootScope.settings.quiz.canvas.pieChartRadius, $rootScope.settings.quiz.canvas.topOffset + $rootScope.settings.quiz.canvas.radius - $rootScope.settings.quiz.canvas.pieChartRadius, $rootScope.settings.quiz.canvas.pieChartRadius * 2, $rootScope.settings.quiz.canvas.pieChartRadius * 2);
+                        drawImageAsync(imgQuestionInfoSrc, currentX - $rootScope.settings.quiz.canvas.pieChartRadius, $rootScope.settings.quiz.canvas.topOffset + $rootScope.settings.quiz.canvas.radius - $rootScope.settings.quiz.canvas.pieChartRadius, $rootScope.settings.quiz.canvas.pieChartRadius * 2, $rootScope.settings.quiz.canvas.pieChartRadius * 2);
                     }
                 }
                 else {
@@ -467,10 +512,10 @@
                 //Draw correct/incorrect for answered
                 if ($scope.questionHistory[i].answer != null) {
                     if ($scope.questionHistory[i].answer) {
-                        quizContext.drawImage(imgCorrect, currentX - $rootScope.settings.quiz.canvas.radius, $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius * 2, $rootScope.settings.quiz.canvas.radius * 2);
+                        drawImageAsync(imgCorrectSrc, currentX - $rootScope.settings.quiz.canvas.radius, $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius * 2, $rootScope.settings.quiz.canvas.radius * 2);
                     }
                     else {
-                        quizContext.drawImage(imgError, currentX - $rootScope.settings.quiz.canvas.radius, $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius * 2, $rootScope.settings.quiz.canvas.radius * 2);
+                        drawImageAsync(imgErrorSrc, currentX - $rootScope.settings.quiz.canvas.radius, $rootScope.settings.quiz.canvas.topOffset, $rootScope.settings.quiz.canvas.radius * 2, $rootScope.settings.quiz.canvas.radius * 2);
                     }
                 }
 
@@ -499,7 +544,7 @@
         function drawQuizScores() {
 
             quizContext.beginPath();
-            quizContext.clearRect(0,0,quizCanvas.width,$rootScope.settings.quiz.canvas.scores.top);
+            quizContext.clearRect(0, 0, quizCanvas.width, $rootScope.settings.quiz.canvas.scores.top);
             quizContext.closePath();
 
             var currentX;
@@ -562,8 +607,8 @@
                 function (data) {
                     $scope.quiz = data.quiz;
                     $scope.questionHistory = [];
-                    for(var i=0; i<data.quiz.totalQuestions; i++) {
-                        $scope.questionHistory.push({"score" : $rootScope.settings.quiz.questions.score[i]});
+                    for (var i = 0; i < data.quiz.totalQuestions; i++) {
+                        $scope.questionHistory.push({"score": $rootScope.settings.quiz.questions.score[i]});
                     }
                     drawQuizProgress();
 
@@ -701,8 +746,7 @@
         };
     })
 
-    .
-    controller("QuizResultCtrl", function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory, ContestsService, SoundService, ChartService) {
+    .controller("QuizResultCtrl", function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory, ContestsService, SoundService, ChartService) {
 
         if (!$scope.contestCharts) {
             $scope.contestCharts = [{}];
@@ -1229,13 +1273,15 @@
                 }
             };
             PaymentService.processPayment(transactionData, function (serverPurchaseData) {
+                alert("Server gave the asset, calling google consume...");
                 inappbilling.consumePurchase(function (purchaseData) {
+                        alert("Google consume call finished...");
                         if (callbackOnSuccess) {
                             callbackOnSuccess(purchaseData);
                         }
                         PaymentService.showPurchaseSuccess(serverPurchaseData);
                     }, function (error) {
-                        alert("Error consuming product: " + error)
+                        console.log("Error consuming product: " + error)
                     },
                     purchaseData.productId);
             });
@@ -1319,5 +1365,26 @@
                 }
             }
 
+        }
+    })
+
+    .controller("ShareCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
+        });
+
+        $scope.shareAnywhere = function () {
+            $cordovaSocialSharing.share($translate.instant("SHARE_BODY_NO_URL"),
+                $translate.instant("SHARE_SUBJECT"),
+                $rootScope.settings.general.baseUrl + $rootScope.settings.general.logoUrl,
+                $rootScope.settings.general.downloadUrl
+            );
+        };
+
+        $scope.likeFacebookFanPage = function() {
+            window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
         }
     });

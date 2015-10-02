@@ -1,4 +1,6 @@
 var mathjs = require("mathjs");
+var useragent = require("useragent");
+var logger = require("../utils/logger");
 
 var settings;
 module.exports.injectSettings = function (dbSettings) {
@@ -107,8 +109,8 @@ module.exports.getSettings = function (req, res, next) {
 
     //Generate the "client visible" part of the server settings about the question scores
     if (!settings.client.quiz.questions) {
-        settings.client.quiz.questions = {"score" : []};
-        for (var i=0; i<settings.server.quiz.questions.levels.length; i++) {
+        settings.client.quiz.questions = {"score": []};
+        for (var i = 0; i < settings.server.quiz.questions.levels.length; i++) {
             settings.client.quiz.questions.score.push(settings.server.quiz.questions.levels[i].score);
         }
     }
@@ -128,9 +130,8 @@ module.exports.getSettings = function (req, res, next) {
                 var button = {};
                 button.action = settings.server.versions.mustUpdate.popup.buttons[i].action;
                 button.text = settings.server.versions.mustUpdate.popup.buttons[i].text[data.language];
-                if (settings.server.versions.mustUpdate.popup.buttons[i].link) {
-                    button.link = settings.server.versions.mustUpdate.popup.buttons[i].link[data.clientInfo.platform];
-                }
+                button.link = settings.server.platforms[data.clientInfo.platform].storeLink;
+
                 if (settings.server.versions.mustUpdate.popup.buttons[i].screen) {
                     button.screen = settings.server.versions.mustUpdate.popup.buttons[i].screen;
                 }
@@ -282,7 +283,7 @@ function versionCompare(v1, v2, options) {
 //---------------------------------------------------------------------------------------------------
 // add "contains" function to an array to check if an item exists in an array
 //---------------------------------------------------------------------------------------------------
-Array.prototype.contains = function(obj) {
+Array.prototype.contains = function (obj) {
     var i = this.length;
     while (i--) {
         if (this[i] === obj) {
@@ -291,3 +292,28 @@ Array.prototype.contains = function(obj) {
     }
     return false;
 }
+
+//------------------------------------------------------------------------------------------------
+// download
+//
+// data: <NA>?
+//
+// redirects the client to the game based on agent's platform
+//------------------------------------------------------------------------------------------------
+module.exports.download = function (req, res, next) {
+
+    var agent = useragent.parse(req.headers['user-agent']);
+
+    logger.console.info("download, agent=" + JSON.stringify(agent));
+    logger.server.info("download, agent=" + JSON.stringify(agent));
+
+    if (agent.os.family === "Android") {
+        res.redirect(settings.server.platforms.android.storeLink);
+    }
+    else if (agent.os.family === "iOS") {
+        res.redirect(settings.server.platforms.ios.storeLink);
+    }
+    else {
+        res.redirect(settings.client.general.baseUrl);
+    }
+};

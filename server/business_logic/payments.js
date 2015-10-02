@@ -6,11 +6,9 @@ var ObjectId = require("mongodb").ObjectID;
 var dalDb = require('../dal/dalDb');
 var dalFacebook = require('../dal/dalFacebook');
 var generalUtils = require("../utils/general")
-var GoogleVerifier = require('google-play-purchase-validator');
-var googleVerifierOptions = {
-    "email" : "738730548407-bi9shjugluubofp58m1dnjvg6klpprhq@developer.gserviceaccount.com",
-    "key" : "-----BEGIN PRIVATE KEY-----MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCqtfltjTksqaCM\nKaFIl4fGRTE8q+G0cTw3V/NMrK9jIbg/CHvkEWXLWQSw51MvlBpx826tCc0bKhI+\nJZ0jRmc1ZbPyG+OWiMzz6RgWZsiC1wPjdyaPK1zOjHzsmgeewzddGzD8h9N//C17\ny30eFh8GZdTl9MR5rEuqttrNlhqI2kkhcZ2bwW5iaVlVWNH6f8LaFHBn50tBRs1d\nasK99ACvqrWE9P00qPv2Fopal2nQ+nbLS20nvs86+xMjZF7sFXtFOKO1MDoJF+yQ\nUuLrMdjjbez8RcbVkoN4wwRirPb5J5ATnEVvtzYmv3cAKeAPAiPa+x77uR0DttnC\n+2d30dmrAgMBAAECggEBAIkl4dpt1z1WmjGBUJ4tf1t/Q2tm+9IoFySveDxlkBKo\niIm7my1D/PA9+FLXxjE3X3elB4nlke79AeMD/RbV/R0dNFCSr2nFRkO/RSbaNMVJ\nUUpx83yabdlTbRn5NZ4LYHNg4R5BUV5Fj5UhisedJhfRwBVvbFoEXlYsyeTZbz/6\nL0p2RKiUq+jC/GcJaa84jLGCqoUyk79A+gnxzxvivw3wlTbpNXL3MzFx/sGZxLmv\nHfuVFMKbIUXc6STg2veEcoHP9MQBN6bl+JBiLFV5wnmyzXtdf3Zh4/QPR5Q4KVrd\nTNlT1g7kAQEaKHL0gLykkcBE93hSjDTXcU88LNKZRWECgYEA1K/FTZIxMzNz4R0h\nZp82uP+MqtGCULnqvRmQ/RhiwKnyICfnx+RLoIp305cyloM4NY4/Fr9O7nJPVx8P\nNDTlkqYY/4UZZ/w4Vq8x9tQ/Xoj82fPPSS2K8iJlPgheZgrkzTqgUzcu9pVxhXW1\npM1ePPOHAjIptt50zXWr70wDShcCgYEAzXnVeEgkXiAWDz8XqBJSw1zHnvaosYyb\ncJQ7W/mdVS3OWbK10xkvroBEuZXS1YELjsQuPAmRaGSjBr+mhT8OkG5ppk7T13nQ\n06LhV3xXW3jGawvVGATynEIG5nvqQ0cbnN8WcB3qrW0xWMSPtrCvP4vMmqvBXAkK\nPW9qcbNkLY0CgYEAqMpyMDTEXRkJbu96cYILoNgWn/4ziLNzqu1eVq6CuNpmsMRa\nuxXgOyGJJWBKIo8zDbW9NeVP1AbeFossusb8Jt0w26Ca4B6X65uQcI5TWEgpOyO2\nLyI4sh8/7/IeUKd2m7VaRZB28fT6KeuX45mkn4S5cbGzz1BOrDwl3nyZ47MCgYBm\n4wqxH+6V8xsYp08BKaunh12ti3UM8osi5BaVB3hwnm8lGwdQnNvzVOcUxqC7p9JR\nuoosJd5Zl4rKZkzLi7ePOrpMPEx3KNgYIQcU934Gn4M7NsGNNW0GMUmjP4keBw0c\nj9h8a36HOJXtDP+pSu91slrRWA+KNjyaZp+2L02KQQKBgBrhXO0a3QgqsB+u6knc\nrKNtYjBDGDcdXATtnO/qh6N1tcbRxFqEdxx5wc3Bc04d5aUUJYrGD33lVuZID8qW\ndGodoUinQ+el4TO6BR/9M9xk02vXNQTGCHzdiJ+N8Z+I6CCV1eo/nN6cyzh9Oiif\nR2JnOeVAPz1rxoTN5j2epwu9-----END PRIVATE KEY-----"
-};
+var google = require('googleapis');
+var Androidpublisher = google.androidpublisher("v2");
+var jwtClient;
 
 var PaypalObject = require('paypal-express-checkout').Paypal;
 var paypal;
@@ -154,10 +152,10 @@ module.exports.payPalBuy = function (req, res, next) {
 
             var urlPrefix;
             if (req.connection.encrypted) {
-                urlPrefix = generalUtils.settings.server.general.baseUrlSecured;
+                urlPrefix = generalUtils.settings.client.general.baseUrlSecured;
             }
             else {
-                urlPrefix = generalUtils.settings.server.general.baseUrl;
+                urlPrefix = generalUtils.settings.client.general.baseUrl;
             }
 
             paypal.returnUrl = urlPrefix + paypalSettings.successUrl;
@@ -223,7 +221,10 @@ module.exports.processPayment = function (req, res, next) {
     var data = req.body;
     data.token = token;
 
-    data.paymentId = data.purchaseData.payment_id;
+    if (data.method === "facebook") {
+        //For facebook payments
+        data.paymentId = data.purchaseData.payment_id;
+    }
 
     innerProcessPayment(data, function (err, data) {
         if (!err) {
@@ -322,15 +323,36 @@ function innerProcessPayment(data, callback) {
                     break;
 
                 case "android":
-                    var googleVerifier = new GoogleVerifier(googleVerifierOptions);
-                    var googleReceipt = {
-                        packageName: data.purchaseData.packageName,
-                        productId: data.purchaseData.productId,
-                        purchaseToken: data.purchaseData.purchaseToken
-                    };
 
-                    googleVerifier.verify(googleReceipt, function (err, response) {
-                        if (!err) {
+                    if (!jwtClient) {
+                        jwtClient = new google.auth.JWT(generalUtils.settings.server.google.api.auth.email, null, generalUtils.settings.server.google.api.auth.privateKey, generalUtils.settings.server.google.api.auth.scopes, null);
+                    }
+
+                    jwtClient.authorize(function(err, tokens) {
+                        if (err) {
+                            callback(new exceptions.ServerException("Unable to authorize to google with jwt", {"purchaseData": data.purchaseData, "googleError" : err}));
+                            return;
+                        }
+
+                        var params = {
+                            auth : jwtClient,
+                            packageName: data.purchaseData.packageName,
+                            productId: data.purchaseData.productId,
+                            token: data.purchaseData.purchaseToken
+                        };
+
+                        Androidpublisher.purchases.products.get(params, function(purchaseError, purchaseResponse) {
+                            // handle err and response
+                            if (err) {
+                                callback(new exceptions.ServerException("Unable to verify google purchase", {"purchaseData": data.purchaseData, "googleError" : purchaseError}));
+                                return;
+                            }
+
+                            if (purchaseResponse.consumptionState !== 0) {
+                                callback(new exceptions.ServerException("This purchase has already been consumed", {"purchaseData": data.purchaseData, "purchaseResponse" : purchaseResponse}));
+                                return;
+                            }
+
                             data.newPurchase.transactionId = data.purchaseData.orderId;
                             data.newPurchase.amount = data.extraPurchaseData.actualCost;
                             data.newPurchase.currency = data.extraPurchaseData.actualCurrency;
@@ -339,7 +361,7 @@ function innerProcessPayment(data, callback) {
                             data.featurePurchased = data.extraPurchaseData.featurePurchased;
                             data.paymentData = data.purchaseData;
 
-                            switch (data.purchaseData.purchaseState) {
+                            switch (purchaseResponse.purchaseState) {
                                 case 0: //completed
                                     data.newPurchase.status = "completed";
                                     data.proceedPayment = true;
@@ -355,12 +377,10 @@ function innerProcessPayment(data, callback) {
                             }
 
                             dalDb.insertPurchase(data, callback);
-                        }
-                        else {
-                            callback(new exceptions.ServerException("Invalid google purchase data - not verified", {"purchaseData": data.purchaseData, "googleError" : err}));
-                            return;
-                        }
+
+                        });
                     });
+
                     break;
             }
         },

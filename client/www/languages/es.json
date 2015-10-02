@@ -85,7 +85,7 @@
   "NEW_CONTEST_UNLOCKED" : "Ahora puede crear sus propios concursos !",
   "FEATURE_LOCKED_NEW_CONTEST" : "Creación de nuevos concursos se desbloqueará a nivel {{rank}}",
   "UNLOCK_FEATURE" : "Desbloquear para {{formattedCost}}",
-  "UNLOCK_FEATURE_MOBILE" : "Desbloquear con pago móvil de {{currency}} {{cost}}",
+  "UNLOCK_FEATURE_MOBILE" : "Desbloquear con pago móvil de {{currency}}{{cost}}",
   "ENDS_IN" : "Termina en: ",
   "ENDS_IN_MINUTES" : "{{number}} Minutos",
   "ENDS_IN_HOURS" : "{{number}} Horas",
@@ -101,5 +101,12 @@
   "ANSWERED_INCORRECT" : "Falló",
   "HINT_FOR_SCORE" : "Sugerencia ({{score}} puntoligentes)",
   "ANSWER_FOR_SCORE" : "Respuesta ({{score}} puntoligentes)",
-  "CONTEST_LEADER" : "líder del Concurso"
+  "CONTEST_LEADER" : "líder del Concurso",
+  "SHARE_WITH_FRIENDS_TITLE" : "Compartir con amigos",
+  "CLICK_LIKE" : "Haga clic como a nuestra página de Facebook y obtener actualizaciones sobre los concursos que participas",
+  "LIKE" : "Like",
+  "SHARE_WITH_FRIENDS_MESSAGE" : "Invita a tus amigos para ayudar",
+  "SHARE_SUBJECT" : "Ven a jugar conmigo : '¿Quién es más inteligente ?'",
+  "SHARE_BODY" : "Yo quiero que veas a este divertido juego : {{url}}",
+  "SHARE_BODY_NO_URL" : "I want you to see this cool game"
 }

@@ -41,6 +41,10 @@
                           ng-click="$root.gotoView('contest', false, {mode : 'add'})">
                     {{ 'NEW_CONTEST' | translate}}
                 </ion-item>
+                <ion-item class="ion-android-share" menu-close
+                          ng-click="$root.gotoView('share', false)">
+                    {{ 'SHARE_WITH_FRIENDS_TITLE' | translate}}
+                </ion-item>
                 <ion-item class="ion-gear-a" ng-click="$root.gotoView('settings', false)">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>

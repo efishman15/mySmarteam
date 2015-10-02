@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage'])
+angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage', 'ngCordova'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
     .run(function ($ionicPlatform, $rootScope, $state, PopupService) {
@@ -210,6 +210,13 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     }
                 },
                 controller: "OtherwiseCtrl"
+            })
+
+            .state('share', {
+                url: "/share",
+                params: {serverPopup: null},
+                controller: "ShareCtrl",
+                templateUrl: "templates/share.html"
             })
 
             .state('app.quiz', {

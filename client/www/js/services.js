@@ -189,25 +189,27 @@ angular.module('whoSmarter.services', [])
 
                         $rootScope.user.clientInfo = {};
 
-                        if (ionic.Platform.isAndroid()) {
-                            $rootScope.user.clientInfo.platform = "android";
-                        }
-                        else if (ionic.Platform.isIOS()) {
-                            $rootScope.user.clientInfo.platform = "ios";
-                        }
-                        else if (window.self !== window.top) {
-                            //running inside an iframe, e.g. facebook canvas
-                            $rootScope.user.clientInfo.platform = "facebook";
-                        }
-                        else {
-                            $rootScope.user.clientInfo.platform = "web";
-                        }
-
                         if (window.cordova) {
                             if (!$rootScope.user.clientInfo.appVersion) {
                                 $rootScope.user.clientInfo.appVersion = $rootScope.appVersion;
                             }
                             $rootScope.user.clientInfo.platformVersion = ionic.Platform.version();
+
+                            if (ionic.Platform.isAndroid()) {
+                                $rootScope.user.clientInfo.platform = "android";
+                            }
+                            else if (ionic.Platform.isIOS()) {
+                                $rootScope.user.clientInfo.platform = "ios";
+                            }
+                        }
+                        else {
+                            if (window.self !== window.top) {
+                                //running inside an iframe, e.g. facebook canvas
+                                $rootScope.user.clientInfo.platform = "facebook";
+                            }
+                            else {
+                                $rootScope.user.clientInfo.platform = "web";
+                            }
                         }
 
                         $ionicPlatform.registerBackButtonAction(function (event) {
@@ -1145,7 +1147,7 @@ angular.module('whoSmarter.services', [])
                 case "android" :
                     method = "android";
                     inappbilling.buy(function(purchaseData) {
-                            callbackOnSuccess(purchaseData);
+                            callbackOnSuccess({"method" : method, "data" : purchaseData});
                         },
                         function(error) {
                             //Error messages will be displayed inside google

@@ -99,11 +99,12 @@ dalDb.loadSettings(function (err, data) {
     app.post("/info/geo", generalUtils.geoInfo);
     app.post("/info/settings", generalUtils.getSettings);
     app.post("/facebook/canvas", facebookCanvas.canvas);
-    app.get("/facebook/product/:productId/:language",facebookCanvas.getProductDetails);
-    app.post("/facebook/dynamicPricing",facebookCanvas.dynamicPricing);
-    app.get("/facebook/ipn",facebookCanvas.getChallenge);
-    app.post("/facebook/ipn",facebookCanvas.ipn);
-    app.post("/paypal/ipn",paypalIPN.ipn);
+    app.get("/facebook/product/:productId/:language", facebookCanvas.getProductDetails);
+    app.post("/facebook/dynamicPricing", facebookCanvas.dynamicPricing);
+    app.get("/facebook/ipn", facebookCanvas.getChallenge);
+    app.post("/facebook/ipn", facebookCanvas.ipn);
+    app.post("/paypal/ipn", paypalIPN.ipn);
+    app.get("/download", generalUtils.download);
 
     //----------------------------------------------------
     // Start server listener

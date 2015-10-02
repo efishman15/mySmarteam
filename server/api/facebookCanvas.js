@@ -57,7 +57,7 @@ module.exports.getProductDetails = function (req, res, next) {
                 {
                     "title": product.displayNames[language],
                     "description": product.displayNames[language],
-                    "productUrl": generalUtils.settings.server.general.baseUrlSecured + "fb/payments?productId=" + productId + "&language=" + language,
+                    "productUrl": generalUtils.settings.client.general.baseUrlSecured + "fb/payments?productId=" + productId + "&language=" + language,
                     "language": language,
                     "productId": productId
                 });
