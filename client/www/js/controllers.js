@@ -12,9 +12,7 @@
 
         function resizeCanvas() {
 
-            var CANVAS_WIDTH = 640;
-
-            if ($rootScope.user.clientInfo.platform !== "facebook") {
+            if ($rootScope.user.clientInfo.mobile) {
                 return;
             }
 
@@ -23,12 +21,12 @@
             var hostingView = document.getElementById("myHostingView");
             if (hostingView) {
 
-                if (containerWidth > CANVAS_WIDTH) {
-                    hostingView.style.width = CANVAS_WIDTH + "px";
-                    hostingView.style.marginLeft = (containerWidth - CANVAS_WIDTH) / 2 + "px";
+                if (containerWidth > $rootScope.settings.general.webCanvasWidth) {
+                    hostingView.style.width = $rootScope.settings.general.webCanvasWidth + "px";
+                    hostingView.style.marginLeft = (containerWidth - $rootScope.settings.general.webCanvasWidth) / 2 + "px";
                 }
                 else {
-                    hostingView.style.width = CANVAS_WIDTH + "px";
+                    hostingView.style.width = $rootScope.settings.general.webCanvasWidth + "px";
                     hostingView.style.marginLeft = "0px";
                 }
             }
@@ -882,7 +880,7 @@
         });
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig, $ionicLoading) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -1054,7 +1052,7 @@
 
                         },
                         function (msg) {
-                            alert("error getting product details: " + msg);
+                            console.log("error getting product details: " + msg);
                         }, $rootScope.session.features.newContest.purchaseData.productId);
 
 
@@ -1273,14 +1271,21 @@
                 }
             };
             PaymentService.processPayment(transactionData, function (serverPurchaseData) {
-                alert("Server gave the asset, calling google consume...");
+
+                $ionicLoading.show({
+                        animation: 'fade-in',
+                        showBackdrop: true,
+                        showDelay: 50
+                    }
+                )
                 inappbilling.consumePurchase(function (purchaseData) {
-                        alert("Google consume call finished...");
+                        $ionicLoading.hide();
                         if (callbackOnSuccess) {
                             callbackOnSuccess(purchaseData);
                         }
                         PaymentService.showPurchaseSuccess(serverPurchaseData);
                     }, function (error) {
+                        $ionicLoading.hide();
                         console.log("Error consuming product: " + error)
                     },
                     purchaseData.productId);

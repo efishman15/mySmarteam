@@ -195,6 +195,8 @@ angular.module('whoSmarter.services', [])
                             }
                             $rootScope.user.clientInfo.platformVersion = ionic.Platform.version();
 
+                            $rootScope.user.clientInfo.mobile = true;
+
                             if (ionic.Platform.isAndroid()) {
                                 $rootScope.user.clientInfo.platform = "android";
                             }
@@ -210,6 +212,7 @@ angular.module('whoSmarter.services', [])
                             else {
                                 $rootScope.user.clientInfo.platform = "web";
                             }
+                            $rootScope.user.clientInfo.mobile = false;
                         }
 
                         $ionicPlatform.registerBackButtonAction(function (event) {
