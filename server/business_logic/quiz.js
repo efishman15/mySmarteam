@@ -334,16 +334,18 @@ module.exports.answer = function (req, res, next) {
 
                 // Check if need to replace the contest leader
                 // Leader is the participant that has contributed max points for the contest regardless of teams)
-                if (myContestUser.score > data.contest.users[data.contest.leader].score) {
-                    data.setData["leader"] = data.session.userId;
+                if (myContestUser.score > data.contest.users[data.contest.leader.userId].score) {
+                    data.setData["leader.userId"] = data.session.userId;
+                    data.setData["leader.avatar"] = data.session.avatar;
                     data.clientResponse.becameContestLeader = true;
                 }
 
                 // Check if need to replace the my team's leader
                 // Team leader is the participant that has contributed max points for his/her team)
 
-                if (!data.contest.teams[myTeam].leader || myContestUser.teamScores[myTeam] > data.contest.users[data.contest.teams[myTeam].leader].teamScores[myTeam]) {
-                    data.setData["teams." + myTeam + ".leader"] = data.session.userId;
+                if (!data.contest.teams[myTeam].leader || myContestUser.teamScores[myTeam] > data.contest.users[data.contest.teams[myTeam].leader.userId].teamScores[myTeam]) {
+                    data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
+                    data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
                     data.clientResponse.becameTeamLeader = true;
                 }
 

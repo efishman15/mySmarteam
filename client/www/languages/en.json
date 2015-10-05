@@ -78,7 +78,7 @@
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_MESSAGE" : "Your purchase requires validation. If it will be validated, you will receive your item later automatically",
   "MY_CONTESTS" : "My Contests",
   "RUNNING_CONTESTS" : "Running Contests",
-  "RECENTLY_FINISHED_CONTESTS" : "Recently finished",
+  "RECENTLY_FINISHED_CONTESTS" : "Finished contests",
   "SUCCESS_RATIO" : "({{correctRatio}}% succeeded)",
   "NEW_RANK_TITLE" : "Congratulations!",
   "NEW_RANK_MESSAGE" : "You have reached level: {{rank}}",
@@ -93,7 +93,7 @@
   "PURCHASE_NEW_CONTEST_UNLOCK_KEY" : "New contest - unlock key",
   "PURCHASE_CHALLENGE_FRIEND_CONTEST_UNLOCK_KEY" : "Challenge friend contest - unlock key",
   "PAYMENT_THANKYOU" : "Congratulations!",
-  "EXIT_APP_TITLE" : "Exit Application",
+  "EXIT_APP_TITLE" : "Exit Game",
   "EXIT_APP_MESSAGE" : "Are you sure you would like to exit?",
   "QUESTION_STATS_TITLE" : "Question Data",
   "QUESTION_STATS_CHART_CAPTION" : "Reponse distribution",
@@ -108,5 +108,9 @@
   "SHARE_WITH_FRIENDS_MESSAGE" : "Invite friends to assist",
   "SHARE_SUBJECT" : "Come play with me: 'Who is Smarter?'",
   "SHARE_BODY" : "I want you to see this cool game: {{url}}",
-  "SHARE_BODY_NO_URL" : "I want you to see this cool game"
+  "SHARE_BODY_NO_URL" : "I want you to see this cool game",
+  "JOIN_A_CONTEST_MESSAGE" : "Please join one of the running contests so it will appear in my contests list",
+  "LEADERBOARDS" : "Leaderboards",
+  "FRIENDS" : "Friends",
+  "WEEKLY" : "Weekly"
 }

@@ -1195,3 +1195,45 @@ function insertPurchase(data, callback) {
             callback(null, data);
         });
 }
+
+//--------------------------------------------------------------------------------------------------------------
+// insertPurchase
+//
+// Inserts a new purchase record - duplicates are catched and switches data.duplicatePurchase to true
+//
+// data:
+// -----
+// input: DbHelper, contestId
+// output: participants (array)
+//--------------------------------------------------------------------------------------------------------------
+module.exports.getContestTopParticipants = getContestTopParticipants;
+function getContestTopParticipants(data, callback) {
+
+    var contestsCollection = data.DbHelper.getCollection("Contests");
+
+    data.newPurchase.created = (new Date()).getTime();
+
+    purchasesCollection.insert(data.newPurchase
+        , {}, function (err, result) {
+            if (err) {
+                if (err.code !== 11000) {
+
+                    closeDb(data);
+
+                    callback(new exceptions.ServerException("Error inserting purchase record", {
+                        "purchaseRecord": data.newPurchase,
+                        "dbError": err
+                    }, "error"));
+
+                    return;
+                }
+                else {
+                    data.duplicatePurchase = true;
+                }
+            }
+
+            checkToCloseDb(data);
+
+            callback(null, data);
+        });
+}

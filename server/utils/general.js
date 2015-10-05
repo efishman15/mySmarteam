@@ -103,6 +103,7 @@ module.exports.geoInfo = function (req, res, next) {
 // Optionally return a serverPopup to request to upgrade
 //------------------------------------------------------------------------------------------------
 module.exports.getSettings = function (req, res, next) {
+
     var data = req.body;
 
     var response;

@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage', 'ngCordova'])
+angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
     .run(function ($ionicPlatform, $rootScope, $state, PopupService) {
@@ -331,8 +331,8 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
             })
 
             // setup an abstract state for the tabs directive
-            .state('app.contests', {
-                url: "/contests",
+            .state('app.tabs', {
+                url: "/tabs",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "contests");
@@ -346,8 +346,9 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             })
 
-            .state('app.contests.mine', {
-                url: '/mine',
+            .state('app.tabs.myContests', {
+                url: '/myContests',
+                params : {userClick : null},
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "myContests");
@@ -359,11 +360,11 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab": "mine", "showPlay": true, "showParticipants": false}
+                appData: {"serverTab": "mine", "showPlay": true, "showParticipants": false, title : "MY_CONTESTS"}
             })
 
-            .state('app.contests.running', {
-                url: '/running',
+            .state('app.tabs.runningContests', {
+                url: '/runningContests',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "runningContests");
@@ -375,25 +376,54 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab": "running", "showPlay": true, "showParticipants": false}
+                appData: {"serverTab": "running", "showPlay": true, "showParticipants": false, title : "RUNNING_CONTESTS"}
             })
 
-            .state('app.contests.recentlyFinished', {
-                url: '/recentlyFinished',
+            .state('app.tabs.recentlyFinishedContests', {
+                url: '/recentlyFinishedContests',
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "recentlyFinishedContests");
                     }
                 },
                 views: {
-                    'recentlyFinishedContestsTab': {
+                    'leaderboardTab': {
                         templateUrl: 'templates/contests.html',
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab": "recentlyFinished", "showPlay": false, "showParticipants": true}
-            });
+                appData: {"serverTab": "recentlyFinished", "showPlay": false, "showParticipants": true, title : "LEADERBOARDS"}
+            })
 
+            .state('app.tabs.friendsLeaderboard', {
+                url: '/friendsLeaderboard',
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "friends");
+                    }
+                },
+                views: {
+                    'leaderboardTab': {
+                        templateUrl: 'templates/friendsLeaderboard.html',
+                        controller: 'FriendsLeaderboardCtrl'
+                    }
+                }
+            })
+
+            .state('app.tabs.weeklyLeaderboard', {
+                url: '/weeklyLeaderboard',
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "weekly");
+                    }
+                },
+                views: {
+                    'leaderboardTab': {
+                        templateUrl: 'templates/weeklyLeaderboard.html',
+                        controller: 'WeeklyLeaderboardCtrl'
+                    }
+                }
+            });
 
         $urlRouterProvider.otherwise(function ($injector, $location) {
             var $state = $injector.get("$state");

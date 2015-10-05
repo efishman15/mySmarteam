@@ -2,7 +2,7 @@
     <ion-nav-bar class="bar-stable bar-dark"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <ion-nav-buttons side="primary">
-            <button class="button" ng-click="removeContest()" ng-hide="hideRemoveContest()">{{ 'REMOVE_CONTEST' |
+            <button class="button button-light" ng-click="removeContest()" ng-hide="hideRemoveContest()">{{ 'REMOVE_CONTEST' |
                 translate}}
             </button>
         </ion-nav-buttons>
@@ -161,11 +161,7 @@
                 <button class="button padding button-bar button-calm" translate="OK"
                         ng-click="contestForm.$valid && setContest()">
                 </button>
-                <button class="button padding button-bar button-stable" translate="CANCEL"
-                        ng-click="$root.gotoView('app.contests.mine')" ng-show="!enableBack">
-                </button>
             </div>
-
 
         </form>
     </ion-content>

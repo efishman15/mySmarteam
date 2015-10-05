@@ -1,0 +1,25 @@
+<ion-view class="bgQuestionMarks" title="{{'LEADERBOARDS' | translate}}">
+
+    <!------------------------------------------------------------------------------>
+    <!-- This is a workaround - when navigating to other views, forcing the back
+    <!-- button to show the previous view title only from the ion-nav-title
+    <!------------------------------------------------------------------------------>
+    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
+                 overflow-scroll="true" class="hide-vertical-scrollbar">
+
+        <div class="center button-bar padding">
+            <button class="button padding button-assertive button-outline button-small small-font" translate="RECENTLY_FINISHED_CONTESTS" ng-click="$root.gotoView('app.tabs.recentlyFinishedContests')" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='rtl'}">
+            </button>
+            <button class="button padding button-assertive button-outline button-small small-font thick-border" translate="FRIENDS"
+                    ng-click="$root.gotoView('app.tabs.friendsLeaderboard')">
+            </button>
+            <button class="button padding button-assertive button-small small-font" translate="WEEKLY" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='ltr'}">
+            </button>
+        </div>
+
+        <h1 class="center">Weekly leaderboard</h1>
+
+    </ion-content>
+
+</ion-view>
+

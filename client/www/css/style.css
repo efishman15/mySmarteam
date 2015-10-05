@@ -277,8 +277,25 @@ label.item.valid-lr {
     display: none;
 }
 
-.roundedButtons {
-    border-radius: 25%;
+.round-button-left {
+    border-top-left-radius: 15px !important;
+    border-bottom-left-radius: 15px !important;
+    -moz-border-radius-topleft: 15px !important;
+    -moz-border-radius-bottomleft: 15px !important;
+    border-width: 2px !important;
+}
+
+.round-button-right {
+    border-top-right-radius: 15px !important;
+    border-bottom-right-radius: 15px !important;
+    -moz-border-radius-topright: 15px !important;
+    -moz-border-radius-bottomright: 15px !important;
+    border-width: 2px !important;
+}
+
+.thick-border {
+    border-top-width: 2px !important;
+    border-bottom-width: 2px !important;
 }
 
 .button-3d {
@@ -346,6 +363,11 @@ label.item.valid-lr {
 
 .pointer {
     cursor: pointer;
+}
+
+.small-font {
+    font-size: 65%;
+    font-weight: bold;
 }
 
 .my-item-note-left {

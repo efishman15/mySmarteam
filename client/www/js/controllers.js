@@ -25,10 +25,6 @@
                     hostingView.style.width = $rootScope.settings.general.webCanvasWidth + "px";
                     hostingView.style.marginLeft = (containerWidth - $rootScope.settings.general.webCanvasWidth) / 2 + "px";
                 }
-                else {
-                    hostingView.style.width = $rootScope.settings.general.webCanvasWidth + "px";
-                    hostingView.style.marginLeft = "0px";
-                }
             }
         }
 
@@ -112,7 +108,7 @@
         $scope.$on('$ionicView.beforeEnter', function () {
 
             if ($rootScope.session) {
-                $rootScope.gotoView("app.contests.mine");
+                $rootScope.gotoView("app.tabs.myContests");
             }
             else if (!$rootScope.user) {
                 UserService.initUser(function () {
@@ -164,15 +160,15 @@
 
         $scope.facebookConnect = function () {
             UserService.facebookClientConnect(function (session) {
-                $rootScope.gotoView("app.contests.mine");
+                $rootScope.gotoView("app.tabs.myContests");
             })
         };
 
     })
 
-    .controller("ContestsCtrl", function ($scope, $state, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, ChartService, $ionicTabsDelegate, UserService) {
+    .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, ChartService, $ionicTabsDelegate, UserService) {
 
-        var tabs = ["app.contests.mine", "app.contests.running", "app.contests.recentlyFinished"];
+        var tabs = ["app.tabs.myContests", "app.tabs.runningContests", "app.tabs.recentlyFinishedContests"];
 
         UserService.resolveEvents();
 
@@ -183,6 +179,11 @@
                 $rootScope.gotoView("home");
                 return;
             }
+
+            $scope.userClick = $stateParams.userClick;
+
+            $scope.tab = $state.current.appData.serverTab;
+            $scope.title = $state.current.appData.title;
 
             $scope.doRefresh();
         });
@@ -256,7 +257,7 @@
             ContestsService.getContests(postData, function (contestsResult) {
                 $scope.totalContests = contestsResult.count;
 
-                if ($scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
+                if (!$stateParams.userClick && $scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
                     //If no "my contests" - switch to running contests
                     $rootScope.gotoView(tabs[1]);
                     return;
@@ -592,7 +593,7 @@
         function startQuiz() {
 
             if (!$stateParams.contestId) {
-                $rootScope.gotoView("app.contests.mine");
+                $rootScope.gotoView("app.tabs.myContests");
                 return;
             }
 
@@ -753,7 +754,7 @@
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
             if (!$stateParams.results) {
-                $rootScope.gotoView("app.contests.mine");
+                $rootScope.gotoView("app.tabs.myContests");
                 return;
             }
 
@@ -1010,7 +1011,7 @@
                 }
             }
             else {
-                $rootScope.gotoView("app.contests.mine");
+                $rootScope.gotoView("app.tabs.myContests");
                 return;
             }
 
@@ -1060,13 +1061,6 @@
             }
             else {
                 $rootScope.session.features.newContest.purchaseData.retrieved = true;
-            }
-
-            if ($ionicHistory.backView() == null) {
-                $scope.enableBack = false;
-            }
-            else {
-                $scope.enableBack = true;
             }
 
             viewData.enableBack = true;
@@ -1242,6 +1236,10 @@
                             //Payment might come later from server
                             PopupService.alert({"type": "SERVER_ERROR_PURCHASE_IN_PROGRESS"});
                         }
+                        else {
+                            //Probably user canceled
+                            $scope.buyInProgress = false;
+                        }
                         break;
 
                     case "android":
@@ -1392,4 +1390,12 @@
         $scope.likeFacebookFanPage = function() {
             window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
         }
+    })
+
+    .controller("FriendsLeaderboardCtrl", function ($scope, $rootScope, $ionicConfig, $translate) {
+
+    })
+
+    .controller("WeeklyLeaderboardCtrl", function ($scope, $rootScope, $ionicConfig, $translate) {
+
     });

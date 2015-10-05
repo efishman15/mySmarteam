@@ -1,11 +1,22 @@
-<ion-view class="bgQuestionMarks" title="{{'WHO_IS_SMARTER_QUESTION' | translate}}">
+<ion-view class="bgQuestionMarks" title="{{title | translate}}">
 
     <!------------------------------------------------------------------------------>
     <!-- This is a workaround - when navigating to other views, forcing the back
     <!-- button to show the previous view title only from the ion-nav-title
     <!------------------------------------------------------------------------------>
-    <ion-content dir="{{$root.languages[$root.user.settings.language].direction}}"
+    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
                  overflow-scroll="true" class="hide-vertical-scrollbar">
+
+        <div ng-if="tab==='recentlyFinished'" class="center button-bar padding">
+            <button class="button button-assertive button-small small-font" translate="RECENTLY_FINISHED_CONTESTS" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='rtl'}">
+            </button>
+            <button class="button button-assertive button-outline button-small small-font thick-border" translate="FRIENDS" ng-click="$root.gotoView('app.tabs.friendsLeaderboard')">
+            </button>
+            <button class="button button-assertive button-outline button-small small-font" translate="WEEKLY" ng-click="$root.gotoView('app.tabs.weeklyLeaderboard')" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='ltr'}">
+            </button>
+        </div>
+
+        <h4 class="padding center" ng-if="userClick && totalContests === 0">{{'JOIN_A_CONTEST_MESSAGE' | translate}}</h4>
 
         <ion-scroll class="contests-scroll">
             <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
@@ -34,7 +45,7 @@
                 </div>
                 <div class="center">
                     <image ng-class="{'contests-avatar-leader-ltr' : $root.settings.languages[$root.user.settings.language].direction === 'ltr', 'contests-avatar-leader-rtl' :  $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
-                           ng-src="{{contestChart.contest.leaderAvatar}}" title="{{'CONTEST_LEADER' | translate}}"></image>
+                           ng-src="{{contestChart.contest.leader.avatar}}" title="{{'CONTEST_LEADER' | translate}}"></image>
                 </div>
 
             </ion-list>

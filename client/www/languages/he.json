@@ -79,7 +79,7 @@
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_MESSAGE" : "רכישתכם בתהליך אישור. ברגע שתאושר אתם תקבלו את הפריט באופן אוטומטי",
   "MY_CONTESTS" : "התחרויות שלי",
   "RUNNING_CONTESTS" : "תחרויות רצות",
-  "RECENTLY_FINISHED_CONTESTS" : "הסתיימו לאחרונה",
+  "RECENTLY_FINISHED_CONTESTS" : "תחרויות שהסתיימו",
   "SUCCESS_RATIO" : "({{correctRatio}}% הצליחו)",
   "NEW_RANK_TITLE" : "מזל טוב!",
   "NEW_RANK_MESSAGE" : "עליתם לרמה: {{rank}}",
@@ -92,8 +92,8 @@
   "ENDS_IN_HOURS" : "{{number}} שעות",
   "ENDS_IN_DAYS" : "{{number}} ימים",
   "PAYMENT_THANKYOU" : "תודה רבה!",
-  "EXIT_APP_TITLE" : "יציאה מהמערכת",
-  "EXIT_APP_MESSAGE" : "האם אתם בטוחים שברצונכם לצאת מהמערכת?",
+  "EXIT_APP_TITLE" : "יציאה מהמשחק",
+  "EXIT_APP_MESSAGE" : "האם אתם בטוחים שברצונכם לצאת מהמשחק?",
   "QUESTION_STATS_TITLE" : "נתוני שאלה",
   "QUESTION_STATS_CHART_CAPTION" : "התפלגות התשובות",
   "ANSWERED_CORRECT" : "הצליחו",
@@ -107,5 +107,9 @@
   "SHARE_WITH_FRIENDS_MESSAGE" : "הזמינו חברים לסייע",
   "SHARE_SUBJECT" : "בואו לשחק איתי 'מי יותר חכם?'",
   "SHARE_BODY" : "אתם חייבים להסתכל על המשחק המגניב הזה: {{url}}",
-  "SHARE_BODY_NO_URL" : "אתם חייבים להסתכל על המשחק המגניב הזה"
+  "SHARE_BODY_NO_URL" : "אתם חייבים להסתכל על המשחק המגניב הזה",
+  "JOIN_A_CONTEST_MESSAGE" : "אנא הצטרפו לאחת התחרויות הרצות על מנת שתופיע בתחרויות שלי",
+  "LEADERBOARDS" : "היכל התהילה",
+  "FRIENDS" : "חברים",
+  "WEEKLY" : "שבועי"
 }

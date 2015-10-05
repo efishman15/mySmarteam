@@ -160,10 +160,8 @@ function prepareContestForClient(contest, myTeamId, addLastPlayedStamp) {
 
     contest.myTeam = myTeamId;
 
-    contest.leaderAvatar = contest.users[contest.leader].avatar;
-
     //Fields not to be disclosed to the client
-    delete contest["leader"];
+    delete contest.leader["userId"];
     delete contest["users"];
     delete contest["language"];
 
@@ -230,7 +228,7 @@ function joinToContestObject(contest, userId, avatar, teamId) {
 
     if (!contest.users) {
         contest.users = {};
-        contest.leader = userId;
+        contest.leader = {"userId" : userId, "avatar" : avatar};
     }
 
     //Increment participants only if I did not join this contest yet
@@ -241,7 +239,7 @@ function joinToContestObject(contest, userId, avatar, teamId) {
     }
 
     if (!contest.teams[teamId].leader) {
-        contest.teams[teamId].leader = userId;
+        contest.teams[teamId].leader = {"userId" : userId, "avatar" : avatar};
     }
 
     //Actual join

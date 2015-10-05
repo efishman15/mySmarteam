@@ -148,7 +148,7 @@ angular.module('whoSmarter.services', [])
             FacebookService.login(function (response) {
                 service.setFacebookCredentials(response.authResponse)
                 service.facebookServerConnect(callbackOnSuccess, callbackOnError);
-            }, callbackOnError, ["public_profile", "email"]);
+            }, callbackOnError, $rootScope.settings.facebook.readPermissions);
 
         };
 
@@ -217,7 +217,10 @@ angular.module('whoSmarter.services', [])
 
                         $ionicPlatform.registerBackButtonAction(function (event) {
 
-                            if ($state.current.name.length >= 12 && $state.current.name.substring(0, 12) === "app.contests" && ionic.Platform.isAndroid()) {
+                            if ($rootScope.user.clientInfo.platform === "android" &&
+                                (
+                                ($state.current.name.length >= 8 && $state.current.name.substring(0, 8) === "app.tabs" ) ||
+                                ($state.current.name === "home"))) {
                                 PopupService.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
                                     ionic.Platform.exitApp();
                                 });
@@ -343,7 +346,7 @@ angular.module('whoSmarter.services', [])
 
                         $rootScope.gotoRootView = function () {
                             if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
-                                $rootScope.gotoView("app.contests.mine");
+                                $rootScope.gotoView("app.tabs.myContests");
                             }
                             else {
                                 $rootScope.gotoView("home");
@@ -410,7 +413,7 @@ angular.module('whoSmarter.services', [])
         var service = this;
         var path = 'info/';
 
-        var geoProviders = ["https://www.telize.com/geoip", "https://freegeoip.net/json"];
+        var geoProviders = ["http://www.telize.com/geoip", "http://freegeoip.net/json"];
 
         //----------------------------------------------
         // Service private functions
@@ -433,7 +436,7 @@ angular.module('whoSmarter.services', [])
 
         //Get geo info - never fails - always has a default
         service.getGeoInfo = function (callbackOnSuccess, geoProviderId) {
-            var config = {"timeout": 2000}
+            var config = {"timeout": 5000}
             if (geoProviderId == null) {
                 geoProviderId = 0;
             }
@@ -447,7 +450,7 @@ angular.module('whoSmarter.services', [])
                                 callbackOnSuccess(geoResult, geoInfo);
                             }
                         },
-                        function () {
+                        function (status, data) {
                             callbackOnSuccess(service.getDefaultLanguage(), geoInfo);
                         });
                 },
@@ -468,9 +471,9 @@ angular.module('whoSmarter.services', [])
 
             //Wait until appVersion is set (in app.js)
             if (window.cordova && !$rootScope.user.clientInfo.appVersion) {
-                $timeout(function() {
+                $timeout(function () {
                     service.getSettings(callbackOnSuccess, callbackOnError, config)
-                },100);
+                }, 100);
                 return;
             }
 
@@ -686,7 +689,7 @@ angular.module('whoSmarter.services', [])
             var confirmPopup = $ionicPopup.confirm({
                 title: $translate.instant(title, params),
                 template: $translate.instant(message, params),
-                cssClass: $rootScope.settings.languages[$rootScope.session.settings.language].direction,
+                cssClass: $rootScope.settings.languages[$rootScope.user.settings.language].direction,
                 buttons: buttons
             });
 
@@ -1139,9 +1142,9 @@ angular.module('whoSmarter.services', [])
                 case "web" :
                     var postData = {"feature": feature.name, "language": $rootScope.session.settings.language};
                     method = "paypal";
-                    return ApiService.post(path, method + "/buy", postData, function(data) {
+                    return ApiService.post(path, method + "/buy", postData, function (data) {
                         if (callbackOnSuccess) {
-                            callbackOnSuccess({"method" : method, "data" : data})
+                            callbackOnSuccess({"method": method, "data": data})
                         }
 
                     }, callbackOnError, config);
@@ -1149,10 +1152,10 @@ angular.module('whoSmarter.services', [])
 
                 case "android" :
                     method = "android";
-                    inappbilling.buy(function(purchaseData) {
-                            callbackOnSuccess({"method" : method, "data" : purchaseData});
+                    inappbilling.buy(function (purchaseData) {
+                            callbackOnSuccess({"method": method, "data": purchaseData});
                         },
-                        function(error) {
+                        function (error) {
                             //Error messages will be displayed inside google
                             callbackOnError(error);
                         },
@@ -1171,16 +1174,16 @@ angular.module('whoSmarter.services', [])
                         "method": "pay",
                         "action": "purchaseitem",
                         "product": productUrl,
-                        "request_id" : feature.name + "|" + $rootScope.session.thirdParty.id + "|" + (new Date()).getTime()
+                        "request_id": feature.name + "|" + $rootScope.session.thirdParty.id + "|" + (new Date()).getTime()
                     };
                     if (isMobile && $rootScope.session.features[feature.name].purchaseData.mobilePricepointId) {
                         facebookDialogData.pricepoint_id = $rootScope.session.features[feature.name].purchaseData.mobilePricepointId;
                     }
 
                     ezfb.ui(facebookDialogData,
-                        function(data) {
+                        function (data) {
                             if (callbackOnSuccess) {
-                                callbackOnSuccess({"method" : method, "data" : data})
+                                callbackOnSuccess({"method": method, "data": data})
                             }
                         }
                     );
@@ -1189,14 +1192,14 @@ angular.module('whoSmarter.services', [])
         }
 
         service.processPayment = function (transactionData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "process", transactionData, function(serverPurchaseData) {
+            return ApiService.post(path, "process", transactionData, function (serverPurchaseData) {
                 if (callbackOnSuccess) {
                     callbackOnSuccess(serverPurchaseData);
                 }
             }, callbackOnError, config);
         };
 
-        service.showPurchaseSuccess = function(serverPurchaseData) {
+        service.showPurchaseSuccess = function (serverPurchaseData) {
             $rootScope.session.features = serverPurchaseData.features
             $rootScope.gotoView("payment", false, {
                 "purchaseMethod": "facebook",
