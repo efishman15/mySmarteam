@@ -1,10 +1,11 @@
 var sessionUtils = require("../business_logic/session");
-var async = require('async');
-var exceptions = require('../utils/exceptions');
-var random = require('../utils/random');
-var dalDb = require('../dal/dalDb');
-var generalUtils = require('../utils/general');
-var contestsBusinessLogic = require('../business_logic/contests');
+var async = require("async");
+var exceptions = require("../utils/exceptions");
+var random = require("../utils/random");
+var dalDb = require("../dal/dalDb");
+var generalUtils = require("../utils/general");
+var contestsBusinessLogic = require("../business_logic/contests");
+var leaderboards = require("../business_logic/leaderboards");
 
 var quizSounds = {
     "finish": {
@@ -318,6 +319,9 @@ module.exports.answer = function (req, res, next) {
                 var myTeam = data.contest.users[data.session.userId].team;
                 var myContestUser = data.contest.users[data.session.userId];
 
+                //Update all leaderboards with the score achieved
+                leaderboards.addScore(data.contest._id, myTeam, data.session.quiz.serverData.score, data.session.facebookUserId, data.session.name, data.session.avatar);
+
                 myContestUser.score += data.session.quiz.serverData.score;
                 myContestUser.teamScores[myTeam] += data.session.quiz.serverData.score;
 
@@ -337,6 +341,7 @@ module.exports.answer = function (req, res, next) {
                 if (myContestUser.score > data.contest.users[data.contest.leader.userId].score) {
                     data.setData["leader.userId"] = data.session.userId;
                     data.setData["leader.avatar"] = data.session.avatar;
+                    data.setData["leader.name"] = data.session.name;
                     data.clientResponse.becameContestLeader = true;
                 }
 
@@ -346,6 +351,7 @@ module.exports.answer = function (req, res, next) {
                 if (!data.contest.teams[myTeam].leader || myContestUser.teamScores[myTeam] > data.contest.users[data.contest.teams[myTeam].leader.userId].teamScores[myTeam]) {
                     data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
                     data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
+                    data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
                     data.clientResponse.becameTeamLeader = true;
                 }
 

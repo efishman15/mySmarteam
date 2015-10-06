@@ -101,7 +101,7 @@
   "ANSWERED_INCORRECT" : "Falló",
   "HINT_FOR_SCORE" : "Sugerencia ({{score}} puntoligentes)",
   "ANSWER_FOR_SCORE" : "Respuesta ({{score}} puntoligentes)",
-  "CONTEST_LEADER" : "líder del Concurso",
+  "CONTEST_LEADER" : "líder del Concurso: {{name}}",
   "SHARE_WITH_FRIENDS_TITLE" : "Compartir con amigos",
   "CLICK_LIKE" : "Haga clic como a la página de facebook del juego y obtener los resultados de los concursos que participas",
   "FACEBOOK_GAME_PAGE" : "Facebook la página de juegos",
@@ -112,5 +112,7 @@
   "JOIN_A_CONTEST_MESSAGE" : "Por favor únase a uno de los concursos que se ejecutan por lo que aparecerá en mi lista de los concursos",
   "LEADERBOARDS" : "tablas de clasificación",
   "FRIENDS" : "Amigos",
-  "WEEKLY" : "Cada semana"
+  "WEEKLY" : "Cada semana",
+  "CONTEST_PARTICIPANTS_TITLE" : "Los participantes del concurso",
+  "CONTEST_PARTICIPANTS_GENERAL_SCORING" : "clasificación general"
 }

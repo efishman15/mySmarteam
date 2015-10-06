@@ -315,7 +315,7 @@ angular.module('whoSmarter.services', [])
                             $rootScope.$broadcast("whoSmarter-languageChanged");
                         });
 
-                        $rootScope.gotoView = function (viewName, isRootView, params, clearHistory) {
+                        $rootScope.gotoView = function (viewName, isRootView, params, clearHistory, disableAnimate) {
 
                             if (isRootView == null) {
                                 isRootView = true;
@@ -325,7 +325,12 @@ angular.module('whoSmarter.services', [])
                                 params = {};
                             }
 
+                            var disableBack = false;
+                            disableAnimate = false || disableAnimate;
+
                             if (isRootView) {
+
+                                disableBack = true;
 
                                 if (clearHistory == null) {
                                     clearHistory = true;
@@ -334,11 +339,18 @@ angular.module('whoSmarter.services', [])
                                 if (clearHistory) {
                                     $ionicHistory.clearHistory();
                                 }
-                                $ionicHistory.nextViewOptions({
-                                    disableBack: true,
-                                    historyRoot: clearHistory
-                                });
                             }
+                            else {
+                                clearHistory = false;
+                            }
+
+                            $ionicHistory.nextViewOptions({
+                                disableBack: disableBack,
+                                historyRoot: clearHistory,
+                                disableAnimate: disableAnimate
+                            });
+
+
 
                             $state.go(viewName, params, {reload: true, inherit: true, location: true});
 
@@ -353,6 +365,9 @@ angular.module('whoSmarter.services', [])
                             }
                         };
 
+                        $rootScope.goBack = function () {
+                            $ionicHistory.goBack();
+                        }
 
                         $rootScope.$on("whoSmarter-serverPopup", function (error, data) {
                             $rootScope.gotoView("serverPopup", false, {serverPopup: data})
@@ -1210,4 +1225,34 @@ angular.module('whoSmarter.services', [])
 
         return service;
 
-    });
+    })
+
+    //Store Service
+    .factory('ScreenService', function ($rootScope) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+
+        service.resizeCanvas = function() {
+
+            if ($rootScope.user.clientInfo.mobile) {
+                return;
+            }
+
+            var containerWidth = window.innerWidth;
+
+            var hostingView = document.getElementById("myHostingView");
+            if (hostingView) {
+
+                if (containerWidth > $rootScope.settings.general.webCanvasWidth) {
+                    hostingView.style.width = $rootScope.settings.general.webCanvasWidth + "px";
+                    hostingView.style.marginLeft = (containerWidth - $rootScope.settings.general.webCanvasWidth) / 2 + "px";
+                }
+            }
+        };
+
+        return service;
+
+    })

@@ -202,37 +202,31 @@ label.item.valid-lr {
     line-height: 1em;
 }
 
-.contests-avatar-leader-ltr {
+.contests-avatar-leader {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+}
+
+.contests-avatar-leader-ltr {
     position: relative;
     top: -265px;
     left: 130px;
 }
 
 .contests-avatar-leader-rtl {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
     position: relative;
     top: -265px;
     left: -130px;
 }
 
 .quiz-results-avatar-leader-ltr {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
     position: relative;
     top: -205px;
     left: 130px;
 }
 
 .quiz-results-avatar-leader-rtl {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
     position: relative;
     top: -205px;
     left: -130px;

@@ -205,7 +205,7 @@ function joinContestTeam(data, callback) {
     data.setData = {};
 
     //Increment participants only if I did not join this contest yet
-    if (joinToContestObject(data.contest, data.session.userId, data.session.avatar, data.teamId)) {
+    if (joinToContestObject(data.contest, data.teamId, data.session)) {
         data.setData.participants = data.contest.participants;
         data.setData.lastParticipantJoinDate = (new Date()).getTime();
     }
@@ -220,7 +220,7 @@ function joinContestTeam(data, callback) {
 //
 // Actual joining to the contest object in memory
 //---------------------------------------------------------------------
-function joinToContestObject(contest, userId, avatar, teamId) {
+function joinToContestObject(contest, teamId, session) {
 
     var newJoin = false;
 
@@ -228,24 +228,23 @@ function joinToContestObject(contest, userId, avatar, teamId) {
 
     if (!contest.users) {
         contest.users = {};
-        contest.leader = {"userId" : userId, "avatar" : avatar};
+        contest.leader = {"userId" : session.userId, "name" : session.name, "avatar" : session.avatar};
     }
 
     //Increment participants only if I did not join this contest yet
-    if (!contest.users[userId]) {
+    if (!contest.users[session.userId]) {
         contest.participants++;
         contest.lastParticipantJoinDate = now;
         newJoin = true;
     }
 
     if (!contest.teams[teamId].leader) {
-        contest.teams[teamId].leader = {"userId" : userId, "avatar" : avatar};
+        contest.teams[teamId].leader = {"userId" : session.userId, "name" : session.name, "avatar" : session.avatar};
     }
 
     //Actual join
-    contest.users[userId] = {
-        "userId": userId,
-        "avatar" : avatar,
+    contest.users[session.userId] = {
+        "userId": session.userId,
         "joinDate": now,
         "team" : teamId,
         "score": 0,
@@ -287,7 +286,7 @@ module.exports.setContest = function (req, res, next) {
             data.closeConnection = true;
             if (data.mode == "add") {
                 //Join by default to the first team (on screen appears as "my team")
-                joinToContestObject(data.contest, data.session.userId, data.session.avatar, 0);
+                joinToContestObject(data.contest, 0, data.session);
                 dalDb.addContest(data, callback);
             }
             else {

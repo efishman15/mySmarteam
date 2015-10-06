@@ -124,19 +124,6 @@ dalDb.loadSettings(function (err, data) {
     http.createServer(app).listen(80);
     https.createServer(certificate, app).listen(443);
 
-  /*  var Leaderboard = require("agoragames-leaderboard");
-    var highscores = new Leaderboard("hidescores");
-    //highscores.rankMember("eddy", 10, "fishman", function(err, reply) {
-       //console.log("changeScoreForEddy=" + JSON.stringify(reply));
-    //});
-    highscores.changeScoreFor("lior", 70, function(err, reply) {
-        //console.log("changeScoreForLior=" + JSON.stringify(reply));
-    });
-
-    highscores.memberDataFor("eddy", function(reply) {
-        console.log("memberDataFor=" + JSON.stringify(reply));
-    });*/
-
     console.log("server up!");
 
 })

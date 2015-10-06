@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage'])
+angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage','ngCordova'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
     .run(function ($ionicPlatform, $rootScope, $state, PopupService) {
@@ -219,6 +219,13 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 templateUrl: "templates/share.html"
             })
 
+            .state('contestParticipants', {
+                url: "/contestParticipants",
+                params: {contest: null},
+                controller: "ContestParticipantsCtrl",
+                templateUrl: "templates/contestParticipants.html"
+            })
+
             .state('app.quiz', {
                 url: "/quiz",
                 cache: false,
@@ -234,23 +241,6 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'QuizCtrl'
                     }
                 }
-            })
-
-            .state('app.quizResult', {
-                url: "/quizResult",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication(null, "app.quizResult");
-                    }
-                },
-                cache: false,
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/quizResult.html",
-                        controller: 'QuizResultCtrl'
-                    }
-                },
-                params: {results: null}
             })
 
             .state('contest', {

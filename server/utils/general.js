@@ -4,6 +4,7 @@ var logger = require("../utils/logger");
 
 var settings;
 module.exports.injectSettings = function (dbSettings) {
+
     settings = dbSettings;
 
     //Compute unlockRank for each feature using the rankByXp settings
@@ -11,6 +12,12 @@ module.exports.injectSettings = function (dbSettings) {
         if (settings.server.rankByXp[i].unlockFeature) {
             settings.server.features[settings.server.rankByXp[i].unlockFeature].unlockRank = settings.server.rankByXp[i].rank;
         }
+    }
+
+    //Generate the "client visible" part of the server settings about the question scores
+    settings.client.quiz.questions = {"score": []};
+    for (var i = 0; i < settings.server.quiz.questions.levels.length; i++) {
+        settings.client.quiz.questions.score.push(settings.server.quiz.questions.levels[i].score);
     }
 
     module.exports.settings = settings;
@@ -108,13 +115,6 @@ module.exports.getSettings = function (req, res, next) {
 
     var response;
 
-    //Generate the "client visible" part of the server settings about the question scores
-    if (!settings.client.quiz.questions) {
-        settings.client.quiz.questions = {"score": []};
-        for (var i = 0; i < settings.server.quiz.questions.levels.length; i++) {
-            settings.client.quiz.questions.score.push(settings.server.quiz.questions.levels[i].score);
-        }
-    }
 
     if (data.clientInfo && data.clientInfo.appVersion) {
 
@@ -292,7 +292,19 @@ Array.prototype.contains = function (obj) {
         }
     }
     return false;
-}
+};
+
+//-------------------------------------------------------------------------------------------------------
+// getWeekYear returns a string of current year and current week (e.g. 201541 - means year 2015 week 41
+//-------------------------------------------------------------------------------------------------------
+module.exports.getYearWeek = function() {
+
+    var d = new Date();
+    var thisYear = d.getFullYear();
+    var startOfYear = new Date(thisYear, 0, 1);
+    var week = Math.ceil((((d - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
+    return "" + thisYear + "" + week;
+};
 
 //------------------------------------------------------------------------------------------------
 // download

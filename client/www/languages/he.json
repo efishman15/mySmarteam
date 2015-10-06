@@ -100,7 +100,7 @@
   "ANSWERED_INCORRECT" : "טעו",
   "HINT_FOR_SCORE" : "רמז ({{score}} נקודות)",
   "ANSWER_FOR_SCORE" : "תשובה ({{score}} נקודות)",
-  "CONTEST_LEADER" : "מקום ראשון בתחרות",
+  "CONTEST_LEADER" : "מקום ראשון: {{name}}",
   "SHARE_WITH_FRIENDS_TITLE" : "שתפו חברים",
   "CLICK_LIKE" : "לחצו לייק לדף המשחק בפייסבוק לקבלת תוצאות התחרויות בהשתתפותכם",
   "FACEBOOK_GAME_PAGE" : "דף המשחק בפייסבוק",
@@ -111,5 +111,7 @@
   "JOIN_A_CONTEST_MESSAGE" : "אנא הצטרפו לאחת התחרויות הרצות על מנת שתופיע בתחרויות שלי",
   "LEADERBOARDS" : "היכל התהילה",
   "FRIENDS" : "חברים",
-  "WEEKLY" : "שבועי"
+  "WEEKLY" : "שבועי",
+  "CONTEST_PARTICIPANTS_TITLE" : "משתתפי התחרות",
+  "CONTEST_PARTICIPANTS_GENERAL_SCORING" : "דירוג כללי"
 }

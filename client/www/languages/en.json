@@ -101,7 +101,7 @@
   "ANSWERED_INCORRECT" : "Failed",
   "HINT_FOR_SCORE" : "Hint ({{score}} smartpoints)",
   "ANSWER_FOR_SCORE" : "Answer ({{score}} smartpoints)",
-  "CONTEST_LEADER" : "Contest Leader",
+  "CONTEST_LEADER" : "Contest Leader: {{name}}",
   "SHARE_WITH_FRIENDS_TITLE" : "Share with friends",
   "CLICK_LIKE" : "Click like to the facebook game page and get the results of contests you participate in",
   "FACEBOOK_GAME_PAGE" : "Facebook game page",
@@ -112,5 +112,7 @@
   "JOIN_A_CONTEST_MESSAGE" : "Please join one of the running contests so it will appear in my contests list",
   "LEADERBOARDS" : "Leaderboards",
   "FRIENDS" : "Friends",
-  "WEEKLY" : "Weekly"
+  "WEEKLY" : "Weekly",
+  "CONTEST_PARTICIPANTS_TITLE" : "Contest Participants",
+  "CONTEST_PARTICIPANTS_GENERAL_SCORING" : "Overall Ranking"
 }

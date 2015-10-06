@@ -1,32 +1,65 @@
-<ion-view view-title="{{ 'QUIZ' | translate}}" class="bgQuestionMarks">
+<ion-view view-title="{{getTitle()}}" class="bgQuestionMarks">
 
     <ion-content dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
 
-        <canvas id="quizCanvas" height="{{$root.settings.quiz.canvas.height}}" class="quizCanvas" ng-click="canvasClick($event)">
-        </canvas>
+        <div id="quiz" ng-show="mode==='quiz'">
 
-        <div dir="{{quiz.currentQuestion.direction}}"
-             animationend="questionAnimationEnd"
-             ng-class="{'questionAnimationLtr' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
+            <canvas id="quizCanvas" height="{{$root.settings.quiz.canvas.height}}" class="quizCanvas" ng-click="canvasClick($event)">
+            </canvas>
+
+            <div dir="{{quiz.currentQuestion.direction}}"
+                 animationend="questionAnimationEnd"
+                 ng-class="{'questionAnimationLtr' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
                         'questionAnimationRtl' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}">
 
-            <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
+                <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
 
-            <div class="list padding">
-                <button id="buttonAnswer{{answer.id}}"
-                        ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
-                        ng-repeat="answer in quiz.currentQuestion.answers track by answer.id"
-                        class="item button button-full item-text-wrap quiz-answer"
-                        ng-class="{'button-3d' : !quiz.currentQuestion.answered,
+                <div class="list padding">
+                    <button id="buttonAnswer{{answer.id}}"
+                            ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
+                            ng-repeat="answer in quiz.currentQuestion.answers track by answer.id"
+                            class="item button button-full item-text-wrap quiz-answer"
+                            ng-class="{'button-3d' : !quiz.currentQuestion.answered,
                          'button-positive' : !quiz.currentQuestion.answered,
                             'button-3d-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
                             'button-3d-assertive blink' : answer.answeredCorrectly == false && answer.correct == null}"
-                        ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"
-                        ng-bind-html="answer.text"
-                        animationend="buttonAnimationEnded">
-                </button>
+                            ng-click="!quiz.currentQuestion.answered && submitAnswer(answer.id)"
+                            ng-bind-html="answer.text"
+                            animationend="buttonAnimationEnded">
+                    </button>
+                </div>
             </div>
         </div>
+
+        <div ng-if="mode==='results'" class="padding center">
+
+            <div class="padding center">
+                <h3>{{quiz.results.title | translate}}</h3>
+            </div>
+
+            <div class="padding center">
+                <h3>{{quiz.results.message | translate:{score : quiz.results.score, myTeam : quiz.results.contest.teams[quiz.results.contest.myTeam].name} }}</h3>
+            </div>
+
+            <div class="padding center"
+                 fusioncharts
+                 width="260"
+                 height="180"
+                 type="column2d"
+                 dataSource="{{contestCharts[0]}}"
+                 events="fcEvents">
+            </div>
+            <div class="center">
+                <image class="pointer contests-avatar-leader" ng-class="{'quiz-results-avatar-leader-ltr' : $root.settings.languages[$root.user.settings.language].direction === 'ltr', 'quiz-results-avatar-leader-rtl' :  $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                       ng-src="{{contestCharts[0].contest.leader.avatar}}" ng-click="$root.gotoView('contestParticipants', false, {contest : contestCharts[0].contest})" title="{{'CONTEST_LEADER' | translate:{name: contestCharts[0].contest.leader.name} }}"></image>
+            </div>
+
+            <div class="padding center">
+                <button class="item button button-stable button-small button-3d button-3d-assertive nowrapText" ng-click="playAgain()">{{ 'PLAY_AGAIN' | translate}}</button>
+                <button class="item button button-stable button-small button-3d button-3d-assertive nowrapText" ng-click="$root.goBack()">{{ 'CONTEST_LIST' | translate}}</button>
+            </div>
+        </div>
+
 
     </ion-content>
 </ion-view>

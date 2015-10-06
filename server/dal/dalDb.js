@@ -751,7 +751,8 @@ function getNextQuestion(data, callback) {
             return;
         }
 
-        if (data.session.quiz.clientData.totalQuestions === (data.session.quiz.clientData.currentQuestionIndex+1)) {
+        //if (data.session.quiz.clientData.totalQuestions === (data.session.quiz.clientData.currentQuestionIndex+1)) {
+        if (1 === (data.session.quiz.clientData.currentQuestionIndex+1)) {
             data.session.quiz.clientData.finished = true;
         }
 

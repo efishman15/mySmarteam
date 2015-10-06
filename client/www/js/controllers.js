@@ -1,34 +1,20 @@
 ﻿angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
-    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, StoreService) {
+    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService) {
 
         $rootScope.$on('whoSmarter-directionChanged', function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
         });
 
         $scope.$on("whoSmarter-windowResize", function () {
-            resizeCanvas();
+            ScreenService.resizeCanvas();
         });
 
-        function resizeCanvas() {
+        $scope.$on("whoSmarter-orientationChanged", function () {
+            ScreenService.resizeCanvas();
+        });
 
-            if ($rootScope.user.clientInfo.mobile) {
-                return;
-            }
-
-            var containerWidth = window.innerWidth;
-
-            var hostingView = document.getElementById("myHostingView");
-            if (hostingView) {
-
-                if (containerWidth > $rootScope.settings.general.webCanvasWidth) {
-                    hostingView.style.width = $rootScope.settings.general.webCanvasWidth + "px";
-                    hostingView.style.marginLeft = (containerWidth - $rootScope.settings.general.webCanvasWidth) / 2 + "px";
-                }
-            }
-        }
-
-        resizeCanvas();
+        ScreenService.resizeCanvas();
 
         //-------------------------------------------------------
         //Loading modal dialogs
@@ -103,7 +89,17 @@
 
     })
 
-    .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, $window) {
+    .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, ScreenService) {
+
+        ScreenService.resizeCanvas();
+
+        $scope.$on("whoSmarter-windowResize", function () {
+            ScreenService.resizeCanvas();
+        });
+
+        $scope.$on("whoSmarter-orientationChanged", function () {
+            ScreenService.resizeCanvas();
+        });
 
         $scope.$on('$ionicView.beforeEnter', function () {
 
@@ -126,44 +122,11 @@
             $translate.use(language.value);
         };
 
-        $scope.getDemoContestWidth = function () {
-            var width = $window.innerWidth;
-            var height = $window.innerHeight;
-
-            if (height > width) {
-                //Portrait
-                if (width > 1024) {
-                    return "400px";
-                }
-                else {
-                    return "100%"
-                }
-            }
-            else {
-                //Landscape
-                if (width < 400) {
-                    return width + "px";
-                }
-                else {
-                    return "400px";
-                }
-            }
-        };
-
-        $scope.$on("whoSmarter-windowResize", function () {
-            angular.element(document.querySelector("#demoContestImage")).width = $scope.getDemoContestWidth();
-        });
-
-        $scope.$on("whoSmarter-orientationChanged", function () {
-            angular.element(document.querySelector("#demoContestImage")).width = $scope.getDemoContestWidth();
-        });
-
         $scope.facebookConnect = function () {
             UserService.facebookClientConnect(function (session) {
                 $rootScope.gotoView("app.tabs.myContests");
             })
         };
-
     })
 
     .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, ChartService, $ionicTabsDelegate, UserService) {
@@ -174,7 +137,7 @@
 
         var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             if (!$rootScope.session) {
                 $rootScope.gotoView("home");
                 return;
@@ -184,6 +147,8 @@
 
             $scope.tab = $state.current.appData.serverTab;
             $scope.title = $state.current.appData.title;
+
+            viewData.enableBack = false;
 
             $scope.doRefresh();
         });
@@ -295,15 +260,24 @@
         ChartService.setEvents($scope);
     })
 
-    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, ContestsService) {
+    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig, ContestsService) {
+
+        $scope.mode = "quiz";
 
         var quizCanvas;
         var quizContext;
         if (!quizCanvas) {
+            quizCanvas = angular.element(document.querySelector("#quizCanvas"));
             quizCanvas = document.getElementById("quizCanvas");
             quizContext = quizCanvas.getContext("2d");
             quizContext.font = $rootScope.settings.quiz.canvas.font;
         }
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+
+        var quizModeTitle = $translate.instant("QUIZ");
+        var resultsModeTitle = $translate.instant("WHO_IS_SMARTER") + " - " + $translate.instant("QUIZ_RESULTS");
 
         //-------------------------------------------------------
         // Question stats Popover
@@ -424,6 +398,11 @@
             viewData.enableBack = true;
             startQuiz();
         });
+
+        $scope.playAgain = function () {
+            startQuiz();
+        };
+
 
         $scope.$on("whoSmarter-windowResize", function () {
             drawQuizProgress();
@@ -597,8 +576,10 @@
                 return;
             }
 
+            $scope.mode = "quiz";
+
             var postData = {"contestId": $stateParams.contestId};
-            if ($stateParams.teamId == 0 || $stateParams.teamId == 1) {
+            if ($stateParams.teamId === 0 || $stateParams.teamId === 1) {
                 postData.teamId = $stateParams.teamId;
             }
 
@@ -618,6 +599,16 @@
 
                     $scope.quiz.currentQuestion.answered = false;
                 });
+        }
+
+        $scope.getTitle = function() {
+
+            if ($scope.mode === "quiz") {
+                return quizModeTitle;
+            }
+            else {
+                return resultsModeTitle;
+            }
         }
 
         $scope.nextQuestion = function () {
@@ -648,7 +639,9 @@
             if ($scope.quiz.finished) {
                 drawQuizProgress();
                 $rootScope.session.score += $scope.quiz.results.score;
-                $rootScope.gotoView("app.quizResult", true, {results: $scope.quiz.results}, false);
+
+                $scope.contestCharts = [ContestsService.prepareContestChart($scope.quiz.results.contest, 0)];
+                $scope.mode = "results";
             }
             else {
                 $scope.nextQuestion();
@@ -670,7 +663,7 @@
                     "SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ": {"next": startQuiz},
                     "SERVER_ERROR_GENERAL": {
                         "next": function () {
-                            $ionicHistory.goBack();
+                            $rootScope.goBack();
                         }
                     }
                 }
@@ -743,53 +736,6 @@
             $scope.closeQuestionInfoModal();
             window.open($rootScope.settings.languages[$rootScope.user.settings.language].wiki + $scope.quiz.currentQuestion.wikipediaAnswer, "_system", "location=yes");
         };
-    })
-
-    .controller("QuizResultCtrl", function ($scope, $rootScope, $stateParams, $state, $translate, $ionicHistory, ContestsService, SoundService, ChartService) {
-
-        if (!$scope.contestCharts) {
-            $scope.contestCharts = [{}];
-        }
-
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-
-            if (!$stateParams.results) {
-                $rootScope.gotoView("app.tabs.myContests");
-                return;
-            }
-
-            viewData.enableBack = false;
-            $rootScope.hideMenuButton = true;
-
-            $scope.results = $stateParams.results;
-
-            //Work with an array becase ChartService.setEvents works with an array scope property called contestCharts
-            $scope.contestCharts = [ContestsService.prepareContestChart($scope.results.contest, 0)];
-
-            //Play sound only if enabled and not came by pressing back
-            if (!$rootScope.lastPlayed || $rootScope.lastPlayed < $stateParams.results.contest.lastPlayed) {
-                SoundService.play($scope.results.sound);
-            }
-
-            $rootScope.lastPlayed = $stateParams.results.contest.lastPlayed;
-        });
-
-        $scope.$on('$ionicView.beforeLeave', function () {
-
-            $rootScope.hideMenuButton = false;
-        });
-
-        $scope.playAgain = function () {
-
-            $rootScope.gotoView("app.quiz", false, {
-                contestId: $scope.results.contest._id,
-                teamId: $scope.results.contest.myTeam
-            });
-
-        };
-
-        ChartService.setEvents($scope);
-
     })
 
     .controller("LogoutCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $translate) {
@@ -991,7 +937,7 @@
                         }
                     }
                     else {
-                        $scope.goBack();
+                        $rootScope.goBack();
                         return;
                     }
                 }
@@ -1095,10 +1041,6 @@
             }
         }
 
-        $scope.goBack = function () {
-            $ionicHistory.goBack();
-        }
-
         $scope.getTitle = function () {
             if ($stateParams.mode == "add") {
                 return $translate.instant("NEW_CONTEST") + " - " + $translate.instant("WHO_IS_SMARTER");
@@ -1154,14 +1096,14 @@
                     function (contest) {
                         //Raise event - so the contest graph can be refreshed without going to the server again
                         $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
-                        $scope.goBack();
+                        $rootScope.goBack();
                     }, function (status, error) {
                         $scope.localViewData.startDate = startDate;
                         $scope.localViewData.endDate = endDate;
                     });
             }
             else {
-                $scope.goBack();
+                $rootScope.goBack();
             }
         };
 
@@ -1197,7 +1139,7 @@
                 ContestsService.removeContest(postData,
                     function (data) {
                         $rootScope.$broadcast("whoSmarter-contestRemoved");
-                        $scope.goBack();
+                        $rootScope.goBack();
                     });
 
             });
@@ -1342,13 +1284,13 @@
         $scope.buttonAction = function (button) {
             switch (button.action) {
                 case "dismiss" :
-                    $ionicHistory.goBack();
+                    $rootScope.goBack();
                     break;
 
                 case "link" :
                 {
                     window.open(button.link, "_system", "location=yes");
-                    $ionicHistory.goBack();
+                    $rootScope.goBack();
                     break;
                 }
 
@@ -1387,15 +1329,77 @@
             );
         };
 
-        $scope.likeFacebookFanPage = function() {
+        $scope.likeFacebookFanPage = function () {
             window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
         }
     })
 
-    .controller("FriendsLeaderboardCtrl", function ($scope, $rootScope, $ionicConfig, $translate) {
+    .controller("FriendsLeaderboardCtrl", function ($scope, $ionicConfig) {
 
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = false;
+        });
     })
 
-    .controller("WeeklyLeaderboardCtrl", function ($scope, $rootScope, $ionicConfig, $translate) {
+    .controller("WeeklyLeaderboardCtrl", function ($scope, $ionicConfig) {
+
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = false;
+        });
+    })
+
+    .controller("ContestParticipantsCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+        $scope.participantsState = [
+            {
+                "team": -1,
+                "selected": true,
+                participants: [
+                    {"id": 1, "rank": 1, "name": "Eddy Fishman", "avatar": "https://graph.facebook.com/1041809664/picture?type=square", "score": 50},
+                    {"id": 2, "rank": 2, "name": "Eyal Porat", "avatar": "https://graph.facebook.com/849153768467187/picture?type=square", "score": 30},
+                    {"id": 3, "rank": 3, "name": "Lior Porat", "avatar": "https://graph.facebook.com/10153534425349268/picture?type=square", "score": 20},
+                ]
+            },
+            {
+                "team": 0,
+                "selected": false,
+                participants: [
+                    {"id": 1, "rank": 1, "name": "Eyal Porat", "avatar": "https://graph.facebook.com/849153768467187/picture?type=square", "score": 30},
+                    {"id": 2, "rank": 2, "name": "Lior Porat", "avatar": "https://graph.facebook.com/10153534425349268/picture?type=square", "score": 20},
+                ]
+            },
+            {
+                "team": 1,
+                "selected": false,
+                participants: [
+                    {"id": 1, "rank": 1, "name": "Eddy Fishman", "avatar": "https://graph.facebook.com/1041809664/picture?type=square", "score": 50}
+                ]
+            }
+        ];
+
+        $scope.selectTab = function (tabId) {
+            for (var i = 0; i < $scope.participantsState.length; i++) {
+                if (i !== tabId) {
+                    $scope.participantsState[i].selected = false;
+                }
+                else {
+                    $scope.participantsState[i].selected = true;
+                }
+            }
+
+            $scope.participants = $scope.participantsState[tabId].participants;
+        };
+
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
+
+            $scope.contest = $stateParams.contest;
+
+            $scope.participants = $scope.participantsState[0].participants;
+        });
 
     });
+
+
