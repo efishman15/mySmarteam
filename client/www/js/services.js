@@ -284,8 +284,15 @@ angular.module('whoSmarter.services', [])
                             if (rejection.data instanceof Object && rejection.data.type && rejection.status != 401) {
                                 if (rejection.config && rejection.config.onServerErrors && rejection.data.type && rejection.config.onServerErrors[rejection.data.type]) {
                                     //Caller has set a function to be invoked after user presses ok on the alert
-                                    rejection.data.onTap = rejection.config.onServerErrors[rejection.data.type].next;
-                                    PopupService.alert(rejection.data);
+                                    if (!rejection.config.onServerErrors[rejection.data.type].confirm) {
+                                        rejection.data.onTap = rejection.config.onServerErrors[rejection.data.type].next;
+                                        PopupService.alert(rejection.data);
+                                    }
+                                    else {
+                                        var title = $translate.instant(rejection.data.type + "_TITLE");
+                                        var message = $translate.instant(rejection.data.type + "_MESSAGE");
+                                        PopupService.confirm(title, message, rejection.config.onServerErrors[rejection.data.type].params, rejection.config.onServerErrors[rejection.data.type].next);
+                                    }
                                 }
                                 else {
                                     PopupService.alert(rejection.data)
@@ -407,7 +414,8 @@ angular.module('whoSmarter.services', [])
         };
 
         //Save settings to server
-        service.saveSettingsToServer = function (postData, callbackOnSuccess, callbackOnError, config) {
+        service.saveSettingsToServer = function (settings, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"settings": settings};
             ApiService.post(path, "settings", postData, callbackOnSuccess, callbackOnError, config);
         }
 
@@ -527,29 +535,22 @@ angular.module('whoSmarter.services', [])
         var canvasContext = canvas.getContext("2d");
         canvasContext.font = $rootScope.settings.charts.contestAnnotations.annotationsFont;
 
-        //add contest
-        service.addContest = function (postData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "add", postData, callbackOnSuccess, callbackOnError, config)
-        };
-
         //Set Contest
-        service.setContest = function (postData, callbackOnSuccess, callbackOnError, config) {
+        service.setContest = function (contest, mode, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"contest": contest, "mode": mode};
             return ApiService.post(path, "set", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Remove Contest
-        service.removeContest = function (postData, callbackOnSuccess, callbackOnError, config) {
+        service.removeContest = function (contestId, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"contestId": contestId};
             return ApiService.post(path, "remove", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Get Contests
-        service.getContests = function (postData, callbackOnSuccess, callbackOnError, config) {
+        service.getContests = function (clientContestCount, tab, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"clientContestCount": clientContestCount, "tab": tab};
             return ApiService.post(path, "get", postData, callbackOnSuccess, callbackOnError, config)
-        };
-
-        //Join Contest
-        service.joinContest = function (postData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         service.prepareContestChart = function (contest, contestIndex) {
@@ -629,12 +630,23 @@ angular.module('whoSmarter.services', [])
         var path = 'quiz/';
 
         //Start quiz
-        service.start = function (postData, callbackOnSuccess, callbackOnError, config) {
+        service.start = function (contestId, teamId, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"contestId" : contestId};
+            if (teamId === 0 || teamId === 1) {
+                postData.teamId = teamId;
+            }
             return ApiService.post(path, "start", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Answer a quiz question
-        service.answer = function (postData, callbackOnSuccess, callbackOnError, config) {
+        service.answer = function (answerId, hintUsed, answerUsed, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"id" : answerId};
+            if (hintUsed) {
+                postData.hintUsed = true;
+            }
+            if (answerUsed) {
+                postData.answerUsed = true;
+            }
             return ApiService.post(path, "answer", postData, callbackOnSuccess, callbackOnError, config)
         };
 
@@ -1206,8 +1218,12 @@ angular.module('whoSmarter.services', [])
             }
         }
 
-        service.processPayment = function (transactionData, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "process", transactionData, function (serverPurchaseData) {
+        service.processPayment = function (method, purchaseData, extraPurchaseData, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"method" : method, "purchaseData" : purchaseData};
+            if (extraPurchaseData) {
+                postData.extraPurchaseData = extraPurchaseData;
+            }
+            return ApiService.post(path, "process", postData, function (serverPurchaseData) {
                 if (callbackOnSuccess) {
                     callbackOnSuccess(serverPurchaseData);
                 }
@@ -1227,7 +1243,7 @@ angular.module('whoSmarter.services', [])
 
     })
 
-    //Store Service
+    //Screen Service
     .factory('ScreenService', function ($rootScope) {
 
         //----------------------------------------------
@@ -1251,6 +1267,36 @@ angular.module('whoSmarter.services', [])
                     hostingView.style.marginLeft = (containerWidth - $rootScope.settings.general.webCanvasWidth) / 2 + "px";
                 }
             }
+        };
+
+        return service;
+
+    })
+
+    //Leaderboard Service
+    .factory('LeaderboardService', function (ApiService) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+        var path = 'leaderboard/';
+
+        service.getContestLeaders = function(contestId, teamId, callbackOnSuccess, callbackOnError, config) {
+
+            var postData = {"contestId" : contestId};
+            if (teamId === 0 || teamId === 1) {
+                postData.teamId = teamId;
+            }
+            return ApiService.post(path, "contest", postData, callbackOnSuccess, callbackOnError, config)
+        };
+
+        service.getFriends = function(callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "friends", null, callbackOnSuccess, callbackOnError, config)
+        };
+
+        service.getWeeklyLeaders = function(callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "weekly", null, callbackOnSuccess, callbackOnError, config)
         };
 
         return service;

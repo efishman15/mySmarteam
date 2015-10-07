@@ -7,35 +7,15 @@ var generalUtils = require('../utils/general');
 var querystring = require("querystring");
 
 //---------------------------------------------------------------------------------------------------------------------------------
-// getUserInfo
+// facebookGet
 //
-// Validates facebook access token and makes sure it matches the input user id
-//
-// data:
-// -----
-// input: user (contains thirdParty.accessToken + thirdParty.id OR thirdParty.signedRequest if in canvas)
-// output: user.avatar, user.name, user.email, user.ageRange, user.thirdParty.payment_mobile_pricepoints (in case of canvas)
+// General function performing https GET for a graph apiI
 //---------------------------------------------------------------------------------------------------------------------------------
-module.exports.getUserInfo = function (data, callback) {
+function facebookGet(url, callback) {
 
-    var fields = "id,name,email,age_range";
+    facebookResponse = "";
 
-    var facebookResponse = "";
-
-    if (data.user.thirdParty.signedRequest) {
-        //Coming from canvas
-        var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.user.thirdParty.signedRequest);
-        if (!verifier.verify) {
-            callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
-            return;
-        }
-
-        data.user.thirdParty.accessToken = verifier.data.oauth_token;
-        data.user.thirdParty.id = verifier.data.user_id;
-        fields += ",payment_mobile_pricepoints,currency";
-    }
-
-    var req = https.get(FACEBOOK_GRAPH_URL + "/me?fields=" + fields + "&access_token=" + data.user.thirdParty.accessToken, function (res) {
+    var req = https.get(url, function (res) {
 
         res.setEncoding("utf8");
 
@@ -50,53 +30,98 @@ module.exports.getUserInfo = function (data, callback) {
                 facebookData = JSON.parse(facebookResponse);
             }
             catch(e) {
-                callback(new exceptions.ServerException("Error parsing facebook response", {
-                    "facebookResponse": facebookResponse,
-                    "facebookAccessToken": data.user.thirdParty.accessToken,
-                    "facebookUserId": data.user.thirdParty.id
+                callback(new exceptions.ServerException("Error parsing facebookGet response", {
+                    "url" : url,
+                    "facebookResponse": facebookResponse
                 }));
-            }
-
-            if (facebookData && facebookData.id) {
-                if (facebookData.id === data.user.thirdParty.id) {
-                    data.user.avatar = getUserAvatar(data.user.thirdParty.id);
-                    data.user.name = facebookData.name;
-                    data.user.email = facebookData.email; //might be null if user removed
-                    data.user.ageRange = facebookData.age_range;
-                    if (facebookData.payment_mobile_pricepoints) {
-                        data.user.thirdParty.paymentMobilePricepoints = facebookData.payment_mobile_pricepoints;
-                        data.user.thirdParty.currency = facebookData.currency;
-                    }
-                    callback(null, data);
-                }
-                else {
-                    callback(new exceptions.ServerException("Error validating facebook access token, token belongs to someone else", {
-                        "facebookResponse": responseData,
-                        "facebookAccessToken": data.user.thirdParty.accessToken,
-                        "actualFacebookId": facebookData.id
-                    }));
-                    return;
-                }
-            }
-            else {
-                callback(new exceptions.ServerMessageException("SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN", {
-                    "facebookResponse": responseData,
-                    "facebookAccessToken": data.user.thirdParty.accessToken
-                }, 424));
                 return;
             }
+
+            if (facebookData.error) {
+                callback(new exceptions.ServerException("Error received from facebookGet", {
+                    "url" : url,
+                    "facebookResponse": facebookResponse,
+                    "error" : facebookData.error
+                }));
+                return;
+            }
+
+            callback(facebookData);
 
         });
     });
 
     req.on("error", function (error) {
-        callback(new exceptions.ServerException("Error recevied from facebook while validating access token", {
-            "facebookAccessToken": data.user.thirdParty.accessToken,
-            "error": error
+        callback(new exceptions.ServerException("Error during request from facebookGet", {
+            "url" : url,
+            "error" : error
         }));
     });
 
     req.end();
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------
+// getUserInfo
+//
+// Validates facebook access token and makes sure it matches the input user id
+//
+// data:
+// -----
+// input: user (contains thirdParty.accessToken + thirdParty.id OR thirdParty.signedRequest if in canvas)
+// output: user.avatar, user.name, user.email, user.ageRange, user.thirdParty.payment_mobile_pricepoints (in case of canvas)
+//---------------------------------------------------------------------------------------------------------------------------------
+module.exports.getUserInfo = function (data, callback) {
+
+    var fields = "id,name,email,age_range";
+
+    if (data.user.thirdParty.signedRequest) {
+        //Coming from canvas
+        var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.user.thirdParty.signedRequest);
+        if (!verifier.verify) {
+            callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
+            return;
+        }
+
+        data.user.thirdParty.accessToken = verifier.data.oauth_token;
+        data.user.thirdParty.id = verifier.data.user_id;
+        fields += ",payment_mobile_pricepoints,currency";
+    }
+
+    var url = FACEBOOK_GRAPH_URL + "/me?fields=" + fields + "&access_token=" + data.user.thirdParty.accessToken;
+
+    facebookGet(url, function(facebookData) {
+
+        if (facebookData && facebookData.id) {
+            if (facebookData.id === data.user.thirdParty.id) {
+                data.user.avatar = getUserAvatar(data.user.thirdParty.id);
+                data.user.name = facebookData.name;
+                data.user.email = facebookData.email; //might be null if user removed
+                data.user.ageRange = facebookData.age_range;
+                if (facebookData.payment_mobile_pricepoints) {
+                    data.user.thirdParty.paymentMobilePricepoints = facebookData.payment_mobile_pricepoints;
+                    data.user.thirdParty.currency = facebookData.currency;
+                }
+                callback(null, data);
+            }
+            else {
+                callback(new exceptions.ServerException("Error validating facebook access token, token belongs to someone else", {
+                    "facebookResponse": responseData,
+                    "facebookAccessToken": data.user.thirdParty.accessToken,
+                    "actualFacebookId": facebookData.id
+                }));
+                return;
+            }
+        }
+        else {
+            callback(new exceptions.ServerMessageException("SERVER_ERROR_INVALID_FACEBOOK_ACCESS_TOKEN", {
+                "facebookResponse": responseData,
+                "facebookAccessToken": data.user.thirdParty.accessToken
+            }, 424));
+            return;
+        }
+    });
 };
 
 //-------------------------------------------------------------------------------------
@@ -169,90 +194,71 @@ module.exports.getPaymentInfo = function (data, callback) {
     var facebookResponse = "";
 
     var url = FACEBOOK_GRAPH_URL + "/" + data.paymentId + "?fields=" + fields + "&access_token=" + generalUtils.settings.server.facebook.appAccessToken;
-    var req = https.get(url, function (res) {
 
-        res.setEncoding("utf8");
+    facebookGet(url, function(facebookData) {
+        //request_id in the format: "featureName|facebookUserId|timeStamp"
+        var requestIdParts = facebookData.request_id.split("|");
 
-        res.on('data', function (chunk) {
-            facebookResponse += chunk;
-        });
-
-        res.on('end', function () {
-
-            var facebookData = JSON.parse(facebookResponse);
-
-            //request_id in the format: "featureName|facebookUserId|timeStamp"
-            var requestIdParts = facebookData.request_id.split("|");
-
-            if (data.purchaseData && data.purchaseData.signed_request) {
-                var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.purchaseData.signed_request);
-                if (!verifier.verify) {
-                    callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
-                    return;
-                }
-
-                if (verifier.data.request_id !== facebookData.request_id) {
-                    callback(new exceptions.ServerException("Error validating payment, payment belongs to someone else", {
-                        "facebookData": facebookData,
-                        "verifier.data": verifier.data,
-                        "paymentFacebookId": requestIdParts[1]
-                    }));
-                    return;
-                }
+        if (data.purchaseData && data.purchaseData.signed_request) {
+            var verifier = new SignedRequest(generalUtils.settings.server.facebook.secretKey, data.purchaseData.signed_request);
+            if (!verifier.verify) {
+                callback(new exceptions.ServerException("Invalid signed request received from facebook", {"signedRequest": data.signedRequest}));
+                return;
             }
 
-            data.paymentData = facebookData;
-            data.paymentData.clientTimestamp = parseInt(requestIdParts[2], 10);
-            data.featurePurchased = requestIdParts[0];
-            data.facebookUserId = requestIdParts[1];
+            if (verifier.data.request_id !== facebookData.request_id) {
+                callback(new exceptions.ServerException("Error validating payment, payment belongs to someone else", {
+                    "facebookData": facebookData,
+                    "verifier.data": verifier.data,
+                    "paymentFacebookId": requestIdParts[1]
+                }));
+                return;
+            }
+        }
 
-            if (!data.thirdPartyServerCall || data.entry[0].changed_fields.contains("actions")) {
-                //Coming from facebook server notification
-                var lastAction = facebookData.actions[facebookData.actions.length - 1];
+        data.paymentData = facebookData;
+        data.paymentData.clientTimestamp = parseInt(requestIdParts[2], 10);
+        data.featurePurchased = requestIdParts[0];
+        data.facebookUserId = requestIdParts[1];
 
-                data.paymentData.status = lastAction.type + "." + lastAction.status;
+        if (!data.thirdPartyServerCall || data.entry[0].changed_fields.contains("actions")) {
+            //Coming from facebook server notification
+            var lastAction = facebookData.actions[facebookData.actions.length - 1];
 
-                if (lastAction.type === "charge") {
-                    if (lastAction.status === "completed") {
-                        data.proceedPayment = true;
-                    }
-                }
-                else {
-                    //refund, chargeback, decline
-                    data.revokeAsset = true;
+            data.paymentData.status = lastAction.type + "." + lastAction.status;
+
+            if (lastAction.type === "charge") {
+                if (lastAction.status === "completed") {
+                    data.proceedPayment = true;
                 }
             }
+            else {
+                //refund, chargeback, decline
+                data.revokeAsset = true;
+            }
+        }
 
-            if (data.thirdPartyServerCall) {
+        if (data.thirdPartyServerCall) {
 
-                if (data.entry[0].changed_fields.contains("disputes")) {
-                    var lastDispute = facebookData.disputes[facebookData.disputes.length - 1];
+            if (data.entry[0].changed_fields.contains("disputes")) {
+                var lastDispute = facebookData.disputes[facebookData.disputes.length - 1];
 
-                    data.paymentData.status = "dispute." + lastDispute.status;
+                data.paymentData.status = "dispute." + lastDispute.status;
 
-                    if (lastDispute.status === "pending") {
-                        data.dispute = true;
-                        for (var i = 0; i < facebookData.actions.length; i++) {
-                            if (facebookData.actions[i].type === "charge" && facebookData.actions[i].status === "completed") {
-                                data.itemCharged = true;
-                            }
+                if (lastDispute.status === "pending") {
+                    data.dispute = true;
+                    for (var i = 0; i < facebookData.actions.length; i++) {
+                        if (facebookData.actions[i].type === "charge" && facebookData.actions[i].status === "completed") {
+                            data.itemCharged = true;
                         }
                     }
                 }
             }
+        }
 
-            callback(null, data);
-        });
+        callback(null, data);
+
     });
-
-    req.on("error", function (error) {
-        callback(new exceptions.ServerException("Error recevied from facebook while retrieving payment id", {
-            "paymentId": data.paymentId,
-            "error": error
-        }));
-    });
-
-    req.end();
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -320,4 +326,69 @@ module.exports.denyDispute = function (data, callback) {
     req.write(postData);
 
     req.end();
+};
+
+//---------------------------------------------------------------------------------------------------------------------------------
+// getUserFriends
+//
+// Retrieves the list of friends using out app
+//
+// data:
+// -----
+// input: session.facebookAccessToken
+// output: friends [{name, id},...]
+//---------------------------------------------------------------------------------------------------------------------------------
+module.exports.getUserFriends = getUserFriends;
+function getUserFriends(data, callback) {
+
+    if (!data.friends) {
+        data.friends = [];
+    }
+
+    if (!data.url) {
+        data.url = FACEBOOK_GRAPH_URL + "/me/friends" + "?limit=" + generalUtils.settings.server.facebook.friendsPageSize + "&offset=0&access_token=" + data.session.facebookAccessToken;
+    }
+
+    facebookGet(data.url, function(facebookData) {
+
+        if (!facebookData.data) {
+            callback(new exceptions.ServerException("Unable to retrieve user friends", {
+                "accessToken": data.accessToken,
+                "error": facebookData
+            }));
+            return;
+        }
+
+        if (facebookData.data.length > 0) {
+            for(var i=0; i<facebookData.data.length; i++) {
+                var friend = {"id" : "" + facebookData.data[i].id, "name" : facebookData.data[i].name}
+                data.friends.push(friend);
+            }
+            if (facebookData.data.length < generalUtils.settings.server.facebook.friendsPageSize) {
+                callback(null, data);
+            }
+            else if (facebookData.paging && facebookData.paging.next) {
+                data.url = facebookData.paging.next;
+                getUserFriends(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        }
+        else {
+            //Possibly lack of permission - check if user_friends permission has been declined
+            if (data.friends.length === 0) {
+                var url = FACEBOOK_GRAPH_URL + "/me/permissions/user_friends?access_token=" + data.session.facebookAccessToken;
+                facebookGet(url, function(facebookData) {
+                   if (!facebookData.data || facebookData.data.length === 0 || facebookData.data[0].status === "declined") {
+                       callback(new exceptions.ServerMessageException("SERVER_ERROR_MISSING_FRIENDS_PERMISSION"));
+                       return;
+                   }
+                });
+            }
+            else {
+                callback(null, data);
+            }
+        }
+    });
 };

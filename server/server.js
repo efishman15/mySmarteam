@@ -17,6 +17,7 @@ var https = require("https");
 var fs = require("fs");
 var facebookCanvas = require("./api/facebookCanvas");
 var paypalIPN = require("./api/paypalPN");
+var leaderboards = require("./business_logic/leaderboards");
 
 var domain = require("domain");
 
@@ -72,14 +73,14 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-//----------------------------------------------------
-// API's that require authentication
-//----------------------------------------------------
 dalDb.loadSettings(function (err, data) {
 
     //Block server listener until settings loaded from db
     generalUtils.injectSettings(data.settings);
 
+    //----------------------------------------------------
+    // API's that require authentication
+    //----------------------------------------------------
     app.post("/user/logout", isAuthenticated, credentials.logout);
     app.post("/user/settings", sessionUtils.saveSettings);
     app.post("/user/toggleSound", sessionUtils.toggleSound);
@@ -91,6 +92,9 @@ dalDb.loadSettings(function (err, data) {
     app.post("/contests/get", isAuthenticated, contests.getContests);
     app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
     app.post("/payments/process", isAuthenticated, payments.processPayment);
+    app.post("/leaderboard/contest", isAuthenticated, leaderboards.getContestLeaders);
+    app.post("/leaderboard/friends", isAuthenticated, leaderboards.getFriends);
+    app.post("/leaderboard/weekly", isAuthenticated, leaderboards.getWeeklyLeaders);
 
     //----------------------------------------------------
     // API's that do NOT require authentication

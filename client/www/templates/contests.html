@@ -38,8 +38,8 @@
                             translate}}
                         </button>
                         <button class="item button button-stable button-small nowrapText button-3d button-3d-assertive"
-                                ng-show="showContestParticipants()" ng-click="showParticipants(contestChart.contest)">
-                            {{'PARTICIPANTS' | translate}}
+                                ng-show="showContestParticipants()" ng-click="$root.gotoView('contestParticipants', false, {contest : contestChart.contest})">
+                            {{'CONTEST_LEADERS' | translate}}
                         </button>
                     </div>
                 </div>

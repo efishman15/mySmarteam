@@ -1,43 +1,134 @@
+var exceptions = require("../utils/exceptions");
 var generalUtils = require("../utils/general");
 var Leaderboard = require("agoragames-leaderboard");
 var logger = require("../utils/logger");
+var async = require("async");
+var sessionUtils = require("./session");
+var dalLeaderboards = require("../dal/dalLeaderboards");
+var dalFacebook = require("../dal/dalFacebook");
 
-//Open connection to general leaderboards (not timebased)
-var generalLeaderboard = new Leaderboard("general");
+//--------------------------------------------------------------------------
+// private functions
+//--------------------------------------------------------------------------
 
-//---------------------------------------------------------------------------------------------------------------------------
-// addScore
+//--------------------------------------------------------------------------
+// getLeaders
+// input: data.leaderboard
+// output data.clientResponse
+//--------------------------------------------------------------------------
+function getLeaders(data, callback) {
+
+    var operations = [
+
+        //getSession
+        function (callback) {
+            data.closeConnection = true;
+            sessionUtils.getSession(data, callback);
+        },
+
+        dalLeaderboards.getLeaders
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            callback(null, data);
+        }
+        else {
+            callback(err, data);
+        }
+    });
+}
+
+//--------------------------------------------------------------------------
+// getContestLeaders
 //
-// The following leaderboards are updated:
-// =======================================
-// 1. Contest general leaderboard - "contest_<contestId>"
-// 2. Contest team leaderboard - "contest_<contestId>_team_<teamId>"
-// 3. General Leaderboard (ever) - "general" (will be used to display my friends' scores)
-// 4. Weekly leaderboard - weekly_<YearWeek>
+// data: contestId, teamId (optional)
+//--------------------------------------------------------------------------
+module.exports.getContestLeaders = function (req, res, next) {
+
+    var token = req.headers.authorization;
+    var data = req.body;
+    data.token = token;
+
+    if (!data.contestId) {
+        exceptions.ServerResponseException(res, "contestId not supplied", null, "warn", 424);
+        return;
+    }
+
+    if (data.teamId != null && data.teamId !== 0 && data.teamId !== 1) {
+        exceptions.ServerResponseException(res, "invalid teamId supplied", {"teamId": data.teamId}, "warn", 424);
+        return;
+    }
+
+    if (data.teamId === 0 || data.teamId === 1) {
+        data.leaderboard = dalLeaderboards.getTeamLeaderboard(data.contestId, data.teamId);
+    }
+    else {
+        data.leaderboard = dalLeaderboards.getContestLeaderboard(data.contestId);
+    }
+
+    getLeaders(data, function(err, data) {
+        if (!err) {
+            res.send(200, data.clientResponse);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    });
+};
+
+//--------------------------------------------------------------------------
+// getWeeklyLeaders
 //
-// @deltaScore - the score currently achieved which should be increased in all leaderboards
-// @facebookUserId - used as the primary member key in all leaderboards (to be able to retrieve friends leaderboard)
-//---------------------------------------------------------------------------------------------------------------------------
-module.exports.addScore = addScore;
-function addScore(contestId, teamId, deltaScore, facebookUserId, name, avatar) {
+// data: <NA>
+//--------------------------------------------------------------------------
+module.exports.getWeeklyLeaders = function (req, res, next) {
 
-    var contestGeneralLeaderboard = new Leaderboard("contest_" + contestId);
-    var contestTeamLeaderboard = new Leaderboard("contest_" + contestId + "_team" + teamId);
-    var weeklyLeaderboard = new Leaderboard("weekly_" + generalUtils.getYearWeek());
+    var token = req.headers.authorization;
+    var data = {"token" : token};
 
-    generalLeaderboard.changeScoreFor(facebookUserId, deltaScore, function(reply) {
-        generalLeaderboard.updateMemberData(facebookUserId, avatar + "|" + name);
+    data.leaderboard = dalLeaderboards.getWeeklyLeaderboard();
+
+    getLeaders(data, function(err, data) {
+        if (!err) {
+            res.send(200, data.clientResponse);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
     });
+};
 
-    contestGeneralLeaderboard.changeScoreFor(facebookUserId, deltaScore, function(reply) {
-        contestGeneralLeaderboard.updateMemberData(facebookUserId, avatar + "|" + name);
-    });
+//--------------------------------------------------------------------------
+// getFriends
+//
+// data: <NA>
+//--------------------------------------------------------------------------
+module.exports.getFriends = function (req, res, next) {
 
-    contestTeamLeaderboard.changeScoreFor(facebookUserId, deltaScore, function(reply) {
-        contestTeamLeaderboard.updateMemberData(facebookUserId, avatar + "|" + name);
-    });
+    var token = req.headers.authorization;
+    var data = {"token" : token};
 
-    weeklyLeaderboard.changeScoreFor(facebookUserId, deltaScore, function(reply) {
-        contestTeamLeaderboard.updateMemberData(facebookUserId, avatar + "|" + name);
-    });
+    var operations = [
+
+        //getSession
+        function (callback) {
+            data.closeConnection = true;
+            sessionUtils.getSession(data, callback);
+        },
+
+        dalFacebook.getUserFriends,
+
+        dalLeaderboards.getFriends
+
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            res.send(200, data.clientResponse)
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    })
 };

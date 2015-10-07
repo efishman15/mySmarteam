@@ -1,4 +1,4 @@
-<ion-view title="{{'CONTEST_PARTICIPANTS_TITLE' | translate}}">
+<ion-view title="{{'CONTEST_LEADERS' | translate}}">
     <ion-nav-bar class="bar-stable bar-dark" align-title="center"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
         <ion-nav-back-button></ion-nav-back-button>
@@ -11,25 +11,16 @@
     <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
 
         <div class="center button-bar padding">
-            <button class="button button-assertive button-small small-font" translate="CONTEST_PARTICIPANTS_GENERAL_SCORING" ng-click="selectTab(0)" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'button-outline' : !participantsState[0].selected}">
+            <button class="button button-assertive button-small small-font" translate="CONTEST_LEADERS_GENERAL_SCORING" ng-click="selectLeaderboard('all')" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'button-outline' : !leaderboards.all.selected}">
             </button>
-            <button class="button button-assertive button-outline button-small small-font thick-border" ng-click="selectTab(1)" ng-class="{'button-outline' : !participantsState[1].selected}">{{contest.teams[0].name}}
+            <button class="button button-assertive button-outline button-small small-font thick-border" ng-click="selectLeaderboard('team0')" ng-class="{'button-outline' : !leaderboards.team0.selected}">{{contest.teams[0].name}}
             </button>
-            <button class="button button-assertive button-outline button-small small-font" translate="WEEKLY" ng-click="selectTab(2)" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'button-outline' : !participantsState[2].selected}">{{contest.teams[1].name}}
+            <button class="button button-assertive button-outline button-small small-font" translate="WEEKLY" ng-click="selectLeaderboard('team1')" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'button-outline' : !leaderboards.team1.selected}">{{contest.teams[1].name}}
             </button>
         </div>
 
-        <div class="list list-inset" ng-repeat="participant in participants track by participant.id">
-            <div class="row" style="padding: 2px !important;">
-                <div class="col-10">
-                    <h1 style="margin-top: 14px;">{{participant.rank}}</h1>
-                </div>
-                <div class="col-90 item" ng-class="{'item-avatar-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','item-avatar-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl' }">
-                    <image ng-src="{{participant.avatar}}"></image>
-                    <h2>{{participant.name}}</h2>
-                    <p>{{participant.score}} {{'SCORE' | translate}}</p>
-                </div>
-            </div>
+        <div ng-include="'templates/leaders.html'">
+
         </div>
 
     </ion-content>

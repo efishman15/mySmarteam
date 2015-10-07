@@ -415,6 +415,7 @@ module.exports.facebookLogin = function (data, callback) {
             {
                 $set: {
                     "lastLogin": now,
+                    "facebookAccessToken" : data.user.thirdParty.accessToken,
                     "name": data.user.name,  //keep sync with Facebook changes
                     "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
                     "ageRange": data.user.ageRange, //keep sync with Facebook changes
@@ -434,7 +435,12 @@ module.exports.facebookLogin = function (data, callback) {
                     return;
                 }
 
+                //Update all those fields also locally as previouselly they were only updated in the db
                 user.lastLogin = now;
+                user.name = data.user.name;
+                user.email = data.user.email;
+                user.ageRange = data.user.ageRange;
+
                 data.user = user;
 
                 //restore the avatar back
@@ -751,8 +757,7 @@ function getNextQuestion(data, callback) {
             return;
         }
 
-        //if (data.session.quiz.clientData.totalQuestions === (data.session.quiz.clientData.currentQuestionIndex+1)) {
-        if (1 === (data.session.quiz.clientData.currentQuestionIndex+1)) {
+        if (data.session.quiz.clientData.totalQuestions === (data.session.quiz.clientData.currentQuestionIndex+1)) {
             data.session.quiz.clientData.finished = true;
         }
 

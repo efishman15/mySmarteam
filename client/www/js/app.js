@@ -221,6 +221,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             .state('contestParticipants', {
                 url: "/contestParticipants",
+                cache: false,
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "contestParticipants");
+                    }
+                },
                 params: {contest: null},
                 controller: "ContestParticipantsCtrl",
                 templateUrl: "templates/contestParticipants.html"
@@ -228,7 +234,6 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             .state('app.quiz', {
                 url: "/quiz",
-                cache: false,
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "quiz");

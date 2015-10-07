@@ -232,7 +232,6 @@ label.item.valid-lr {
     left: -130px;
 }
 
-
 .menu-avatar-ltr {
     width: 36px;
     height: 36px;
@@ -359,9 +358,11 @@ label.item.valid-lr {
     cursor: pointer;
 }
 
-.small-font {
-    font-size: 65%;
+.button.small-font {
+    font-size: 90%;
     font-weight: bold;
+    line-height: 1em;
+    white-space: normal;
 }
 
 .my-item-note-left {
@@ -393,4 +394,22 @@ label.item.valid-lr {
     margin-top: 10px;
     margin-left: 5%;
     margin-right: 5%;
+}
+
+.col-100 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 100%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 100%;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.leader-avatar-in-leaderboard {
+    margin-top: -5px !important;
+}
+
+.leader-avatar-outside-leaderboard {
+    margin-top: -8px !important;
 }

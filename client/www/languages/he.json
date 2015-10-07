@@ -77,6 +77,8 @@
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_TITLE" : "רכישה בתהליך",
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_MESSAGE" : "Your purchase requires validation. If it will be validated, you will receive your item later automatically",
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_MESSAGE" : "רכישתכם בתהליך אישור. ברגע שתאושר אתם תקבלו את הפריט באופן אוטומטי",
+  "SERVER_ERROR_MISSING_FRIENDS_PERMISSION_TITLE" : "הרשאת חברים",
+  "SERVER_ERROR_MISSING_FRIENDS_PERMISSION_MESSAGE" : "על מנת לגלות מי מחבריך עבר אותך בהיכל התהילה, האם תוכלו לאשר את שליפת רשימת חבריך בפייסבוק?",
   "MY_CONTESTS" : "התחרויות שלי",
   "RUNNING_CONTESTS" : "תחרויות רצות",
   "RECENTLY_FINISHED_CONTESTS" : "תחרויות שהסתיימו",
@@ -112,6 +114,7 @@
   "LEADERBOARDS" : "היכל התהילה",
   "FRIENDS" : "חברים",
   "WEEKLY" : "שבועי",
-  "CONTEST_PARTICIPANTS_TITLE" : "משתתפי התחרות",
-  "CONTEST_PARTICIPANTS_GENERAL_SCORING" : "דירוג כללי"
+  "CONTEST_LEADERS" : "מובילי התחרות",
+  "CONTEST_LEADERS_GENERAL_SCORING" : "דירוג כללי",
+  "MY_POSITION" : "המיקום שלי: {{position}}"
 }

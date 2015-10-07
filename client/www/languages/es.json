@@ -76,6 +76,8 @@
   "SERVER_ERROR_PURCHASE_FAILED_MESSAGE" : "Su compra ha fracasado",
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_TITLE" : "Compra en curso",
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_MESSAGE" : "Su compra requiere validación. Si se validará , usted recibirá su artículo más adelante de forma automática",
+  "SERVER_ERROR_MISSING_FRIENDS_PERMISSION_TITLE" : "permiso Amigos",
+  "SERVER_ERROR_MISSING_FRIENDS_PERMISSION_MESSAGE" : "Para poder ver quién de tu te ha pasado en la tabla de clasificación , podemos tener su permiso para recuperar tus amigos de Facebook ?",
   "MY_CONTESTS" : "Mis Concursos",
   "RUNNING_CONTESTS" : "Correr Concursos",
   "RECENTLY_FINISHED_CONTESTS" : "Concursos Terminado",
@@ -113,6 +115,7 @@
   "LEADERBOARDS" : "tablas de clasificación",
   "FRIENDS" : "Amigos",
   "WEEKLY" : "Cada semana",
-  "CONTEST_PARTICIPANTS_TITLE" : "Los participantes del concurso",
-  "CONTEST_PARTICIPANTS_GENERAL_SCORING" : "clasificación general"
+  "CONTEST_LEADERS" : "Líderes del Concurso",
+  "CONTEST_LEADERS_GENERAL_SCORING" : "clasificación general",
+  "MY_POSITION" : "Mi posición: {{position}}"
 }

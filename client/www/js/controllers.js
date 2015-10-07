@@ -212,14 +212,12 @@
                 clientContestCount = 0;
             }
 
-            var postData = {"clientContestCount": clientContestCount, "tab": $state.current.appData.serverTab};
-
             var config;
             if ($scope.totalContests != -1) {
                 config = {"blockUserInterface": false}
             }
 
-            ContestsService.getContests(postData, function (contestsResult) {
+            ContestsService.getContests(clientContestCount, $state.current.appData.serverTab, function (contestsResult) {
                 $scope.totalContests = contestsResult.count;
 
                 if (!$stateParams.userClick && $scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
@@ -234,7 +232,6 @@
 
                 //Add server contests to the end of the array
                 var contestChartsCount = $scope.contestCharts.length;
-
                 for (var i = 0; i < contestsResult.list.length; i++) {
                     var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], contestChartsCount + i);
                     $scope.contestCharts.push(contestChart);
@@ -396,13 +393,14 @@
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
 
             viewData.enableBack = true;
-            startQuiz();
+            if ($scope.mode === "quiz") {
+                startQuiz();
+            }
         });
 
         $scope.playAgain = function () {
             startQuiz();
         };
-
 
         $scope.$on("whoSmarter-windowResize", function () {
             drawQuizProgress();
@@ -578,12 +576,7 @@
 
             $scope.mode = "quiz";
 
-            var postData = {"contestId": $stateParams.contestId};
-            if ($stateParams.teamId === 0 || $stateParams.teamId === 1) {
-                postData.teamId = $stateParams.teamId;
-            }
-
-            QuizService.start(postData,
+            QuizService.start($stateParams.contestId, $stateParams.teamId,
                 function (data) {
                     $scope.quiz = data.quiz;
                     $scope.questionHistory = [];
@@ -601,7 +594,7 @@
                 });
         }
 
-        $scope.getTitle = function() {
+        $scope.getTitle = function () {
 
             if ($scope.mode === "quiz") {
                 return quizModeTitle;
@@ -669,16 +662,7 @@
                 }
             };
 
-            var answerRequest = {"id": answerId};
-            if ($scope.questionHistory[$scope.quiz.currentQuestionIndex].hintUsed) {
-                answerRequest.hintUsed = true;
-            }
-
-            if ($scope.questionHistory[$scope.quiz.currentQuestionIndex].answerUsed) {
-                answerRequest.answerUsed = true;
-            }
-
-            QuizService.answer(answerRequest,
+            QuizService.answer(answerId, $scope.questionHistory[$scope.quiz.currentQuestionIndex].hintUsed, $scope.questionHistory[$scope.quiz.currentQuestionIndex].answerUsed,
                 function (data) {
                     var correctAnswerId;
 
@@ -718,7 +702,8 @@
                     }
 
                     $scope.correctButtonId = "buttonAnswer" + correctAnswerId;
-                }, null, config);
+                }, null, config
+            );
         }
 
         $scope.assistWithHint = function () {
@@ -801,8 +786,8 @@
         $scope.$on('$ionicView.beforeLeave', function () {
             if (JSON.stringify($scope.localViewData) != JSON.stringify($rootScope.session.settings)) {
                 //Dirty settings - save to server
-                var postData = {"settings": $scope.localViewData};
-                UserService.saveSettingsToServer(postData,
+
+                UserService.saveSettingsToServer($scope.localViewData,
                     function (data) {
                         prevLanguage = $rootScope.user.settings.language;
                         $rootScope.user.settings = $scope.localViewData;
@@ -1063,7 +1048,7 @@
 
         function endDateCallback(val) {
             if (val) {
-                if (val >= $scope.localViewData.startDate) {
+                if (val >= $scope.localViewData.startDate || $rootScope.session.isAdmin) {
                     //Date picker works with time as 00:00:00.000
                     //End date should be "almost" midnight of the selected date, e.g. 23:59:59.000
                     $scope.localViewData.endDate = new Date(val.getTime() + (24 * 60 * 60 - 1) * 1000);
@@ -1089,10 +1074,8 @@
 
             if ($stateParams.mode == "add" || ($stateParams.mode == "edit" && JSON.stringify($stateParams.contest) != JSON.stringify($scope.localViewData))) {
 
-                var postData = {"contest": $scope.localViewData, "mode": $stateParams.mode};
-
                 //Add/update the new/updated contest to the server and in the local $rootScope
-                ContestsService.setContest(postData,
+                ContestsService.setContest($scope.localViewData, $stateParams.mode,
                     function (contest) {
                         //Raise event - so the contest graph can be refreshed without going to the server again
                         $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
@@ -1135,8 +1118,7 @@
             buttons.push(cancelButton);
 
             PopupService.confirm("CONFIRM_REMOVE_TITLE", "CONFIRM_REMOVE_TEMPLATE", {name: contestName}, function () {
-                var postData = {"contestId": $scope.localViewData._id};
-                ContestsService.removeContest(postData,
+                ContestsService.removeContest($scope.localViewData._id,
                     function (data) {
                         $rootScope.$broadcast("whoSmarter-contestRemoved");
                         $rootScope.goBack();
@@ -1164,9 +1146,7 @@
 
                     case "facebook":
                         if (result.data.status === "completed") {
-                            var transactionData = {"method": "facebook"};
-                            transactionData.purchaseData = result.data;
-                            PaymentService.processPayment(transactionData, function (serverPurchaseData) {
+                            PaymentService.processPayment(method, result.data, null, function (serverPurchaseData) {
                                 //Update local assets
                                 $scope.buyInProgress = false;
                                 PaymentService.showPurchaseSuccess(serverPurchaseData);
@@ -1201,23 +1181,21 @@
         };
 
         function processAndroidPurchase(purchaseData, callbackOnSuccess) {
-            var transactionData = {
-                "method": "android",
-                "purchaseData": purchaseData,
-                "extraPurchaseData": {
-                    "actualCost": $rootScope.session.features.newContest.purchaseData.cost,
-                    "actualCurrency": $rootScope.session.features.newContest.purchaseData.currency,
-                    "featurePurchased": $rootScope.session.features.newContest.name
-                }
+            var extraPurchaseData = {
+                "actualCost": $rootScope.session.features.newContest.purchaseData.cost,
+                "actualCurrency": $rootScope.session.features.newContest.purchaseData.currency,
+                "featurePurchased": $rootScope.session.features.newContest.name
             };
-            PaymentService.processPayment(transactionData, function (serverPurchaseData) {
+
+            PaymentService.processPayment("android", purchaseData, extraPurchaseData, function (serverPurchaseData) {
 
                 $ionicLoading.show({
                         animation: 'fade-in',
                         showBackdrop: true,
                         showDelay: 50
                     }
-                )
+                );
+
                 inappbilling.consumePurchase(function (purchaseData) {
                         $ionicLoading.hide();
                         if (callbackOnSuccess) {
@@ -1334,72 +1312,74 @@
         }
     })
 
-    .controller("FriendsLeaderboardCtrl", function ($scope, $ionicConfig) {
+    .controller("FriendsLeaderboardCtrl", function ($scope, LeaderboardService) {
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = false;
+
+            var config = {
+                "onServerErrors": {
+                    "SERVER_ERROR_MISSING_FRIENDS_PERMISSION": {"next": askFriendsPermissions, "confirm" : true}
+                }
+            };
+
+            LeaderboardService.getFriends(function(leaders) {
+                $scope.leaders = leaders;
+            }, null, config);
+
         });
+
+        function askFriendsPermissions() {
+            alert("TBD - ask for friends permission")
+        }
     })
 
-    .controller("WeeklyLeaderboardCtrl", function ($scope, $ionicConfig) {
+    .controller("WeeklyLeaderboardCtrl", function ($scope, LeaderboardService) {
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = false;
+
+            LeaderboardService.getWeeklyLeaders(function(leaders) {
+                $scope.leaders = leaders;
+            });
+
         });
     })
 
-    .controller("ContestParticipantsCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams) {
+    .controller("ContestParticipantsCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, LeaderboardService) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
-        $scope.participantsState = [
-            {
-                "team": -1,
-                "selected": true,
-                participants: [
-                    {"id": 1, "rank": 1, "name": "Eddy Fishman", "avatar": "https://graph.facebook.com/1041809664/picture?type=square", "score": 50},
-                    {"id": 2, "rank": 2, "name": "Eyal Porat", "avatar": "https://graph.facebook.com/849153768467187/picture?type=square", "score": 30},
-                    {"id": 3, "rank": 3, "name": "Lior Porat", "avatar": "https://graph.facebook.com/10153534425349268/picture?type=square", "score": 20},
-                ]
-            },
-            {
-                "team": 0,
-                "selected": false,
-                participants: [
-                    {"id": 1, "rank": 1, "name": "Eyal Porat", "avatar": "https://graph.facebook.com/849153768467187/picture?type=square", "score": 30},
-                    {"id": 2, "rank": 2, "name": "Lior Porat", "avatar": "https://graph.facebook.com/10153534425349268/picture?type=square", "score": 20},
-                ]
-            },
-            {
-                "team": 1,
-                "selected": false,
-                participants: [
-                    {"id": 1, "rank": 1, "name": "Eddy Fishman", "avatar": "https://graph.facebook.com/1041809664/picture?type=square", "score": 50}
-                ]
-            }
-        ];
+        $scope.leaderboards = {
+                "all" : {"selected" : true, "teamId" : null},
+                "team0" : {"selected" : false, "teamId" : 0},
+                "team1" : {"selected" : false, "teamId" : 1},
+        };
 
-        $scope.selectTab = function (tabId) {
-            for (var i = 0; i < $scope.participantsState.length; i++) {
-                if (i !== tabId) {
-                    $scope.participantsState[i].selected = false;
-                }
-                else {
-                    $scope.participantsState[i].selected = true;
-                }
-            }
+        $scope.selectLeaderboard = function (leaderboard) {
 
-            $scope.participants = $scope.participantsState[tabId].participants;
+            $scope.leaderboards.all.selected = (leaderboard === "all");
+            $scope.leaderboards.team0.selected = (leaderboard === "team0");
+            $scope.leaderboards.team1.selected = (leaderboard === "team1");
+
+            LeaderboardService.getContestLeaders($scope.contest._id, $scope.leaderboards[leaderboard].teamId, function(leaders) {
+                $scope.leaders = leaders;
+            });
+
         };
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-            viewData.enableBack = true;
 
+            if (!$stateParams.contest) {
+                $rootScope.gotoRootView();
+                return;
+            }
+
+            viewData.enableBack = true;
             $scope.contest = $stateParams.contest;
 
-            $scope.participants = $scope.participantsState[0].participants;
+            $scope.selectLeaderboard("all");
+
         });
 
     });
-
-

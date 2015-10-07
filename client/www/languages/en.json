@@ -76,6 +76,8 @@
   "SERVER_ERROR_PURCHASE_FAILED_MESSAGE" : "Your purchase has failed",
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_TITLE" : "Purchase in progress",
   "SERVER_ERROR_PURCHASE_IN_PROGRESS_MESSAGE" : "Your purchase requires validation. If it will be validated, you will receive your item later automatically",
+  "SERVER_ERROR_MISSING_FRIENDS_PERMISSION_TITLE" : "Friends permission",
+  "SERVER_ERROR_MISSING_FRIENDS_PERMISSION_MESSAGE" : "To be able to see who of your has passed you in the leaderboard, can we have your permission to retrieve your facebook friends?",
   "MY_CONTESTS" : "My Contests",
   "RUNNING_CONTESTS" : "Running Contests",
   "RECENTLY_FINISHED_CONTESTS" : "Finished contests",
@@ -113,6 +115,7 @@
   "LEADERBOARDS" : "Leaderboards",
   "FRIENDS" : "Friends",
   "WEEKLY" : "Weekly",
-  "CONTEST_PARTICIPANTS_TITLE" : "Contest Participants",
-  "CONTEST_PARTICIPANTS_GENERAL_SCORING" : "Overall Ranking"
+  "CONTEST_LEADERS" : "Contest Leaders",
+  "CONTEST_LEADERS_GENERAL_SCORING" : "Overall Ranking",
+  "MY_POSITION" : "My position: {{position}}"
 }

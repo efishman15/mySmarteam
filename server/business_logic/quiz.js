@@ -5,7 +5,7 @@ var random = require("../utils/random");
 var dalDb = require("../dal/dalDb");
 var generalUtils = require("../utils/general");
 var contestsBusinessLogic = require("../business_logic/contests");
-var leaderboards = require("../business_logic/leaderboards");
+var dalLeaderboard = require("../dal/dalLeaderboards");
 
 var quizSounds = {
     "finish": {
@@ -320,7 +320,7 @@ module.exports.answer = function (req, res, next) {
                 var myContestUser = data.contest.users[data.session.userId];
 
                 //Update all leaderboards with the score achieved
-                leaderboards.addScore(data.contest._id, myTeam, data.session.quiz.serverData.score, data.session.facebookUserId, data.session.name, data.session.avatar);
+                dalLeaderboard.addScore(data.contest._id, myTeam, data.session.quiz.serverData.score, data.session.facebookUserId, data.session.name, data.session.avatar);
 
                 myContestUser.score += data.session.quiz.serverData.score;
                 myContestUser.teamScores[myTeam] += data.session.quiz.serverData.score;
