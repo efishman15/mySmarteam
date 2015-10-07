@@ -9,7 +9,7 @@
         "unlockText" : "NEW_CONTEST_UNLOCKED",
         "view" : {
           "name" : "contest",
-          "isRoot" : true,
+          "isRoot" : false,
           "params" : {
             "mode" : "add"
           }
@@ -85,11 +85,12 @@
     "facebook" : {
       "secretKey" : "9ddb5d54c189bbf740967e6a6c18ccbb",
       "signedRequestRedirectUrl" : "https://www.whosmarter.com/#/facebook",
-      "appAccessToken" : "344342552056|QiE5jBhMjOyz7XxV93voCQf553A"
+      "appAccessToken" : "344342552056|QiE5jBhMjOyz7XxV93voCQf553A",
+      "friendsPageSize" : 25
     },
     "versions" : {
       "mustUpdate" : {
-        "minVersion" : "0.0.19",
+        "minVersion" : "0.0.21",
         "popup" : {
           "buttons" : [{
               "action" : "linkExit",
@@ -200,6 +201,9 @@
       "ios" : {
         "storeLink" : "http://www.apple.com"
       }
+    },
+    "leaderboard" : {
+      "pageSize" : 3
     }
   },
   "client" : {
@@ -403,11 +407,15 @@
       "baseUrlWithoutProtocol" : "//www.whosmarter.com/",
       "downloadUrl" : "http://www.whosmarter.com/download/",
       "logoUrl" : "images/logo.png",
-      "facebookFanPage" : "https://www.facebook.com/392678080828378"
+      "facebookFanPage" : "https://www.facebook.com/392678080828378",
+      "webCanvasWidth" : 640
     },
     "share" : {
       "twitterAccount" : "whoSmarter",
       "url" : "http://www.whosmarter.com/download"
+    },
+    "facebook" : {
+      "readPermissions" : ["public_profile", "email", "user_friends"]
     }
   }
 }
