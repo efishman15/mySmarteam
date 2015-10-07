@@ -278,17 +278,18 @@ label.item.valid-lr {
     border-width: 2px !important;
 }
 
+.center-button-in-ellipse {
+    margin-right: -1px !important;; margin-left: -1px !important;
+    border-top-width: 2px !important;
+    border-bottom-width: 2px !important;
+}
+
 .round-button-right {
     border-top-right-radius: 15px !important;
     border-bottom-right-radius: 15px !important;
     -moz-border-radius-topright: 15px !important;
     -moz-border-radius-bottomright: 15px !important;
     border-width: 2px !important;
-}
-
-.thick-border {
-    border-top-width: 2px !important;
-    border-bottom-width: 2px !important;
 }
 
 .button-3d {

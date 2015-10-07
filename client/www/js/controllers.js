@@ -133,6 +133,8 @@
 
         var tabs = ["app.tabs.myContests", "app.tabs.runningContests", "app.tabs.recentlyFinishedContests"];
 
+        $scope.roundTabState = [true, false, false];
+
         UserService.resolveEvents();
 
         var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
@@ -150,8 +152,15 @@
 
             viewData.enableBack = false;
 
+            $scope.roundTabState[0] = true;
+
             $scope.doRefresh();
         });
+
+        $scope.roundTabSwitch = function(viewName) {
+            $scope.roundTabState[0] = false;
+            $rootScope.gotoView(viewName, false, {}, false, true);
+        };
 
         $scope.$on('whoSmarter-tabChanged', function () {
             $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()]);
@@ -269,9 +278,6 @@
             quizContext = quizCanvas.getContext("2d");
             quizContext.font = $rootScope.settings.quiz.canvas.font;
         }
-
-        $ionicConfig.backButton.previousTitleText("");
-        $ionicConfig.backButton.text("");
 
         var quizModeTitle = $translate.instant("QUIZ");
         var resultsModeTitle = $translate.instant("WHO_IS_SMARTER") + " - " + $translate.instant("QUIZ_RESULTS");
@@ -391,6 +397,9 @@
         initDrawImageQueue(imgQuestionInfoSrc);
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+
+            $ionicConfig.backButton.previousTitleText("");
+            $ionicConfig.backButton.text("");
 
             viewData.enableBack = true;
             if ($scope.mode === "quiz") {
@@ -1312,10 +1321,14 @@
         }
     })
 
-    .controller("FriendsLeaderboardCtrl", function ($scope, LeaderboardService) {
+    .controller("FriendsLeaderboardCtrl", function ($scope, $rootScope, LeaderboardService) {
+
+        $scope.roundTabState = [false, true, false];
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = false;
+
+            $scope.roundTabState[1] = true;
 
             var config = {
                 "onServerErrors": {
@@ -1329,21 +1342,37 @@
 
         });
 
+        $scope.roundTabSwitch = function(viewName) {
+            $scope.roundTabState[1] = false;
+            $rootScope.gotoView(viewName, false, {}, false, true);
+        };
+
         function askFriendsPermissions() {
             alert("TBD - ask for friends permission")
         }
     })
 
-    .controller("WeeklyLeaderboardCtrl", function ($scope, LeaderboardService) {
+    .controller("WeeklyLeaderboardCtrl", function ($scope, $rootScope, LeaderboardService) {
+
+        $scope.roundTabState = [false, false, true];
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+
             viewData.enableBack = false;
+
+            $scope.roundTabState[2] = true;
 
             LeaderboardService.getWeeklyLeaders(function(leaders) {
                 $scope.leaders = leaders;
             });
 
         });
+
+        $scope.roundTabSwitch = function(viewName) {
+            $scope.roundTabState[2] = false;
+            $rootScope.gotoView(viewName, false, {}, false, true);
+        };
+
     })
 
     .controller("ContestParticipantsCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, LeaderboardService) {

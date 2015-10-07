@@ -1,0 +1,17 @@
+<div class="center button-bar padding">
+    <button class="button button-assertive button-small small-font"
+            translate="RECENTLY_FINISHED_CONTESTS"
+            ng-class="{'button-outline' : !roundTabState[0], 'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='rtl'}"
+            ng-click="!roundTabState[0] && roundTabSwitch('app.tabs.recentlyFinishedContests')">
+    </button>
+    <button class="button button-assertive button-small small-font center-button-in-ellipse"
+            translate="FRIENDS"
+            ng-class="{'button-outline' : !roundTabState[1]}"
+            ng-click="!roundTabState[1] && roundTabSwitch('app.tabs.friendsLeaderboard')">
+    </button>
+    <button class="button button-assertive button-small small-font"
+            translate="WEEKLY"
+            ng-class="{'button-outline' : !roundTabState[2], 'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='ltr'}"
+            ng-click="!roundTabState[2] && roundTabSwitch('app.tabs.weeklyLeaderboard')">
+    </button>
+</div>
