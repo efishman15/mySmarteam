@@ -224,6 +224,7 @@ angular.module('whoSmarter.services', [])
                                 ($state.current.name.length >= 8 && $state.current.name.substring(0, 8) === "app.tabs" ) ||
                                 ($state.current.name === "home"))) {
                                 PopupService.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
+                                    FlurryAgent.endSession();
                                     ionic.Platform.exitApp();
                                 });
                             }

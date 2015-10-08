@@ -918,7 +918,7 @@
         });
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-fsdfsd
+
             if ($stateParams.mode) {
                 $scope.mode = $stateParams.mode;
                 if ($stateParams.mode == "edit") {
