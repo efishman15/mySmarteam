@@ -134,6 +134,8 @@ angular.module('whoSmarter.services', [])
                         $ionicConfig.backButton.icon('ion-chevron-right');
                     }
 
+                    FlurryAgent.setUserId(session.userId);
+
                     callbackOnSuccess(session);
                 },
                 function (status, data) {
@@ -816,7 +818,7 @@ angular.module('whoSmarter.services', [])
         var service = this;
 
         //Login
-        service.login = function (callbackOnSuccess, callbackOnError, permissions) {
+        service.login = function (callbackOnSuccess, callbackOnError, permissions, rerequestDeclinedPermissions) {
             if (window.cordova) {
                 window.cordova.exec(callbackOnSuccess, callbackOnError, "FacebookConnectPlugin", "login", permissions);
             }
@@ -824,7 +826,11 @@ angular.module('whoSmarter.services', [])
                 var permissionObject = {};
                 if (permissions && permissions.length > 0) {
                     permissionObject.scope = permissions.toString();
+                    if (rerequestDeclinedPermissions) {
+                        permissionObject.auth_type = "rerequest";
+                    }
                 }
+
                 ezfb.login(function (response) {
                     if (response.authResponse) {
                         callbackOnSuccess(response);

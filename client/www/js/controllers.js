@@ -129,7 +129,7 @@
         };
     })
 
-    .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, ChartService, $ionicTabsDelegate, UserService) {
+    .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, ChartService, $ionicTabsDelegate, UserService, $window, $location) {
 
         var tabs = ["app.tabs.myContests", "app.tabs.runningContests", "app.tabs.recentlyFinishedContests"];
 
@@ -157,7 +157,7 @@
             $scope.doRefresh();
         });
 
-        $scope.roundTabSwitch = function(viewName) {
+        $scope.roundTabSwitch = function (viewName) {
             $scope.roundTabState[0] = false;
             $rootScope.gotoView(viewName, false, {}, false, true);
         };
@@ -264,6 +264,10 @@
         };
 
         ChartService.setEvents($scope);
+
+        $scope.$on('$viewContentLoaded', function(event) {
+            FlurryAgent.logEvent("page-" + $state.current.name);
+        });
     })
 
     .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig, ContestsService) {
@@ -914,6 +918,7 @@
         });
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+fsdfsd
             if ($stateParams.mode) {
                 $scope.mode = $stateParams.mode;
                 if ($stateParams.mode == "edit") {
@@ -1155,7 +1160,7 @@
 
                     case "facebook":
                         if (result.data.status === "completed") {
-                            PaymentService.processPayment(method, result.data, null, function (serverPurchaseData) {
+                            PaymentService.processPayment(result.method, result.data, null, function (serverPurchaseData) {
                                 //Update local assets
                                 $scope.buyInProgress = false;
                                 PaymentService.showPurchaseSuccess(serverPurchaseData);
@@ -1321,7 +1326,7 @@
         }
     })
 
-    .controller("FriendsLeaderboardCtrl", function ($scope, $rootScope, LeaderboardService) {
+    .controller("FriendsLeaderboardCtrl", function ($scope, $rootScope, LeaderboardService, FacebookService) {
 
         $scope.roundTabState = [false, true, false];
 
@@ -1330,25 +1335,33 @@
 
             $scope.roundTabState[1] = true;
 
-            var config = {
-                "onServerErrors": {
-                    "SERVER_ERROR_MISSING_FRIENDS_PERMISSION": {"next": askFriendsPermissions, "confirm" : true}
-                }
-            };
-
-            LeaderboardService.getFriends(function(leaders) {
-                $scope.leaders = leaders;
-            }, null, config);
+            $scope.getFriends();
 
         });
 
-        $scope.roundTabSwitch = function(viewName) {
+        $scope.getFriends = function () {
+            var config = {
+                "onServerErrors": {
+                    "SERVER_ERROR_MISSING_FRIENDS_PERMISSION": {"next": askFriendsPermissions, "confirm": true}
+                }
+            };
+
+            LeaderboardService.getFriends(function (leaders) {
+                $scope.leaders = leaders;
+            }, null, config);
+        }
+
+        $scope.roundTabSwitch = function (viewName) {
             $scope.roundTabState[1] = false;
             $rootScope.gotoView(viewName, false, {}, false, true);
         };
 
         function askFriendsPermissions() {
-            alert("TBD - ask for friends permission")
+            FacebookService.login(function (response) {
+                    $scope.getFriends();
+                },
+                null,
+                $rootScope.settings.facebook.friendsPermissions, true);
         }
     })
 
@@ -1362,13 +1375,13 @@
 
             $scope.roundTabState[2] = true;
 
-            LeaderboardService.getWeeklyLeaders(function(leaders) {
+            LeaderboardService.getWeeklyLeaders(function (leaders) {
                 $scope.leaders = leaders;
             });
 
         });
 
-        $scope.roundTabSwitch = function(viewName) {
+        $scope.roundTabSwitch = function (viewName) {
             $scope.roundTabState[2] = false;
             $rootScope.gotoView(viewName, false, {}, false, true);
         };
@@ -1380,9 +1393,9 @@
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
         $scope.leaderboards = {
-                "all" : {"selected" : true, "teamId" : null},
-                "team0" : {"selected" : false, "teamId" : 0},
-                "team1" : {"selected" : false, "teamId" : 1},
+            "all": {"selected": true, "teamId": null},
+            "team0": {"selected": false, "teamId": 0},
+            "team1": {"selected": false, "teamId": 1},
         };
 
         $scope.selectLeaderboard = function (leaderboard) {
@@ -1391,7 +1404,7 @@
             $scope.leaderboards.team0.selected = (leaderboard === "team0");
             $scope.leaderboards.team1.selected = (leaderboard === "team1");
 
-            LeaderboardService.getContestLeaders($scope.contest._id, $scope.leaderboards[leaderboard].teamId, function(leaders) {
+            LeaderboardService.getContestLeaders($scope.contest._id, $scope.leaderboards[leaderboard].teamId, function (leaders) {
                 $scope.leaders = leaders;
             });
 

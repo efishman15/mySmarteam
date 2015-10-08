@@ -5,61 +5,95 @@ var exceptions = require('../utils/exceptions');
 var crypto = require('crypto');
 var generalUtils = require('../utils/general');
 var querystring = require("querystring");
+var request = require("request");
+
+//---------------------------------------------------------------------------------------------------------------------------------
+// private functions
+//
+//---------------------------------------------------------------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------------------------------------------------------------
 // facebookGet
 //
-// General function performing https GET for a graph apiI
+// Calls facebookApi with method get
 //---------------------------------------------------------------------------------------------------------------------------------
-function facebookGet(url, callback) {
+function facebookGet(url, params, callback) {
+    return facebookApi(url, params, "get", callback);
+}
 
-    facebookResponse = "";
+//---------------------------------------------------------------------------------------------------------------------------------
+// facebookPost
+//
+// Calls facebookApi with method post
+//---------------------------------------------------------------------------------------------------------------------------------
+function facebookPost(url, params, callback) {
+    return facebookApi(url, params, "post", callback);
+}
 
-    var req = https.get(url, function (res) {
+//---------------------------------------------------------------------------------------------------------------------------------
+// facebookApi
+//
+// General function performing https GET/POST for a graph api
+//---------------------------------------------------------------------------------------------------------------------------------
+function facebookApi(url, params, method, callback) {
 
-        res.setEncoding("utf8");
+    var facebookRequest;
+    switch (method) {
+        case "get" :
+            facebookRequest = request.get;
+            break;
+        case "post":
+            facebookRequest = request.post;
+            break;
 
-        res.on('data', function (chunk) {
-            facebookResponse += chunk;
-        });
+        default:
+            callback(new exceptions.ServerException("Unsupported method during faceboookApi", {
+                "url": url,
+                "params": params,
+                "method" : method
+            }));
 
-        res.on('end', function () {
+    }
 
-            var facebookData;
-            try {
-                facebookData = JSON.parse(facebookResponse);
-            }
-            catch(e) {
-                callback(new exceptions.ServerException("Error parsing facebookGet response", {
-                    "url" : url,
-                    "facebookResponse": facebookResponse
-                }));
-                return;
-            }
+    var requestObject = {"url" : url};
+    if (params) {
+        requestObject.qs = params;
+    }
 
-            if (facebookData.error) {
-                callback(new exceptions.ServerException("Error received from facebookGet", {
-                    "url" : url,
-                    "facebookResponse": facebookResponse,
-                    "error" : facebookData.error
-                }));
-                return;
-            }
+    facebookRequest(requestObject, function (err, resp, body) {
+        if (err) {
+            callback(new exceptions.ServerException("Error during request from facebookApi", {
+                "url": url,
+                "params": params,
+                "error": err
+            }));
+            return;
+        }
 
-            callback(facebookData);
+        var facebookData;
+        try {
+            facebookData = JSON.parse(body);
+        }
+        catch (e) {
+            callback(new exceptions.ServerException("Error parsing facebookApi response", {
+                "url": url,
+                "facebookResponse": body,
+                "error": e
+            }));
+            return;
+        }
 
-        });
+        if (facebookData.error) {
+            callback(new exceptions.ServerException("Error received from facebookApi", {
+                "url": url,
+                "facebookResponse": facebookResponse,
+                "error": facebookData.error
+            }));
+            return;
+        }
+
+        callback(facebookData);
     });
-
-    req.on("error", function (error) {
-        callback(new exceptions.ServerException("Error during request from facebookGet", {
-            "url" : url,
-            "error" : error
-        }));
-    });
-
-    req.end();
-
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -89,9 +123,13 @@ module.exports.getUserInfo = function (data, callback) {
         fields += ",payment_mobile_pricepoints,currency";
     }
 
-    var url = FACEBOOK_GRAPH_URL + "/me?fields=" + fields + "&access_token=" + data.user.thirdParty.accessToken;
+    var url = FACEBOOK_GRAPH_URL + "/me";
+    var params = {
+        "access_token" : data.user.thirdParty.accessToken,
+        "fields" : fields
+    }
 
-    facebookGet(url, function(facebookData) {
+    facebookGet(url, params, function (facebookData) {
 
         if (facebookData && facebookData.id) {
             if (facebookData.id === data.user.thirdParty.id) {
@@ -184,7 +222,7 @@ SignedRequest.prototype.base64decode = function (data) {
 //
 // data:
 // -----
-// input: paymentId
+// input: paymentId, purchaseData
 // output: paymentData, featurePurchased, facebookUserId
 //---------------------------------------------------------------------------------------------------------------------------------
 module.exports.getPaymentInfo = function (data, callback) {
@@ -193,9 +231,14 @@ module.exports.getPaymentInfo = function (data, callback) {
 
     var facebookResponse = "";
 
-    var url = FACEBOOK_GRAPH_URL + "/" + data.paymentId + "?fields=" + fields + "&access_token=" + generalUtils.settings.server.facebook.appAccessToken;
+    var url = FACEBOOK_GRAPH_URL + "/" + data.paymentId;
+    var params = {
+        "access_token" : generalUtils.settings.server.facebook.appAccessToken,
+        "fields" : fields
+    }
 
-    facebookGet(url, function(facebookData) {
+    facebookGet(url, params, function (facebookData) {
+
         //request_id in the format: "featureName|facebookUserId|timeStamp"
         var requestIdParts = facebookData.request_id.split("|");
 
@@ -273,59 +316,26 @@ module.exports.getPaymentInfo = function (data, callback) {
 //---------------------------------------------------------------------------------------------------------------------------------
 module.exports.denyDispute = function (data, callback) {
 
-    var fields = "id,actions,items,disputes,request_id";
-
     var facebookResponse = "";
 
-    var postData = querystring.stringify({
-            "access_token": generalUtils.settings.server.facebook.appAccessToken,
-            "reason": "DENIED_REFUND"
-        }
-    )
-
-    var options = {
-        host: FACEBOOK_GRAPH_DOMAIN,
-        port: 443,
-        path: data.paymentId + "/dispute",
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': postData.length
-        }
+    var url = FACEBOOK_GRAPH_URL + "/" + data.paymentId + "/dispute";
+    var params = {
+        "access_token": generalUtils.settings.server.facebook.appAccessToken,
+        "reason": "DENIED_REFUND"
     };
 
-    var req = https.request(options, function (res) {
+    facebookPost(url, params, function (facebookData) {
 
-        res.setEncoding("utf8");
+        if (!facebookData) {
+            callback(new exceptions.ServerException("Error recevied from facebook while disputing payment id", {
+                "paymentId": data.paymentId,
+                "facebookData": facebookData
+            }));
+        }
 
-        res.on('data', function (chunk) {
-            facebookResponse += chunk;
-        });
-
-        res.on('end', function () {
-
-            var facebookData = JSON.parse(facebookResponse);
-            if (!facebookData || !facebookData.success) {
-                callback(new exceptions.ServerException("Error recevied from facebook while disputing payment id", {
-                    "paymentId": data.paymentId,
-                    "facebookResponse": facebookResponse
-                }));
-            }
-
-            callback(null, data);
-        });
+        callback(null, data);
     });
 
-    req.on("error", function (error) {
-        callback(new exceptions.ServerException("Error recevied from facebook while disputing payment id", {
-            "paymentId": data.paymentId,
-            "error": error
-        }));
-    });
-
-    req.write(postData);
-
-    req.end();
 };
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -349,7 +359,7 @@ function getUserFriends(data, callback) {
         data.url = FACEBOOK_GRAPH_URL + "/me/friends" + "?limit=" + generalUtils.settings.server.facebook.friendsPageSize + "&offset=0&access_token=" + data.session.facebookAccessToken;
     }
 
-    facebookGet(data.url, function(facebookData) {
+    facebookGet(data.url, null, function (facebookData) {
 
         if (!facebookData.data) {
             callback(new exceptions.ServerException("Unable to retrieve user friends", {
@@ -360,8 +370,8 @@ function getUserFriends(data, callback) {
         }
 
         if (facebookData.data.length > 0) {
-            for(var i=0; i<facebookData.data.length; i++) {
-                var friend = {"id" : "" + facebookData.data[i].id, "name" : facebookData.data[i].name}
+            for (var i = 0; i < facebookData.data.length; i++) {
+                var friend = {"id": "" + facebookData.data[i].id, "name": facebookData.data[i].name}
                 data.friends.push(friend);
             }
             if (facebookData.data.length < generalUtils.settings.server.facebook.friendsPageSize) {
@@ -378,12 +388,16 @@ function getUserFriends(data, callback) {
         else {
             //Possibly lack of permission - check if user_friends permission has been declined
             if (data.friends.length === 0) {
-                var url = FACEBOOK_GRAPH_URL + "/me/permissions/user_friends?access_token=" + data.session.facebookAccessToken;
-                facebookGet(url, function(facebookData) {
-                   if (!facebookData.data || facebookData.data.length === 0 || facebookData.data[0].status === "declined") {
-                       callback(new exceptions.ServerMessageException("SERVER_ERROR_MISSING_FRIENDS_PERMISSION"));
-                       return;
-                   }
+                var url = FACEBOOK_GRAPH_URL + "/me/permissions/user_friends";
+                var params = {
+                    "access_token" : data.session.facebookAccessToken
+                }
+
+                facebookGet(url, params, function (facebookData) {
+                    if (!facebookData.data || facebookData.data.length === 0 || facebookData.data[0].status === "declined") {
+                        callback(new exceptions.ServerMessageException("SERVER_ERROR_MISSING_FRIENDS_PERMISSION"));
+                        return;
+                    }
                 });
             }
             else {

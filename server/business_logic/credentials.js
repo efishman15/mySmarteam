@@ -11,6 +11,7 @@ var sessionUtils = require("./session");
 function getSessionResponse(session) {
     return {
         "token": session.userToken,
+        "userId" : session.userId,
         "thirdParty": {"id": session.facebookUserId, "accessToken": session.facebookAccessToken, "type": "facebook"},
         "isAdmin": session.isAdmin,
         "avatar": session.avatar,

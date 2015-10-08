@@ -4,10 +4,10 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'angular-google-analytics', 'ezfb', 'ionic-datepicker','angular-storage','ngCordova'])
+angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'ezfb', 'ionic-datepicker', 'angular-storage', 'ngCordova'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
-    .run(function ($ionicPlatform, $rootScope, $state, PopupService) {
+    .run(function ($ionicPlatform, $rootScope) {
         $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -46,15 +46,17 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                             showLog: true
                         }
                         ,
-                        ["productId1", "productId2", "productId3"]
+                        []
                     );
                 }
+
+                FlurryAgent.setDebugLogEnabled(true);
+                FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
             }
         );
     })
 
-    .
-    config(function ($httpProvider, $translateProvider) {
+    .config(function ($httpProvider, $translateProvider) {
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
@@ -88,54 +90,50 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 // Module default is `v2.0`.
                 // If you want to use Facebook platform `v2.3`, you'll have to add the following parameter.
                 // https://developers.facebook.com/docs/javascript/reference/FB.init
-                version: 'v2.4'
+                version: 'v2.5'
             });
         }
     })
 
-    /*
-     .config(function (AnalyticsProvider) {
-     // Set analytics account
-     AnalyticsProvider.setAccount('UA-66555929-1');
+    .config(function ($provide) {
 
-     // Track all routes (or not)
-     AnalyticsProvider.trackPages(true);
+        $provide.decorator("$exceptionHandler", function ($delegate, $injector) {
+            return function (exception, cause) {
+                FlurryAgent.logError("UnhandledException", exception.stack + ", cause: " + cause);
+            };
+        });
+    })
 
-     // Track all URL query params (default is false)
-     AnalyticsProvider.trackUrlParams(true);
+    /*.config(function (AnalyticsProvider) {
+        // Set analytics account
+        AnalyticsProvider.setAccount('UA-66555929-1');
 
-     // Use display features plugin
-     AnalyticsProvider.useDisplayFeatures(true);
+        // Track all routes (or not)
+        AnalyticsProvider.trackPages(true);
 
-     // Use analytics.js instead of ga.js
-     AnalyticsProvider.useAnalytics(true);
+        // Track all URL query params (default is false)
+        AnalyticsProvider.trackUrlParams(true);
 
-     // Ignore first page view... helpful when using hashes and whenever your bounce rate looks obscenely low.
-     AnalyticsProvider.ignoreFirstPageLoad(true);
+        // Use display features plugin
+        AnalyticsProvider.useDisplayFeatures(true);
 
-     // Enable enhanced link attribution
-     AnalyticsProvider.useEnhancedLinkAttribution(true);
+        // Use analytics.js instead of ga.js
+        AnalyticsProvider.useAnalytics(true);
 
-     // Set custom cookie parameters for analytics.js
-     AnalyticsProvider.setCookieConfig({
-     cookieDomain: 'whosmarter.com',
-     cookieName: 'whoSmarterAnalytics',
-     cookieExpires: 20000
-     });
+        // Ignore first page view... helpful when using hashes and whenever your bounce rate looks obscenely low.
+        AnalyticsProvider.ignoreFirstPageLoad(true);
 
-     // Change page event name
-     AnalyticsProvider.setPageEvent('$stateChangeSuccess');
+        // Enable enhanced link attribution
+        AnalyticsProvider.useEnhancedLinkAttribution(true);
 
-     // Delay script tag creation
-     // must manually call Analytics.createScriptTag(cookieConfig) or Analytics.createAnalyticsScriptTag(cookieConfig)
-     AnalyticsProvider.delayScriptTag(true);
-     })
+        // Change page event name
+        AnalyticsProvider.setPageEvent('$stateChangeSuccess');
 
-     .run(function (Analytics) {
-     // In case you are relying on automatic page tracking, you need to inject Analytics
-     // at least once in your application (for example in the main run() block)
-     })
-     */
+        // Delay script tag creation
+        // must manually call Analytics.createScriptTag(cookieConfig) or Analytics.createAnalyticsScriptTag(cookieConfig)
+        AnalyticsProvider.delayScriptTag(true);
+    })*/
+
     .config(function ($translateProvider) {
         $translateProvider.useSanitizeValueStrategy('escaped');
         $translateProvider.useStaticFilesLoader({
@@ -343,7 +341,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             .state('app.tabs.myContests', {
                 url: '/myContests',
-                params : {userClick : null},
+                params: {userClick: null},
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "myContests");
@@ -355,7 +353,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab": "mine", "showPlay": true, "showParticipants": false, title : "MY_CONTESTS"}
+                appData: {"serverTab": "mine", "showPlay": true, "showParticipants": false, title: "MY_CONTESTS"}
             })
 
             .state('app.tabs.runningContests', {
@@ -371,7 +369,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab": "running", "showPlay": true, "showParticipants": false, title : "RUNNING_CONTESTS"}
+                appData: {
+                    "serverTab": "running",
+                    "showPlay": true,
+                    "showParticipants": false,
+                    title: "RUNNING_CONTESTS"
+                }
             })
 
             .state('app.tabs.recentlyFinishedContests', {
@@ -387,7 +390,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         controller: 'ContestsCtrl'
                     }
                 },
-                appData: {"serverTab": "recentlyFinished", "showPlay": false, "showParticipants": true, title : "LEADERBOARDS"}
+                appData: {
+                    "serverTab": "recentlyFinished",
+                    "showPlay": false,
+                    "showParticipants": true,
+                    title: "LEADERBOARDS"
+                }
             })
 
             .state('app.tabs.friendsLeaderboard', {

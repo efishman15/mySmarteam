@@ -129,7 +129,6 @@ dalDb.loadSettings(function (err, data) {
     https.createServer(certificate, app).listen(443);
 
     console.log("server up!");
-
 })
 
 
