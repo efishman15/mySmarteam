@@ -415,7 +415,7 @@ module.exports.facebookLogin = function (data, callback) {
             {
                 $set: {
                     "lastLogin": now,
-                    "facebookAccessToken" : data.user.thirdParty.accessToken,
+                    "facebookAccessToken": data.user.thirdParty.accessToken,
                     "name": data.user.name,  //keep sync with Facebook changes
                     "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
                     "ageRange": data.user.ageRange, //keep sync with Facebook changes
@@ -680,24 +680,30 @@ function prepareQuestionCriteria(data, callback) {
     var questionLevel = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex];
 
     var questionCriteria = {
-        "_id": {"$nin": data.session.quiz.serverData.previousQuestions},
-        "topicId": {"$in": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]},
-        "$or" : [
-            {"correctAnswers" : 0, "wrongAnswers" : 0},
-            {"$and" : [
-                {"correctRatio" : {$gte : questionLevel.minCorrectRatio}},
-                {"correctRatio" : {$lt : questionLevel.maxCorrectRatio}}
-            ]}]
+        "$and": [
+            {"_id": {"$nin": data.session.quiz.serverData.previousQuestions}},
+            {"topicId": {"$in": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]}},
+            {
+                "$or": [
+                    {"correctAnswers": 0, "wrongAnswers": 0},
+                    {
+                        "$and": [
+                            {"correctRatio": {$gte: questionLevel.minCorrectRatio}},
+                            {"correctRatio": {$lt: questionLevel.maxCorrectRatio}}
+                        ]
+                    }]
+            }
+        ]
     };
 
     //Filter by age if available
     if (data.session.ageRange) {
         if (data.session.ageRange.min) {
-            questionCriteria.minAge = {$lte: data.session.ageRange.min}
+            questionCriteria["$and"].push({"minAge" : {$lte: data.session.ageRange.min}});
         }
 
         if (data.session.ageRange.max) {
-            questionCriteria.maxAge = {$gte: data.session.ageRange.max}
+            questionCriteria["$and"].push({"maxAge" : {$gte: data.session.ageRange.max}});
         }
     }
 
@@ -757,7 +763,7 @@ function getNextQuestion(data, callback) {
             return;
         }
 
-        if (data.session.quiz.clientData.totalQuestions === (data.session.quiz.clientData.currentQuestionIndex+1)) {
+        if (data.session.quiz.clientData.totalQuestions === (data.session.quiz.clientData.currentQuestionIndex + 1)) {
             data.session.quiz.clientData.finished = true;
         }
 
