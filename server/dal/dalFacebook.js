@@ -77,7 +77,7 @@ function facebookApi(url, params, method, callback) {
         catch (e) {
             callback(new exceptions.ServerException("Error parsing facebookApi response", {
                 "url": url,
-                "facebookResponse": body,
+                "body": body,
                 "error": e
             }));
             return;
@@ -86,8 +86,7 @@ function facebookApi(url, params, method, callback) {
         if (facebookData.error) {
             callback(new exceptions.ServerException("Error received from facebookApi", {
                 "url": url,
-                "facebookResponse": facebookResponse,
-                "error": facebookData.error
+                "facebookData": facebookData
             }));
             return;
         }

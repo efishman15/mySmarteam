@@ -154,6 +154,8 @@
 
             $scope.roundTabState[0] = true;
 
+            FlurryAgent.logEvent("page-" + $state.current.name);
+
             $scope.doRefresh();
         });
 
@@ -265,12 +267,9 @@
 
         ChartService.setEvents($scope);
 
-        $scope.$on('$viewContentLoaded', function(event) {
-            FlurryAgent.logEvent("page-" + $state.current.name);
-        });
     })
 
-    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig, ContestsService) {
+    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig, ContestsService, $timeout) {
 
         $scope.mode = "quiz";
 
@@ -648,6 +647,9 @@
 
                 $scope.contestCharts = [ContestsService.prepareContestChart($scope.quiz.results.contest, 0)];
                 $scope.mode = "results";
+                $timeout(function() {
+                    SoundService.play($scope.quiz.results.sound);
+                },1000)
             }
             else {
                 $scope.nextQuestion();

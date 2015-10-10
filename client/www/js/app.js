@@ -50,7 +50,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     );
                 }
 
-                FlurryAgent.setDebugLogEnabled(true);
+                //FlurryAgent.setDebugLogEnabled(true);
                 FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
             }
         );
@@ -99,7 +99,9 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
         $provide.decorator("$exceptionHandler", function ($delegate, $injector) {
             return function (exception, cause) {
-                FlurryAgent.logError("UnhandledException", exception.stack + ", cause: " + cause);
+                var message = exception.stack + ", cause: " + cause;
+                message = message.substring(0,255);
+                FlurryAgent.logError("UnhandledException", message, 0);
             };
         });
     })
