@@ -410,6 +410,10 @@
             }
         });
 
+        $scope.$on('$ionicView.beforeLeave', function () {
+            $scope.mode = "quiz";
+        });
+
         $scope.playAgain = function () {
             startQuiz();
         };
