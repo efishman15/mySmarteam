@@ -276,7 +276,6 @@
         var quizCanvas;
         var quizContext;
         if (!quizCanvas) {
-            quizCanvas = angular.element(document.querySelector("#quizCanvas"));
             quizCanvas = document.getElementById("quizCanvas");
             quizContext = quizCanvas.getContext("2d");
             quizContext.font = $rootScope.settings.quiz.canvas.font;
@@ -412,6 +411,7 @@
 
         $scope.$on('$ionicView.afterLeave', function () {
             $scope.mode = "quiz";
+            clearQuizScores();
         });
 
         $scope.playAgain = function () {
@@ -424,7 +424,6 @@
 
         function drawQuizProgress() {
 
-            quizCanvas.width = quizCanvas.clientWidth;
             quizContext.beginPath();
             quizContext.moveTo(0, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset);
             quizContext.lineTo(quizCanvas.width, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset);
@@ -533,11 +532,15 @@
 
         };
 
-        function drawQuizScores() {
-
+        function clearQuizScores() {
             quizContext.beginPath();
             quizContext.clearRect(0, 0, quizCanvas.width, $rootScope.settings.quiz.canvas.scores.top);
             quizContext.closePath();
+        }
+
+        function drawQuizScores() {
+
+            clearQuizScores();
 
             var currentX;
             if ($rootScope.settings.languages[$rootScope.user.settings.language].direction === "ltr") {
@@ -629,7 +632,7 @@
             });
         }
 
-        $scope.questionAnimationEnd = function () {
+        $scope.questionTransitionEnd = function () {
             $scope.quiz.currentQuestion.animation = false; //Animation end will trigger quiz proceed
         }
 
@@ -999,12 +1002,12 @@
                                     }
                                 },
                                 function (error) {
-                                    console.log("Error retrieving unconsumed items: " + error);
+                                    FlurryAgent.mylogError("AndroidBillingError", "Error retrieving unconsumed items: " + error);
                                 });
 
                         },
                         function (msg) {
-                            console.log("error getting product details: " + msg);
+                            FlurryAgent.mylogError("AndroidBillingError", "Error getting product details: " + msg);
                         }, $rootScope.session.features.newContest.purchaseData.productId);
 
 
@@ -1224,7 +1227,7 @@
                         PaymentService.showPurchaseSuccess(serverPurchaseData);
                     }, function (error) {
                         $ionicLoading.hide();
-                        console.log("Error consuming product: " + error)
+                        FlurryAgent.myLogError("AndroidBilling", "Error consuming product: " + error);
                     },
                     purchaseData.productId);
             });

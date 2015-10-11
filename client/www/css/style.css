@@ -97,9 +97,13 @@ label.item.valid-lr {
 }
 
 .question-text {
+    width: 640px;
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
 }
 
 .translate-cloak {

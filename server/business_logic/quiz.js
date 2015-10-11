@@ -420,6 +420,7 @@ module.exports.answer = function (req, res, next) {
 //--------------------------------------------------------------------------
 module.exports.nextQuestion = function (req, res, next) {
     var token = req.headers.authorization;
+
     var data = {};
     var operations = [
 

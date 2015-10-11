@@ -855,7 +855,7 @@ angular.module('whoSmarter.services', [])
                     });
                 } catch (error) {
                     if (!callbackOnError) {
-                        console.error(error.message);
+                        FlurryAgent.myLogError("ezfbError", "Error getting login status: " + error.message);
                     } else {
                         callbackOnError(error.message);
                     }
@@ -1002,7 +1002,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Chart Service
-    .factory('XpService', function ($rootScope) {
+    .factory('XpService', function ($rootScope, $window) {
 
         //----------------------------------------------
         // Service Variables
@@ -1101,15 +1101,12 @@ angular.module('whoSmarter.services', [])
 
             var startPoint = $rootScope.session.xpProgress.current / $rootScope.session.xpProgress.max;
 
-            if (requestAnimationFrame) {
-
-                //Occurs after xp has already been added to the session
-                for (var i = 1; i <= xpProgress.addition; i++) {
-                    requestAnimationFrame(function () {
-                        var endPoint = ($rootScope.session.xpProgress.current + i) / $rootScope.session.xpProgress.max;
-                        animateXpAddition(startPoint, endPoint, service.quarter, service.circle);
-                    })
-                }
+            //Occurs after xp has already been added to the session
+            for (var i = 1; i <= xpProgress.addition; i++) {
+                myRequestAnimationFrame(function () {
+                    var endPoint = ($rootScope.session.xpProgress.current + i) / $rootScope.session.xpProgress.max;
+                    animateXpAddition(startPoint, endPoint, service.quarter, service.circle);
+                })
             }
 
             //Add the actual xp to the client side

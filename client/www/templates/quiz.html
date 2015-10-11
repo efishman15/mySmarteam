@@ -4,15 +4,17 @@
 
         <div id="quiz" ng-show="mode==='quiz'">
 
-            <canvas id="quizCanvas" height="{{$root.settings.quiz.canvas.height}}" class="quizCanvas" ng-click="canvasClick($event)">
+            <canvas id="quizCanvas" width="{{$root.settings.quiz.canvas.width}}" height="{{$root.settings.quiz.canvas.height}}" class="quizCanvas" ng-click="canvasClick($event)">
             </canvas>
 
             <div dir="{{quiz.currentQuestion.direction}}"
-                 animationend="questionAnimationEnd"
+                 mytransitionend="questionTransitionEnd"
                  ng-class="{'questionAnimationLtr' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
                         'questionAnimationRtl' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}">
 
-                <h2 class="center question-text" ng-bind-html="quiz.currentQuestion.text"></h2>
+                <div class="question-text" >
+                    <span ng-bind-html="quiz.currentQuestion.text"></span>
+                </div>
 
                 <div class="list padding">
                     <button id="buttonAnswer{{answer.id}}"

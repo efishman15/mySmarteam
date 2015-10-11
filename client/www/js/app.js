@@ -50,8 +50,23 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     );
                 }
 
+                FlurryAgent.myLogError = function(errorType, message) {
+                    FlurryAgent.logError(errorType.substring(0,255), message.substring(0,255), 0);
+                }
+
                 //FlurryAgent.setDebugLogEnabled(true);
                 FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
+
+                // Fallback where requestAnimationFrame or its equivalents are not supported in the current browser
+                window.myRequestAnimationFrame = (function(){
+                    return window.requestAnimationFrame    ||
+                        window.webkitRequestAnimationFrame ||
+                        window.mozRequestAnimationFrame    ||
+                        function( callback ){
+                            window.setTimeout(callback, 1000 / 60);
+                        };
+                })();
+
             }
         );
     })
@@ -99,42 +114,10 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
         $provide.decorator("$exceptionHandler", function ($delegate, $injector) {
             return function (exception, cause) {
-                var message = exception.stack + ", cause: " + cause;
-                message = message.substring(0,255);
-                FlurryAgent.logError("UnhandledException", message, 0);
+                FlurryAgent.myLogError("UnhandledException", exception.stack + ", cause: " + cause, 0);
             };
         });
     })
-
-    /*.config(function (AnalyticsProvider) {
-        // Set analytics account
-        AnalyticsProvider.setAccount('UA-66555929-1');
-
-        // Track all routes (or not)
-        AnalyticsProvider.trackPages(true);
-
-        // Track all URL query params (default is false)
-        AnalyticsProvider.trackUrlParams(true);
-
-        // Use display features plugin
-        AnalyticsProvider.useDisplayFeatures(true);
-
-        // Use analytics.js instead of ga.js
-        AnalyticsProvider.useAnalytics(true);
-
-        // Ignore first page view... helpful when using hashes and whenever your bounce rate looks obscenely low.
-        AnalyticsProvider.ignoreFirstPageLoad(true);
-
-        // Enable enhanced link attribution
-        AnalyticsProvider.useEnhancedLinkAttribution(true);
-
-        // Change page event name
-        AnalyticsProvider.setPageEvent('$stateChangeSuccess');
-
-        // Delay script tag creation
-        // must manually call Analytics.createScriptTag(cookieConfig) or Analytics.createAnalyticsScriptTag(cookieConfig)
-        AnalyticsProvider.delayScriptTag(true);
-    })*/
 
     .config(function ($translateProvider) {
         $translateProvider.useSanitizeValueStrategy('escaped');
@@ -234,6 +217,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             .state('app.quiz', {
                 url: "/quiz",
+                cache: false,
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "quiz");
@@ -468,8 +452,24 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
             },
             link: function (scope, element) {
                 var callback = scope.animationend(),
-                    events = 'animationend webkitAnimationEnd MSAnimationEnd' +
-                        'transitionend webkitTransitionEnd';
+                    events = 'animationend webkitAnimationEnd MSAnimationEnd';
+
+                element.on(events, function (event) {
+                    callback.call(element[0], element[0], event);
+                });
+            }
+        };
+    })
+
+    .directive('mytransitionend', function () {
+        return {
+            restrict: 'A',
+            scope: {
+                mytransitionend: '&'
+            },
+            link: function (scope, element) {
+                var callback = scope.mytransitionend(),
+                    events = 'animationend webkitAnimationEnd MSAnimationEnd' + 'transitionend webkitTransitionEnd';
 
                 element.on(events, function (event) {
                     callback.call(element[0], element[0], event);
