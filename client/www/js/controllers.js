@@ -31,6 +31,7 @@
         });
 
         $scope.openNewRankModal = function () {
+            FlurryAgent.logEvent("newRank", {"rank" : "" + $rootScope.session.rank})
             $scope.newRankModal.show();
         };
 
@@ -54,16 +55,6 @@
             }
         });
 
-        $rootScope.$on("whoSmarter-rankChanged", function (error, data) {
-
-            SoundService.play("audio/finish_great_1");
-            $scope.xpProgress = data.xpProgress;
-            $scope.callbackAfterModal = data.callback;
-
-            $scope.openNewRankModal();
-
-        });
-
         $scope.canvas = document.createElement("canvas");
         $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
         $scope.canvas.height = $rootScope.settings.xpControl.canvas.height;
@@ -83,13 +74,14 @@
                 $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
             }
             else {
+                FlurryAgent.logEvent("menu/open")
                 $scope.canvas.className = "menu-xp-menu-open";
             }
         });
 
     })
 
-    .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, ScreenService) {
+    .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, ScreenService, StoreService) {
 
         ScreenService.resizeCanvas();
 
@@ -153,8 +145,6 @@
             viewData.enableBack = false;
 
             $scope.roundTabState[0] = true;
-
-            FlurryAgent.logEvent("page-" + $state.current.name);
 
             $scope.doRefresh();
         });
@@ -258,9 +248,11 @@
 
         $scope.playContest = function (contest) {
             if (contest.myTeam == 0 || contest.myTeam == 1) {
+                FlurryAgent.logEvent("contest/playContest/click", {"contestId" : contest._id, "team" : "" + contest.myTeam});
                 $rootScope.gotoView("app.quiz", false, {contestId: contest._id});
             }
             else {
+                FlurryAgent.logEvent("contest/playContestWithoutJoining/click", {"contestId" : contest._id});
                 PopupService.alert({"type": "SERVER_ERROR_NOT_JOINED_TO_CONTEST"});
             }
         };
@@ -296,6 +288,7 @@
 
         $scope.openQuestionInfoModal = function () {
             $rootScope.preventBack = true;
+            FlurryAgent.logEvent("quiz/showQuestionInfo", {"question" : "" + ($scope.quiz.currentQuestionIndex + 1)});
             $scope.questionInfoModal.show();
         };
 
@@ -597,6 +590,7 @@
 
             QuizService.start($stateParams.contestId, $stateParams.teamId,
                 function (data) {
+                    FlurryAgent.logEvent("quiz/started");
                     $scope.quiz = data.quiz;
                     $scope.questionHistory = [];
                     for (var i = 0; i < data.quiz.totalQuestions; i++) {
@@ -626,6 +620,7 @@
         $scope.nextQuestion = function () {
             QuizService.nextQuestion(function (data) {
                 $scope.quiz = data;
+                FlurryAgent.logEvent("quiz/gotQuestion" +  ($scope.quiz.currentQuestionIndex+1));
                 $scope.quiz.currentQuestion.answered = false;
                 $scope.quiz.currentQuestion.animation = true; //Animation end will trigger quiz proceed
                 drawQuizProgress();
@@ -653,6 +648,14 @@
                 $rootScope.session.score += $scope.quiz.results.score;
 
                 $scope.contestCharts = [ContestsService.prepareContestChart($scope.quiz.results.contest, 0)];
+
+                FlurryAgent.logEvent("quiz/finished",
+                    {
+                        "score" : "" + $scope.quiz.results.score,
+                        "title" : $scope.quiz.results.title,
+                        "message" : $scope.quiz.results.message
+                    });
+
                 $scope.mode = "results";
                 $timeout(function() {
                     SoundService.play($scope.quiz.results.sound);
@@ -708,11 +711,15 @@
                     }
 
                     if (data.question.correct) {
+
+                        FlurryAgent.logEvent("quiz/question" +  ($scope.quiz.currentQuestionIndex+1) + "/answered/correct");
+
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
                         SoundService.play("audio/click_ok");
                     }
                     else {
+                        FlurryAgent.logEvent("quiz/question" +  ($scope.quiz.currentQuestionIndex+1) + "/answered/incorrect");
                         SoundService.play("audio/click_wrong");
                         correctAnswerId = data.question.correctAnswerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
@@ -1101,6 +1108,21 @@
                 ContestsService.setContest($scope.localViewData, $stateParams.mode,
                     function (contest) {
                         //Raise event - so the contest graph can be refreshed without going to the server again
+
+                        //Report to Flurry
+                        var contestParams = {
+                            "team0" : contest.teams[0].name,
+                            "team1" : contest.teams[1].name,
+                            "duration" : contest.endOption
+                        };
+
+                        if ($stateParams.mode === "add") {
+                            FlurryAgent.logEvent("contest/created", contestParams);
+                        }
+                        else {
+                            FlurryAgent.logEvent("contest/updated", contestParams);
+                        }
+
                         $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
                         $rootScope.goBack();
                     }, function (status, error) {
@@ -1408,6 +1430,8 @@
         };
 
         $scope.selectLeaderboard = function (leaderboard) {
+
+            FlurryAgent.logEvent("contest/participants/leaderboard/" + leaderboard);
 
             $scope.leaderboards.all.selected = (leaderboard === "all");
             $scope.leaderboards.team0.selected = (leaderboard === "team0");

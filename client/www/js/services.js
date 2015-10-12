@@ -136,6 +136,13 @@ angular.module('whoSmarter.services', [])
 
                     FlurryAgent.setUserId(session.userId);
 
+                    if (session.justRegistered) {
+                        FlurryAgent.logEvent("server/register");
+                    }
+                    else {
+                        FlurryAgent.logEvent("server/login");
+                    }
+
                     callbackOnSuccess(session);
                 },
                 function (status, data) {
@@ -932,7 +939,7 @@ angular.module('whoSmarter.services', [])
         //----------------------------------------------
         var service = this;
 
-        function teamClicked(scope, dataSource, teamId) {
+        function teamClicked(scope, dataSource, teamId, sourceClick) {
             var serverTeamId = teamId;
             if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "rtl") {
                 serverTeamId = 1 - teamId; //In RTL - the teams are presented backwards
@@ -940,6 +947,14 @@ angular.module('whoSmarter.services', [])
 
             //Show effect of joining the team on the client side before entering the quiz
             if (dataSource.contest.myTeam == null || dataSource.contest.myTeam != serverTeamId) {
+
+                if (dataSource.contest.myTeam == null) {
+                    FlurryAgent.logEvent("contest/join", {"contestId" : dataSource.contest._id, "team" : "" + serverTeamId, "sourceClick" : sourceClick});
+                }
+                else {
+                    FlurryAgent.logEvent("contest/teamSwitch", {"contestId" : dataSource.contest._id, "team" : "" + serverTeamId, "sourceClick" : sourceClick});
+                }
+
                 dataSource.contest.myTeam = serverTeamId;
 
                 scope.$apply(function () {
@@ -950,6 +965,7 @@ angular.module('whoSmarter.services', [])
                 });
             }
             else {
+                FlurryAgent.logEvent("contest/playMyTeam", {"contestId" : dataSource.contest._id, "team" : "" + serverTeamId, "sourceClick" : sourceClick});
                 $rootScope.gotoView("app.quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
             }
         }
@@ -958,20 +974,22 @@ angular.module('whoSmarter.services', [])
         service.setEvents = function (scope) {
 
             scope.$on("whoSmarter-teamClicked", function (error, data) {
-                teamClicked(scope, data.dataSource, data.teamId)
+                teamClicked(scope, data.dataSource, data.teamId, data.sourceClick)
             });
 
             scope.fcEvents = {
                 "dataplotClick": function (eventObj, dataObj) {
                     scope.$broadcast("whoSmarter-teamClicked", {
                         "dataSource": eventObj.sender.args.dataSource,
-                        "teamId": dataObj.dataIndex
+                        "teamId": dataObj.dataIndex,
+                        "sourceClick" : "bar"
                     });
                 },
                 "dataLabelClick": function (eventObj, dataObj) {
                     scope.$broadcast("whoSmarter-teamClicked", {
                         "dataSource": eventObj.sender.args.dataSource,
-                        "teamId": dataObj.dataIndex
+                        "teamId": dataObj.dataIndex,
+                        "sourceClick" : "label"
                     });
                 },
                 "annotationClick": function (eventObj, dataObj) {

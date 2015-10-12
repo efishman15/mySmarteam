@@ -188,3 +188,84 @@ function getFriends(data, callback) {
         callback(null, data);
     });
 }
+
+//---------------------------------------------------------------------------------------------------------------------------
+// getFriendsAboveMe
+//
+// getFriendsAboveMe - returns x (based on general settings) friends above me in the leaderboard
+//
+// data: session
+// output: data.friendsAboveMe array
+//---------------------------------------------------------------------------------------------------------------------------
+module.exports.getFriendsAboveMe = getFriendsAboveMe;
+function getFriendsAboveMe(data, callback) {
+
+    var options = {
+        "withMemberData": true,
+        "sortBy": "rank",
+        "pageSize": generalUtils.settings.server.leaderboard.friendsAboveMePageSize
+    };
+
+    data.friendsAboveMe = [];
+
+    generalLeaderboard.aroundMe(data.session.facebookUserId, options, function (leaders) {
+        if (leaders && leaders.length > 0) {
+
+            //I will be in that list as the last one - all my friends that are above me - will be first in the array)
+            for(var i=0; i<leaders.length; i++) {
+                data.friendsAboveMe.push(prepareLeaderObject(i, leaders[i]));
+                if (leaders[i].member === data.session.facebookUserId) {
+                    break;
+                }
+            }
+        }
+
+        callback(null, data);
+
+    });
+};
+
+//---------------------------------------------------------------------------------------------------------------------------
+// getPassedFriends
+//
+// getPassedFriends - returns all the friends that I passed (in relation to data.friendsAboveMe)
+//
+// data: session, friendsAboveMe (friends that previously were above me - I will be last in this array)
+// output: data.passedFriends array
+//---------------------------------------------------------------------------------------------------------------------------
+module.exports.getPassedFriends = getPassedFriends;
+function getPassedFriends(data, callback) {
+
+    var options = {
+        "withMemberData": true,
+        "sortBy": "rank",
+        "pageSize": data.friendsAboveMe.length
+    };
+
+    data.passedFriends = [];
+
+    var members = [];
+    for (var i = 0; i < data.friendsAboveMe.length; i++) {
+        members.push(data.friendsAboveMe[i].id);
+    }
+
+    generalLeaderboard.rankedInList(members, options, function (leaders) {
+        var reachedMyself = false;
+        var friendsAfterMe = 0;
+
+        for (var i = 0; i < leaders.length; i++) {
+
+            if (reachedMyself) {
+                data.passedFriends.push(friendsAfterMe, prepareLeaderObject(friendsAfterMe, leaders[i]))
+                friendsAfterMe++;
+            }
+            else if (leaders[i].member === data.session.facebookUserId) {
+                reachedMyself = true;
+            }
+        }
+
+        callback(null, data);
+    });
+
+};
+

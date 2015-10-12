@@ -89,6 +89,7 @@ function register(data, callback) {
             }
 
             data.user = newUser;
+            data.user.justRegistered = true; //does not need to be in db - just returned back to the client
 
             //restore avatar - computed field
             data.user.avatar = avatar;
@@ -481,26 +482,31 @@ module.exports.createOrUpdateSession = function (data, callback) {
     var now = new Date();
     var nowEpoch = now.getTime();
 
+    var setObject = {
+        "userId": ObjectId(data.user._id),
+        "facebookUserId": data.user.facebookUserId,
+        "isAdmin": data.user.isAdmin,
+        "facebookAccessToken": data.user.facebookAccessToken,
+        "name": data.user.name,
+        "ageRange": data.user.ageRange,
+        "avatar": data.user.avatar,
+        "created": nowEpoch,
+        "expires": new Date(nowEpoch + generalUtils.settings.server.db.sessionExpirationMilliseconds), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
+        "userToken": userToken,
+        "settings": data.user.settings,
+        "score": data.user.score,
+        "xp": data.user.xp,
+        "rank": data.user.rank,
+        "features": data.features,
+        "clientInfo": data.user.clientInfo
+    };
+    if (data.user.justRegistered) {
+        setObject.justRegistered = true;
+    }
+
     sessionsCollection.findAndModify({"userId": ObjectId(data.user._id)}, {},
         {
-            $set: {
-                "userId": ObjectId(data.user._id),
-                "facebookUserId": data.user.facebookUserId,
-                "isAdmin": data.user.isAdmin,
-                "facebookAccessToken": data.user.facebookAccessToken,
-                "name": data.user.name,
-                "ageRange": data.user.ageRange,
-                "avatar": data.user.avatar,
-                "created": nowEpoch,
-                "expires": new Date(nowEpoch + generalUtils.settings.server.db.sessionExpirationMilliseconds), //must be without getTime() since db internally removes by TTL - and ttl works only when it is actual date and not epoch
-                "userToken": userToken,
-                "settings": data.user.settings,
-                "score": data.user.score,
-                "xp": data.user.xp,
-                "rank": data.user.rank,
-                "features": data.features,
-                "clientInfo": data.user.clientInfo
-            }
+            $set: setObject,
         }, {upsert: true, new: true}, function (err, session) {
 
             if (err) {

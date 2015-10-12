@@ -34,7 +34,8 @@
                         </button>
                         <button class="item button button-stable button-small nowrapText button-3d button-3d-assertive"
                                 ng-show="showContestParticipants()"
-                                ng-click="$root.gotoView('contestParticipants', false, {contest : contestChart.contest})">
+                                ng-click="$root.gotoView('contestParticipants', false, {contest : contestChart.contest})"
+                                analytics-on="click" analytics-event="contest/participants/buttonClick">
                             {{'CONTEST_LEADERS' | translate}}
                         </button>
                     </div>
@@ -44,7 +45,8 @@
                            ng-class="{'contests-avatar-leader-ltr' : $root.settings.languages[$root.user.settings.language].direction === 'ltr', 'contests-avatar-leader-rtl' :  $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
                            ng-src="{{contestChart.contest.leader.avatar}}"
                            ng-click="$root.gotoView('contestParticipants', false, {contest : contestChart.contest})"
-                           title="{{'CONTEST_LEADER' | translate:{name: contestChart.contest.leader.name} }}"></image>
+                           title="{{'CONTEST_LEADER' | translate:{name: contestChart.contest.leader.name} }}"
+                           analytics-on="click" analytics-event="contest/leaderClick"></image>
                 </div>
 
             </ion-list>

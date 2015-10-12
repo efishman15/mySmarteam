@@ -148,8 +148,38 @@ module.exports.start = function (req, res, next) {
                 "previousQuestions": [],
                 "contestId": data.contestId,
                 "score": 0,
-                "correctAnswers" : 0
+                "correctAnswers": 0,
+                "share": {"data": {}, "stories": []}
             };
+
+            var myTeam = data.contest.users[data.session.userId].team;
+
+
+            //--------------------------------------------------------------------------------------------------
+            //-- prepare "background check" data for stories - to later evaludate if they happened
+            //--------------------------------------------------------------------------------------------------
+
+            //-- store the leading team
+            if (data.contest.teams[0].score > data.contest.teams[1].score) {
+                quiz.serverData.share.data.leadingTeam = 0;
+            }
+            else if (data.contest.teams[0].score < data.contest.teams[1].score) {
+                quiz.serverData.share.data.leadingTeam = 1;
+            }
+            else {
+                //Tie between the teams - take the OTHER team which I am not playing for
+                //Any positive score achieved for my team will create a share story
+                //"My score just made the (my team) lead..."
+                quiz.serverData.share.data.leadingTeam = 1 - myTeam;
+            }
+
+            //-- store if myTeamStartedBehind
+            if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score) {
+                //My team is behind
+                if (contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) > generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
+                    quiz.serverData.share.data.myTeamStartedBehind = true;
+                }
+            }
 
             data.session.quiz = quiz;
 
@@ -157,6 +187,16 @@ module.exports.start = function (req, res, next) {
 
             callback(null, data);
 
+        },
+
+        //Stores some friends above me in the leaderboard
+        dalLeaderboard.getFriendsAboveMe,
+
+        function (data, callback) {
+            if (data.friendsAboveMe && data.friendsAboveMe.length > 0) {
+                data.session.quiz.serverData.share.data.friendsAboveMe = data.friendsAboveMe;
+            }
+            callback(null, data);
         },
 
         //Pick a random subject from the avilable subjects in this quiz and prepare the query
@@ -342,7 +382,7 @@ module.exports.answer = function (req, res, next) {
                     data.setData["leader.userId"] = data.session.userId;
                     data.setData["leader.avatar"] = data.session.avatar;
                     data.setData["leader.name"] = data.session.name;
-                    data.clientResponse.becameContestLeader = true;
+                    data.session.quiz.share.stories.push({"id" : "becameContestLeader"});
                 }
 
                 // Check if need to replace the my team's leader
@@ -352,12 +392,50 @@ module.exports.answer = function (req, res, next) {
                     data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
                     data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
                     data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
-                    data.clientResponse.becameTeamLeader = true;
+                    data.session.quiz.share.stories.push({"id" : "becameTeamLeader"});
                 }
 
                 data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
                 data.setData["teams." + data.contest.users[data.session.userId].team + ".score"] = data.contest.teams[data.contest.users[data.session.userId].team].score;
 
+                //Check if a perfect score story exist
+                if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
+                    data.session.quiz.serverData.share.stories.push({"id" : "perfectScore"});
+                }
+
+                //Check if one of 2 stories happened:
+                // 1. My team started leading
+                // 2. My team is very close to lead
+                if (data.session.quiz.serverData.share.data.myTeamStartedBehind) {
+                    if (data.contest.teams[myTeam].score > data.contest.teams[1 - myTeam].score) {
+                        data.session.quiz.serverData.share.stories.push({"id" : "myTeamStartedLeading"})
+                    }
+                    else if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score &&
+                        contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) < generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
+                        data.session.quiz.serverData.share.stories.push({"id" : "myTeamAlmostLeads"})
+                    }
+                }
+
+                if (data.session.quiz.serverData.share.data.friendsAboveMe) {
+                    data.friendsAboveMe = data.session.quiz.serverData.share.data.friendsAboveMe;
+                    dalLeaderboard.getPassedFriends(data, callback);
+                }
+                else {
+                    callback(null, data);
+                }
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
+        //Check the passedFriends story and save the contest
+        function (data, callback) {
+            if (data.session.quiz.clientData.finished) {
+
+                if (data.passedFriends) {
+                    data.session.quiz.serverData.share.stories.push({"id" : "passedFriends", "passedFriends" : data.passedFriends});
+                }
                 data.closeConnection = true;
                 dalDb.setContest(data, callback);
             }
@@ -367,7 +445,7 @@ module.exports.answer = function (req, res, next) {
             }
         },
 
-        //Set contest status fields (required for client only),
+        //Set contest result fields (required for client only),
         //AFTER contest has been saved to db
         function (data, callback) {
             if (data.session.quiz.clientData.finished) {

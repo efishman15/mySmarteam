@@ -423,4 +423,17 @@ module.exports.getContests = function (req, res, next) {
             res.send(err.httpStatus, err);
         }
     });
-}
+};
+
+//-------------------------------------------------------------------------------------
+// getTeamDistancePercent
+// returns the distance in percents (e.g. 0.02 = 2 percent) between the given team's
+// score and the other's team score
+//-------------------------------------------------------------------------------------
+module.exports.getTeamDistancePercent = function(contest, teamId) {
+    var sumScores = contest.teams[teamId].score + contest.teams[1-teamId].score;
+    var inputTeamPercent = contest.teams[teamId].score / sumScores;
+    var otherTeamPercent = contest.teams[1-teamId].score / sumScores;
+
+    return (inputTeamPercent - otherTeamPercent);
+};

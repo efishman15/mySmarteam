@@ -9,7 +9,7 @@ var sessionUtils = require("./session");
 // private functions
 //--------------------------------------------------------------------------
 function getSessionResponse(session) {
-    return {
+    var clientSession = {
         "token": session.userToken,
         "userId" : session.userId,
         "thirdParty": {"id": session.facebookUserId, "accessToken": session.facebookAccessToken, "type": "facebook"},
@@ -22,6 +22,12 @@ function getSessionResponse(session) {
         "settings": session.settings,
         "features": session.features
     };
+
+    if (session.justRegistered) {
+        clientSession.justRegistered = true;
+    }
+
+    return clientSession;
 }
 
 //-----------------------------------------------------------------------------------------------------------

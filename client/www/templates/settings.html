@@ -7,7 +7,7 @@
         <div class="list">
             <a class="item" ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
                                     'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
-               ng-click="openLanguagePopover($event)">
+               ng-click="openLanguagePopover($event)" analytics-on="click" analytics-event="settings/language/click">
                 <i class="icon ion-android-globe"></i>
                 {{'LANGUAGE' | translate}}
                 <p>
@@ -19,7 +19,8 @@
                                     'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
                         ng-model="localViewData.sound"
                         class="item toggle-small"
-                        toggle-class="toggle-royal">
+                        toggle-class="toggle-royal"
+                        analytics-on="click" analytics-event="settings/sound/{{localViewData.sound}}">
                 <span ng-class="{'my-toggle-rtl-fix' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}">{{ 'SOUND' | translate}}</span>
                 <i ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"
                    class="icon ion-ios-musical-notes"></i>
@@ -31,7 +32,8 @@
             </ion-toggle>
             <a class="item" ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
                                     'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
-               ng-click="$root.gotoView('logout')" class="ion-log-out">
+               ng-click="$root.gotoView('logout')" class="ion-log-out"
+               analytics-on="click" analytics-event="settings/facebookSignOut">
                 <i class="icon ion-log-out"></i>
                 {{ 'SIGN_OUT' | translate}}
             </a>

@@ -13,8 +13,8 @@
             <div class="col text-center">
                 <button class="center button button-block button-facebook"
                         analytics-on="click"
-                        analytics-event="FacebookLogin"
-                        analytics-properties="{ category: 'Login' }" ng-click="facebookConnect()">
+                        analytics-event="home/facebookLogin"
+                        analytics-properties="{'category': 'login' }" ng-click="facebookConnect()">
                     {{'FACEBOOK_CONNECT' | translate}}
                 </button>
             </div>
@@ -27,8 +27,13 @@
     </ion-content>
 
     <ion-footer-bar align="center" class="center padding" ng-hide="$root.session" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <a class="language padding" ng-repeat="language in $root.settings.languages track by language.value"
-           ng-click="changeLanguage(language)">{{language.displayNames[language.value]}}
+        <a
+                class="language padding"
+                ng-repeat="language in $root.settings.languages track by language.value"
+                ng-click="changeLanguage(language)"
+                analytics-on="click"
+                analytics-event="home/changeLanguage"
+                analytics-properties="{'language': '{{language.value}}' }" >{{language.displayNames[language.value]}}"
         </a>
     </ion-footer-bar>
 

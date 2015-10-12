@@ -57,8 +57,18 @@
             </div>
 
             <div class="padding center">
-                <button class="item button button-stable button-small button-3d button-3d-assertive nowrapText" ng-click="playAgain()">{{ 'PLAY_AGAIN' | translate}}</button>
-                <button class="item button button-stable button-small button-3d button-3d-assertive nowrapText" ng-click="$root.goBack()">{{ 'CONTEST_LIST' | translate}}</button>
+                <button
+                        class="item button button-stable button-small button-3d button-3d-assertive nowrapText"
+                        ng-click="playAgain()"
+                        analytics-on="click"
+                        analytics-event="quizResults/playAgain">{{ 'PLAY_AGAIN' | translate}}
+                </button>
+                <button
+                        class="item button button-stable button-small button-3d button-3d-assertive nowrapText"
+                        ng-click="$root.goBack()"
+                        analytics-on="click"
+                        analytics-event="quizResults/contestList">{{ 'CONTEST_LIST' | translate}}
+                </button>
             </div>
         </div>
 

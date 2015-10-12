@@ -24,12 +24,16 @@
         <div>
             <button ng-if="quiz.currentQuestion.wikipediaHint"
                     class="padding button button-small button-3d button-3d-balanced item-wrap-text"
-                    ng-click="assistWithHint()">{{ 'HINT_FOR_SCORE' | translate:{score : quiz.currentQuestion.hintCost}
+                    ng-click="assistWithHint()"
+                    analytics-on="click"
+                    analytics-event="quiz/useHint">{{ 'HINT_FOR_SCORE' | translate:{score : quiz.currentQuestion.hintCost}
                 }}
             </button>
             <button ng-if="quiz.currentQuestion.wikipediaAnswer"
                     class="padding button button-small button-3d button-3d-assertive item-wrap-text"
-                    ng-click="assistWithAnswer()">{{ 'ANSWER_FOR_SCORE' | translate:{score :
+                    ng-click="assistWithAnswer()"
+                    analytics-on="click"
+                    analytics-event="quiz/useAnswer">{{ 'ANSWER_FOR_SCORE' | translate:{score :
                 quiz.currentQuestion.answerCost} }}
             </button>
         </div>

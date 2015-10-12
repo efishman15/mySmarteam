@@ -7,7 +7,7 @@
 angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'ezfb', 'ionic-datepicker', 'angular-storage', 'ngCordova'])
     .constant('ENDPOINT_URI', 'http://www.whosmarter.com/')
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
-    .run(function ($ionicPlatform, $rootScope) {
+    .run(function ($ionicPlatform, $rootScope, $location) {
         $ionicPlatform.ready(function () {
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
@@ -23,6 +23,8 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         else {
                             $rootScope.appVersion = version;
                         }
+
+                        FlurryAgent.setAppVersion("" + version);
                     });
 
                     //Hook into window.open
@@ -50,22 +52,27 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     );
                 }
 
-                FlurryAgent.myLogError = function(errorType, message) {
-                    FlurryAgent.logError(errorType.substring(0,255), message.substring(0,255), 0);
+                FlurryAgent.myLogError = function (errorType, message) {
+                    FlurryAgent.logError(errorType.substring(0, 255), message.substring(0, 255), 0);
+                    console.log(message);
                 }
 
-                //FlurryAgent.setDebugLogEnabled(true);
+                FlurryAgent.setDebugLogEnabled(true);
                 FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
 
                 // Fallback where requestAnimationFrame or its equivalents are not supported in the current browser
-                window.myRequestAnimationFrame = (function(){
-                    return window.requestAnimationFrame    ||
+                window.myRequestAnimationFrame = (function () {
+                    return window.requestAnimationFrame ||
                         window.webkitRequestAnimationFrame ||
-                        window.mozRequestAnimationFrame    ||
-                        function( callback ){
+                        window.mozRequestAnimationFrame ||
+                        function (callback) {
                             window.setTimeout(callback, 1000 / 60);
                         };
                 })();
+
+                $rootScope.$on('$stateChangeSuccess', function (event, current) {
+                    FlurryAgent.logEvent("page" + $location.url())
+                });
 
             }
         );
@@ -540,6 +547,71 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
             }
         };
     }])
+
+    .directive('analyticsOn', function () {
+        function isCommand(element) {
+            return ['a:', 'button:', 'button:button', 'button:submit', 'input:button', 'input:submit'].indexOf(
+                    element.tagName.toLowerCase() + ':' + (element.type || '')) >= 0;
+        }
+
+        function inferEventType(element) {
+            if (isCommand(element)) return 'click';
+            return 'click';
+        }
+
+        function inferEventName(element) {
+            if (isCommand(element)) return element.innerText || element.value;
+            return element.id || element.name || element.tagName;
+        }
+
+        function isProperty(name) {
+            return name.substr(0, 9) === 'analytics' && ['On', 'Event', 'If', 'Properties', 'EventType'].indexOf(name.substr(9)) === -1;
+        }
+
+        function propertyName(name) {
+            var s = name.slice(9); // slice off the 'analytics' prefix
+            if (typeof s !== 'undefined' && s !== null && s.length > 0) {
+                return s.substring(0, 1).toLowerCase() + s.substring(1);
+            }
+            else {
+                return s;
+            }
+        }
+
+        return {
+            restrict: 'A',
+            link: function ($scope, $element, $attrs) {
+                var eventType = $attrs.analyticsOn || inferEventType($element[0]);
+                var trackingData = {};
+
+                angular.forEach($attrs.$attr, function (attr, name) {
+                    if (isProperty(name)) {
+                        trackingData[propertyName(name)] = $attrs[name];
+                        $attrs.$observe(name, function (value) {
+                            trackingData[propertyName(name)] = value;
+                        });
+                    }
+                });
+
+                angular.element($element[0]).bind(eventType, function ($event) {
+                    var eventName = $attrs.analyticsEvent || inferEventName($element[0]);
+                    trackingData.eventType = $event.type;
+
+                    if ($attrs.analyticsIf) {
+                        if (!$scope.$eval($attrs.analyticsIf)) {
+                            return; // Cancel this event if we don't pass the analytics-if condition
+                        }
+                    }
+                    // Allow components to pass through an expression that gets merged on to the event properties
+                    // eg. analytics-properites='myComponentScope.someConfigExpression.$analyticsProperties'
+                    if ($attrs.analyticsProperties) {
+                        angular.extend(trackingData, $scope.$eval($attrs.analyticsProperties));
+                    }
+                    FlurryAgent.logEvent(eventName, trackingData);
+                });
+            }
+        }
+    })
 
     .filter('orderObjectBy', function () {
         return function (items, field, reverse) {

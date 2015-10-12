@@ -159,7 +159,8 @@
 
             <div class="button-bar padding">
                 <button class="button padding button-bar button-calm" translate="OK"
-                        ng-click="contestForm.$valid && setContest()">
+                        ng-click="contestForm.$valid && setContest()"
+                            analytics-on="click" analytics-event="contest/set">
                 </button>
             </div>
 
