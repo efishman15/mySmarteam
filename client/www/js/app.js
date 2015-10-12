@@ -57,7 +57,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     console.log(message);
                 }
 
-                FlurryAgent.setDebugLogEnabled(true);
+                //FlurryAgent.setDebugLogEnabled(true);
                 FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
 
                 // Fallback where requestAnimationFrame or its equivalents are not supported in the current browser
