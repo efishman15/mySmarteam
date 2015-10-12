@@ -169,12 +169,12 @@
             "maxCorrectRatio" : 0.9,
             "score" : 20
           }, {
-            "minCorrectRatio" : 0.8,
-            "maxCorrectRatio" : 0.7,
+            "minCorrectRatio" : 0.7,
+            "maxCorrectRatio" : 0.8,
             "score" : 50
           }, {
-            "minCorrectRatio" : 0.7,
-            "maxCorrectRatio" : 0.6,
+            "minCorrectRatio" : 0.6,
+            "maxCorrectRatio" : 0.7,
             "score" : 100
           }, {
             "minCorrectRatio" : 0.0,
@@ -183,7 +183,8 @@
           }]
       },
       "hintCost" : 0.2,
-      "answerCost" : 0.5
+      "answerCost" : 0.5,
+      "teamPercentDistanceForShare" : 0.02
     },
     "google" : {
       "api" : {
@@ -203,7 +204,8 @@
       }
     },
     "leaderboard" : {
-      "pageSize" : 3
+      "pageSize" : 3,
+      "friendsAboveMePageSize" : 6
     }
   },
   "client" : {
@@ -386,8 +388,8 @@
     },
     "quiz" : {
       "canvas" : {
-        "height" : 50,
-        "topOffset" : 10,
+        "height" : 52,
+        "topOffset" : 12,
         "radius" : 20,
         "inactiveColor" : "#5f5f5f",
         "activeColor" : "#5f5f5f",
@@ -396,9 +398,10 @@
         "incorrectRatioColor" : "#e74c3c",
         "font" : "bold 10px Helvetica",
         "scores" : {
-          "top" : 8
+          "top" : 10
         },
-        "pieChartRadius" : 15
+        "pieChartRadius" : 15,
+        "width" : 576
       }
     },
     "general" : {
@@ -415,7 +418,8 @@
       "url" : "http://www.whosmarter.com/download"
     },
     "facebook" : {
-      "readPermissions" : ["public_profile", "email", "user_friends"]
+      "readPermissions" : ["public_profile", "email", "user_friends"],
+      "friendsPermissions" : ["user_friends"]
     }
   }
 }
