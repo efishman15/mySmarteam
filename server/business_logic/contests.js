@@ -2,6 +2,7 @@ var async = require("async");
 var dalDb = require("../dal/dalDb");
 var exceptions = require("../utils/exceptions");
 var mathjs = require("mathjs");
+var commonBusinessLogic = require("./common");
 
 //---------------------------------------------------------------------
 // private functions
@@ -23,7 +24,10 @@ function validateContestData(data, callback) {
     }
 
     if (data.mode == "add" && data.session.features.newContest.locked) {
-        callback(new exceptions.ServerException("Attempt to create a new contest without having an eligable rank or feature asset",{"session" : data.session, "contest" : data.contest}));
+        callback(new exceptions.ServerException("Attempt to create a new contest without having an eligable rank or feature asset", {
+            "session": data.session,
+            "contest": data.contest
+        }));
         return;
     }
 
@@ -118,10 +122,14 @@ function validateContestData(data, callback) {
 // 3. Chart values as a result of a score change
 //---------------------------------------------------------------------
 module.exports.prepareContestForClient = prepareContestForClient;
-function prepareContestForClient(contest, myTeamId, addLastPlayedStamp) {
+function prepareContestForClient(contest, currentUserId) {
 
     //Status
     var now = (new Date()).getTime();
+
+    if (contest.users && contest.users[currentUserId]) {
+        contest.myTeam = contest.users[currentUserId].team;
+    }
 
     if (contest.endDate < now) {
         contest.status = "finished";
@@ -131,10 +139,6 @@ function prepareContestForClient(contest, myTeamId, addLastPlayedStamp) {
     }
     else {
         contest.status = "running";
-    }
-
-    if (addLastPlayedStamp) {
-        contest.lastPlayed = now;
     }
 
     //ends In...or ended
@@ -158,12 +162,15 @@ function prepareContestForClient(contest, myTeamId, addLastPlayedStamp) {
 
     setContestScores(contest);
 
-    contest.myTeam = myTeamId;
+    if (contest.userIdCreated === currentUserId) {
+        contest.owner = true;
+    }
 
     //Fields not to be disclosed to the client
     delete contest.leader["userId"];
     delete contest["users"];
     delete contest["language"];
+    delete contest["userIdCreated"];
 
 }
 
@@ -177,29 +184,117 @@ module.exports.setContestScores = setContestScores;
 function setContestScores(contest) {
 
     //Chart values
-    if (contest.teams[0].score == 0 && contest.teams[1].score == 0) {
+    if (contest.teams[0].score === 0 && contest.teams[1].score === 0) {
         contest.teams[0].chartValue = 0.5;
         contest.teams[1].chartValue = 0.5;
     }
     else {
         //Do relational compute
         var sum = contest.teams[0].score + contest.teams[1].score;
-        contest.teams[0].chartValue = mathjs.round(contest.teams[0].score / sum,2);
-        contest.teams[1].chartValue = mathjs.round(contest.teams[1].score / sum,2);
+        contest.teams[0].chartValue = mathjs.round(contest.teams[0].score / sum, 2);
+        contest.teams[1].chartValue = mathjs.round(contest.teams[1].score / sum, 2);
     }
+}
+
+module.exports.joinContest = joinContest;
+function joinContest (req, res, next) {
+
+    var token = req.headers.authorization;
+    var data = req.body;
+
+    if (!data.contestId) {
+        exceptions.ServerResponseException(res, "contestId not supplied", null, "warn", 424);
+        return;
+    }
+
+    if (data.teamId !== 0 && data.teamId !== 1) {
+        callback(new exceptions.ServerResponseException("SERVER_ERROR_NOT_JOINED_TO_CONTEST"));
+        return;
+    }
+
+    var operations = [
+
+        //Connect to the database (so connection will stay open until we decide to close it)
+        dalDb.connect,
+
+        //Retrieve the session
+        function (connectData, callback) {
+            data.DbHelper = connectData.DbHelper;
+            data.token = token;
+            dalDb.retrieveSession(data, callback);
+        },
+
+        //Retrieve the contest
+        dalDb.getContest,
+
+        //Join the contest
+        joinContestTeam,
+
+        //Store the session's xp progress in the db
+        function (data, callback) {
+
+            prepareContestForClient(data.contest, data.session.userId);
+
+            data.clientResponse = {"contest" : data.contest};
+
+            if (data.newJoin) {
+                commonBusinessLogic.addXp(data, "joinContest");
+                data.clientResponse.xpProgress = data.xpProgress;
+                dalDb.storeSession(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
+        //Store the user's xp progress in the db
+        function (data, callback) {
+            //Save the user to the db - session will be stored at the end of this block
+            if (data.newJoin) {
+                data.setData = {"xp": data.session.xp, "rank": data.session.rank};
+                data.closeConnection = true;
+                dalDb.setUser(data, callback);
+            }
+            else {
+                dalDb.closeDb(data);
+                callback(null, data);
+            }
+        }
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            res.json(data.clientResponse);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    });
+
 }
 
 //---------------------------------------------------------------------
 // joinContestTeam
-//
+// Data: contest, session, teamId
 // Actual joining to the contest object and database update
 //---------------------------------------------------------------------
 module.exports.joinContestTeam = joinContestTeam;
 function joinContestTeam(data, callback) {
 
+    //Status
+    var now = (new Date()).getTime();
+
     //Cannot join a contest that ended
-    if (data.contest.status == "finished") {
+    if (data.contest.endDate < now) {
+        data.DbHelper.close();
         callback(new exceptions.ServerException("Contest has already been finished", data));
+    }
+
+    //Already joined this team - exit
+    if (data.contest.users && data.contest.users[data.session.userId] && data.contest.users[data.session.userId].team === data.teamId) {
+        data.DbHelper.close();
+        callback(new exceptions.ServerException("Already joined to this team", data));
+        return;
     }
 
     data.setData = {};
@@ -207,10 +302,11 @@ function joinContestTeam(data, callback) {
     //Increment participants only if I did not join this contest yet
     if (joinToContestObject(data.contest, data.teamId, data.session)) {
         data.setData.participants = data.contest.participants;
+        data.newJoin = true;
         data.setData.lastParticipantJoinDate = (new Date()).getTime();
     }
 
-    data.setData["users." + data.session.userId]  = data.contest.users[data.session.userId];
+    data.setData["users." + data.session.userId] = data.contest.users[data.session.userId];
 
     dalDb.setContest(data, callback);
 }
@@ -228,7 +324,7 @@ function joinToContestObject(contest, teamId, session) {
 
     if (!contest.users) {
         contest.users = {};
-        contest.leader = {"userId" : session.userId, "name" : session.name, "avatar" : session.avatar};
+        contest.leader = {"userId": session.userId, "name": session.name, "avatar": session.avatar};
     }
 
     //Increment participants only if I did not join this contest yet
@@ -239,16 +335,16 @@ function joinToContestObject(contest, teamId, session) {
     }
 
     if (!contest.teams[teamId].leader) {
-        contest.teams[teamId].leader = {"userId" : session.userId, "name" : session.name, "avatar" : session.avatar};
+        contest.teams[teamId].leader = {"userId": session.userId, "name": session.name, "avatar": session.avatar};
     }
 
     //Actual join
     contest.users[session.userId] = {
         "userId": session.userId,
         "joinDate": now,
-        "team" : teamId,
+        "team": teamId,
         "score": 0,
-        "teamScores" : [0,0]
+        "teamScores": [0, 0]
     }
 
     return newJoin;
@@ -318,7 +414,7 @@ module.exports.removeContest = function (req, res, next) {
     var data = req.body;
 
     if (!data.contestId) {
-        exceptions.ServerResponseException(res, "contestId not supplied",null,"warn",424);
+        exceptions.ServerResponseException(res, "contestId not supplied", null, "warn", 424);
         return;
     }
 
@@ -369,7 +465,7 @@ module.exports.getContests = function (req, res, next) {
     var data = req.body;
 
     if (data.clientContestCount == null) {
-        exceptions.ServerResponseException(res, "clientContestCount not supplied",null,"warn",424);
+        exceptions.ServerResponseException(res, "clientContestCount not supplied", null, "warn", 424);
         return;
     }
 
@@ -397,18 +493,9 @@ module.exports.getContests = function (req, res, next) {
         },
 
         //Set contest status for each contest
-        function(data, callback) {
+        function (data, callback) {
             for (var i = 0; i < data.contests.length; i++) {
-
-                if (data.contests[i].users && data.contests[i].users[data.session.userId]) {
-                    data.contests[i].myTeam = data.contests[i].users[data.session.userId].team;
-                }
-
-                var myTeam = null;
-                if (data.contests[i].users && data.contests[i].users[data.session.userId]) {
-                    myTeam = data.contests[i].users[data.session.userId].team;
-                }
-                prepareContestForClient(data.contests[i], myTeam);
+                prepareContestForClient(data.contests[i], data.session.userId);
             }
 
             callback(null, data);
@@ -417,7 +504,7 @@ module.exports.getContests = function (req, res, next) {
 
     async.waterfall(operations, function (err, data) {
         if (!err) {
-            res.json({"count" : data.contestsCount, "list" : data.contests});
+            res.json({"count": data.contestsCount, "list": data.contests});
         }
         else {
             res.send(err.httpStatus, err);
@@ -426,14 +513,66 @@ module.exports.getContests = function (req, res, next) {
 };
 
 //-------------------------------------------------------------------------------------
+// getContest
+
+// data: contestId
+// output: contest
+//-------------------------------------------------------------------------------------
+module.exports.getContest = function (req, res, next) {
+    var token = req.headers.authorization;
+    var data = req.body;
+
+    if (!data.contestId) {
+        exceptions.ServerResponseException(res, "contestId not supplied", null, "warn", 424);
+        return;
+    }
+
+    var operations = [
+
+        //Connect to the database (so connection will stay open until we decide to close it)
+        dalDb.connect,
+
+        //Retrieve the session
+        function (connectData, callback) {
+
+            data.DbHelper = connectData.DbHelper;
+            data.token = token;
+            dalDb.retrieveSession(data, callback);
+        },
+
+        //Retrieve the contest
+        function (data, callback) {
+            data.closeConnection = true;
+            dalDb.getContest(data, callback);
+        },
+
+        //Prepare contest for client
+        function (data, callback) {
+            prepareContestForClient(data.contest, data.session.userId);
+            callback(null, data);
+        }
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            res.json(data.contest);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    });
+};
+
+
+//-------------------------------------------------------------------------------------
 // getTeamDistancePercent
 // returns the distance in percents (e.g. 0.02 = 2 percent) between the given team's
 // score and the other's team score
 //-------------------------------------------------------------------------------------
-module.exports.getTeamDistancePercent = function(contest, teamId) {
-    var sumScores = contest.teams[teamId].score + contest.teams[1-teamId].score;
+module.exports.getTeamDistancePercent = function (contest, teamId) {
+    var sumScores = contest.teams[teamId].score + contest.teams[1 - teamId].score;
     var inputTeamPercent = contest.teams[teamId].score / sumScores;
-    var otherTeamPercent = contest.teams[1-teamId].score / sumScores;
+    var otherTeamPercent = contest.teams[1 - teamId].score / sumScores;
 
     return (inputTeamPercent - otherTeamPercent);
 };

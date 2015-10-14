@@ -222,6 +222,21 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 templateUrl: "templates/contestParticipants.html"
             })
 
+            .state('app.contest', {
+                url: "/contest/:id",
+                resolve: {
+                    auth: function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "contest");
+                    }
+                },
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/contest.html",
+                        controller: 'ContestCtrl'
+                    }
+                }
+            })
+
             .state('app.quiz', {
                 url: "/quiz",
                 cache: false,
@@ -230,7 +245,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         return UserService.resolveAuthentication(null, "quiz");
                     }
                 },
-                params: {contestId: null, teamId: null},
+                params: {contestId: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/quiz.html",
@@ -239,16 +254,16 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 }
             })
 
-            .state('contest', {
-                url: "/contest",
+            .state('setContest', {
+                url: "/setContest",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
-                        return UserService.resolveAuthentication(null, "contest");
+                        return UserService.resolveAuthentication(null, "setContest");
                     }
                 },
                 cache: false,
-                templateUrl: "templates/contest.html",
-                controller: "ContestCtrl",
+                templateUrl: "templates/setContest.html",
+                controller: "SetContestCtrl",
                 params: {mode: null, contest: null}
             })
 

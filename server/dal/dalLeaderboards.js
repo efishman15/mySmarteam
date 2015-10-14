@@ -43,7 +43,7 @@ function prepareLeaderObject(id, leader, outsideLeaderboard) {
         "rank": leader.rank,
         "score": leader.score,
         "avatar": memberDataParts[0],
-        "name": memberDataParts[1]
+        "name": memberDataParts[1],
     };
 
     if (outsideLeaderboard) {
@@ -155,7 +155,7 @@ function getLeaders(data, callback) {
 //
 // Retrieve me and my friends from the general leaderboard
 //
-// data: session, friends (array of id,name objects)
+// data: session (including friends.list array of id,name objects)
 // output: data.clientResponse
 //---------------------------------------------------------------------------------------------------------------------------
 module.exports.getFriends = getFriends;
@@ -170,13 +170,14 @@ function getFriends(data, callback) {
     data.clientResponse = [];
 
     var members = [];
-    for (var i = 0; i < data.friends.length; i++) {
-        members.push(data.friends[i].id);
+    for (var i = 0; i < data.session.friends.list.length; i++) {
+        members.push(data.session.friends.list[i].id);
     }
     //Push myself as well
     members.push(data.session.facebookUserId);
 
     generalLeaderboard.rankedInList(members, options, function (leaders) {
+
         for (var i = 0; i < leaders.length; i++) {
 
             //Check that rank exist - otherwise this friends did not play yet and he/she is not in the leaderboard
@@ -212,8 +213,9 @@ function getFriendsAboveMe(data, callback) {
         if (leaders && leaders.length > 0) {
 
             //I will be in that list as the last one - all my friends that are above me - will be first in the array)
-            for(var i=0; i<leaders.length; i++) {
-                data.friendsAboveMe.push(prepareLeaderObject(i, leaders[i]));
+            //.id property for each item in the friendsAboveMe list is the facebookUserId - for later to compute the passedFriends
+            for (var i = 0; i < leaders.length; i++) {
+                data.friendsAboveMe.push(prepareLeaderObject(leaders[i].member, leaders[i]));
                 if (leaders[i].member === data.session.facebookUserId) {
                     break;
                 }
@@ -246,7 +248,7 @@ function getPassedFriends(data, callback) {
 
     var members = [];
     for (var i = 0; i < data.friendsAboveMe.length; i++) {
-        members.push(data.friendsAboveMe[i].id);
+        members.push(data.friendsAboveMe[i].id); //Id is the facebookUserId which is the key of the member in the leaderboard
     }
 
     generalLeaderboard.rankedInList(members, options, function (leaders) {

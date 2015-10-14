@@ -70,10 +70,12 @@ angular.module('whoSmarter.services', [])
                 service.localInitUser(callbackOnSuccess, language, geoInfo);
             }
             else {
-                InfoService.getGeoInfo(function (geoResult, geoInfo) {
-                    StoreService.setLanguage(geoResult.language);
-                    service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
-                });
+                //InfoService.getGeoInfo(function (geoResult, geoInfo) {
+                    //StoreService.setLanguage(geoResult.language);
+                    //service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
+                    StoreService.setLanguage("he");
+                    service.localInitUser(callbackOnSuccess, "he", geoInfo);
+                //});
             }
         };
 
@@ -545,6 +547,12 @@ angular.module('whoSmarter.services', [])
         var canvasContext = canvas.getContext("2d");
         canvasContext.font = $rootScope.settings.charts.contestAnnotations.annotationsFont;
 
+        //Get Contest
+        service.getContest = function (contestId, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"contestId": contestId};
+            return ApiService.post(path, "get", postData, callbackOnSuccess, callbackOnError, config)
+        };
+
         //Set Contest
         service.setContest = function (contest, mode, callbackOnSuccess, callbackOnError, config) {
             var postData = {"contest": contest, "mode": mode};
@@ -560,10 +568,10 @@ angular.module('whoSmarter.services', [])
         //Get Contests
         service.getContests = function (clientContestCount, tab, callbackOnSuccess, callbackOnError, config) {
             var postData = {"clientContestCount": clientContestCount, "tab": tab};
-            return ApiService.post(path, "get", postData, callbackOnSuccess, callbackOnError, config)
+            return ApiService.post(path, "list", postData, callbackOnSuccess, callbackOnError, config)
         };
 
-        service.prepareContestChart = function (contest, contestIndex) {
+        service.prepareContestChart = function (contest) {
             var contestCaption = $translate.instant("WHO_IS_SMARTER");
             var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.contest));
             contestChart.contest = contest;
@@ -612,7 +620,7 @@ angular.module('whoSmarter.services', [])
                 "value": contest.teams[teamsOrder[1]].chartValue
             });
 
-            if (contest.myTeam == 0 || contest.myTeam == 1) {
+            if (contest.myTeam === 0 || contest.myTeam === 1) {
                 contestChart.data[teamsOrder[contest.myTeam]].labelFontBold = true;
             }
 
@@ -622,10 +630,15 @@ angular.module('whoSmarter.services', [])
                 team1: contest.teams[1].name
             });
 
-            contestChart.contestIndex = contestIndex;
-
             return contestChart;
         };
+
+        //Join Contest
+        service.joinContest = function (contestId, teamId, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"contestId": contestId, "teamId": teamId};
+            return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError, config)
+        };
+
 
         return service;
     })
@@ -640,11 +653,8 @@ angular.module('whoSmarter.services', [])
         var path = 'quiz/';
 
         //Start quiz
-        service.start = function (contestId, teamId, callbackOnSuccess, callbackOnError, config) {
+        service.start = function (contestId, callbackOnSuccess, callbackOnError, config) {
             var postData = {"contestId" : contestId};
-            if (teamId === 0 || teamId === 1) {
-                postData.teamId = teamId;
-            }
             return ApiService.post(path, "start", postData, callbackOnSuccess, callbackOnError, config)
         };
 
@@ -931,95 +941,7 @@ angular.module('whoSmarter.services', [])
         return service;
     })
 
-    //Chart Service
-    .factory('ChartService', function ($rootScope, $timeout, ContestsService) {
-
-        //----------------------------------------------
-        // Service Variables
-        //----------------------------------------------
-        var service = this;
-
-        function teamClicked(scope, dataSource, teamId, sourceClick) {
-            var serverTeamId = teamId;
-            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "rtl") {
-                serverTeamId = 1 - teamId; //In RTL - the teams are presented backwards
-            }
-
-            //Show effect of joining the team on the client side before entering the quiz
-            if (dataSource.contest.myTeam == null || dataSource.contest.myTeam != serverTeamId) {
-
-                if (dataSource.contest.myTeam == null) {
-                    FlurryAgent.logEvent("contest/join", {"contestId" : dataSource.contest._id, "team" : "" + serverTeamId, "sourceClick" : sourceClick});
-                }
-                else {
-                    FlurryAgent.logEvent("contest/teamSwitch", {"contestId" : dataSource.contest._id, "team" : "" + serverTeamId, "sourceClick" : sourceClick});
-                }
-
-                dataSource.contest.myTeam = serverTeamId;
-
-                scope.$apply(function () {
-                    scope.teamChanged = true;
-
-                    //The caller must set this property as an array of charts in order to work with this reused peace of code
-                    scope.contestCharts[dataSource.contestIndex] = ContestsService.prepareContestChart(dataSource.contest);
-                });
-            }
-            else {
-                FlurryAgent.logEvent("contest/playMyTeam", {"contestId" : dataSource.contest._id, "team" : "" + serverTeamId, "sourceClick" : sourceClick});
-                $rootScope.gotoView("app.quiz", false, {contestId: dataSource.contest._id, teamId: serverTeamId});
-            }
-        }
-
-        //setEvents
-        service.setEvents = function (scope) {
-
-            scope.$on("whoSmarter-teamClicked", function (error, data) {
-                teamClicked(scope, data.dataSource, data.teamId, data.sourceClick)
-            });
-
-            scope.fcEvents = {
-                "dataplotClick": function (eventObj, dataObj) {
-                    scope.$broadcast("whoSmarter-teamClicked", {
-                        "dataSource": eventObj.sender.args.dataSource,
-                        "teamId": dataObj.dataIndex,
-                        "sourceClick" : "bar"
-                    });
-                },
-                "dataLabelClick": function (eventObj, dataObj) {
-                    scope.$broadcast("whoSmarter-teamClicked", {
-                        "dataSource": eventObj.sender.args.dataSource,
-                        "teamId": dataObj.dataIndex,
-                        "sourceClick" : "label"
-                    });
-                },
-                "annotationClick": function (eventObj, dataObj) {
-                    if ($rootScope.session.isAdmin) {
-                        $rootScope.gotoView("contest", false, {
-                            mode: "edit",
-                            contest: eventObj.sender.args.dataSource.contest
-                        });
-                    }
-                },
-                "drawComplete": function (eventObj, dataObj) {
-                    if (scope.teamChanged) {
-                        scope.teamChanged = false;
-
-                        //Let the chart animation finish
-                        $timeout(function () {
-                            $rootScope.gotoView("app.quiz", false, {
-                                contestId: eventObj.sender.args.dataSource.contest._id,
-                                teamId: eventObj.sender.args.dataSource.contest.myTeam
-                            });
-                        }, 1000);
-                    }
-                }
-            };
-        };
-
-        return service;
-    })
-
-    //Chart Service
+    //XpService Service
     .factory('XpService', function ($rootScope, $window) {
 
         //----------------------------------------------
@@ -1313,8 +1235,12 @@ angular.module('whoSmarter.services', [])
             return ApiService.post(path, "contest", postData, callbackOnSuccess, callbackOnError, config)
         };
 
-        service.getFriends = function(callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "friends", null, callbackOnSuccess, callbackOnError, config)
+        service.getFriends = function(friendsPermissionJustGranted, callbackOnSuccess, callbackOnError, config) {
+            var postData = {};
+            if (friendsPermissionJustGranted) {
+                postData.friendsPermissionJustGranted = friendsPermissionJustGranted;
+            }
+            return ApiService.post(path, "friends", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         service.getWeeklyLeaders = function(callbackOnSuccess, callbackOnError, config) {

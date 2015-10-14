@@ -1,12 +1,13 @@
 {
-  "HOME_WELCOME_PLAY_TRIVIA" : "Play for your team and find out",
+  "HOME_WELCOME" : "Play for your team and find out",
   "FACEBOOK_CONNECT" : "Connect with Facebook",
   "WHO_IS_SMARTER_QUESTION" : "Who is smarter ?",
   "WHO_IS_SMARTER" : "Who is smarter",
   "DEMO_TEAM0" : "Boys",
   "DEMO_TEAM1" : "Girls",
   "CONTEST_NAME" : "{{team0}} or {{team1}}",
-  "CONTEST_ENDS_IN" : "Contest ends in {{number}} {{units}}",
+  "FULL_CONTEST_NAME" : "Who is smarter: {{team0}} or {{team1}}?",
+  "CONTEST_ENDS_IN" : "Ends in {{number}} {{units}}",
   "CONTEST_ENDED" : "Contest ended {{number}} {{units}} ago",
   "DEMO_CONTEST_ENDS_IN_UNITS" : "Days",
   "CONTEST_PARTICIPANTS" : "Participants: {{participants}}",
@@ -103,7 +104,8 @@
   "ANSWERED_INCORRECT" : "Failed",
   "HINT_FOR_SCORE" : "Hint ({{score}} smartpoints)",
   "ANSWER_FOR_SCORE" : "Answer ({{score}} smartpoints)",
-  "CONTEST_LEADER" : "Contest Leader: {{name}}",
+  "CONTEST_LEADER_WITH_NAME" : "Contest Leader: {{name}}",
+  "CONTEST_LEADER" : "Contest Leader",
   "SHARE_WITH_FRIENDS_TITLE" : "Share with friends",
   "CLICK_LIKE" : "Click like to the facebook game page and get the results of contests you participate in",
   "FACEBOOK_GAME_PAGE" : "Facebook game page",
@@ -117,5 +119,6 @@
   "WEEKLY" : "Weekly",
   "CONTEST_LEADERS" : "Contest Leaders",
   "CONTEST_LEADERS_GENERAL_SCORING" : "Overall Ranking",
-  "MY_POSITION" : "My position: {{position}}"
+  "MY_POSITION" : "My position: {{position}}",
+  "JOIN_TEAM" : "Join {{team}}"
 }

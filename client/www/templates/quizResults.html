@@ -1,0 +1,17 @@
+<ion-popover-view dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+    <ion-header-bar align-title="center" class="bar-stable bar-assertive">
+        <h1 class="title">{{lastQuizResults.title | translate}}</h1>
+        <div class="button button-clear" ng-click="closeQuizResultsPopover()">
+            <span class="icon ion-close"></span>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="padding center">
+            <h3>{{lastQuizResults.message | translate:{score : lastQuizResults.score, myTeam : contestChart.contest.teams[contestChart.contest.myTeam].name} }}</h3>
+        </div>
+
+        <div class="padding center">
+            <button class="item button button-stable button-small button-3d button-3d-assertive nowrapText" ng-click="playAgain()">{{ 'PLAY_AGAIN' | translate}}</button>
+        </div>
+    </ion-content>
+</ion-popover-view>

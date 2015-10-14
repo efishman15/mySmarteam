@@ -97,7 +97,7 @@ label.item.valid-lr {
 }
 
 .question-text {
-    width: 640px;
+    width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 20px;
@@ -206,23 +206,31 @@ label.item.valid-lr {
     line-height: 1em;
 }
 
-.contests-avatar-leader {
+.contest-leader-wrapper {
+    height: 25px;
+    margin: 0px auto;
+}
+
+.avatar-leader {
     width: 30px;
     height: 30px;
     border-radius: 50%;
 }
 
-.contests-avatar-leader-ltr {
+.contests-avatar-leader {
     position: relative;
-    top: -265px;
-    left: 130px;
+    top: 10px;
+    z-index: 500;
+}
+
+.contests-avatar-leader-ltr {
+    right: -15px;
 }
 
 .contests-avatar-leader-rtl {
-    position: relative;
-    top: -265px;
-    left: -130px;
+    left: -15px;
 }
+
 
 .quiz-results-avatar-leader-ltr {
     position: relative;
@@ -324,6 +332,7 @@ label.item.valid-lr {
 
 .button-3d-assertive {
     color: #FFFFFF !important;
+    box-shadow: 1px 1px 1px #BEE2F9;
     -webkit-box-shadow: 1px 1px 1px #BEE2F9;
     -moz-box-shadow: 1px 1px 1px #BEE2F9;
     background: #EF473A;
@@ -365,9 +374,12 @@ label.item.valid-lr {
 
 .button.small-font {
     font-size: 90%;
-    font-weight: bold;
-    line-height: 1em;
+    line-height: 1.2em;
     white-space: normal;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 .my-item-note-left {
@@ -394,7 +406,7 @@ label.item.valid-lr {
     overflow-y: hidden;
 }
 
-.quizCanvas {
+.quiz-canvas {
     width: 90%;
     margin-top: 10px;
     margin-left: 5%;
@@ -421,4 +433,12 @@ label.item.valid-lr {
 
 .full-width {
     width: 100%;
+}
+
+.chart {
+    box-shadow: 3px 3px 3px #CDCDCD;
+    -webkit-box-shadow: 3px 3px 3px #CDCDCD;
+    -moz-box-shadow: 3px 3px 3px #CDCDCD;
+    width: 50%;
+    margin: 0 auto;
 }

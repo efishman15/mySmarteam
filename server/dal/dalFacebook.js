@@ -140,7 +140,8 @@ module.exports.getUserInfo = function (data, callback) {
                     data.user.thirdParty.paymentMobilePricepoints = facebookData.payment_mobile_pricepoints;
                     data.user.thirdParty.currency = facebookData.currency;
                 }
-                callback(null, data);
+
+                getUserFriends(data, callback);
             }
             else {
                 callback(new exceptions.ServerException("Error validating facebook access token, token belongs to someone else", {
@@ -344,7 +345,7 @@ module.exports.denyDispute = function (data, callback) {
 //
 // data:
 // -----
-// input: session.facebookAccessToken
+// input: facebookAccessToken
 // output: friends [{name, id},...]
 //---------------------------------------------------------------------------------------------------------------------------------
 module.exports.getUserFriends = getUserFriends;
@@ -355,23 +356,25 @@ function getUserFriends(data, callback) {
     }
 
     if (!data.url) {
-        data.url = FACEBOOK_GRAPH_URL + "/me/friends" + "?limit=" + generalUtils.settings.server.facebook.friendsPageSize + "&offset=0&access_token=" + data.session.facebookAccessToken;
-    }
+        data.url = FACEBOOK_GRAPH_URL + "/me/friends" + "?limit=" + generalUtils.settings.server.facebook.friendsPageSize + "&offset=0&access_token=" + data.user.thirdParty.accessToken;
+   }
 
     facebookGet(data.url, null, function (facebookData) {
 
         if (!facebookData.data) {
             callback(new exceptions.ServerException("Unable to retrieve user friends", {
-                "accessToken": data.accessToken,
+                "accessToken": data.user.thirdParty.accessToken,
                 "error": facebookData
             }));
             return;
         }
 
+        data.user.thirdParty.friends = {"list" : [], "noPermission" : false};
+
         if (facebookData.data.length > 0) {
             for (var i = 0; i < facebookData.data.length; i++) {
                 var friend = {"id": "" + facebookData.data[i].id, "name": facebookData.data[i].name}
-                data.friends.push(friend);
+                data.user.thirdParty.friends.list.push(friend);
             }
             if (facebookData.data.length < generalUtils.settings.server.facebook.friendsPageSize) {
                 callback(null, data);
@@ -386,17 +389,17 @@ function getUserFriends(data, callback) {
         }
         else {
             //Possibly lack of permission - check if user_friends permission has been declined
-            if (data.friends.length === 0) {
+            if (data.user.thirdParty.friends.list.length === 0) {
                 var url = FACEBOOK_GRAPH_URL + "/me/permissions/user_friends";
                 var params = {
-                    "access_token" : data.session.facebookAccessToken
+                    "access_token" : data.user.thirdParty.accessToken
                 }
 
                 facebookGet(url, params, function (facebookData) {
-                    if (!facebookData.data || facebookData.data.length === 0 || facebookData.data[0].status === "declined") {
-                        callback(new exceptions.ServerMessageException("SERVER_ERROR_MISSING_FRIENDS_PERMISSION"));
-                        return;
+                    if ((!facebookData.data || facebookData.data.length === 0 || facebookData.data[0].status === "declined")) {
+                        data.user.thirdParty.friends.noPermission = true;
                     }
+                    callback(null, data);
                 });
             }
             else {

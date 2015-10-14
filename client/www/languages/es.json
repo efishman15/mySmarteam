@@ -1,12 +1,13 @@
 {
-  "HOME_WELCOME_PLAY_TRIVIA" : "Juega a su equipo y descubrir",
+  "HOME_WELCOME" : "Juega a su equipo y descubrir",
   "FACEBOOK_CONNECT" : "Conectarse con Facebook",
   "WHO_IS_SMARTER_QUESTION" : "Quién es más listo?",
   "WHO_IS_SMARTER" : "Quién es más listo",
   "DEMO_TEAM0" : "Niños",
   "DEMO_TEAM1" : "Chicas",
   "CONTEST_NAME" : "{{team0}} o {{team1}}",
-  "CONTEST_ENDS_IN" : "El concurso termina en {{number}} {{units}}",
+  "FULL_CONTEST_NAME" : "Quién es más listo: {{team0}} o {{team1}}?",
+  "CONTEST_ENDS_IN" : "termina en {{number}} {{units}}",
   "CONTEST_ENDED" : "Concurso terminó hace {{number}} {{units}}",
   "DEMO_CONTEST_ENDS_IN_UNITS" : "días",
   "CONTEST_PARTICIPANTS" : "Participantes: {{participants}}",
@@ -103,7 +104,8 @@
   "ANSWERED_INCORRECT" : "Falló",
   "HINT_FOR_SCORE" : "Sugerencia ({{score}} puntoligentes)",
   "ANSWER_FOR_SCORE" : "Respuesta ({{score}} puntoligentes)",
-  "CONTEST_LEADER" : "líder del Concurso: {{name}}",
+  "CONTEST_LEADER_WITH_NAME" : "líder del Concurso: {{name}}",
+  "CONTEST_LEADER" : "líder del Concurso",
   "SHARE_WITH_FRIENDS_TITLE" : "Compartir con amigos",
   "CLICK_LIKE" : "Haga clic como a la página de facebook del juego y obtener los resultados de los concursos que participas",
   "FACEBOOK_GAME_PAGE" : "Facebook la página de juegos",
@@ -117,5 +119,6 @@
   "WEEKLY" : "Cada semana",
   "CONTEST_LEADERS" : "Líderes del Concurso",
   "CONTEST_LEADERS_GENERAL_SCORING" : "clasificación general",
-  "MY_POSITION" : "Mi posición: {{position}}"
+  "MY_POSITION" : "Mi posición: {{position}}",
+  "JOIN_TEAM" : "Únete {{team}}"
 }

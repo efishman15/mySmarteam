@@ -72,8 +72,37 @@ module.exports.getProductDetails = function (req, res, next) {
     else {
         new exceptions.ServerResponseException(res, "Invalid product id received from facebook", {"productId": productId}, "warn", 403);
     }
-
 }
+
+//----------------------------------------------------
+// getContestDetails
+//
+//----------------------------------------------------
+module.exports.getContestDetails = function (req, res, next) {
+
+    if (!req.params.contestId) {
+        new exceptions.ServerResponseException(res, "contestId is required", {}, "warn", 403);
+        return;
+    }
+
+    var data = {"contestId" : req.params.contestId, "closeConnection" : true};
+
+    dalDb.connect(function(err, data) {
+
+        data.contestId = req.params.contestId;
+        data.closeConnection = true;
+
+        dalDb.getContest(data, function(err, data) {
+
+            res.render("fbcontest",
+                {
+                    "title": data.contest.name,
+                    "description": generalUtils.settings.server.text[data.contest.language].gameDescription,
+                    "contestId" : req.params.contestId
+                });
+        });
+    });
+};
 
 //----------------------------------------------------
 // getChallenge

@@ -87,9 +87,11 @@ dalDb.loadSettings(function (err, data) {
     app.post("/quiz/start", isAuthenticated, quiz.start);
     app.post("/quiz/answer", isAuthenticated, quiz.answer);
     app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
+    app.post("/contests/get", isAuthenticated, contests.getContest);
     app.post("/contests/set", isAuthenticated, contests.setContest);
     app.post("/contests/remove", isAuthenticated, contests.removeContest);
-    app.post("/contests/get", isAuthenticated, contests.getContests);
+    app.post("/contests/list", isAuthenticated, contests.getContests);
+    app.post("/contests/join", isAuthenticated, contests.joinContest);
     app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
     app.post("/payments/process", isAuthenticated, payments.processPayment);
     app.post("/leaderboard/contest", isAuthenticated, leaderboards.getContestLeaders);
@@ -104,6 +106,7 @@ dalDb.loadSettings(function (err, data) {
     app.post("/info/settings", generalUtils.getSettings);
     app.post("/facebook/canvas", facebookCanvas.canvas);
     app.get("/facebook/product/:productId/:language", facebookCanvas.getProductDetails);
+    app.get("/facebook/contest/:contestId", facebookCanvas.getContestDetails);
     app.post("/facebook/dynamicPricing", facebookCanvas.dynamicPricing);
     app.get("/facebook/ipn", facebookCanvas.getChallenge);
     app.post("/facebook/ipn", facebookCanvas.ipn);

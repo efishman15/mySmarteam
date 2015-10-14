@@ -6,6 +6,7 @@ var dalDb = require("../dal/dalDb");
 var generalUtils = require("../utils/general");
 var contestsBusinessLogic = require("../business_logic/contests");
 var dalLeaderboard = require("../dal/dalLeaderboards");
+var commonBusinessLogic = require("./common");
 
 var quizSounds = {
     "finish": {
@@ -44,19 +45,6 @@ function setQuestionDirection(data, callback) {
     });
 }
 
-function addXp(data, action) {
-    if (!data.clientResponse) {
-        data.clientResponse = {};
-    }
-
-    if (!data.clientResponse.xpProgress) {
-        data.clientResponse.xpProgress = new generalUtils.XpProgress(data.session.xp, data.session.rank);
-    }
-
-    data.clientResponse.xpProgress.addXp(data.session, "joinContest");
-
-}
-
 //--------------------------------------------------------------------------
 //Public functions
 //--------------------------------------------------------------------------
@@ -64,7 +52,7 @@ function addXp(data, action) {
 //--------------------------------------------------------------------------
 // start
 //
-// data: contestId, teamId (optional)
+// data: contestId
 //--------------------------------------------------------------------------
 module.exports.start = function (req, res, next) {
     var token = req.headers.authorization;
@@ -90,44 +78,9 @@ module.exports.start = function (req, res, next) {
         //Check contest join and possible team switch
         function (data, callback) {
 
-            if (data.teamId == null && (!data.contest.users || !data.contest.users[data.session.userId])) {
-
-                //----------------------------------
-                //Not joined and did not pass team
-                //----------------------------------
+            if (!data.contest.users || !data.contest.users[data.session.userId]) {
                 data.DbHelper.close();
                 callback(new exceptions.ServerMessageException("SERVER_ERROR_NOT_JOINED_TO_CONTEST"));
-            }
-            else if ((data.teamId === 0 || data.teamId === 1) &&
-                (
-                    (data.contest.users == null || //nobody joined yet
-                    data.contest.users[data.session.userId] == null) //I did not join
-                )) {
-
-                //----------------------------------
-                //Not joined and passed a valid team
-                //----------------------------------
-                addXp(data, "joinContest");
-
-                //Flagging for next function to do the join if necessary
-                data.joinTeam = true;
-
-                //Save the user to the db - session will be stored at the end of this block
-                data.setData = {"xp": data.session.xp, "rank": data.session.rank};
-                dalDb.setUser(data, callback);
-            }
-            else if ((data.teamId === 0 || data.teamId === 1) && data.contest.users[data.session.userId].team != data.teamId) { //I joined but I am switching teams now
-                contestsBusinessLogic.joinContestTeam(data, callback);
-            }
-            else {
-                callback(null, data);
-            }
-        },
-
-        //Check to join contest team because of switch teams
-        function (data, callback) {
-            if (data.joinTeam && data.joinTeam) {
-                contestsBusinessLogic.joinContestTeam(data, callback);
             }
             else {
                 callback(null, data)
@@ -153,7 +106,6 @@ module.exports.start = function (req, res, next) {
             };
 
             var myTeam = data.contest.users[data.session.userId].team;
-
 
             //--------------------------------------------------------------------------------------------------
             //-- prepare "background check" data for stories - to later evaludate if they happened
@@ -267,7 +219,7 @@ module.exports.answer = function (req, res, next) {
 
                 data.session.quiz.serverData.correctAnswers++;
 
-                addXp(data, "correctAnswer");
+                commonBusinessLogic.addXp(data, "correctAnswer");
 
                 var questionScore = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex].score;
                 if (data.answerUsed && data.session.quiz.clientData.currentQuestion.answerCost) {
@@ -298,6 +250,10 @@ module.exports.answer = function (req, res, next) {
             var store = false;
             if (data.session.quiz.clientData.finished) {
 
+                if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
+                    commonBusinessLogic.addXp(data, "quizFullScore");
+                }
+
                 //Update total score in profile
                 data.session.score += data.session.quiz.serverData.score;
                 store = true;
@@ -307,17 +263,18 @@ module.exports.answer = function (req, res, next) {
                 store = true;
             }
 
-            if (data.clientResponse.xpProgress && data.clientResponse.xpProgress.rankChanged) {
+            if (data.xpProgress) {
+
                 store = true;
-                data.session.features = sessionUtils.computeFeatures(data.session);
-                data.clientResponse.features = data.session.features;
+                data.clientResponse.xpProgress = data.xpProgress;
+
+                if (data.xpProgress.rankChanged) {
+                    data.session.features = sessionUtils.computeFeatures(data.session);
+                    data.clientResponse.features = data.session.features;
+                }
             }
 
             if (store) {
-                if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
-                    addXp(data, "quizFullScore");
-                }
-
                 dalDb.storeSession(data, callback);
             }
             else {
@@ -327,7 +284,7 @@ module.exports.answer = function (req, res, next) {
 
         //Check to save the score into the users object as well - when quiz is finished or when got a correct answer (which gives score and/or xp
         function (data, callback) {
-            if (data.session.quiz.clientData.finished || (data.clientResponse.xpProgress && data.clientResponse.xpProgress.addition > 0)) {
+            if (data.session.quiz.clientData.finished || (data.xpProgress && data.xpProgress.addition > 0)) {
 
                 data.setData = {
                     "score": data.session.score,
@@ -382,7 +339,7 @@ module.exports.answer = function (req, res, next) {
                     data.setData["leader.userId"] = data.session.userId;
                     data.setData["leader.avatar"] = data.session.avatar;
                     data.setData["leader.name"] = data.session.name;
-                    data.session.quiz.share.stories.push({"id" : "becameContestLeader"});
+                    data.session.quiz.serverData.share.stories.push({"id" : "becameContestLeader"});
                 }
 
                 // Check if need to replace the my team's leader
@@ -392,7 +349,7 @@ module.exports.answer = function (req, res, next) {
                     data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
                     data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
                     data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
-                    data.session.quiz.share.stories.push({"id" : "becameTeamLeader"});
+                    data.session.quiz.serverData.share.stories.push({"id" : "becameTeamLeader"});
                 }
 
                 data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
@@ -437,6 +394,7 @@ module.exports.answer = function (req, res, next) {
                     data.session.quiz.serverData.share.stories.push({"id" : "passedFriends", "passedFriends" : data.passedFriends});
                 }
                 data.closeConnection = true;
+
                 dalDb.setContest(data, callback);
             }
             else {
@@ -450,31 +408,31 @@ module.exports.answer = function (req, res, next) {
         function (data, callback) {
             if (data.session.quiz.clientData.finished) {
 
-                data.clientResponse.results = {"contest": data.contest};
+                data.clientResponse.results = {"contest": data.contest, "data" : {}};
 
-                contestsBusinessLogic.prepareContestForClient(data.clientResponse.results.contest, data.clientResponse.results.contest.users[data.session.userId].team, true);
+                contestsBusinessLogic.prepareContestForClient(data.clientResponse.results.contest, data.session.userId);
 
-                data.clientResponse.results.score = data.session.quiz.serverData.score;
+                data.clientResponse.results.data.score = data.session.quiz.serverData.score;
 
                 if (data.clientResponse.becameContestLeader) {
-                    data.clientResponse.results.sound = random.pick(quizSounds.finish.great);
-                    data.clientResponse.results.title = "BECAME_CONTEST_LEADER_TITLE";
-                    data.clientResponse.results.message = "POSITIVE_SCORE_MESSAGE";
+                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.great);
+                    data.clientResponse.results.data.title = "BECAME_CONTEST_LEADER_TITLE";
+                    data.clientResponse.results.data.message = "POSITIVE_SCORE_MESSAGE";
                 }
                 else if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
-                    data.clientResponse.results.sound = random.pick(quizSounds.finish.great);
-                    data.clientResponse.results.title = "EXCELLENT_SCORE_TITLE";
-                    data.clientResponse.results.message = "POSITIVE_SCORE_MESSAGE";
+                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.great);
+                    data.clientResponse.results.data.title = "EXCELLENT_SCORE_TITLE";
+                    data.clientResponse.results.data.message = "POSITIVE_SCORE_MESSAGE";
                 }
-                else if (data.clientResponse.results.score > 0) {
-                    data.clientResponse.results.sound = random.pick(quizSounds.finish.ok);
-                    data.clientResponse.results.title = "POSITIVE_SCORE_TITLE";
-                    data.clientResponse.results.message = "POSITIVE_SCORE_MESSAGE";
+                else if (data.clientResponse.results.data.score > 0) {
+                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.ok);
+                    data.clientResponse.results.data.title = "POSITIVE_SCORE_TITLE";
+                    data.clientResponse.results.data.message = "POSITIVE_SCORE_MESSAGE";
                 }
                 else { //zero
-                    data.clientResponse.results.sound = random.pick(quizSounds.finish.zero);
-                    data.clientResponse.results.title = "ZERO_SCORE_TITLE";
-                    data.clientResponse.results.message = "ZERO_SCORE_MESSAGE";
+                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.zero);
+                    data.clientResponse.results.data.title = "ZERO_SCORE_TITLE";
+                    data.clientResponse.results.data.message = "ZERO_SCORE_MESSAGE";
                 }
             }
             callback(null, data);

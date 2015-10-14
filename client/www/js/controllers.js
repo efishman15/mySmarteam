@@ -31,7 +31,7 @@
         });
 
         $scope.openNewRankModal = function () {
-            FlurryAgent.logEvent("newRank", {"rank" : "" + $rootScope.session.rank})
+            FlurryAgent.logEvent("newRank", {"rank": "" + $rootScope.session.rank})
             $scope.newRankModal.show();
         };
 
@@ -121,7 +121,7 @@
         };
     })
 
-    .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, ChartService, $ionicTabsDelegate, UserService, $window, $location) {
+    .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, $ionicTabsDelegate, UserService, $window, $location) {
 
         var tabs = ["app.tabs.myContests", "app.tabs.runningContests", "app.tabs.recentlyFinishedContests"];
 
@@ -170,10 +170,6 @@
             shouldTriggerScrollInfiniteRealFunction = false;
 
             $scope.loadMoreContests(true);
-        };
-
-        $scope.showPlay = function () {
-            return ($state.current.appData && $state.current.appData.showPlay);
         };
 
         $scope.showContestParticipants = function () {
@@ -246,24 +242,14 @@
             }, null, config);
         }
 
-        $scope.playContest = function (contest) {
-            if (contest.myTeam == 0 || contest.myTeam == 1) {
-                FlurryAgent.logEvent("contest/playContest/click", {"contestId" : contest._id, "team" : "" + contest.myTeam});
-                $rootScope.gotoView("app.quiz", false, {contestId: contest._id});
+        $scope.fcEvents = {
+            "chartClick": function (eventObj, dataObj) {
+                $rootScope.gotoView("app.contest", false, {"id": eventObj.sender.args.dataSource.contest._id});
             }
-            else {
-                FlurryAgent.logEvent("contest/playContestWithoutJoining/click", {"contestId" : contest._id});
-                PopupService.alert({"type": "SERVER_ERROR_NOT_JOINED_TO_CONTEST"});
-            }
-        };
-
-        ChartService.setEvents($scope);
-
+        }
     })
 
     .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig, ContestsService, $timeout) {
-
-        $scope.mode = "quiz";
 
         var quizCanvas;
         var quizContext;
@@ -272,9 +258,6 @@
             quizContext = quizCanvas.getContext("2d");
             quizContext.font = $rootScope.settings.quiz.canvas.font;
         }
-
-        var quizModeTitle = $translate.instant("QUIZ");
-        var resultsModeTitle = $translate.instant("WHO_IS_SMARTER") + " - " + $translate.instant("QUIZ_RESULTS");
 
         //-------------------------------------------------------
         // Question stats Popover
@@ -288,7 +271,7 @@
 
         $scope.openQuestionInfoModal = function () {
             $rootScope.preventBack = true;
-            FlurryAgent.logEvent("quiz/showQuestionInfo", {"question" : "" + ($scope.quiz.currentQuestionIndex + 1)});
+            FlurryAgent.logEvent("quiz/showQuestionInfo", {"question": "" + ($scope.quiz.currentQuestionIndex + 1)});
             $scope.questionInfoModal.show();
         };
 
@@ -397,25 +380,17 @@
             $ionicConfig.backButton.text("");
 
             viewData.enableBack = true;
-            if ($scope.mode === "quiz") {
-                startQuiz();
-            }
-        });
 
-        $scope.$on('$ionicView.afterLeave', function () {
-            $scope.mode = "quiz";
-            clearQuizScores();
-        });
-
-        $scope.playAgain = function () {
             startQuiz();
-        };
+        });
 
         $scope.$on("whoSmarter-windowResize", function () {
             drawQuizProgress();
         });
 
         function drawQuizProgress() {
+
+            quizCanvas.width = quizCanvas.clientWidth;
 
             quizContext.beginPath();
             quizContext.moveTo(0, $rootScope.settings.quiz.canvas.radius + $rootScope.settings.quiz.canvas.topOffset);
@@ -438,6 +413,7 @@
 
             $scope.currentQuestionCircle = null;
             var circleOffsets = (quizCanvas.width - $scope.quiz.totalQuestions * $rootScope.settings.quiz.canvas.radius * 2) / ($scope.quiz.totalQuestions - 1);
+
             for (var i = 0; i < $scope.quiz.totalQuestions; i++) {
 
                 if (i === $scope.quiz.currentQuestionIndex) {
@@ -586,9 +562,7 @@
                 return;
             }
 
-            $scope.mode = "quiz";
-
-            QuizService.start($stateParams.contestId, $stateParams.teamId,
+            QuizService.start($stateParams.contestId,
                 function (data) {
                     FlurryAgent.logEvent("quiz/started");
                     $scope.quiz = data.quiz;
@@ -598,29 +572,14 @@
                     }
                     drawQuizProgress();
 
-                    //Might get xp if starting quiz by pressing a new team (joining contest)
-                    if ($scope.quiz.xpProgress && $scope.quiz.xpProgress.addition > 0) {
-                        XpService.addXp($scope.quiz.xpProgress.addition);
-                    }
-
                     $scope.quiz.currentQuestion.answered = false;
                 });
-        }
-
-        $scope.getTitle = function () {
-
-            if ($scope.mode === "quiz") {
-                return quizModeTitle;
-            }
-            else {
-                return resultsModeTitle;
-            }
         }
 
         $scope.nextQuestion = function () {
             QuizService.nextQuestion(function (data) {
                 $scope.quiz = data;
-                FlurryAgent.logEvent("quiz/gotQuestion" +  ($scope.quiz.currentQuestionIndex+1));
+                FlurryAgent.logEvent("quiz/gotQuestion" + ($scope.quiz.currentQuestionIndex + 1));
                 $scope.quiz.currentQuestion.answered = false;
                 $scope.quiz.currentQuestion.animation = true; //Animation end will trigger quiz proceed
                 drawQuizProgress();
@@ -637,7 +596,7 @@
                 XpService.addXp($scope.quiz.xpProgress, $scope.quizProceed);
             }
 
-            if ((!$scope.quiz.xpProgress || !($scope.quiz.xpProgress.rankChanged)) && $scope.correctButtonId == button.id) {
+            if ($scope.correctButtonId === button.id && (!$scope.quiz.xpProgress || !$scope.quiz.xpProgress.rankChanged)) {
                 $scope.quizProceed();
             }
         };
@@ -645,33 +604,23 @@
         $scope.quizProceed = function () {
             if ($scope.quiz.finished) {
                 drawQuizProgress();
-                $rootScope.session.score += $scope.quiz.results.score;
-
-                $scope.contestCharts = [ContestsService.prepareContestChart($scope.quiz.results.contest, 0)];
+                $rootScope.session.score += $scope.quiz.results.data.score;
 
                 FlurryAgent.logEvent("quiz/finished",
                     {
-                        "score" : "" + $scope.quiz.results.score,
-                        "title" : $scope.quiz.results.title,
-                        "message" : $scope.quiz.results.message
+                        "score": "" + $scope.quiz.results.data.score,
+                        "title": $scope.quiz.results.data.title,
+                        "message": $scope.quiz.results.data.message
                     });
 
-                $scope.mode = "results";
-                $timeout(function() {
-                    SoundService.play($scope.quiz.results.sound);
-                },1000)
+                $ionicHistory.goBack();
+                $rootScope.$broadcast("whoSmarter-quizFinished", $scope.quiz.results);
+
             }
             else {
                 $scope.nextQuestion();
             }
         }
-
-        $scope.toggleSound = function () {
-            UserService.toggleSound(
-                function () {
-                    $rootScope.session.settings.sound = !$rootScope.session.settings.sound;
-                });
-        };
 
         $scope.submitAnswer = function (answerId) {
             $scope.quiz.currentQuestion.answered = true;
@@ -712,14 +661,14 @@
 
                     if (data.question.correct) {
 
-                        FlurryAgent.logEvent("quiz/question" +  ($scope.quiz.currentQuestionIndex+1) + "/answered/correct");
+                        FlurryAgent.logEvent("quiz/question" + ($scope.quiz.currentQuestionIndex + 1) + "/answered/correct");
 
                         correctAnswerId = answerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
                         SoundService.play("audio/click_ok");
                     }
                     else {
-                        FlurryAgent.logEvent("quiz/question" +  ($scope.quiz.currentQuestionIndex+1) + "/answered/incorrect");
+                        FlurryAgent.logEvent("quiz/question" + ($scope.quiz.currentQuestionIndex + 1) + "/answered/incorrect");
                         SoundService.play("audio/click_wrong");
                         correctAnswerId = data.question.correctAnswerId;
                         $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
@@ -841,7 +790,7 @@
         });
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig, $ionicLoading) {
+    .controller("SetContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig, $ionicLoading) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -1104,6 +1053,10 @@
 
             if ($stateParams.mode == "add" || ($stateParams.mode == "edit" && JSON.stringify($stateParams.contest) != JSON.stringify($scope.localViewData))) {
 
+                $scope.localViewData.name = $translate.instant("FULL_CONTEST_NAME", {
+                    "team0": $scope.localViewData.teams[0].name,
+                    "team1": $scope.localViewData.teams[1].name
+                });
                 //Add/update the new/updated contest to the server and in the local $rootScope
                 ContestsService.setContest($scope.localViewData, $stateParams.mode,
                     function (contest) {
@@ -1111,9 +1064,9 @@
 
                         //Report to Flurry
                         var contestParams = {
-                            "team0" : contest.teams[0].name,
-                            "team1" : contest.teams[1].name,
-                            "duration" : contest.endOption
+                            "team0": $scope.localViewData.teams[0].name,
+                            "team1": $scope.localViewData.teams[1].name,
+                            "duration": $scope.localViewData.endOption
                         };
 
                         if ($stateParams.mode === "add") {
@@ -1137,11 +1090,6 @@
 
         $scope.removeContest = function () {
 
-            var contestName = $translate.instant("CONTEST_NAME", {
-                team0: $scope.localViewData.teams[0].name,
-                team1: $scope.localViewData.teams[1].name
-            });
-
             var okButton = {
                 text: $translate.instant("OK"),
                 type: 'button-positive',
@@ -1162,7 +1110,7 @@
             buttons.push(okButton);
             buttons.push(cancelButton);
 
-            PopupService.confirm("CONFIRM_REMOVE_TITLE", "CONFIRM_REMOVE_TEMPLATE", {name: contestName}, function () {
+            PopupService.confirm("CONFIRM_REMOVE_TITLE", "CONFIRM_REMOVE_TEMPLATE", {name: $scope.localViewData.name}, function () {
                 ContestsService.removeContest($scope.localViewData._id,
                     function (data) {
                         $rootScope.$broadcast("whoSmarter-contestRemoved");
@@ -1366,18 +1314,18 @@
 
             $scope.roundTabState[1] = true;
 
-            $scope.getFriends();
+            $scope.getFriends(false);
 
         });
 
-        $scope.getFriends = function () {
+        $scope.getFriends = function (friendsPermissionJustGranted) {
             var config = {
                 "onServerErrors": {
                     "SERVER_ERROR_MISSING_FRIENDS_PERMISSION": {"next": askFriendsPermissions, "confirm": true}
                 }
             };
 
-            LeaderboardService.getFriends(function (leaders) {
+            LeaderboardService.getFriends(friendsPermissionJustGranted, function (leaders) {
                 $scope.leaders = leaders;
             }, null, config);
         }
@@ -1389,7 +1337,7 @@
 
         function askFriendsPermissions() {
             FacebookService.login(function (response) {
-                    $scope.getFriends();
+                    $scope.getFriends(true);
                 },
                 null,
                 $rootScope.settings.facebook.friendsPermissions, true);
@@ -1455,6 +1403,156 @@
 
             $scope.selectLeaderboard("all");
 
+        });
+
+    })
+
+    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicPopover, SoundService) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+        $scope.contestChart = {};
+
+        $scope.buttonState = null;
+
+        if (!$stateParams.id) {
+            $rootScope.gotoRootView();
+            return;
+        }
+
+        ContestsService.getContest($stateParams.id, function (contest) {
+            refreshContest(contest);
+        });
+
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+
+            viewData.enableBack = true;
+
+        });
+
+        function refreshContest(contest) {
+
+            $scope.contestChart = ContestsService.prepareContestChart(contest);
+            if (contest.myTeam === 0 || contest.myTeam === 1) {
+                $scope.buttonState = "play";
+            }
+            else {
+                $scope.buttonState = "join";
+            }
+        }
+
+        $scope.joinContest = function (teamId, sourceClick) {
+            ContestsService.joinContest($scope.contestChart.contest._id, teamId, function (data) {
+
+                var eventName;
+                if ($scope.contestChart.contest.myTeam === null) {
+                    eventName = "contest/join";
+                }
+                else {
+                    eventName = "contest/teamSwitch";
+                }
+                FlurryAgent.logEvent(eventName, {
+                    "contestId": $scope.contestChart.contest._id,
+                    "team": "" + teamId,
+                    "sourceClick": sourceClick
+                });
+
+                refreshContest(data.contest);
+
+                //Should get xp if fresh join
+                if (data.xpProgress && data.xpProgress.addition > 0) {
+                    XpService.addXp(data.xpProgress);
+                }
+
+            });
+        };
+
+        function teamClicked(teamId, sourceClick) {
+            var serverTeamId = teamId;
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "rtl") {
+                serverTeamId = 1 - teamId; //In RTL - the teams are presented backwards
+            }
+
+            if ($scope.contestChart.contest.myTeam === null || $scope.contestChart.contest.myTeam != serverTeamId) {
+                $scope.joinContest(serverTeamId, sourceClick);
+            }
+            else {
+                //My team clicked
+                FlurryAgent.logEvent("contest/playMyTeam", {
+                    "contestId": $scope.contestChart.contest._id,
+                    "team": "" + teamId,
+                    "sourceClick": sourceClick
+                });
+                $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
+            }
+        }
+
+        $scope.fcEvents = {
+            "dataplotClick": function (eventObj, dataObj) {
+                teamClicked(dataObj.dataIndex, "bar");
+            },
+            "dataLabelClick": function (eventObj, dataObj) {
+                teamClicked(dataObj.dataIndex, "label");
+            },
+            "annotationClick": function (eventObj, dataObj) {
+                if ($rootScope.session.isAdmin) {
+                    $rootScope.gotoView("setContest", false, {
+                        mode: "edit",
+                        contest: eventObj.sender.args.dataSource.contest
+                    });
+                }
+            }
+        };
+
+        //-------------------------------------------------------
+        // Choose Contest end option Popover
+        // ------------------------------------------------------
+        $ionicPopover.fromTemplateUrl('templates/quizResults.html', {
+            scope: $scope
+        }).then(function (quizResultsPopover) {
+            $scope.quizResultsPopover = quizResultsPopover;
+        });
+
+        $scope.openQuizResultsPopover = function ($event) {
+            if ($event) {
+                $scope.quizResultsPopover.show($event);
+            }
+            else {
+                $scope.quizResultsPopover.show("<ion-footer-bar>");
+            }
+        };
+
+        $scope.closeQuizResultsPopover = function () {
+            $scope.quizResultsPopover.hide();
+        };
+
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            if ($scope.quizResultsPopover) {
+                $scope.quizResultsPopover.remove();
+            }
+        });
+
+
+        $scope.playAgain = function () {
+            $scope.closeQuizResultsPopover();
+            $scope.playContest();
+        };
+
+        $scope.playContest = function () {
+            FlurryAgent.logEvent("contest/playContest/click", {
+                "contestId": $scope.contestChart.contest._id,
+                "team": "" + $scope.contestChart.contest.myTeam
+            });
+            $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
+        };
+
+        $rootScope.$on('whoSmarter-quizFinished', function (error, results) {
+            refreshContest(results.contest);
+            $scope.lastQuizResults = results.data;
+
+            $scope.openQuizResultsPopover();
+            SoundService.play(results.data.sound);
         });
 
     });

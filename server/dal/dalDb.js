@@ -393,73 +393,78 @@ module.exports.facebookLogin = function (data, callback) {
     var now = (new Date()).getTime();
 
     usersCollection.findOne({"facebookUserId": data.user.thirdParty.id}, {}, function (err, user) {
-        if (err || !user) {
-            register(data, callback);
-            return;
-        }
+            if (err || !user) {
+                register(data, callback);
+                return;
+            }
 
-        var dailyXp = 0;
-        var prevLogin = new Date(user.lastLogin);
+            var dailyXp = 0;
+            var prevLogin = new Date(user.lastLogin);
 
-        var today = new Date();
-        var now = today.getTime();
+            var today = new Date();
+            var now = today.getTime();
 
-        if (prevLogin.getUTCDay() != today.getUTCDay() ||
-            prevLogin.getUTCMonth() != today.getUTCMonth() ||
-            prevLogin.getUTCFullYear() != today.getUTCFullYear()) {
+            if (prevLogin.getUTCDay() != today.getUTCDay() ||
+                prevLogin.getUTCMonth() != today.getUTCMonth() ||
+                prevLogin.getUTCFullYear() != today.getUTCFullYear()) {
 
-            var xpProgress = new generalUtils.XpProgress(user.xp, user.rank);
-            xpProgress.addXp(user, "login");
-        }
+                var xpProgress = new generalUtils.XpProgress(user.xp, user.rank);
+                xpProgress.addXp(user, "login");
+            }
 
-        usersCollection.updateOne({"_id": user._id},
-            {
-                $set: {
+            var setObject = {
+                "$set": {
                     "lastLogin": now,
                     "facebookAccessToken": data.user.thirdParty.accessToken,
                     "name": data.user.name,  //keep sync with Facebook changes
                     "email": data.user.email,  //keep sync with Facebook changes - might be null if user removed email permission
                     "ageRange": data.user.ageRange, //keep sync with Facebook changes
                     "xp": user.xp,
-                    "rank": user.rank
+                    "rank": user.rank,
+                    "friends": thirdParty.friends
                 }
-            }, function (err, results) {
+            };
 
-                if (err || results.nModified < 1) {
 
-                    closeDb(data);
+            usersCollection.updateOne({"_id": user._id}, setObject
+                , function (err, results) {
 
-                    callback(new exceptions.ServerException("Error updating user during login", {
-                        "user": user
-                    }, "error"));
+                    if (err || results.nModified < 1) {
 
-                    return;
-                }
+                        closeDb(data);
 
-                //Update all those fields also locally as previouselly they were only updated in the db
-                user.lastLogin = now;
-                user.name = data.user.name;
-                user.email = data.user.email;
-                user.ageRange = data.user.ageRange;
+                        callback(new exceptions.ServerException("Error updating user during login", {
+                            "user": user
+                        }, "error"));
 
-                data.user = user;
+                        return;
+                    }
 
-                //restore the avatar back
-                data.user.avatar = avatar;
+                    //Update all those fields also locally as previouselly they were only updated in the db
+                    user.lastLogin = now;
+                    user.name = data.user.name;
+                    user.email = data.user.email;
+                    user.ageRange = data.user.ageRange;
 
-                if (thirdParty) {
-                    data.user.thirdParty = thirdParty;
-                }
+                    data.user = user;
 
-                if (clientInfo) {
-                    data.user.clientInfo = clientInfo;
-                }
+                    //restore the avatar back
+                    data.user.avatar = avatar;
 
-                checkToCloseDb(data);
+                    if (thirdParty) {
+                        data.user.thirdParty = thirdParty;
+                    }
 
-                callback(null, data);
-            });
-    });
+                    if (clientInfo) {
+                        data.user.clientInfo = clientInfo;
+                    }
+
+                    checkToCloseDb(data);
+
+                    callback(null, data);
+                });
+        }
+    );
 };
 
 //---------------------------------------------------------------------
@@ -485,6 +490,7 @@ module.exports.createOrUpdateSession = function (data, callback) {
     var setObject = {
         "userId": ObjectId(data.user._id),
         "facebookUserId": data.user.facebookUserId,
+        "friends" : data.user.thirdParty.friends,
         "isAdmin": data.user.isAdmin,
         "facebookAccessToken": data.user.facebookAccessToken,
         "name": data.user.name,
@@ -705,11 +711,11 @@ function prepareQuestionCriteria(data, callback) {
     //Filter by age if available
     if (data.session.ageRange) {
         if (data.session.ageRange.min) {
-            questionCriteria["$and"].push({"minAge" : {$lte: data.session.ageRange.min}});
+            questionCriteria["$and"].push({"minAge": {$lte: data.session.ageRange.min}});
         }
 
         if (data.session.ageRange.max) {
-            questionCriteria["$and"].push({"maxAge" : {$gte: data.session.ageRange.max}});
+            questionCriteria["$and"].push({"maxAge": {$gte: data.session.ageRange.max}});
         }
     }
 

@@ -1,11 +1,12 @@
 {
-  "HOME_WELCOME_PLAY_TRIVIA": "שחקו עבור קבוצתכם ותגלו",
+  "HOME_WELCOME": "שחקו עבור קבוצתכם ותגלו",
   "FACEBOOK_CONNECT": "התחברו עם פייסבוק",
   "WHO_IS_SMARTER_QUESTION": "מי יותר חכם?",
   "WHO_IS_SMARTER": "מי יותר חכם",
   "DEMO_TEAM0": "הבנים",
   "DEMO_TEAM1": "הבנות",
   "CONTEST_NAME": "{{team0}} או {{team1}}",
+  "FULL_CONTEST_NAME" : "מי יותר חכם: {{team0}} או {{team1}}?",
   "CONTEST_ENDS_IN": "מסתיימת בעוד {{number}} {{units}}",
   "CONTEST_ENDED" : "הסתיימה לפני {{number}} {{units}}",
   "DEMO_CONTEST_ENDS_IN_UNITS": "ימים",
@@ -102,7 +103,8 @@
   "ANSWERED_INCORRECT" : "טעו",
   "HINT_FOR_SCORE" : "רמז ({{score}} נקודות)",
   "ANSWER_FOR_SCORE" : "תשובה ({{score}} נקודות)",
-  "CONTEST_LEADER" : "מקום ראשון: {{name}}",
+  "CONTEST_LEADER_WITH_NAME" : "מקום ראשון: {{name}}",
+  "CONTEST_LEADER" : "מקום ראשון",
   "SHARE_WITH_FRIENDS_TITLE" : "שתפו חברים",
   "CLICK_LIKE" : "לחצו לייק לדף המשחק בפייסבוק לקבלת תוצאות התחרויות בהשתתפותכם",
   "FACEBOOK_GAME_PAGE" : "דף המשחק בפייסבוק",
@@ -116,5 +118,6 @@
   "WEEKLY" : "שבועי",
   "CONTEST_LEADERS" : "מובילי התחרות",
   "CONTEST_LEADERS_GENERAL_SCORING" : "דירוג כללי",
-  "MY_POSITION" : "המיקום שלי: {{position}}"
+  "MY_POSITION" : "המיקום שלי: {{position}}",
+  "JOIN_TEAM" : "הצטרפו לקבוצת {{team}}"
 }
