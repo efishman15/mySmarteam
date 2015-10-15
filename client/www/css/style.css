@@ -150,8 +150,8 @@ label.item.valid-lr {
     background-color: #fff
 }
 
-.nowrapText {
-    overflow: visible;
+.no-wrap-text {
+    overflow: visible !important;
 }
 
 .language {
@@ -231,7 +231,6 @@ label.item.valid-lr {
     left: -15px;
 }
 
-
 .quiz-results-avatar-leader-ltr {
     position: relative;
     top: -205px;
@@ -291,7 +290,8 @@ label.item.valid-lr {
 }
 
 .center-button-in-ellipse {
-    margin-right: -1px !important;; margin-left: -1px !important;
+    margin-right: -1px !important;;
+    margin-left: -1px !important;
     border-top-width: 2px !important;
     border-bottom-width: 2px !important;
 }
@@ -441,4 +441,47 @@ label.item.valid-lr {
     -moz-box-shadow: 3px 3px 3px #CDCDCD;
     width: 50%;
     margin: 0 auto;
+}
+
+.zero-margin {
+    margin: 0px auto;
+}
+
+.tabs-striped.tabs-footer {
+    background-color: transparent;
+    border: 0px;
+    border-color: transparent;
+    border-top: transparent;
+    border-bottom: transparent;
+    background-image: none !important;
+}
+
+.tabs-striped .tab-item.footer-tab-item {
+    color: #232323 !important;
+}
+
+.bar-footer {
+    border: 0px !important;
+    border-bottom-color: transparent !important;
+    background-image: none;
+    border-bottom: none;
+}
+
+.button.join-contest {
+    font-size: 90%;
+    line-height: 1.2em;
+    white-space: normal;
+    height: 40px;
+}
+
+.center-position {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.long-animated {
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
 }

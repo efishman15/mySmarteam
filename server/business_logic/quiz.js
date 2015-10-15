@@ -8,14 +8,6 @@ var contestsBusinessLogic = require("../business_logic/contests");
 var dalLeaderboard = require("../dal/dalLeaderboards");
 var commonBusinessLogic = require("./common");
 
-var quizSounds = {
-    "finish": {
-        "zero": ["audio/finish_zero_1", "audio/finish_zero_2"],
-        "ok": ["audio/finish_ok_1"],
-        "great": ["audio/finish_great_1"]
-    }
-}
-
 //--------------------------------------------------------------------------
 //Private functions
 //--------------------------------------------------------------------------
@@ -43,6 +35,26 @@ function setQuestionDirection(data, callback) {
         callback(null, data);
 
     });
+}
+
+//----------------------------------------------------------------------------------------
+// setPostStory
+//
+// determines if the given story has a higher post priority than the current story and
+// replaces if necessary
+//----------------------------------------------------------------------------------------
+function setPostStory(data, story, additionalInfo) {
+    if (!data.session.quiz.serverData.share.story.name) {
+        data.session.quiz.serverData.share.story.name = story;
+    }
+    else if (generalUtils.settings.server.quiz.stories[story].priority > generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name].priority) {
+        //Replace the story with one with a higher priority
+        data.session.quiz.serverData.share.story.name = story;
+    }
+
+    if (additionalInfo) {
+        data.session.quiz.serverData.share.story.additionalInfo = additionalInfo;
+    }
 }
 
 //--------------------------------------------------------------------------
@@ -102,7 +114,7 @@ module.exports.start = function (req, res, next) {
                 "contestId": data.contestId,
                 "score": 0,
                 "correctAnswers": 0,
-                "share": {"data": {}, "stories": []}
+                "share": {"data": {}, "story": {}}
             };
 
             var myTeam = data.contest.users[data.session.userId].team;
@@ -203,6 +215,7 @@ module.exports.answer = function (req, res, next) {
         function (data, callback) {
 
             if (!data.session.quiz) {
+                dalDb.closeDb(data);
                 callback(new exceptions.ServerMessageException("SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ", null, 403));
                 return;
             }
@@ -339,7 +352,7 @@ module.exports.answer = function (req, res, next) {
                     data.setData["leader.userId"] = data.session.userId;
                     data.setData["leader.avatar"] = data.session.avatar;
                     data.setData["leader.name"] = data.session.name;
-                    data.session.quiz.serverData.share.stories.push({"id" : "becameContestLeader"});
+                    setPostStory(data, "becameContestLeader");
                 }
 
                 // Check if need to replace the my team's leader
@@ -349,7 +362,7 @@ module.exports.answer = function (req, res, next) {
                     data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
                     data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
                     data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
-                    data.session.quiz.serverData.share.stories.push({"id" : "becameTeamLeader"});
+                    setPostStory(data, "becameTeamLeader");
                 }
 
                 data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
@@ -357,7 +370,7 @@ module.exports.answer = function (req, res, next) {
 
                 //Check if a perfect score story exist
                 if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
-                    data.session.quiz.serverData.share.stories.push({"id" : "perfectScore"});
+                    setPostStory(data, "gotPerfectScore");
                 }
 
                 //Check if one of 2 stories happened:
@@ -365,15 +378,23 @@ module.exports.answer = function (req, res, next) {
                 // 2. My team is very close to lead
                 if (data.session.quiz.serverData.share.data.myTeamStartedBehind) {
                     if (data.contest.teams[myTeam].score > data.contest.teams[1 - myTeam].score) {
-                        data.session.quiz.serverData.share.stories.push({"id" : "myTeamStartedLeading"})
+                        setPostStory(data, "madeMyTeamLead");
                     }
                     else if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score &&
                         contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) < generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
-                        data.session.quiz.serverData.share.stories.push({"id" : "myTeamAlmostLeads"})
+                        setPostStory(data, "myTeamIsCloseToLead");
                     }
                 }
 
-                if (data.session.quiz.serverData.share.data.friendsAboveMe) {
+                if (
+                    //Call the leaderboard to check passed friends only if there is no story to post up until now
+                    //Or the "passed friends" story is a "better" story in terms of priority
+                    data.session.quiz.serverData.share.data.friendsAboveMe &&
+                    (
+                        !data.session.quiz.serverData.share.story.name ||
+                        generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name].priority < generalUtils.settings.server.quiz.stories.passedFriendInLeaderboard.priority
+                    )
+                ) {
                     data.friendsAboveMe = data.session.quiz.serverData.share.data.friendsAboveMe;
                     dalLeaderboard.getPassedFriends(data, callback);
                 }
@@ -391,8 +412,16 @@ module.exports.answer = function (req, res, next) {
             if (data.session.quiz.clientData.finished) {
 
                 if (data.passedFriends) {
-                    data.session.quiz.serverData.share.stories.push({"id" : "passedFriends", "passedFriends" : data.passedFriends});
+                    setPostStory(data, "passedFriendInLeaderboard", {"passedFriends": data.passedFriends});
                 }
+
+                if (data.session.quiz.serverData.score > 0) {
+                    setPostStory(data, "gotScore");
+                }
+                else {
+                    setPostStory(data, "gotZeroScore");
+                }
+
                 data.closeConnection = true;
 
                 dalDb.setContest(data, callback);
@@ -408,31 +437,20 @@ module.exports.answer = function (req, res, next) {
         function (data, callback) {
             if (data.session.quiz.clientData.finished) {
 
-                data.clientResponse.results = {"contest": data.contest, "data" : {}};
+                data.clientResponse.results = {"contest": data.contest, "data": {}};
 
-                contestsBusinessLogic.prepareContestForClient(data.clientResponse.results.contest, data.session.userId);
+                contestsBusinessLogic.prepareContestForClient(data.clientResponse.results.contest, data.session);
 
                 data.clientResponse.results.data.score = data.session.quiz.serverData.score;
 
-                if (data.clientResponse.becameContestLeader) {
-                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.great);
-                    data.clientResponse.results.data.title = "BECAME_CONTEST_LEADER_TITLE";
-                    data.clientResponse.results.data.message = "POSITIVE_SCORE_MESSAGE";
-                }
-                else if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
-                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.great);
-                    data.clientResponse.results.data.title = "EXCELLENT_SCORE_TITLE";
-                    data.clientResponse.results.data.message = "POSITIVE_SCORE_MESSAGE";
-                }
-                else if (data.clientResponse.results.data.score > 0) {
-                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.ok);
-                    data.clientResponse.results.data.title = "POSITIVE_SCORE_TITLE";
-                    data.clientResponse.results.data.message = "POSITIVE_SCORE_MESSAGE";
-                }
-                else { //zero
-                    data.clientResponse.results.data.sound = random.pick(quizSounds.finish.zero);
-                    data.clientResponse.results.data.title = "ZERO_SCORE_TITLE";
-                    data.clientResponse.results.data.message = "ZERO_SCORE_MESSAGE";
+                var story = generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name];
+
+                data.clientResponse.results.data.sound = random.pick(generalUtils.settings.server.quiz.sounds.finish[story.soundGroup]);
+                data.clientResponse.results.data.clientKey = story.clientKey
+                data.clientResponse.results.data.animation = random.pick(generalUtils.settings.server.quiz.animations);
+
+                if (story.facebookPost) {
+                    data.clientResponse.results.data.facebookPost = story.facebookPost;
                 }
             }
             callback(null, data);

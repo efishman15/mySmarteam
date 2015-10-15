@@ -204,7 +204,8 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             .state('share', {
                 url: "/share",
-                params: {serverPopup: null},
+                params: {contest: null},
+                cache : false,
                 controller: "ShareCtrl",
                 templateUrl: "templates/share.html"
             })

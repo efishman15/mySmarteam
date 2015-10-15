@@ -122,13 +122,13 @@ function validateContestData(data, callback) {
 // 3. Chart values as a result of a score change
 //---------------------------------------------------------------------
 module.exports.prepareContestForClient = prepareContestForClient;
-function prepareContestForClient(contest, currentUserId) {
+function prepareContestForClient(contest, session) {
 
     //Status
     var now = (new Date()).getTime();
 
-    if (contest.users && contest.users[currentUserId]) {
-        contest.myTeam = contest.users[currentUserId].team;
+    if (contest.users && contest.users[session.userId]) {
+        contest.myTeam = contest.users[session.userId].team;
     }
 
     if (contest.endDate < now) {
@@ -162,7 +162,7 @@ function prepareContestForClient(contest, currentUserId) {
 
     setContestScores(contest);
 
-    if (contest.userIdCreated === currentUserId) {
+    if (contest.userIdCreated === session.userId || session.isAdmin) {
         contest.owner = true;
     }
 
@@ -233,7 +233,7 @@ function joinContest (req, res, next) {
         //Store the session's xp progress in the db
         function (data, callback) {
 
-            prepareContestForClient(data.contest, data.session.userId);
+            prepareContestForClient(data.contest, data.session);
 
             data.clientResponse = {"contest" : data.contest};
 
@@ -495,7 +495,7 @@ module.exports.getContests = function (req, res, next) {
         //Set contest status for each contest
         function (data, callback) {
             for (var i = 0; i < data.contests.length; i++) {
-                prepareContestForClient(data.contests[i], data.session.userId);
+                prepareContestForClient(data.contests[i], data.session);
             }
 
             callback(null, data);
@@ -548,7 +548,7 @@ module.exports.getContest = function (req, res, next) {
 
         //Prepare contest for client
         function (data, callback) {
-            prepareContestForClient(data.contest, data.session.userId);
+            prepareContestForClient(data.contest, data.session);
             callback(null, data);
         }
     ];

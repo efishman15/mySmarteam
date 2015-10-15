@@ -1120,12 +1120,12 @@
             });
         };
 
-        $scope.hideRemoveContest = function () {
-            if ($stateParams.mode == 'add' || !$rootScope.session.isAdmin) {
-                return true;
+        $scope.showRemoveContest = function () {
+            if ($stateParams.mode === 'add' || !$rootScope.session.isAdmin) {
+                return false;
             }
             else {
-                return false;
+                return true;
             }
         }
 
@@ -1284,19 +1284,51 @@
         }
     })
 
-    .controller("ShareCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate) {
+    .controller("ShareCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate, $stateParams) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
+
+        $scope.shareUrl = null;
+        $scope.shareSubject = null;
+        $scope.shareBody = null;
+        $scope.shareBodyNoUrl = null;
+
+        var emailRef = "?ref=shareEmail";
+
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = true;
+            $scope.contest = $stateParams.contest;
+            if ($scope.contest) {
+                $scope.shareUrl = encodeURIComponent($rootScope.settings.share.contestUrlPrefix + $scope.contest._id);
+                $scope.shareSubject = $translate.instant("SHARE_SUBJECT_WITH_CONTEST", {name : $scope.contest.name});
+
+                if ($scope.contest.myTeam === 0 || $scope.contest.myTeam === 1) {
+                    $scope.shareBody = $translate.instant("SHARE_BODY_WITH_CONTEST", {team : $scope.contest.teams[$scope.contest.myTeam].name, url : $scope.shareUrl});
+                    $scope.shareBodyEmail = $translate.instant("SHARE_BODY_WITH_CONTEST", {team : $scope.contest.teams[$scope.contest.myTeam].name, url : $scope.shareUrl + emailRef});
+                    $scope.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL_WITH_CONTEST", {team : $scope.contest.teams[$scope.contest.myTeam].name});
+                }
+                else {
+                    $scope.shareBody = $translate.instant("SHARE_BODY", {url : $scope.shareUrl});
+                    $scope.shareBodyEmail = $translate.instant("SHARE_BODY", {url : $scope.shareUrl + emailRef});
+                    $scope.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL");
+                }
+            }
+            else {
+                $scope.shareUrl = encodeURIComponent($rootScope.settings.general.downloadUrl);
+                $scope.shareSubject = $translate.instant("SHARE_SUBJECT");
+                $scope.shareBody = $translate.instant("SHARE_BODY", {url : $scope.shareUrl});
+                $scope.shareBodyEmail = $translate.instant("SHARE_BODY", {url : $scope.shareUrl + emailRef});
+                $scope.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL");
+            }
         });
 
+
         $scope.shareAnywhere = function () {
-            $cordovaSocialSharing.share($translate.instant("SHARE_BODY_NO_URL"),
-                $translate.instant("SHARE_SUBJECT"),
+            $cordovaSocialSharing.share($scope.shareBodyNoUrl,
+                $scope.shareSubject,
                 $rootScope.settings.general.baseUrl + $rootScope.settings.general.logoUrl,
-                $rootScope.settings.general.downloadUrl
+                $rootScope.shareUrl
             );
         };
 
@@ -1414,6 +1446,7 @@
         $scope.contestChart = {};
 
         $scope.buttonState = null;
+        $scope.showResults = false;
 
         if (!$stateParams.id) {
             $rootScope.gotoRootView();
@@ -1425,9 +1458,11 @@
         });
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-
             viewData.enableBack = true;
+        });
 
+        $scope.$on('$ionicView.beforeLeave', function (event, viewData) {
+            $scope.showResults = false;
         });
 
         function refreshContest(contest) {
@@ -1438,6 +1473,12 @@
             }
             else {
                 $scope.buttonState = "join";
+            }
+        }
+
+        $scope.switchTeams = function() {
+            if ($scope.contestChart.contest.myTeam === 0 || $scope.contestChart.contest.myTeam === 1) {
+                $scope.joinContest(1 - $scope.contestChart.contest.myTeam, "footer");
             }
         }
 
@@ -1550,8 +1591,9 @@
         $rootScope.$on('whoSmarter-quizFinished', function (error, results) {
             refreshContest(results.contest);
             $scope.lastQuizResults = results.data;
+            console.log("animation=" + $scope.lastQuizResults.animation);
 
-            $scope.openQuizResultsPopover();
+            $scope.showResults = true;
             SoundService.play(results.data.sound);
         });
 

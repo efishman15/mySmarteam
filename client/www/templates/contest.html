@@ -1,14 +1,15 @@
 <ion-view view-title="{{ 'WHO_IS_SMARTER_QUESTION' | translate}}" class="bgQuestionMarks">
 
-    <ion-content dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
+    <ion-content dir="{{$root.settings.languages[$root.session.settings.language].direction}}" drag-content="false">
 
         <div class="full-width">
             <div class="row padding center">
-                <div class="center item item-divider leader-avatar-in-leaderboard" style="margin: 0px auto;"
-                     ng-class="{'item-avatar-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','item-avatar-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}">
+                <div class="center item item-divider leader-avatar-in-leaderboard pointer zero-margin"
+                     ng-class="{'item-avatar-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','item-avatar-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                     ng-click="$root.gotoView('contestParticipants', false, {'contest' : contestChart.contest})">
                     <image class="leader-avatar-in-leaderboard" ng-src="{{contestChart.contest.leader.avatar}}"></image>
                     <div style="text-align: {{$root.settings.languages[$root.user.settings.language].align}}">
-                        <h2>{{contestChart.contest.leader.name}}</h2>
+                        <h2 class="no-wrap-text">{{contestChart.contest.leader.name}}</h2>
 
                         <p>{{'CONTEST_LEADER' | translate}}</p>
                     </div>
@@ -31,19 +32,19 @@
             <div class="animate-switch-container" ng-switch on="buttonState">
                 <div class="animate-switch" ng-switch-when="play">
                     <button
-                            class="item button button-stable button-small nowrapText button-3d button-3d-assertive"
+                            class="item button button-stable button-small no-wrap-text button-3d button-3d-assertive"
                             ng-click="playContest()">{{'PLAY_CONTEST' |
                         translate}}
                     </button>
                 </div>
                 <div class="animate-switch" ng-switch-when="join">
                     <button style="width: {{$root.settings.charts.size.width / 2}}px;"
-                            class="item button button-stable button-small small-font nowrapText button-3d button-3d-assertive"
+                            class="item button button-stable button-small join-contest no-wrap-text button-3d button-3d-assertive"
                             ng-click="joinContest(0,'button')">{{'JOIN_TEAM' | translate:{team :
                         contestChart.contest.teams[0].name} }}
                     </button>
                     <button style="width: {{$root.settings.charts.size.width / 2}}px;"
-                            class="item button button-stable button-small small-font nowrapText button-3d button-3d-assertive"
+                            class="item button button-stable button-small join-contest no-wrap-text button-3d button-3d-assertive"
                             ng-click="joinContest(1,'button')">{{'JOIN_TEAM' | translate:{team :
                         contestChart.contest.teams[1].name} }}
                     </button>
@@ -52,6 +53,37 @@
 
         </div>
 
+        <div ng-if="showResults" class="item-divider center long-animated {{lastQuizResults.animation}}">
+            <h4>{{lastQuizResults.clientKey + '_TITLE' | translate }}</h4>
+            <h5>{{lastQuizResults.clientKey + '_MESSAGE' | translate:{score : lastQuizResults.score, team : contestChart.contest.teams[contestChart.contest.myTeam].name} }}</h5>
+        </div>
+
     </ion-content>
+
+    <div class="bar bar-footer">
+
+        <div class="tabs tabs-striped tabs-footer tabs-icon-top">
+            <a class="tab-item footer-tab-item"
+               ng-click="$root.gotoView('share', false, {'contest' : contestChart.contest})">
+                <i class="icon ion-android-share-alt"></i>
+
+                <p>{{'SHARE' | translate}}</p>
+            </a>
+            <a class="tab-item footer-tab-item"
+               ng-click="$root.gotoView('contestParticipants', false, {'contest' : contestChart.contest})">
+                <i class="icon ion-ios-people"></i>
+                {{'CONTEST_LEADERS' | translate}}
+            </a>
+            <a class="tab-item footer-tab-item" ng-click="switchTeams()">
+                <i class="icon ion-arrow-swap"></i>
+                {{'SWITCH_TEAMS' | translate}}
+            </a>
+            <a ng-if="contestChart.contest.owner" class="tab-item footer-tab-item"
+               ng-click="$root.gotoView('setContest', false, {'mode' : 'edit', 'contest' : contestChart.contest})">
+                <i class="icon ion-edit"></i>
+                {{'EDIT_CONTEST' | translate}}
+            </a>
+        </div>
+    </div>
 
 </ion-view>

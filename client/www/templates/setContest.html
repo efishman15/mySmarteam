@@ -1,11 +1,6 @@
 <ion-view title="{{getTitle()}}">
-    <ion-nav-bar class="bar-stable bar-dark"
+    <ion-nav-bar class="bar-stable bar-dark" align-title="center"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
-        <ion-nav-buttons side="primary">
-            <button class="button button-light" ng-click="removeContest()" ng-hide="hideRemoveContest()">{{ 'REMOVE_CONTEST' |
-                translate}}
-            </button>
-        </ion-nav-buttons>
         <ion-nav-back-button></ion-nav-back-button>
     </ion-nav-bar>
     <ion-content has-header="true" padding="true"
@@ -153,6 +148,9 @@
                                    value="{{localViewData.totalParticipants}}">
                         </div>
                     </div>
+                    <button class="padding button button-small button-assertive" ng-click="removeContest()" ng-if="showRemoveContest()">{{ 'REMOVE_CONTEST' |
+                        translate}}
+                    </button>
 
                 </div>
             </div>
