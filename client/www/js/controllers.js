@@ -39,7 +39,7 @@
             $scope.newRankModal.hide();
         };
 
-        $rootScope.$on("whoSmarter-rankChanged", function (error, data) {
+        $rootScope.$on("whoSmarter-rankChanged", function (event, data) {
 
             SoundService.play("audio/finish_great_1");
             $scope.xpProgress = data.xpProgress;
@@ -121,7 +121,7 @@
         };
     })
 
-    .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, $ionicTabsDelegate, UserService, $window, $location) {
+    .controller("ContestsCtrl", function ($scope, $state, $stateParams, $rootScope, $ionicHistory, $translate, ContestsService, PopupService, $timeout, $ionicTabsDelegate, UserService, $ionicConfig) {
 
         var tabs = ["app.tabs.myContests", "app.tabs.runningContests", "app.tabs.recentlyFinishedContests"];
 
@@ -244,6 +244,7 @@
 
         $scope.fcEvents = {
             "chartClick": function (eventObj, dataObj) {
+                $rootScope.$broadcast("whoSmarter-contestUpdated", eventObj.sender.args.dataSource.contest);
                 $rootScope.gotoView("app.contest", false, {"id": eventObj.sender.args.dataSource.contest._id});
             }
         }
@@ -1113,8 +1114,8 @@
             PopupService.confirm("CONFIRM_REMOVE_TITLE", "CONFIRM_REMOVE_TEMPLATE", {name: $scope.localViewData.name}, function () {
                 ContestsService.removeContest($scope.localViewData._id,
                     function (data) {
-                        $rootScope.$broadcast("whoSmarter-contestRemoved");
                         $rootScope.goBack();
+                        $rootScope.$broadcast("whoSmarter-contestRemoved");
                     });
 
             });
@@ -1439,14 +1440,14 @@
 
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicPopover, SoundService) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
         $scope.contestChart = {};
 
         $scope.buttonState = null;
-        $scope.showResults = false;
+        $scope.quizJustFinished = false;
 
         if (!$stateParams.id) {
             $rootScope.gotoRootView();
@@ -1459,10 +1460,15 @@
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = true;
+            //Contest is passed when clicking on chart from main screen,
+            //But not passed when calling screen from direct link outside the app (Deep linking)
+            if ($stateParams.contest && !$scope.quizJustFinished ) {
+                refreshContest($stateParams.contest);
+            }
         });
 
-        $scope.$on('$ionicView.beforeLeave', function (event, viewData) {
-            $scope.showResults = false;
+        $scope.$on('$ionicView.afterLeave', function (event, viewData) {
+            $scope.quizJustFinished = false;
         });
 
         function refreshContest(contest) {
@@ -1545,41 +1551,7 @@
             }
         };
 
-        //-------------------------------------------------------
-        // Choose Contest end option Popover
-        // ------------------------------------------------------
-        $ionicPopover.fromTemplateUrl('templates/quizResults.html', {
-            scope: $scope
-        }).then(function (quizResultsPopover) {
-            $scope.quizResultsPopover = quizResultsPopover;
-        });
-
-        $scope.openQuizResultsPopover = function ($event) {
-            if ($event) {
-                $scope.quizResultsPopover.show($event);
-            }
-            else {
-                $scope.quizResultsPopover.show("<ion-footer-bar>");
-            }
-        };
-
-        $scope.closeQuizResultsPopover = function () {
-            $scope.quizResultsPopover.hide();
-        };
-
         //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function () {
-            if ($scope.quizResultsPopover) {
-                $scope.quizResultsPopover.remove();
-            }
-        });
-
-
-        $scope.playAgain = function () {
-            $scope.closeQuizResultsPopover();
-            $scope.playContest();
-        };
-
         $scope.playContest = function () {
             FlurryAgent.logEvent("contest/playContest/click", {
                 "contestId": $scope.contestChart.contest._id,
@@ -1588,13 +1560,25 @@
             $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
         };
 
-        $rootScope.$on('whoSmarter-quizFinished', function (error, results) {
+        $rootScope.$on('whoSmarter-quizFinished', function (event, results) {
+
             refreshContest(results.contest);
             $scope.lastQuizResults = results.data;
-            console.log("animation=" + $scope.lastQuizResults.animation);
+            $scope.quizJustFinished = true;
+            $timeout(function()  {
+                SoundService.play(results.data.sound);
+            },500);
+        });
 
-            $scope.showResults = true;
-            SoundService.play(results.data.sound);
+        $rootScope.$on('whoSmarter-contestRemoved', function () {
+            $timeout(function(){
+                $rootScope.goBack();
+            },500);
+
+        });
+
+        $rootScope.$on('whoSmarter-contestUpdated', function (event, contest) {
+            refreshContest(contest);
         });
 
     });

@@ -133,7 +133,7 @@ module.exports.start = function (req, res, next) {
             else {
                 //Tie between the teams - take the OTHER team which I am not playing for
                 //Any positive score achieved for my team will create a share story
-                //"My score just made the (my team) lead..."
+                //"My score just made my team lead..."
                 quiz.serverData.share.data.leadingTeam = 1 - myTeam;
             }
 
@@ -156,6 +156,7 @@ module.exports.start = function (req, res, next) {
         //Stores some friends above me in the leaderboard
         dalLeaderboard.getFriendsAboveMe,
 
+        //Stores the friends above me in the quiz
         function (data, callback) {
             if (data.friendsAboveMe && data.friendsAboveMe.length > 0) {
                 data.session.quiz.serverData.share.data.friendsAboveMe = data.friendsAboveMe;
@@ -265,6 +266,7 @@ module.exports.answer = function (req, res, next) {
 
                 if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
                     commonBusinessLogic.addXp(data, "quizFullScore");
+                    setPostStory(data, "gotPerfectScore");
                 }
 
                 //Update total score in profile
@@ -324,83 +326,79 @@ module.exports.answer = function (req, res, next) {
 
         //Check to save the quiz score into the contest object - when quiz is finished
         function (data, callback) {
-            if (data.session.quiz.clientData.finished) {
 
-                var myTeam = data.contest.users[data.session.userId].team;
-                var myContestUser = data.contest.users[data.session.userId];
+            if (!data.session.quiz.clientData.finished) {
+                callback(null, data);
+                return;
+            }
 
-                //Update all leaderboards with the score achieved
-                dalLeaderboard.addScore(data.contest._id, myTeam, data.session.quiz.serverData.score, data.session.facebookUserId, data.session.name, data.session.avatar);
+            var myTeam = data.contest.users[data.session.userId].team;
+            var myContestUser = data.contest.users[data.session.userId];
 
-                myContestUser.score += data.session.quiz.serverData.score;
-                myContestUser.teamScores[myTeam] += data.session.quiz.serverData.score;
+            //Update all leaderboards with the score achieved - don't wait for any callbacks of the leaderboard - can
+            //be done fully async and continue doing other stuff
+            dalLeaderboard.addScore(data.contest._id, myTeam, data.session.quiz.serverData.score, data.session.facebookUserId, data.session.name, data.session.avatar);
 
-                //Update:
-                // 1. contest general score
-                // 2. My score in this contest + lastPlayed
-                // 3. My score in my teams contribution
-                // 4. My team's score in this contest
-                data.setData = {};
-                data.setData["users." + data.session.userId + ".score"] = myContestUser.score;
-                data.setData["users." + data.session.userId + ".teamScores." + myTeam] = myContestUser.teamScores[myTeam];
-                data.setData["users." + data.session.userId + ".lastPlayed"] = (new Date()).getTime();
-                data.setData.score = data.contest.score + data.session.quiz.serverData.score;
+            myContestUser.score += data.session.quiz.serverData.score;
+            myContestUser.teamScores[myTeam] += data.session.quiz.serverData.score;
 
-                // Check if need to replace the contest leader
-                // Leader is the participant that has contributed max points for the contest regardless of teams)
-                if (myContestUser.score > data.contest.users[data.contest.leader.userId].score) {
-                    data.setData["leader.userId"] = data.session.userId;
-                    data.setData["leader.avatar"] = data.session.avatar;
-                    data.setData["leader.name"] = data.session.name;
-                    setPostStory(data, "becameContestLeader");
+            //Update:
+            // 1. contest general score
+            // 2. My score in this contest + lastPlayed
+            // 3. My score in my teams contribution
+            // 4. My team's score in this contest
+            data.setData = {};
+            data.setData["users." + data.session.userId + ".score"] = myContestUser.score;
+            data.setData["users." + data.session.userId + ".teamScores." + myTeam] = myContestUser.teamScores[myTeam];
+            data.setData["users." + data.session.userId + ".lastPlayed"] = (new Date()).getTime();
+            data.setData.score = data.contest.score + data.session.quiz.serverData.score;
+
+            // Check if need to replace the contest leader
+            // Leader is the participant that has contributed max points for the contest regardless of teams)
+            if (myContestUser.score > data.contest.users[data.contest.leader.userId].score) {
+                data.setData["leader.userId"] = data.session.userId;
+                data.setData["leader.avatar"] = data.session.avatar;
+                data.setData["leader.name"] = data.session.name;
+                setPostStory(data, "becameContestLeader");
+            }
+
+            // Check if need to replace the my team's leader
+            // Team leader is the participant that has contributed max points for his/her team)
+            if (!data.contest.teams[myTeam].leader || myContestUser.teamScores[myTeam] > data.contest.users[data.contest.teams[myTeam].leader.userId].teamScores[myTeam]) {
+                data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
+                data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
+                data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
+                setPostStory(data, "becameTeamLeader");
+            }
+
+            //Update the team score
+            data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
+            data.setData["teams." + data.contest.users[data.session.userId].team + ".score"] = data.contest.teams[data.contest.users[data.session.userId].team].score;
+
+            //Check if one of 2 stories happened:
+            // 1. My team started leading
+            // 2. My team is very close to lead
+            if (data.session.quiz.serverData.share.data.myTeamStartedBehind) {
+                if (data.contest.teams[myTeam].score > data.contest.teams[1 - myTeam].score) {
+                    setPostStory(data, "madeMyTeamLead");
                 }
-
-                // Check if need to replace the my team's leader
-                // Team leader is the participant that has contributed max points for his/her team)
-
-                if (!data.contest.teams[myTeam].leader || myContestUser.teamScores[myTeam] > data.contest.users[data.contest.teams[myTeam].leader.userId].teamScores[myTeam]) {
-                    data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
-                    data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
-                    data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
-                    setPostStory(data, "becameTeamLeader");
+                else if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score &&
+                    contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) < generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
+                    setPostStory(data, "myTeamIsCloseToLead");
                 }
+            }
 
-                data.contest.teams[data.contest.users[data.session.userId].team].score += data.session.quiz.serverData.score;
-                data.setData["teams." + data.contest.users[data.session.userId].team + ".score"] = data.contest.teams[data.contest.users[data.session.userId].team].score;
-
-                //Check if a perfect score story exist
-                if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
-                    setPostStory(data, "gotPerfectScore");
-                }
-
-                //Check if one of 2 stories happened:
-                // 1. My team started leading
-                // 2. My team is very close to lead
-                if (data.session.quiz.serverData.share.data.myTeamStartedBehind) {
-                    if (data.contest.teams[myTeam].score > data.contest.teams[1 - myTeam].score) {
-                        setPostStory(data, "madeMyTeamLead");
-                    }
-                    else if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score &&
-                        contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) < generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
-                        setPostStory(data, "myTeamIsCloseToLead");
-                    }
-                }
-
-                if (
-                    //Call the leaderboard to check passed friends only if there is no story to post up until now
-                    //Or the "passed friends" story is a "better" story in terms of priority
-                    data.session.quiz.serverData.share.data.friendsAboveMe &&
-                    (
-                        !data.session.quiz.serverData.share.story.name ||
-                        generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name].priority < generalUtils.settings.server.quiz.stories.passedFriendInLeaderboard.priority
-                    )
-                ) {
-                    data.friendsAboveMe = data.session.quiz.serverData.share.data.friendsAboveMe;
-                    dalLeaderboard.getPassedFriends(data, callback);
-                }
-                else {
-                    callback(null, data);
-                }
+            if (
+                //Call the leaderboard to check passed friends only if there is no story to post up until now
+            //Or the "passed friends" story is a "better" story in terms of priority
+            data.session.quiz.serverData.share.data.friendsAboveMe &&
+            (
+                !data.session.quiz.serverData.share.story.name ||
+                generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name].priority < generalUtils.settings.server.quiz.stories.passedFriendInLeaderboard.priority
+            )
+            ) {
+                data.friendsAboveMe = data.session.quiz.serverData.share.data.friendsAboveMe;
+                dalLeaderboard.getPassedFriends(data, callback);
             }
             else {
                 callback(null, data);
@@ -409,27 +407,27 @@ module.exports.answer = function (req, res, next) {
 
         //Check the passedFriends story and save the contest
         function (data, callback) {
-            if (data.session.quiz.clientData.finished) {
 
-                if (data.passedFriends) {
-                    setPostStory(data, "passedFriendInLeaderboard", {"passedFriends": data.passedFriends});
-                }
-
-                if (data.session.quiz.serverData.score > 0) {
-                    setPostStory(data, "gotScore");
-                }
-                else {
-                    setPostStory(data, "gotZeroScore");
-                }
-
-                data.closeConnection = true;
-
-                dalDb.setContest(data, callback);
-            }
-            else {
+            if (!data.session.quiz.clientData.finished) {
                 dalDb.closeDb(data);
                 callback(null, data);
+                return;
             }
+
+            if (data.passedFriends && data.passedFriends.length > 0) {
+                setPostStory(data, "passedFriendInLeaderboard", {"passedFriends": data.passedFriends});
+            }
+
+            if (data.session.quiz.serverData.score > 0) {
+                setPostStory(data, "gotScore");
+            }
+            else {
+                setPostStory(data, "gotZeroScore");
+            }
+
+            data.closeConnection = true;
+
+            dalDb.setContest(data, callback);
         },
 
         //Set contest result fields (required for client only),

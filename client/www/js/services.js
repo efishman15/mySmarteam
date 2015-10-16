@@ -252,7 +252,7 @@ angular.module('whoSmarter.services', [])
                         //------------------------------------------------------------------------------------
 
                         //Define core events and functions to be used in the app
-                        $rootScope.$on("whoSmarter-httpRequest", function (error, config) {
+                        $rootScope.$on("whoSmarter-httpRequest", function (event, config) {
                             if (!config || config.blockUserInterface) {
                                 var direction;
                                 if ($rootScope.settings) {
@@ -271,25 +271,25 @@ angular.module('whoSmarter.services', [])
                             }
                         });
 
-                        $rootScope.$on("whoSmarter-httpResponse", function (error, response) {
+                        $rootScope.$on("whoSmarter-httpResponse", function (event, response) {
                             if (!response.config || response.config.blockUserInterface) {
                                 $ionicLoading.hide();
                             }
                             if (response.data.serverPopup) {
-                                var event = {
+                                var popupEvent = {
                                     "name": "whoSmarter-serverPopup",
                                     "data": response.data.serverPopup
                                 };
                                 if (resolveRequests.length > 0) {
-                                    resolveEvents.push(event);
+                                    resolveEvents.push(popupEvent);
                                 }
                                 else {
-                                    $rootScope.$broadcast(event.name, event.data);
+                                    $rootScope.$broadcast(popupEvent.name, popupEvent.data);
                                 }
                             }
                         });
 
-                        $rootScope.$on("whoSmarter-httpResponseError", function (error, rejection) {
+                        $rootScope.$on("whoSmarter-httpResponseError", function (event, rejection) {
                             if (!rejection.config || rejection.config.blockUserInterface) {
                                 $ionicLoading.hide();
                             }
@@ -312,7 +312,7 @@ angular.module('whoSmarter.services', [])
                             }
                         });
 
-                        $rootScope.$on("event:auth-loginRequired", function (error, rejection) {
+                        $rootScope.$on("event:auth-loginRequired", function (event, rejection) {
                             service.getLoginStatus(function (success) {
                                     service.facebookServerConnect(
                                         function (data) {
@@ -330,7 +330,7 @@ angular.module('whoSmarter.services', [])
                                 });
                         });
 
-                        $rootScope.$on('$translateChangeEnd', function (data) {
+                        $rootScope.$on('$translateChangeEnd', function (event, data) {
                             $rootScope.$broadcast("whoSmarter-languageChanged");
                         });
 
@@ -385,10 +385,15 @@ angular.module('whoSmarter.services', [])
                         };
 
                         $rootScope.goBack = function () {
-                            $ionicHistory.goBack();
+                            if ($ionicHistory.backView()) {
+                                $ionicHistory.goBack();
+                            }
+                            else {
+                                $rootScope.gotoRootView();
+                            }
                         }
 
-                        $rootScope.$on("whoSmarter-serverPopup", function (error, data) {
+                        $rootScope.$on("whoSmarter-serverPopup", function (event, data) {
                             $rootScope.gotoView("serverPopup", false, {serverPopup: data})
                         });
 

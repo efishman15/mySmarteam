@@ -119,7 +119,10 @@ module.exports.getUserInfo = function (data, callback) {
 
         data.user.thirdParty.accessToken = verifier.data.oauth_token;
         data.user.thirdParty.id = verifier.data.user_id;
-        fields += ",payment_mobile_pricepoints,currency";
+
+        if (generalUtils.settings.server.payments.facebook.handleMobilePricePoints) {
+            fields += ",payment_mobile_pricepoints,currency";
+        }
     }
 
     var url = FACEBOOK_GRAPH_URL + "/me";
