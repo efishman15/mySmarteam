@@ -102,6 +102,7 @@
   "SHARE" : "שיתוף",
   "SHARE_WITH_FRIENDS_TITLE" : "שתפו חברים",
   "CLICK_LIKE" : "לחצו לייק לדף המשחק בפייסבוק לקבלת תוצאות התחרויות בהשתתפותכם",
+  "CLICK_LIKE_WITH_CONTEST" : "לחצו לייק לדף המשחק בפייסבוק לקבלת תוצאות התחרויות בהשתתפותכם, כולל התחרות:",
   "FACEBOOK_GAME_PAGE" : "דף המשחק בפייסבוק",
   "SHARE_WITH_FRIENDS_MESSAGE" : "הזמינו חברים לסייע",
   "SHARE_SUBJECT" : "בואו לשחק איתי 'מי יותר חכם?'",
@@ -109,12 +110,13 @@
   "SHARE_BODY" : "אתם חייבים להסתכל על המשחק המגניב הזה: {{url}}",
   "SHARE_BODY_NO_URL" : "אתם חייבים להסתכל על המשחק המגניב הזה",
   "SHARE_BODY_WITH_CONTEST" : "הצטרפתי לשחק עבור קבוצת {{team}}. בואו לעזור: {{url}}",
-  "SHARE_BODY_NO_URL_WITH_CONTEST" :  "הצטרפתי לשחק עבור קבוצת {{team}}. בואו לעזור",
+  "SHARE_BODY_NO_URL_WITH_CONTEST" :  "הצטרפתי לשחק עבור קבוצת {{team}} בתחרות: '{{name}}' - בואו לעזור",
   "JOIN_A_CONTEST_MESSAGE" : "אנא הצטרפו לאחת התחרויות הרצות על מנת שתופיע בתחרויות שלי",
   "LEADERBOARDS" : "היכל התהילה",
   "FRIENDS" : "חברים",
   "WEEKLY" : "שבועי",
-  "CONTEST_LEADERS" : "מובילי התחרות",
+  "CONTEST_LEADERS" : "עשרת הגדולים",
+  "CONTEST_LEADERS_MORE" : "עשרת הגדולים...",
   "CONTEST_LEADERS_GENERAL_SCORING" : "דירוג כללי",
   "MY_POSITION" : "המיקום שלי: {{position}}",
   "JOIN_TEAM" : "הצטרפו לקבוצת {{team}}",
@@ -134,6 +136,6 @@
   "STORY_GOT_SCORE_TITLE" : "כל הכבוד!",
   "STORY_GOT_SCORE_MESSAGE" : "תרמת לקבוצת {{team}} {{score}} נקודות!",
   "STORY_ZERO_SCORE_TITLE" : "נסו שוב",
-  "STORY_ZERO_SCORE_MESSAGE" : "אנחנו בטוחים שאתם יכולים להצליח"
-
+  "STORY_ZERO_SCORE_MESSAGE" : "אנחנו בטוחים שאתם יכולים להצליח",
+  "LIKE" : "Like"
 }

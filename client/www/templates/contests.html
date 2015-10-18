@@ -1,19 +1,16 @@
 <ion-view class="bgQuestionMarks" title="{{title | translate}}">
 
-    <!------------------------------------------------------------------------------>
-    <!-- This is a workaround - when navigating to other views, forcing the back
-    <!-- button to show the previous view title only from the ion-nav-title
-    <!------------------------------------------------------------------------------>
-    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
-                 overflow-scroll="true" class="hide-vertical-scrollbar">
+    <ion-header ng-if="tab==='recentlyFinished'" ng-include="'templates/roundTabs.html'">
+    </ion-header>
 
-        <div ng-if="tab==='recentlyFinished'" ng-include="'templates/roundTabs.html'">
-        </div>
+    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
+                 overflow-scroll="true" class="hide-vertical-scrollbar has-subheader">
 
         <h4 class="padding center" ng-if="userClick && totalContests === 0">{{'JOIN_A_CONTEST_MESSAGE' |
             translate}}</h4>
 
-        <ion-scroll class="contests-scroll">
+        <ion-scroll class="scroll-full-height">
+
             <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
                            pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
                            on-refresh="doRefresh()">

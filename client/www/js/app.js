@@ -29,6 +29,24 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
                     //Hook into window.open
                     window.open = cordova.InAppBrowser.open;
+
+                    window.myHandleBranch = function (err, data) {
+                        alert("data=" + JSON.stringify(data));
+                    };
+
+                    branch.init("key_live_pocRNjTcwzk0YWxsqcRv3olivweLVuVE", function (err, data) {
+                        if (window.myHandleBranch) {
+                            window.myHandleBranch(err, data);
+                        }
+                    });
+                }
+
+                //FlurryAgent.setDebugLogEnabled(true);
+                FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
+
+                FlurryAgent.myLogError = function (errorType, message) {
+                    FlurryAgent.logError(errorType.substring(0, 255), message.substring(0, 255), 0);
+                    console.log(message);
                 }
 
                 if (window.StatusBar) {
@@ -38,27 +56,14 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
                 if (ionic.Platform.isAndroid() && typeof inappbilling !== "undefined") {
                     inappbilling.init(function (resultInit) {
-                            console.log("IAB Initialized");
                         },
                         function (errorInit) {
-                            console.log("ERROR -> " + errorInit);
+                            FlurryAgent.myLogError("InAppBilling", errorInit);
                         }
                         ,
-                        {
-                            showLog: true
-                        }
-                        ,
-                        []
+                        {showLog: true}, []
                     );
                 }
-
-                FlurryAgent.myLogError = function (errorType, message) {
-                    FlurryAgent.logError(errorType.substring(0, 255), message.substring(0, 255), 0);
-                    console.log(message);
-                }
-
-                //FlurryAgent.setDebugLogEnabled(true);
-                FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
 
                 // Fallback where requestAnimationFrame or its equivalents are not supported in the current browser
                 window.myRequestAnimationFrame = (function () {
@@ -76,6 +81,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
             }
         );
+
+        $ionicPlatform.on('resume', function (event) {
+            if (window.myHandleBranch) {
+                window.myHandleBranch(err, data);
+            }
+        });
     })
 
     .config(function ($httpProvider, $translateProvider) {
@@ -202,15 +213,31 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 controller: "OtherwiseCtrl"
             })
 
-            .state('share', {
+            .state('app.share', {
                 url: "/share",
                 params: {contest: null},
-                cache : false,
-                controller: "ShareCtrl",
-                templateUrl: "templates/share.html"
+                cache: false,
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/share.html",
+                        controller: 'ShareCtrl'
+                    }
+                }
             })
 
-            .state('contestParticipants', {
+            .state('app.like', {
+                url: "/like",
+                params: {contest: null},
+                cache: false,
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/like.html",
+                        controller: 'LikeCtrl'
+                    }
+                }
+            })
+
+            .state('app.contestParticipants', {
                 url: "/contestParticipants",
                 cache: false,
                 resolve: {
@@ -219,8 +246,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     }
                 },
                 params: {contest: null},
-                controller: "ContestParticipantsCtrl",
-                templateUrl: "templates/contestParticipants.html"
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/contestParticipants.html",
+                        controller: 'ContestParticipantsCtrl'
+                    }
+                }
             })
 
             .state('app.contest', {
@@ -230,7 +261,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         return UserService.resolveAuthentication(null, "contest");
                     }
                 },
-                params: {id : null},
+                params: {id: null},
                 views: {
                     'menuContent': {
                         templateUrl: "templates/contest.html",
@@ -256,7 +287,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 }
             })
 
-            .state('setContest', {
+            .state('app.setContest', {
                 url: "/setContest",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
@@ -264,8 +295,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     }
                 },
                 cache: false,
-                templateUrl: "templates/setContest.html",
-                controller: "SetContestCtrl",
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/setContest.html",
+                        controller: 'SetContestCtrl'
+                    }
+                },
                 params: {mode: null, contest: null}
             })
 
@@ -300,15 +335,19 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 }
             })
 
-            .state('settings', {
+            .state('app.settings', {
                 url: "/settings",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "settings");
                     }
                 },
-                templateUrl: "templates/settings.html",
-                controller: "SettingsCtrl"
+                views: {
+                    'menuContent': {
+                        templateUrl: "templates/settings.html",
+                        controller: 'SettingsCtrl'
+                    }
+                }
             })
 
             .state('logout', {

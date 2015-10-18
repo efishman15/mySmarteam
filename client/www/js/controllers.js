@@ -1,6 +1,6 @@
 ﻿angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
 
-    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService) {
+    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService, ShareService) {
 
         $rootScope.$on('whoSmarter-directionChanged', function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
@@ -79,6 +79,15 @@
             }
         });
 
+        $scope.share = function() {
+            if ($rootScope.user.clientInfo.mobile) {
+                ShareService.mobileShare();
+            }
+            else {
+                $rootScope.gotoView("app.share", false);
+            }
+        };
+
     })
 
     .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, ScreenService, StoreService) {
@@ -134,6 +143,13 @@
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             if (!$rootScope.session) {
                 $rootScope.gotoView("home");
+                return;
+            }
+
+            if ($rootScope.justCreatedContest) {
+                var contestId = $rootScope.justCreatedContest._id;
+                $rootScope.justCreatedContest = null;
+                $rootScope.gotoView("app.contest", false, {id: contestId});
                 return;
             }
 
@@ -242,10 +258,14 @@
             }, null, config);
         }
 
+        $rootScope.$on("whoSmarter-contestCreated", function(event, contest) {
+            $rootScope.justCreatedContest = contest;
+        });
+
         $scope.fcEvents = {
             "chartClick": function (eventObj, dataObj) {
-                $rootScope.$broadcast("whoSmarter-contestUpdated", eventObj.sender.args.dataSource.contest);
                 $rootScope.gotoView("app.contest", false, {"id": eventObj.sender.args.dataSource.contest._id});
+                $rootScope.$broadcast("whoSmarter-contestUpdated", eventObj.sender.args.dataSource.contest);
             }
         }
     })
@@ -1070,15 +1090,16 @@
                             "duration": $scope.localViewData.endOption
                         };
 
+                        $rootScope.goBack();
                         if ($stateParams.mode === "add") {
                             FlurryAgent.logEvent("contest/created", contestParams);
+                            $rootScope.$broadcast("whoSmarter-contestCreated", contest);
                         }
                         else {
                             FlurryAgent.logEvent("contest/updated", contestParams);
+                            $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
                         }
 
-                        $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
-                        $rootScope.goBack();
                     }, function (status, error) {
                         $scope.localViewData.startDate = startDate;
                         $scope.localViewData.endDate = endDate;
@@ -1285,57 +1306,19 @@
         }
     })
 
-    .controller("ShareCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate, $stateParams) {
+    .controller("ShareCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate, $stateParams, ShareService) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
 
-        $scope.shareUrl = null;
-        $scope.shareSubject = null;
-        $scope.shareBody = null;
-        $scope.shareBodyNoUrl = null;
-
-        var emailRef = "?ref=shareEmail";
-
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-            viewData.enableBack = true;
-            $scope.contest = $stateParams.contest;
-            if ($scope.contest) {
-                $scope.shareUrl = encodeURIComponent($rootScope.settings.share.contestUrlPrefix + $scope.contest._id);
-                $scope.shareSubject = $translate.instant("SHARE_SUBJECT_WITH_CONTEST", {name : $scope.contest.name});
 
-                if ($scope.contest.myTeam === 0 || $scope.contest.myTeam === 1) {
-                    $scope.shareBody = $translate.instant("SHARE_BODY_WITH_CONTEST", {team : $scope.contest.teams[$scope.contest.myTeam].name, url : $scope.shareUrl});
-                    $scope.shareBodyEmail = $translate.instant("SHARE_BODY_WITH_CONTEST", {team : $scope.contest.teams[$scope.contest.myTeam].name, url : $scope.shareUrl + emailRef});
-                    $scope.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL_WITH_CONTEST", {team : $scope.contest.teams[$scope.contest.myTeam].name});
-                }
-                else {
-                    $scope.shareBody = $translate.instant("SHARE_BODY", {url : $scope.shareUrl});
-                    $scope.shareBodyEmail = $translate.instant("SHARE_BODY", {url : $scope.shareUrl + emailRef});
-                    $scope.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL");
-                }
-            }
-            else {
-                $scope.shareUrl = encodeURIComponent($rootScope.settings.general.downloadUrl);
-                $scope.shareSubject = $translate.instant("SHARE_SUBJECT");
-                $scope.shareBody = $translate.instant("SHARE_BODY", {url : $scope.shareUrl});
-                $scope.shareBodyEmail = $translate.instant("SHARE_BODY", {url : $scope.shareUrl + emailRef});
-                $scope.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL");
-            }
+            viewData.enableBack = true;
+
+            $scope.contest = $stateParams.contest;
+            $scope.shareVariables = ShareService.getVariables($scope.contest);
         });
 
-
-        $scope.shareAnywhere = function () {
-            $cordovaSocialSharing.share($scope.shareBodyNoUrl,
-                $scope.shareSubject,
-                $rootScope.settings.general.baseUrl + $rootScope.settings.general.logoUrl,
-                $rootScope.shareUrl
-            );
-        };
-
-        $scope.likeFacebookFanPage = function () {
-            window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
-        }
     })
 
     .controller("FriendsLeaderboardCtrl", function ($scope, $rootScope, LeaderboardService, FacebookService) {
@@ -1440,14 +1423,14 @@
 
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout, ShareService) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
         $scope.contestChart = {};
 
         $scope.buttonState = null;
-        $scope.quizJustFinished = false;
+        $scope.animateResults = false;
 
         if (!$stateParams.id) {
             $rootScope.gotoRootView();
@@ -1462,27 +1445,32 @@
             viewData.enableBack = true;
             //Contest is passed when clicking on chart from main screen,
             //But not passed when calling screen from direct link outside the app (Deep linking)
-            if ($stateParams.contest && !$scope.quizJustFinished ) {
+            if ($stateParams.contest && !$scope.quizJustFinished) {
                 refreshContest($stateParams.contest);
             }
         });
 
         $scope.$on('$ionicView.afterLeave', function (event, viewData) {
-            $scope.quizJustFinished = false;
+            $scope.animateResults = false;
         });
 
         function refreshContest(contest) {
 
             $scope.contestChart = ContestsService.prepareContestChart(contest);
-            if (contest.myTeam === 0 || contest.myTeam === 1) {
-                $scope.buttonState = "play";
+            if (contest.status !== "finished") {
+                if (contest.myTeam === 0 || contest.myTeam === 1) {
+                    $scope.buttonState = "play";
+                }
+                else {
+                    $scope.buttonState = "join";
+                }
             }
             else {
-                $scope.buttonState = "join";
+                $scope.buttonState = "none";
             }
         }
 
-        $scope.switchTeams = function() {
+        $scope.switchTeams = function () {
             if ($scope.contestChart.contest.myTeam === 0 || $scope.contestChart.contest.myTeam === 1) {
                 $scope.joinContest(1 - $scope.contestChart.contest.myTeam, "footer");
             }
@@ -1543,7 +1531,7 @@
             },
             "annotationClick": function (eventObj, dataObj) {
                 if ($rootScope.session.isAdmin) {
-                    $rootScope.gotoView("setContest", false, {
+                    $rootScope.gotoView("app.setContest", false, {
                         mode: "edit",
                         contest: eventObj.sender.args.dataSource.contest
                     });
@@ -1551,7 +1539,6 @@
             }
         };
 
-        //Cleanup the popover when we're done with it!
         $scope.playContest = function () {
             FlurryAgent.logEvent("contest/playContest/click", {
                 "contestId": $scope.contestChart.contest._id,
@@ -1564,16 +1551,16 @@
 
             refreshContest(results.contest);
             $scope.lastQuizResults = results.data;
-            $scope.quizJustFinished = true;
-            $timeout(function()  {
+            $scope.animateResults = true;
+            $timeout(function () {
                 SoundService.play(results.data.sound);
-            },500);
+            }, 500);
         });
 
         $rootScope.$on('whoSmarter-contestRemoved', function () {
-            $timeout(function(){
+            $timeout(function () {
                 $rootScope.goBack();
-            },500);
+            }, 500);
 
         });
 
@@ -1581,4 +1568,27 @@
             refreshContest(contest);
         });
 
+        $scope.share = function() {
+            if ($rootScope.user.clientInfo.mobile) {
+                ShareService.mobileShare($scope.contestChart.contest);
+            }
+            else {
+                $rootScope.gotoView("app.share", false, {contest : $scope.contestChart.contest});
+            }
+        };
+    })
+
+    .controller("LikeCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate, $stateParams) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
+            $scope.contest = $stateParams.contest;
+        });
+
+        $scope.likeFacebookFanPage = function () {
+            window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
+        }
     });

@@ -198,6 +198,24 @@ angular.module('whoSmarter.services', [])
                 //-------------------------------------------------------------------------
                 service.initUser(function () {
 
+                        $rootScope.gotoRootView = function () {
+                            if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
+                                $rootScope.gotoView("app.tabs.myContests");
+                            }
+                            else {
+                                $rootScope.gotoView("home");
+                            }
+                        };
+
+                        $rootScope.goBack = function () {
+                            if ($ionicHistory.backView()) {
+                                $ionicHistory.goBack();
+                            }
+                            else {
+                                $rootScope.gotoRootView();
+                            }
+                        }
+
                         $rootScope.user.clientInfo = {};
 
                         if (window.cordova) {
@@ -241,9 +259,7 @@ angular.module('whoSmarter.services', [])
                                 event.preventDefault();
                             }
                             else {
-                                if (navigator && navigator.app && navigator.app.backHistory) {
-                                    navigator.app.backHistory();
-                                }
+                                $rootScope.goBack();
                             }
                         }, 600);
 
@@ -374,24 +390,6 @@ angular.module('whoSmarter.services', [])
                             $state.go(viewName, params, {reload: true, inherit: true, location: true});
 
                         };
-
-                        $rootScope.gotoRootView = function () {
-                            if ($rootScope.session || ($rootScope.user && $rootScope.user.thirdParty)) {
-                                $rootScope.gotoView("app.tabs.myContests");
-                            }
-                            else {
-                                $rootScope.gotoView("home");
-                            }
-                        };
-
-                        $rootScope.goBack = function () {
-                            if ($ionicHistory.backView()) {
-                                $ionicHistory.goBack();
-                            }
-                            else {
-                                $rootScope.gotoRootView();
-                            }
-                        }
 
                         $rootScope.$on("whoSmarter-serverPopup", function (event, data) {
                             $rootScope.gotoView("serverPopup", false, {serverPopup: data})
@@ -1250,6 +1248,76 @@ angular.module('whoSmarter.services', [])
 
         service.getWeeklyLeaders = function(callbackOnSuccess, callbackOnError, config) {
             return ApiService.post(path, "weekly", null, callbackOnSuccess, callbackOnError, config)
+        };
+
+        return service;
+
+    })
+
+    //Leaderboard Service
+    .factory('ShareService', function ($translate, $rootScope, $cordovaSocialSharing) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+        var emailRef = "?ref=shareEmail";
+
+        function adjustUrl(url) {
+            if (!$rootScope.user.clientInfo.mobile) {
+                return encodeURIComponent(url);
+            }
+            else {
+                return url;
+            }
+        }
+
+        service.getVariables = function(contest) {
+
+            var shareVariables = {};
+
+            if (contest) {
+                shareVariables.shareUrl = adjustUrl($rootScope.settings.share.contestUrlPrefix + contest._id);
+                shareVariables.shareSubject = $translate.instant("SHARE_SUBJECT_WITH_CONTEST", {name: contest.name});
+
+                if (contest.myTeam === 0 || contest.myTeam === 1) {
+                    shareVariables.shareBody = $translate.instant("SHARE_BODY_WITH_CONTEST", {
+                        team: contest.teams[contest.myTeam].name,
+                        url: shareVariables.shareUrl
+                    });
+                    shareVariables.shareBodyEmail = $translate.instant("SHARE_BODY_WITH_CONTEST", {
+                        team: contest.teams[contest.myTeam].name,
+                        url: shareVariables.shareUrl + emailRef
+                    });
+                    shareVariables.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL_WITH_CONTEST", {team: contest.teams[contest.myTeam].name, name: contest.name});
+                }
+                else {
+                    shareVariables.shareBody = $translate.instant("SHARE_BODY", {url: shareVariables.shareUrl});
+                    shareVariables.shareBodyEmail = $translate.instant("SHARE_BODY", {url: shareVariables.shareUrl + emailRef});
+                    shareVariables.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL");
+                }
+            }
+            else {
+                shareVariables.shareUrl = adjustUrl($rootScope.settings.general.downloadUrl);
+                shareVariables.shareSubject = $translate.instant("SHARE_SUBJECT");
+                shareVariables.shareBody = $translate.instant("SHARE_BODY", {url: shareVariables.shareUrl});
+                shareVariables.shareBodyEmail = $translate.instant("SHARE_BODY", {url: shareVariables.shareUrl + emailRef});
+                shareVariables.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL") + " - '" + $translate.instant("WHO_IS_SMARTER_QUESTION") + "'";
+            }
+
+            return shareVariables;
+
+        };
+
+        service.mobileShare = function (contest) {
+
+            var shareVariables = service.getVariables(contest);
+
+            $cordovaSocialSharing.share(shareVariables.shareBodyNoUrl,
+                shareVariables.shareSubject,
+                $rootScope.settings.general.baseUrl + $rootScope.settings.general.logoUrl,
+                shareVariables.shareUrl
+            );
         };
 
         return service;

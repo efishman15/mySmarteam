@@ -196,7 +196,7 @@ label.item.valid-lr {
     width: 45%;
 }
 
-.contests-scroll {
+.scroll-full-height {
     height: 100%;
 }
 
@@ -290,8 +290,8 @@ label.item.valid-lr {
 }
 
 .center-button-in-ellipse {
-    margin-right: -1px !important;;
-    margin-left: -1px !important;
+    margin-right: -2px !important;;
+    margin-left: -2px !important;
     border-top-width: 2px !important;
     border-bottom-width: 2px !important;
 }
@@ -379,7 +379,7 @@ label.item.valid-lr {
 }
 
 .bold {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 .my-item-note-left {
@@ -467,6 +467,13 @@ label.item.valid-lr {
     border-bottom: none;
 }
 
+.bar-subheader {
+    border: 0px !important;
+    border-bottom-color: transparent !important;
+    background-image: none;
+    border-bottom: none;
+}
+
 .button.join-contest {
     font-size: 90%;
     line-height: 1.2em;
@@ -484,4 +491,15 @@ label.item.valid-lr {
     animation-duration: 3s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
+}
+
+.contest-leaders-note-left {
+    float: left;
+    text-decoration: underline;
+}
+
+.contest-leaders-note-right {
+    float: right;
+    color: #aaa;
+    font-size: 14px;
 }

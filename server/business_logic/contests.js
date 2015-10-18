@@ -56,7 +56,6 @@ function validateContestData(data, callback) {
         return;
     }
 
-
     if ((data.contest.teams[0].score || data.contest.teams[1].score) &&
         (!data.session.isAdmin)) {
         callback(new exceptions.ServerException("Only admins are allowed to set team scores"));
@@ -113,6 +112,37 @@ function validateContestData(data, callback) {
     callback(null, data);
 }
 
+function updateContest(data, callback) {
+
+    data.checkOwner = true;
+
+    data.setData = {};
+
+    //Non admin fields
+    data.setData["name"] = data.contest.name;
+    data.setData["teams.0.name"] = data.contest.teams[0].name;
+    data.setData["teams.1.name"] = data.contest.teams[1].name;
+    data.setData.endDate = data.contest.endDate;
+
+    //Admin fields
+    if (data.session.isAdmin) {
+        if (data.contest.teams[0].score != null) {
+            data.setData["teams.0.score"] = data.contest.teams[0].score;
+        }
+        if (data.contest.teams[1].score != null) {
+            data.setData["teams.1.score"] = data.contest.teams[1].score;
+        }
+        if (data.contest.manualParticipants != null) {
+            data.setData["manualParticipants "] = data.contest.manualParticipants;
+        }
+        if (data.contest.manualRating != null) {
+            data.setData["manualParticipants "] = data.contest.manualRating;
+        }
+    }
+
+    dalDb.setContest(data, callback);
+}
+
 //---------------------------------------------------------------------
 // prepareContestForClient
 //
@@ -162,8 +192,16 @@ function prepareContestForClient(contest, session) {
 
     setContestScores(contest);
 
-    if (contest.userIdCreated === session.userId || session.isAdmin) {
-        contest.owner = true;
+    if (contest.status !== "finished") {
+        if (contest.userIdCreated === session.userId || session.isAdmin) {
+            contest.owner = true;
+        }
+    }
+    else {
+        //When contest has finished - only admins can update it
+        if (session.isAdmin) {
+            contest.owner = true;
+        }
     }
 
     //Fields not to be disclosed to the client
@@ -197,7 +235,7 @@ function setContestScores(contest) {
 }
 
 module.exports.joinContest = joinContest;
-function joinContest (req, res, next) {
+function joinContest(req, res, next) {
 
     var token = req.headers.authorization;
     var data = req.body;
@@ -235,7 +273,7 @@ function joinContest (req, res, next) {
 
             prepareContestForClient(data.contest, data.session);
 
-            data.clientResponse = {"contest" : data.contest};
+            data.clientResponse = {"contest": data.contest};
 
             if (data.newJoin) {
                 commonBusinessLogic.addXp(data, "joinContest");
@@ -386,10 +424,16 @@ module.exports.setContest = function (req, res, next) {
                 dalDb.addContest(data, callback);
             }
             else {
-                data.setData = data.contest;
-                dalDb.setContest(data, callback);
+                updateContest(data, callback);
             }
+        },
+
+        //Prepare contest for client
+        function (data, callback) {
+            prepareContestForClient(data.contest, data.session);
+            callback(null, data);
         }
+
     ];
 
     async.waterfall(operations, function (err, data) {

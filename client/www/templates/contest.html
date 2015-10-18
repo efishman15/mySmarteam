@@ -3,15 +3,14 @@
     <ion-content dir="{{$root.settings.languages[$root.session.settings.language].direction}}" drag-content="false">
 
         <div class="full-width">
-            <div class="row padding center">
+            <div class="padding center zero-margin" style="width: {{$root.settings.charts.size.width}}px;">
                 <div class="center item item-divider leader-avatar-in-leaderboard pointer zero-margin"
                      ng-class="{'item-avatar-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','item-avatar-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
-                     ng-click="$root.gotoView('contestParticipants', false, {'contest' : contestChart.contest})">
+                     ng-click="$root.gotoView('app.contestParticipants', false, {'contest' : contestChart.contest})">
                     <image class="leader-avatar-in-leaderboard" ng-src="{{contestChart.contest.leader.avatar}}"></image>
                     <div style="text-align: {{$root.settings.languages[$root.user.settings.language].align}}">
                         <h2 class="no-wrap-text">{{contestChart.contest.leader.name}}</h2>
-
-                        <p>{{'CONTEST_LEADER' | translate}}</p>
+                        <p>{{'CONTEST_LEADER' | translate}}<span ng-class="{'contest-leaders-note-right' : $root.settings.languages[$root.session.settings.language].direction === 'ltr', 'contest-leaders-note-left' : $root.settings.languages[$root.session.settings.language].direction === 'rtl'}">{{'CONTEST_LEADERS_MORE' | translate}}</span></p>
                     </div>
                 </div>
             </div>
@@ -53,10 +52,11 @@
 
         </div>
 
-        <div ng-if="quizJustFinished">
-            <div  class="item-divider center long-animated {{lastQuizResults.animation}}">
+        <div ng-if="animateResults">
+            <div class="item-divider center long-animated {{lastQuizResults.animation}}">
                 <h4>{{lastQuizResults.clientKey + '_TITLE' | translate }}</h4>
-                <h5>{{lastQuizResults.clientKey + '_MESSAGE' | translate:{score : lastQuizResults.score, team : contestChart.contest.teams[contestChart.contest.myTeam].name} }}</h5>
+                <h5>{{lastQuizResults.clientKey + '_MESSAGE' | translate:{score : lastQuizResults.score, team :
+                    contestChart.contest.teams[contestChart.contest.myTeam].name} }}</h5>
             </div>
         </div>
 
@@ -66,22 +66,30 @@
 
         <div class="tabs tabs-striped tabs-footer tabs-icon-top">
             <a class="tab-item footer-tab-item"
-               ng-click="$root.gotoView('share', false, {'contest' : contestChart.contest})">
+               ng-click="share()"
+                analytics-on="click"
+                analytics-event="contest/share/click">
                 <i class="icon ion-android-share-alt"></i>
 
                 <p>{{'SHARE' | translate}}</p>
             </a>
             <a class="tab-item footer-tab-item"
-               ng-click="$root.gotoView('contestParticipants', false, {'contest' : contestChart.contest})">
-                <i class="icon ion-ios-people"></i>
-                {{'CONTEST_LEADERS' | translate}}
+               ng-click="$root.gotoView('app.like', false, {'contest' : contestChart.contest})"
+               analytics-on="click"
+               analytics-event="contest/like/click">
+                <i class="icon ion-thumbsup"></i>
+                {{'LIKE' | translate}}
             </a>
-            <a class="tab-item footer-tab-item" ng-click="switchTeams()">
+            <a ng-if="buttonState==='play'" class="tab-item footer-tab-item" ng-click="switchTeams()"
+                analytics-on="click"
+                analytics-event="contest/switchTeams/click">
                 <i class="icon ion-arrow-swap"></i>
                 {{'SWITCH_TEAMS' | translate}}
             </a>
             <a ng-if="contestChart.contest.owner" class="tab-item footer-tab-item"
-               ng-click="$root.gotoView('setContest', false, {'mode' : 'edit', 'contest' : contestChart.contest})">
+               ng-click="$root.gotoView('app.setContest', false, {'mode' : 'edit', 'contest' : contestChart.contest})"
+               analytics-on="click"
+               analytics-event="contest/edit/click">
                 <i class="icon ion-edit"></i>
                 {{'EDIT_CONTEST' | translate}}
             </a>

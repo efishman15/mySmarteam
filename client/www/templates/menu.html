@@ -22,14 +22,26 @@
         <ion-content>
             <ion-list>
                 <ion-item menu-close class="ion-android-create"
-                          ng-click="$root.gotoView('setContest', false, {mode : 'add'})">
+                          ng-click="$root.gotoView('setContest', false, {mode : 'add'})"
+                          analytics-on="click"
+                          analytics-event="menu/newContest/click">
                     {{ 'NEW_CONTEST' | translate}}
                 </ion-item>
                 <ion-item class="ion-android-share" menu-close
-                          ng-click="$root.gotoView('share', false)">
+                          ng-click="share()"
+                          analytics-on="click"
+                          analytics-event="menu/share/click">
                     {{ 'SHARE_WITH_FRIENDS_TITLE' | translate}}
                 </ion-item>
-                <ion-item class="ion-gear-a" ng-click="$root.gotoView('settings', false)">
+                <ion-item class="ion-thumbsup" menu-close
+                          ng-click="$root.gotoView('app.like', false)"
+                          analytics-on="click"
+                          analytics-event="menu/like/click">
+                    {{ 'LIKE' | translate}}
+                </ion-item>
+                <ion-item class="ion-gear-a" ng-click="$root.gotoView('app.settings', false)"
+                          analytics-on="click"
+                          analytics-event="menu/settings/click">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
             </ion-list>
@@ -42,14 +54,26 @@
         <ion-content>
             <ion-list>
                 <ion-item class="ion-android-create" menu-close
-                          ng-click="$root.gotoView('setContest', false, {mode : 'add'})">
+                          ng-click="$root.gotoView('app.setContest', false, {mode : 'add'})"
+                          analytics-on="click"
+                          analytics-event="menu/newContest/click">
                     {{ 'NEW_CONTEST' | translate}}
                 </ion-item>
                 <ion-item class="ion-android-share" menu-close
-                          ng-click="$root.gotoView('share', false)">
+                          ng-click="share()"
+                          analytics-on="click"
+                          analytics-event="menu/share/click">
                     {{ 'SHARE_WITH_FRIENDS_TITLE' | translate}}
                 </ion-item>
-                <ion-item class="ion-gear-a" ng-click="$root.gotoView('settings', false)">
+                <ion-item class="ion-thumbsup" menu-close
+                          ng-click="$root.gotoView('app.like', false)"
+                          analytics-on="click"
+                          analytics-event="menu/like/click">
+                    {{ 'LIKE' | translate}}
+                </ion-item>
+                <ion-item class="ion-gear-a" ng-click="$root.gotoView('app.settings', false)"
+                          analytics-on="click"
+                          analytics-event="menu/settings/click">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
             </ion-list>

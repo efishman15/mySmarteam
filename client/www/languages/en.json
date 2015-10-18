@@ -103,6 +103,7 @@
   "SHARE" : "Share",
   "SHARE_WITH_FRIENDS_TITLE" : "Share with friends",
   "CLICK_LIKE" : "Click like to the facebook game page and get the results of contests you participate in",
+  "CLICK_LIKE_WITH_CONTEST" : "Click like to the facebook game page and get the results of contests you participate in, including:",
   "FACEBOOK_GAME_PAGE" : "Facebook game page",
   "SHARE_WITH_FRIENDS_MESSAGE" : "Invite friends to assist",
   "SHARE_SUBJECT" : "Come play with me: 'Who is Smarter?'",
@@ -110,12 +111,13 @@
   "SHARE_BODY" : "I want you to see this cool game: {{url}}",
   "SHARE_BODY_NO_URL" : "I want you to see this cool game",
   "SHARE_BODY_WITH_CONTEST" : "I am playing for {{team}} team. Please help: {{url}}",
-  "SHARE_BODY_NO_URL_WITH_CONTEST" : "I am playing for {{team}} team. Please help.",
+  "SHARE_BODY_NO_URL_WITH_CONTEST" : "I am playing for {{team}} team in the contest '{{name}}' - please help",
   "JOIN_A_CONTEST_MESSAGE" : "Please join one of the running contests so it will appear in my contests list",
   "LEADERBOARDS" : "Leaderboards",
   "FRIENDS" : "Friends",
   "WEEKLY" : "Weekly",
   "CONTEST_LEADERS" : "Contest Leaders",
+  "CONTEST_LEADERS_MORE" : "Contest Leaders...",
   "CONTEST_LEADERS_GENERAL_SCORING" : "Overall Ranking",
   "MY_POSITION" : "My position: {{position}}",
   "JOIN_TEAM" : "Join {{team}}",
@@ -135,5 +137,6 @@
   "STORY_GOT_SCORE_TITLE" : "Congratulations, well done",
   "STORY_GOT_SCORE_MESSAGE" : "You have contributed {{score}} smartpoints to {{team}} team!",
   "STORY_ZERO_SCORE_TITLE" : "Try again",
-  "STORY_ZERO_SCORE_MESSAGE" : "We are sure you can do better"
+  "STORY_ZERO_SCORE_MESSAGE" : "We are sure you can do better",
+  "LIKE" : "Like"
 }

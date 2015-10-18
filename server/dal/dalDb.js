@@ -76,7 +76,7 @@ function register(data, callback) {
     };
 
     usersCollection.insert(newUser
-        , {}, function (err, user) {
+        , {}, function (err, insertResult) {
             if (err) {
 
                 closeDb(data);
@@ -263,7 +263,8 @@ function retrieveSession(data, callback) {
 
                 closeDb(data);
 
-                callback(new exceptions.ServerException("Error retrieving session - session expired", {"sessionId": data.token}, "info", 401));
+                //Serverity "low" does not exist - thus skipping writing to logs and console
+                callback(new exceptions.ServerException("Error retrieving session - session expired", {"sessionId": data.token}, "low", 401));
                 return;
             }
 
@@ -535,7 +536,7 @@ module.exports.createOrUpdateSession = function (data, callback) {
             delete sessionHistoryRecord._id;
 
             sessionsHistoryCollection.insert(sessionHistoryRecord
-                , {}, function (sessionHistoryError, insertedRecord) {
+                , {}, function (sessionHistoryError, insertResult) {
                     if (sessionHistoryError) {
 
                         closeDb(data);
@@ -658,7 +659,7 @@ function logAction(data, callback) {
     data.logAction.date = (new Date()).getTime();
 
     logCollection.insert(data.logAction
-        , {}, function (err, actionRecord) {
+        , {}, function (err, insertResult) {
             if (err) {
 
                 closeDb(data);
@@ -858,7 +859,8 @@ function addContest(data, callback) {
     var contestsCollection = data.DbHelper.getCollection("Contests");
 
     contestsCollection.insert(data.contest
-        , {}, function (err, contest) {
+        , {}, function (err, insertResult) {
+
             if (err) {
 
                 closeDb(data);
@@ -869,8 +871,6 @@ function addContest(data, callback) {
                 }, "error"));
                 return;
             }
-
-            data.contest = contest
 
             callback(null, data);
         });
@@ -883,25 +883,33 @@ function addContest(data, callback) {
 //
 // data:
 // -----
-// input: DbHelper, session, contest
+// input: DbHelper, session, contest, checkOwner
 // output: contest (most updated object in db)
 //------------------------------------------------------------------------------------------------
 module.exports.setContest = setContest;
 function setContest(data, callback) {
     var contestsCollection = data.DbHelper.getCollection('Contests');
-    var contestId = ObjectId(data.contest._id);
-    delete data.contest["_id"];
-    contestsCollection.findAndModify({"_id": contestId}, {},
+
+    var whereClause = {"_id" : ObjectId(data.contest._id)};
+
+    //Only contest owners or admins can update the contest
+    if (data.checkOwner && !data.session.isAdmin) {
+        whereClause.userIdCreated = ObjectId(data.session.userId);
+    }
+
+    contestsCollection.findAndModify(whereClause, {},
         {
             $set: data.setData
         }, {w: 1, new: true}, function (err, contest) {
 
-            if (err || !contest) {
+            if (err || !contest || !contest.value) {
                 closeDb(data);
 
                 callback(new exceptions.ServerException("Error setting contest", {
+                    "whereClause" : whereClause,
+                    "session" : data.session,
                     "setData": data.setData,
-                    "contestId": contestId,
+                    "contestId": data.contestId,
                     "dbError": err
                 }, "error"));
                 return;
@@ -1196,7 +1204,7 @@ function insertPurchase(data, callback) {
     data.newPurchase.created = (new Date()).getTime();
 
     purchasesCollection.insert(data.newPurchase
-        , {}, function (err, result) {
+        , {}, function (err, insertResult) {
             if (err) {
                 if (err.code !== 11000) {
 
@@ -1238,7 +1246,7 @@ function getContestTopParticipants(data, callback) {
     data.newPurchase.created = (new Date()).getTime();
 
     purchasesCollection.insert(data.newPurchase
-        , {}, function (err, result) {
+        , {}, function (err, insertResult) {
             if (err) {
                 if (err.code !== 11000) {
 

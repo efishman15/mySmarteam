@@ -103,6 +103,7 @@
   "SHARE" : "Compartir",
   "SHARE_WITH_FRIENDS_TITLE" : "Compartir con amigos",
   "CLICK_LIKE" : "Haga clic como a la página de facebook del juego y obtener los resultados de los concursos que participas",
+  "CLICK_LIKE_WITH_CONTEST" : "Haga clic como a la página de facebook del juego y obtener los resultados de los concursos que participas, incluyendo:",
   "FACEBOOK_GAME_PAGE" : "Facebook la página de juegos",
   "SHARE_WITH_FRIENDS_MESSAGE" : "Invita a tus amigos para ayudar",
   "SHARE_SUBJECT" : "Ven a jugar conmigo : '¿Quién es más inteligente ?'",
@@ -110,12 +111,13 @@
   "SHARE_BODY" : "Yo quiero que veas a este divertido juego : {{url}}",
   "SHARE_BODY_NO_URL" : "I want you to see this cool game",
   "SHARE_BODY_WITH_CONTEST" : "Estoy jugando para el equipo {{team}}. Por favor ayuda: {{url}}",
-  "SHARE_BODY_NO_URL_WITH_CONTEST" : "Estoy jugando para el equipo {{team}}. Por favor ayuda",
+  "SHARE_BODY_NO_URL_WITH_CONTEST" : "Estoy jugando para el equipo {{team}} en el concurso de '{{name}}' - por favor ayuda",
   "JOIN_A_CONTEST_MESSAGE" : "Por favor únase a uno de los concursos que se ejecutan por lo que aparecerá en mi lista de los concursos",
   "LEADERBOARDS" : "tablas de clasificación",
   "FRIENDS" : "Amigos",
   "WEEKLY" : "Cada semana",
   "CONTEST_LEADERS" : "Líderes del Concurso",
+  "CONTEST_LEADERS_MORE" : "Líderes del Concurso...",
   "CONTEST_LEADERS_GENERAL_SCORING" : "clasificación general",
   "MY_POSITION" : "Mi posición: {{position}}",
   "JOIN_TEAM" : "Únete {{team}}",
@@ -135,5 +137,6 @@
   "STORY_GOT_SCORE_TITLE" : "Enhorabuena , bien hecho",
   "STORY_GOT_SCORE_MESSAGE" : "Usted ha contribuido {{score}} SmartPoints a {{team}} equipo!",
   "STORY_ZERO_SCORE_TITLE" : "Inténtalo de nuevo",
-  "STORY_ZERO_SCORE_MESSAGE" : "Estamos seguros de que puedes hacerlo mejor"
+  "STORY_ZERO_SCORE_MESSAGE" : "Estamos seguros de que puedes hacerlo mejor",
+  "LIKE" : "Like"
 }
