@@ -19,6 +19,8 @@
             </button>
         </div>
         <form name="contestForm" novalidate="novalidate">
+            <h4 class="center padding">{{'WHO_IS_SMARTER_QUESTION' | translate}}</h4>
+
             <div class="padding row">
                 <div class="contest-team">
                     <label class="item item-input"
@@ -145,8 +147,8 @@
                                    value="{{localViewData.totalParticipants}}">
                         </div>
                     </div>
-                    <button class="padding button button-small button-assertive" ng-click="removeContest()" ng-if="showRemoveContest()">{{ 'REMOVE_CONTEST' |
-                        translate}}
+                    <button class="padding button button-small button-assertive" ng-click="removeContest()"
+                            ng-if="showRemoveContest">{{ 'REMOVE_CONTEST' | translate}}
                     </button>
 
                 </div>
@@ -155,7 +157,7 @@
             <div class="button-bar padding">
                 <button class="button padding button-bar button-calm" translate="OK"
                         ng-click="contestForm.$valid && setContest()"
-                            analytics-on="click" analytics-event="contest/set">
+                        analytics-on="click" analytics-event="contest/set">
                 </button>
             </div>
 

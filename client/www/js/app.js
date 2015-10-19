@@ -9,6 +9,15 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
     .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
     .run(function ($ionicPlatform, $rootScope, $location) {
         $ionicPlatform.ready(function () {
+
+                //FlurryAgent.setDebugLogEnabled(true);
+                FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
+
+                FlurryAgent.myLogError = function (errorType, message) {
+                    console.log(message);
+                    FlurryAgent.logError(errorType.substring(0, 255), message.substring(0, 255), 0);
+                }
+
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
                 // for form inputs)
                 if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -31,7 +40,20 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                     window.open = cordova.InAppBrowser.open;
 
                     window.myHandleBranch = function (err, data) {
-                        alert("data=" + JSON.stringify(data));
+                        try {
+                            if (err) {
+                                FlurryAgent.myLogError("BranchIoError", "Error received during branch init: " + err);
+                                return;
+                            }
+
+                            if (data.data_parsed && data.data_parsed.contestId) {
+                                //Will go to this contest
+                                $rootScope.deepLinkContestId = data.data_parsed.contestId;
+                            }
+                        }
+                        catch (e) {
+                            FlurryAgent.myLogError("BranchIoError", "Error parsing data during branch init, data= " + data + ", parsedData=" + parsedData + ", error: " + e);
+                        }
                     };
 
                     branch.init("key_live_pocRNjTcwzk0YWxsqcRv3olivweLVuVE", function (err, data) {
@@ -39,14 +61,6 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                             window.myHandleBranch(err, data);
                         }
                     });
-                }
-
-                //FlurryAgent.setDebugLogEnabled(true);
-                FlurryAgent.startSession("NT66P8Q5BR5HHVN2C527");
-
-                FlurryAgent.myLogError = function (errorType, message) {
-                    FlurryAgent.logError(errorType.substring(0, 255), message.substring(0, 255), 0);
-                    console.log(message);
                 }
 
                 if (window.StatusBar) {

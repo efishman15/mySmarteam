@@ -111,7 +111,6 @@ dalDb.loadSettings(function (err, data) {
     app.get("/facebook/ipn", facebookCanvas.getChallenge);
     app.post("/facebook/ipn", facebookCanvas.ipn);
     app.post("/paypal/ipn", paypalIPN.ipn);
-    app.get("/download", generalUtils.download);
 
     //----------------------------------------------------
     // Start server listener

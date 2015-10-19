@@ -290,8 +290,6 @@ label.item.valid-lr {
 }
 
 .center-button-in-ellipse {
-    margin-right: -2px !important;;
-    margin-left: -2px !important;
     border-top-width: 2px !important;
     border-bottom-width: 2px !important;
 }
@@ -373,9 +371,9 @@ label.item.valid-lr {
 }
 
 .button.small-font {
-    font-size: 90%;
-    line-height: 1.2em;
-    white-space: normal;
+    font-size: 90% !important;
+    line-height: 1.0em !important;
+    white-space: normal !important;
 }
 
 .bold {
@@ -426,6 +424,11 @@ label.item.valid-lr {
 .leader-avatar-in-leaderboard {
     margin-top: -5px !important;
 }
+
+.leader-avatar-in-contest {
+    margin-top: -9px !important;
+}
+
 
 .leader-avatar-outside-leaderboard {
     margin-top: -8px !important;
@@ -496,10 +499,19 @@ label.item.valid-lr {
 .contest-leaders-note-left {
     float: left;
     text-decoration: underline;
+    font-size: 13px;
 }
 
 .contest-leaders-note-right {
     float: right;
     color: #aaa;
-    font-size: 14px;
+    font-size: 13px;
+}
+
+.contest-leader {
+    font-size: 13px !important;
+}
+
+.chart-margin-top {
+    margin-top: 10px;
 }

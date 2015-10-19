@@ -85,8 +85,6 @@ module.exports.getContestDetails = function (req, res, next) {
         return;
     }
 
-    var data = {"contestId" : req.params.contestId, "closeConnection" : true};
-
     dalDb.connect(function(err, data) {
 
         data.contestId = req.params.contestId;

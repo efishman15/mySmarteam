@@ -4,10 +4,10 @@
     </ion-header>
 
     <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
-                 overflow-scroll="true" class="hide-vertical-scrollbar has-subheader">
+                 overflow-scroll="true" class="hide-vertical-scrollbar"
+                 ng-class="{'has-subheader' : tab==='recentlyFinished'}">
 
-        <h4 class="padding center" ng-if="userClick && totalContests === 0">{{'JOIN_A_CONTEST_MESSAGE' |
-            translate}}</h4>
+        <h4 class="padding center" ng-if="userClick && totalContests === 0">{{'JOIN_A_CONTEST_MESSAGE' | translate}}</h4>
 
         <ion-scroll class="scroll-full-height">
 

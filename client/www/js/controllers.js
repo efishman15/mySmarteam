@@ -79,7 +79,7 @@
             }
         });
 
-        $scope.share = function() {
+        $scope.share = function () {
             if ($rootScope.user.clientInfo.mobile) {
                 ShareService.mobileShare();
             }
@@ -146,9 +146,9 @@
                 return;
             }
 
-            if ($rootScope.justCreatedContest) {
-                var contestId = $rootScope.justCreatedContest._id;
-                $rootScope.justCreatedContest = null;
+            if ($rootScope.deepLinkContestId) {
+                var contestId = $rootScope.deepLinkContestId;
+                $rootScope.deepLinkContestId = null;
                 $rootScope.gotoView("app.contest", false, {id: contestId});
                 return;
             }
@@ -180,7 +180,7 @@
                 $scope.contestCharts.length = 0;
             }
 
-            $scope.totalContests = 0;
+            $scope.totalContests = -1;
 
             //That bug again...prevent inifinite firing twice
             shouldTriggerScrollInfiniteRealFunction = false;
@@ -193,7 +193,7 @@
         };
 
         $scope.haveMoreContests = function () {
-            return ($scope.totalContests == -1 || //never retrieved from the server
+            return ($scope.totalContests === -1 || //never retrieved from the server
             ($scope.totalContests > 0 && $scope.contestCharts.length < $scope.totalContests)); //retrieved, server has data, and I have less than the server
         };
 
@@ -226,7 +226,7 @@
             }
 
             var config;
-            if ($scope.totalContests != -1) {
+            if ($scope.totalContests !== -1) {
                 config = {"blockUserInterface": false}
             }
 
@@ -258,8 +258,8 @@
             }, null, config);
         }
 
-        $rootScope.$on("whoSmarter-contestCreated", function(event, contest) {
-            $rootScope.justCreatedContest = contest;
+        $rootScope.$on("whoSmarter-contestCreated", function (event, contest) {
+            $rootScope.deepLinkContestId = contest._id;
         });
 
         $scope.fcEvents = {
@@ -877,6 +877,8 @@
             "d3": {"value": "d3", "number": 3, "units": "ENDS_IN_DAYS", "msecMultiplier": 24 * 60 * 60 * 1000}
         }
 
+        $scope.showRemoveContest = false;
+
         //-------------------------------------------------------
         // Choose Contest end option Popover
         // -------------------------------------------------------
@@ -947,6 +949,8 @@
             }
 
             $rootScope.session.features.newContest.purchaseData.retrieved = false;
+
+            $scope.showRemoveContest = ($stateParams.mode === "edit" && $rootScope.session.isAdmin);
 
             //-------------------------------------------------------------------------------------------------------------
             //Android Billing
@@ -1028,13 +1032,13 @@
 
         $scope.getTitle = function () {
             if ($stateParams.mode == "add") {
-                return $translate.instant("NEW_CONTEST") + " - " + $translate.instant("WHO_IS_SMARTER");
+                return $translate.instant("NEW_CONTEST");
             }
             else if ($stateParams.mode == "edit") {
-                return $translate.instant("WHO_IS_SMARTER");
+                return $translate.instant("EDIT_CONTEST");
             }
             else {
-                return null;
+                return $translate.instant("WHO_IS_SMARTER");
             }
         };
 
@@ -1072,43 +1076,76 @@
             $scope.localViewData.startDate = $scope.localViewData.startDate.getTime();
             $scope.localViewData.endDate = $scope.localViewData.endDate.getTime();
 
-            if ($stateParams.mode == "add" || ($stateParams.mode == "edit" && JSON.stringify($stateParams.contest) != JSON.stringify($scope.localViewData))) {
+            if ($stateParams.mode === "add" || ($stateParams.mode === "edit" && JSON.stringify($stateParams.contest) != JSON.stringify($scope.localViewData))) {
 
                 $scope.localViewData.name = $translate.instant("FULL_CONTEST_NAME", {
                     "team0": $scope.localViewData.teams[0].name,
                     "team1": $scope.localViewData.teams[1].name
                 });
-                //Add/update the new/updated contest to the server and in the local $rootScope
-                ContestsService.setContest($scope.localViewData, $stateParams.mode,
-                    function (contest) {
-                        //Raise event - so the contest graph can be refreshed without going to the server again
 
-                        //Report to Flurry
-                        var contestParams = {
-                            "team0": $scope.localViewData.teams[0].name,
-                            "team1": $scope.localViewData.teams[1].name,
-                            "duration": $scope.localViewData.endOption
-                        };
+                if ($stateParams.mode === "edit" && $scope.localViewData.name !== $stateParams.contest.name) {
+                    $scope.localViewData.nameChanged = true;
+                }
 
-                        $rootScope.goBack();
-                        if ($stateParams.mode === "add") {
-                            FlurryAgent.logEvent("contest/created", contestParams);
-                            $rootScope.$broadcast("whoSmarter-contestCreated", contest);
-                        }
-                        else {
-                            FlurryAgent.logEvent("contest/updated", contestParams);
-                            $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
-                        }
+                ContestsService.setContest($scope.localViewData, $stateParams.mode, function (contest) {
+                    //Report to Flurry
+                    var contestParams = {
+                        "team0": $scope.localViewData.teams[0].name,
+                        "team1": $scope.localViewData.teams[1].name,
+                        "duration": $scope.localViewData.endOption
+                    };
 
-                    }, function (status, error) {
-                        $scope.localViewData.startDate = startDate;
-                        $scope.localViewData.endDate = endDate;
-                    });
+                    $rootScope.goBack();
+
+                    if ($stateParams.mode === "add") {
+                        FlurryAgent.logEvent("contest/created", contestParams);
+                        $rootScope.$broadcast("whoSmarter-contestCreated", contest);
+                    }
+                    else {
+                        FlurryAgent.logEvent("contest/updated", contestParams);
+                        $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
+                    }
+
+                }, function (status, error) {
+                    $scope.localViewData.startDate = startDate;
+                    $scope.localViewData.endDate = endDate;
+                });
             }
             else {
                 $rootScope.goBack();
             }
-        };
+
+        }
+
+        function processAndroidPurchase(purchaseData, callbackOnSuccess) {
+            var extraPurchaseData = {
+                "actualCost": $rootScope.session.features.newContest.purchaseData.cost,
+                "actualCurrency": $rootScope.session.features.newContest.purchaseData.currency,
+                "featurePurchased": $rootScope.session.features.newContest.name
+            };
+
+            PaymentService.processPayment("android", purchaseData, extraPurchaseData, function (serverPurchaseData) {
+
+                $ionicLoading.show({
+                        animation: 'fade-in',
+                        showBackdrop: true,
+                        showDelay: 50
+                    }
+                );
+
+                inappbilling.consumePurchase(function (purchaseData) {
+                        $ionicLoading.hide();
+                        if (callbackOnSuccess) {
+                            callbackOnSuccess(purchaseData);
+                        }
+                        PaymentService.showPurchaseSuccess(serverPurchaseData);
+                    }, function (error) {
+                        $ionicLoading.hide();
+                        FlurryAgent.myLogError("AndroidBilling", "Error consuming product: " + error);
+                    },
+                    purchaseData.productId);
+            });
+        }
 
         $scope.removeContest = function () {
 
@@ -1141,15 +1178,6 @@
 
             });
         };
-
-        $scope.showRemoveContest = function () {
-            if ($stateParams.mode === 'add' || !$rootScope.session.isAdmin) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
 
         $scope.buyNewContestUnlockKey = function (isMobile) {
             $scope.buyInProgress = true;
@@ -1195,35 +1223,6 @@
             });
         };
 
-        function processAndroidPurchase(purchaseData, callbackOnSuccess) {
-            var extraPurchaseData = {
-                "actualCost": $rootScope.session.features.newContest.purchaseData.cost,
-                "actualCurrency": $rootScope.session.features.newContest.purchaseData.currency,
-                "featurePurchased": $rootScope.session.features.newContest.name
-            };
-
-            PaymentService.processPayment("android", purchaseData, extraPurchaseData, function (serverPurchaseData) {
-
-                $ionicLoading.show({
-                        animation: 'fade-in',
-                        showBackdrop: true,
-                        showDelay: 50
-                    }
-                );
-
-                inappbilling.consumePurchase(function (purchaseData) {
-                        $ionicLoading.hide();
-                        if (callbackOnSuccess) {
-                            callbackOnSuccess(purchaseData);
-                        }
-                        PaymentService.showPurchaseSuccess(serverPurchaseData);
-                    }, function (error) {
-                        $ionicLoading.hide();
-                        FlurryAgent.myLogError("AndroidBilling", "Error consuming product: " + error);
-                    },
-                    purchaseData.productId);
-            });
-        }
     })
 
     .controller("PayPalPaymentSuccessCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, PopupService) {
@@ -1524,18 +1523,23 @@
 
         $scope.fcEvents = {
             "dataplotClick": function (eventObj, dataObj) {
-                teamClicked(dataObj.dataIndex, "bar");
+                if ($scope.buttonState === "join") {
+                    teamClicked(dataObj.dataIndex, "bar");
+                    $scope.chartTeamEventHandled = true;
+                }
             },
             "dataLabelClick": function (eventObj, dataObj) {
-                teamClicked(dataObj.dataIndex, "label");
-            },
-            "annotationClick": function (eventObj, dataObj) {
-                if ($rootScope.session.isAdmin) {
-                    $rootScope.gotoView("app.setContest", false, {
-                        mode: "edit",
-                        contest: eventObj.sender.args.dataSource.contest
-                    });
+                console.log("dataLabelClick1");
+                if ($scope.buttonState === "join") {
+                    teamClicked(dataObj.dataIndex, "label");
+                    $scope.chartTeamEventHandled = true;
                 }
+            },
+            "chartClick": function (eventObj, dataObj) {
+                if (!$scope.chartTeamEventHandled && $scope.buttonState === "play") {
+                    $scope.playContest();
+                }
+                $scope.chartTeamEventHandled = false;
             }
         };
 
@@ -1568,12 +1572,12 @@
             refreshContest(contest);
         });
 
-        $scope.share = function() {
+        $scope.share = function () {
             if ($rootScope.user.clientInfo.mobile) {
                 ShareService.mobileShare($scope.contestChart.contest);
             }
             else {
-                $rootScope.gotoView("app.share", false, {contest : $scope.contestChart.contest});
+                $rootScope.gotoView("app.share", false, {contest: $scope.contestChart.contest});
             }
         };
     })

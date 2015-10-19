@@ -1277,7 +1277,7 @@ angular.module('whoSmarter.services', [])
             var shareVariables = {};
 
             if (contest) {
-                shareVariables.shareUrl = adjustUrl($rootScope.settings.share.contestUrlPrefix + contest._id);
+                shareVariables.shareUrl = contest.link;
                 shareVariables.shareSubject = $translate.instant("SHARE_SUBJECT_WITH_CONTEST", {name: contest.name});
 
                 if (contest.myTeam === 0 || contest.myTeam === 1) {

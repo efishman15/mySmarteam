@@ -305,28 +305,3 @@ module.exports.getYearWeek = function() {
     var week = Math.ceil((((d - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
     return "" + thisYear + "" + week;
 };
-
-//------------------------------------------------------------------------------------------------
-// download
-//
-// data: <NA>?
-//
-// redirects the client to the game based on agent's platform
-//------------------------------------------------------------------------------------------------
-module.exports.download = function (req, res, next) {
-
-    var agent = useragent.parse(req.headers['user-agent']);
-
-    logger.console.info("download, agent=" + JSON.stringify(agent));
-    logger.server.info("download, agent=" + JSON.stringify(agent));
-
-    if (agent.os.family === "Android") {
-        res.redirect(settings.server.platforms.android.storeLink);
-    }
-    else if (agent.os.family === "iOS") {
-        res.redirect(settings.server.platforms.ios.storeLink);
-    }
-    else {
-        res.redirect(settings.client.general.baseUrl);
-    }
-};

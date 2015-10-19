@@ -2,20 +2,20 @@
 
     <ion-content dir="{{$root.settings.languages[$root.session.settings.language].direction}}" drag-content="false">
 
-        <div class="full-width">
+        <div class="padding full-width">
             <div class="padding center zero-margin" style="width: {{$root.settings.charts.size.width}}px;">
-                <div class="center item item-divider leader-avatar-in-leaderboard pointer zero-margin"
+                <div class="center item item-divider leader-avatar-in-contest pointer zero-margin"
                      ng-class="{'item-avatar-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','item-avatar-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
                      ng-click="$root.gotoView('app.contestParticipants', false, {'contest' : contestChart.contest})">
-                    <image class="leader-avatar-in-leaderboard" ng-src="{{contestChart.contest.leader.avatar}}"></image>
+                    <image class="leader-avatar-in-contest" ng-src="{{contestChart.contest.leader.avatar}}"></image>
                     <div style="text-align: {{$root.settings.languages[$root.user.settings.language].align}}">
-                        <h2 class="no-wrap-text">{{contestChart.contest.leader.name}}</h2>
-                        <p>{{'CONTEST_LEADER' | translate}}<span ng-class="{'contest-leaders-note-right' : $root.settings.languages[$root.session.settings.language].direction === 'ltr', 'contest-leaders-note-left' : $root.settings.languages[$root.session.settings.language].direction === 'rtl'}">{{'CONTEST_LEADERS_MORE' | translate}}</span></p>
+                        <h2 class="no-wrap-text contest-leader">{{contestChart.contest.leader.name}}</h2>
+                        <p class="contest-leader">{{'CONTEST_LEADER' | translate}}<span ng-class="{'contest-leaders-note-right' : $root.settings.languages[$root.session.settings.language].direction === 'ltr', 'contest-leaders-note-left' : $root.settings.languages[$root.session.settings.language].direction === 'rtl'}">{{'CONTEST_LEADERS_MORE' | translate}}</span></p>
                     </div>
                 </div>
             </div>
 
-            <div class="chart"
+            <div class="chart chart-margin-top"
                  fusioncharts
                  width="{{$root.settings.charts.size.width}}"
                  height="{{$root.settings.charts.size.height}}"

@@ -1,5 +1,6 @@
 var async = require("async");
 var dalDb = require("../dal/dalDb");
+var dalBranchIo = require("../dal/dalBranchIo");
 var exceptions = require("../utils/exceptions");
 var mathjs = require("mathjs");
 var commonBusinessLogic = require("./common");
@@ -123,6 +124,11 @@ function updateContest(data, callback) {
     data.setData["teams.0.name"] = data.contest.teams[0].name;
     data.setData["teams.1.name"] = data.contest.teams[1].name;
     data.setData.endDate = data.contest.endDate;
+
+    //If team names are changing - a new link is created in branch.io with the new contest teams /name
+    if (data.contest.link) {
+        data.setData["link"] = data.contest.link;
+    }
 
     //Admin fields
     if (data.session.isAdmin) {
@@ -388,13 +394,13 @@ function joinToContestObject(contest, teamId, session) {
     return newJoin;
 }
 
-//----------------------------------------------------
+//-----------------------------------------------------------------
 // setContest
 //
 // data:
-// input: contest, mode (add, edit)
+// input: contest, mode (add, edit), nameChanged (optional)
 // output: contest (extended)
-//----------------------------------------------------
+//-----------------------------------------------------------------
 module.exports.setContest = function (req, res, next) {
 
     var token = req.headers.authorization;
@@ -428,12 +434,33 @@ module.exports.setContest = function (req, res, next) {
             }
         },
 
+        function (data, callback) {
+            if (data.mode === "add") {
+                //In case of add - contest needed to be added in the previous operation first, to get an _id
+                dalBranchIo.createContestLink(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
+        //In case of update - create a branch link first before updating the db
+        function (data, callback) {
+            if (data.mode === "add") {
+                //In case of add - update the link to the contest object
+                data.setData = {"link" : data.contest.link};
+                dalDb.setContest(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
         //Prepare contest for client
         function (data, callback) {
             prepareContestForClient(data.contest, data.session);
             callback(null, data);
         }
-
     ];
 
     async.waterfall(operations, function (err, data) {

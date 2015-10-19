@@ -1025,7 +1025,7 @@ function prepareContestsQuery(data, callback) {
             break;
 
         case "recentlyFinished":
-            contestsCriteria.endDate = {$lt: now, $gte: now - (2 * 24 * 60 * 60 * 1000)}; //finished in the past 2 days
+            contestsCriteria.endDate = {$lt: now, $gte: now - (generalUtils.settings.server.contestList.recentlyFinishedDays * 24 * 60 * 60 * 1000)}; //finished in the past 2 days
             contestsOrder.push(["endDate", "desc"]);  //order by participants descending
             break;
 
