@@ -156,6 +156,54 @@ module.exports.toggleSound = function (req, res, next) {
     });
 };
 
+//----------------------------------------------------
+// setGcmRegistration
+//
+// data: registrationId
+//----------------------------------------------------
+module.exports.setGcmRegistration = function (req, res, next) {
+
+    var data = req.body;
+
+    if (!data.registrationId) {
+        exceptions.ServerResponseException(res, "registrationId not supplied", null, "warn", 424);
+        return;
+    }
+
+    var token = req.headers.authorization;
+
+
+    var operations = [
+
+        //Connect to the database
+        dalDb.connect,
+
+        //Retrieve the session
+        function (connectData, callback) {
+            data.DbHelper = connectData.DbHelper;
+            data.token = token;
+            dalDb.retrieveSession(data, callback);
+        },
+
+        //Save the settings to the user object
+        function (data, callback) {
+            data.setData = {"gcmRegistrationId": data.registrationId};
+            data.closeConnection = true;
+            dalDb.setUser(data, callback);
+        }
+    ];
+
+    async.waterfall(operations, function (err) {
+        if (!err) {
+            res.send(200, "OK");
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    });
+};
+
+
 //---------------------------------------------------------------------------------
 // computeFeatures
 //

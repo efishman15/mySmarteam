@@ -21,14 +21,6 @@
     "cordova-plugin-whitelist",
     "org.apache.cordova.inappbrowser",
     {
-      "locator": "https://github.com/phonegap/phonegap-facebook-plugin.git",
-      "id": "com.phonegap.plugins.facebookconnect",
-      "variables": {
-        "APP_ID": "344342552056",
-        "APP_NAME": "whoSmarter"
-      }
-    },
-    {
       "locator": "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
       "id": "cordova-plugin-x-socialsharing"
     }

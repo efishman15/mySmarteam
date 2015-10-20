@@ -155,8 +155,8 @@
 
             $scope.userClick = $stateParams.userClick;
 
-            $scope.tab = $state.current.appData.serverTab;
-            $scope.title = $state.current.appData.title;
+            $scope.tab = $state.current.data.serverTab;
+            $scope.title = $state.current.data.title;
 
             viewData.enableBack = false;
 
@@ -189,7 +189,7 @@
         };
 
         $scope.showContestParticipants = function () {
-            return ($state.current.appData && $state.current.appData.showParticipants);
+            return ($state.current.data && $state.current.data.showParticipants);
         };
 
         $scope.haveMoreContests = function () {
@@ -230,7 +230,7 @@
                 config = {"blockUserInterface": false}
             }
 
-            ContestsService.getContests(clientContestCount, $state.current.appData.serverTab, function (contestsResult) {
+            ContestsService.getContests(clientContestCount, $state.current.data.serverTab, function (contestsResult) {
                 $scope.totalContests = contestsResult.count;
 
                 if (!$stateParams.userClick && $scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
@@ -268,9 +268,10 @@
                 $rootScope.$broadcast("whoSmarter-contestUpdated", eventObj.sender.args.dataSource.contest);
             }
         }
+
     })
 
-    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig, ContestsService, $timeout) {
+    .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig) {
 
         var quizCanvas;
         var quizContext;
@@ -291,20 +292,20 @@
         });
 
         $scope.openQuestionInfoModal = function () {
-            $rootScope.preventBack = true;
+            if ($state.current.data && $state.current.data.questionInfo) {
+                $state.current.data.questionInfo.open = true;
+            }
             FlurryAgent.logEvent("quiz/showQuestionInfo", {"question": "" + ($scope.quiz.currentQuestionIndex + 1)});
             $scope.questionInfoModal.show();
         };
 
         $scope.closeQuestionInfoModal = function () {
-            $rootScope.preventBack = false;
             $scope.questionInfoModal.hide();
         };
 
-        $scope.$on('modal.hidden', function () {
-            $rootScope.preventBack = false;
-            $scope.questionChart = null;
-        });
+        //Hardware back button handlers
+        $state.current.data.questionInfo.isOpenHandler = function() {return $scope.questionInfoModal.isShown()};
+        $state.current.data.questionInfo.closeHandler = $scope.closeQuestionInfoModal;
 
         //Cleanup the modal when we're done with it!
         $scope.$on('$destroy', function () {

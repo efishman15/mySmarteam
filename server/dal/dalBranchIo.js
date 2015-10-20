@@ -15,7 +15,6 @@ module.exports.createContestLink = function (data, callback) {
 
     var postData = {
         "branch_key": generalUtils.settings.server.branch.key,
-        "alias": "c" + data.contest._id,
         "feature": "contest",
         "data": {
             "$og_redirect": generalUtils.settings.server.branch.contestLinkPrefix + data.contest._id,

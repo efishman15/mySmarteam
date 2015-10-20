@@ -27,6 +27,10 @@ function getSessionResponse(session) {
         clientSession.justRegistered = true;
     }
 
+    if (session.gcmRegistrationId) {
+        clientSession.gcmRegistrationId = session.gcmRegistrationId;
+    }
+
     return clientSession;
 }
 

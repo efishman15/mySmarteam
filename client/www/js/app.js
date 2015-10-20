@@ -1,12 +1,6 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers', 'ui.router', 'ionic', 'http-auth-interceptor', 'ngMessages', 'pascalprecht.translate', 'ng-fusioncharts', 'ezfb', 'ionic-datepicker', 'angular-storage', 'ngCordova'])
-    .constant('ENDPOINT_URI', 'http://www.whosmarter.com/')
-    .constant('ENDPOINT_URI_SECURED', 'https://www.whosmarter.com/')
+angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers", "ui.router", "ionic", "http-auth-interceptor", "ngMessages", "pascalprecht.translate", "ng-fusioncharts", "ezfb", "ionic-datepicker", "angular-storage", "ngCordova"])
+    .constant("ENDPOINT_URI", "http://www.whosmarter.com/")
+    .constant("ENDPOINT_URI_SECURED", "https://www.whosmarter.com/")
     .run(function ($ionicPlatform, $rootScope, $location) {
         $ionicPlatform.ready(function () {
 
@@ -56,11 +50,16 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         }
                     };
 
-                    branch.init("key_live_pocRNjTcwzk0YWxsqcRv3olivweLVuVE", function (err, data) {
-                        if (window.myHandleBranch) {
-                            window.myHandleBranch(err, data);
-                        }
-                    });
+                    window.initBranch = function () {
+                        branch.init("key_live_pocRNjTcwzk0YWxsqcRv3olivweLVuVE", function (err, data) {
+                            if (window.myHandleBranch) {
+                                window.myHandleBranch(err, data);
+                            }
+                        });
+                    }
+
+                    initBranch();
+
                 }
 
                 if (window.StatusBar) {
@@ -89,17 +88,18 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                         };
                 })();
 
-                $rootScope.$on('$stateChangeSuccess', function (event, current) {
+                $rootScope.$on("$stateChangeSuccess", function (event, current) {
                     FlurryAgent.logEvent("page" + $location.url())
                 });
 
             }
         );
 
-        $ionicPlatform.on('resume', function (event) {
-            if (window.myHandleBranch) {
-                window.myHandleBranch(err, data);
+        $ionicPlatform.on("resume", function (event) {
+            if (window.cordova && window.initBranch) {
+                window.initBranch();
             }
+
         });
     })
 
@@ -107,15 +107,15 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
-                    $rootScope.$broadcast('whoSmarter-httpRequest', config)
+                    $rootScope.$broadcast("whoSmarter-httpRequest", config)
                     return config;
                 },
                 response: function (response) {
-                    $rootScope.$broadcast('whoSmarter-httpResponse', response)
+                    $rootScope.$broadcast("whoSmarter-httpResponse", response)
                     return response;
                 },
                 responseError: function (rejection) {
-                    $rootScope.$broadcast('whoSmarter-httpResponseError', rejection)
+                    $rootScope.$broadcast("whoSmarter-httpResponseError", rejection)
                     return $q.reject(rejection);
                 }
             }
@@ -125,19 +125,19 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
     .config(function ($ionicConfigProvider) {
         $ionicConfigProvider.backButton.text("");
         $ionicConfigProvider.backButton.previousTitleText("");
-        $ionicConfigProvider.tabs.position('bottom');
+        $ionicConfigProvider.tabs.position("bottom");
     })
 
     .config(function (ezfbProvider) {
         if (!window.cordova) {
             ezfbProvider.setInitParams({
                 // This is my FB app id for plunker demo app
-                appId: '344342552056',
+                appId: "344342552056",
 
                 // Module default is `v2.0`.
                 // If you want to use Facebook platform `v2.3`, you'll have to add the following parameter.
                 // https://developers.facebook.com/docs/javascript/reference/FB.init
-                version: 'v2.5'
+                version: "v2.5"
             });
         }
     })
@@ -152,10 +152,10 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
     })
 
     .config(function ($translateProvider) {
-        $translateProvider.useSanitizeValueStrategy('escaped');
+        $translateProvider.useSanitizeValueStrategy("escaped");
         $translateProvider.useStaticFilesLoader({
-            prefix: 'languages/',
-            suffix: '.json'
+            prefix: "languages/",
+            suffix: ".json"
         });
 
         var lang = navigator.language || navigator.userLanguage;
@@ -176,37 +176,47 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
 
         $stateProvider
-            .state('home', {
-                url: "/home",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("home", {
+                "url": "/home",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "home");
                     }
                 },
-                controller: "HomeCtrl",
-                templateUrl: "templates/home.html"
+                "controller": "HomeCtrl",
+                "templateUrl": "templates/home.html",
+                "data": {
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        PopupService.confirmExitApp();
+                    }
+                }
             })
 
-            .state('serverPopup', {
-                url: "/serverPopup",
-                params: {serverPopup: null},
-                controller: "ServerPopupCtrl",
-                templateUrl: "templates/serverPopup.html"
+            .state("serverPopup", {
+                "url": "/serverPopup",
+                "params": {"serverPopup": null},
+                "controller": "ServerPopupCtrl",
+                "templateUrl": "templates/serverPopup.html",
+                "data": {
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        event.preventDefault();
+                    }
+                }
             })
 
-            .state('questionStats', {
-                url: "/questionStats",
-                params: {serverPopup: null},
-                controller: "ServerPopupCtrl",
-                templateUrl: "templates/serverPopup.html"
+            .state("questionStats", {
+                "url": "/questionStats",
+                "params": {"serverPopup": null},
+                "controller": "ServerPopupCtrl",
+                "templateUrl": "templates/serverPopup.html"
             })
 
-            .state('facebookCanvas', {
-                url: "/facebook?connected&signedRequest&language",
-                controller: "FacebookCanvasCtrl",
-                params: {connected: null, signedRequest: null, language: null},
-                resolve: {
-                    auth: function resolveAuthentication(UserService, $stateParams) {
+            .state("facebookCanvas", {
+                "url": "/facebook?connected&signedRequest&language",
+                "controller": "FacebookCanvasCtrl",
+                "params": {"connected": null, "signedRequest": null, "language": null},
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService, $stateParams) {
                         var data = {
                             "connected": $stateParams.connected,
                             "signedRequest": $stateParams.signedRequest,
@@ -218,163 +228,174 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
             })
 
             .state("otherwise", {
-                url: "/otherwise",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+                "url": "/otherwise",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "otherwise");
                     }
                 },
-                controller: "OtherwiseCtrl"
+                "controller": "OtherwiseCtrl"
             })
 
-            .state('app.share', {
-                url: "/share",
-                params: {contest: null},
-                cache: false,
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/share.html",
-                        controller: 'ShareCtrl'
+            .state("app.share", {
+                "url": "/share",
+                "params": {"contest": null},
+                "cache": false,
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/share.html",
+                        "controller": "ShareCtrl"
                     }
                 }
             })
 
-            .state('app.like', {
-                url: "/like",
-                params: {contest: null},
-                cache: false,
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/like.html",
-                        controller: 'LikeCtrl'
+            .state("app.like", {
+                "url": "/like",
+                "params": {"contest": null},
+                "cache": false,
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/like.html",
+                        "controller": "LikeCtrl"
                     }
                 }
             })
 
-            .state('app.contestParticipants', {
-                url: "/contestParticipants",
-                cache: false,
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.contestParticipants", {
+                "url": "/contestParticipants",
+                "cache": false,
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "contestParticipants");
                     }
                 },
-                params: {contest: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/contestParticipants.html",
-                        controller: 'ContestParticipantsCtrl'
+                "params": {"contest": null},
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/contestParticipants.html",
+                        "controller": "ContestParticipantsCtrl"
                     }
                 }
             })
 
-            .state('app.contest', {
-                url: "/contest/:id",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.contest", {
+                "url": "/contest/:id",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "contest");
                     }
                 },
-                params: {id: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/contest.html",
-                        controller: 'ContestCtrl'
+                "params": {"id": null},
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/contest.html",
+                        "controller": "ContestCtrl"
                     }
                 }
             })
 
-            .state('app.quiz', {
-                url: "/quiz",
-                cache: false,
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.quiz", {
+                "url": "/quiz",
+                "cache": false,
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "quiz");
                     }
                 },
-                params: {contestId: null},
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/quiz.html",
-                        controller: 'QuizCtrl'
+                "params": {"contestId": null},
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/quiz.html",
+                        "controller": "QuizCtrl"
+                    }
+                },
+                "data": {
+                    "questionInfo" : {"isOpenHandler" : null, closeHandler: null},
+                    "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
+                        if (currentState.data.questionInfo.isOpenHandler && currentState.data.questionInfo.isOpenHandler() && currentState.data.questionInfo.closeHandler) {
+                            currentState.data.questionInfo.closeHandler();
+                        }
+                        else {
+                            $rootScope.goBack();
+                        }
                     }
                 }
             })
 
-            .state('app.setContest', {
-                url: "/setContest",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.setContest", {
+                "url": "/setContest",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "setContest");
                     }
                 },
-                cache: false,
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/setContest.html",
-                        controller: 'SetContestCtrl'
+                "cache": false,
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/setContest.html",
+                        "controller": "SetContestCtrl"
                     }
                 },
-                params: {mode: null, contest: null}
+                "params": {"mode": null, "contest": null}
             })
 
-            .state('payPalPaymentSuccess', {
-                url: "/payPalPaymentSuccess?token&PayerID",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("payPalPaymentSuccess", {
+                "url": "/payPalPaymentSuccess?token&PayerID",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "payPalPaymentSuccess");
                     }
                 },
-                controller: "PayPalPaymentSuccessCtrl",
-                params: {token: null, PayerID: null}
+                "controller": "PayPalPaymentSuccessCtrl",
+                "params": {"token": null, "PayerID": null}
             })
 
-            .state('payment', {
-                url: "/payment?purchaseMethod&purchaseSuccess&token&PayerID",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("payment", {
+                "url": "/payment?purchaseMethod&purchaseSuccess&token&PayerID",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "payment");
                     }
                 },
-                templateUrl: "templates/payment.html",
-                controller: "PaymentCtrl",
-                params: {
-                    token: null,
-                    PayerID: null,
-                    productId: null,
-                    purchaseMethod: null,
-                    purchaseSuccess: null,
-                    nextView: null,
-                    featurePurchased: null
+                "templateUrl": "templates/payment.html",
+                "controller": "PaymentCtrl",
+                "params": {
+                    "token": null,
+                    "PayerID": null,
+                    "productId": null,
+                    "purchaseMethod": null,
+                    "purchaseSuccess": null,
+                    "nextView": null,
+                    "featurePurchased": null
                 }
             })
 
-            .state('app.settings', {
-                url: "/settings",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.settings", {
+                "url": "/settings",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "settings");
                     }
                 },
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/settings.html",
-                        controller: 'SettingsCtrl'
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/settings.html",
+                        "controller": "SettingsCtrl"
                     }
                 }
             })
 
-            .state('logout', {
-                url: "/logout",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("logout", {
+                "url": "/logout",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "logout");
                     }
                 },
-                controller: "LogoutCtrl"
+                "controller": "LogoutCtrl"
             })
 
-            .state('app', {
+            .state("app", {
                 url: "/app",
                 resolve: {
                     auth: function resolveAuthentication(UserService) {
@@ -383,110 +404,134 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
                 },
                 abstract: true,
                 templateUrl: "templates/menu.html",
-                controller: 'AppCtrl'
+                controller: "AppCtrl"
             })
 
             // setup an abstract state for the tabs directive
-            .state('app.tabs', {
-                url: "/tabs",
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.tabs", {
+                "url": "/tabs",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "contests");
                     }
                 },
-                views: {
+                "views": {
                     "menuContent": {
-                        templateUrl: "templates/tabs.html"
+                        "templateUrl": "templates/tabs.html"
                     }
                 }
 
             })
 
-            .state('app.tabs.myContests', {
-                url: '/myContests',
-                params: {userClick: null},
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.tabs.myContests", {
+                "url": "/myContests",
+                "params": {"userClick": null},
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "myContests");
                     }
                 },
-                views: {
-                    'myContestsTab': {
-                        templateUrl: 'templates/contests.html',
-                        controller: 'ContestsCtrl'
+                "views": {
+                    "myContestsTab": {
+                        "templateUrl": "templates/contests.html",
+                        "controller": "ContestsCtrl"
                     }
                 },
-                appData: {"serverTab": "mine", "showPlay": true, "showParticipants": false, title: "MY_CONTESTS"}
+                "data": {
+                    "serverTab": "mine",
+                    "showPlay": true,
+                    "showParticipants": false,
+                    "title": "MY_CONTESTS",
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        PopupService.confirmExitApp();
+                    }
+                }
             })
 
-            .state('app.tabs.runningContests', {
-                url: '/runningContests',
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.tabs.runningContests", {
+                "url": "/runningContests",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "runningContests");
                     }
                 },
-                views: {
-                    'runningContestsTab': {
-                        templateUrl: 'templates/contests.html',
-                        controller: 'ContestsCtrl'
+                "views": {
+                    "runningContestsTab": {
+                        "templateUrl": "templates/contests.html",
+                        "controller": "ContestsCtrl"
                     }
                 },
-                appData: {
+                data: {
                     "serverTab": "running",
                     "showPlay": true,
                     "showParticipants": false,
-                    title: "RUNNING_CONTESTS"
+                    "title": "RUNNING_CONTESTS",
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        PopupService.confirmExitApp();
+                    }
                 }
             })
 
-            .state('app.tabs.recentlyFinishedContests', {
-                url: '/recentlyFinishedContests',
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.tabs.recentlyFinishedContests", {
+                "url": "/recentlyFinishedContests",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "recentlyFinishedContests");
                     }
                 },
-                views: {
-                    'leaderboardTab': {
-                        templateUrl: 'templates/contests.html',
-                        controller: 'ContestsCtrl'
+                "views": {
+                    "leaderboardTab": {
+                        "templateUrl": "templates/contests.html",
+                        "controller": "ContestsCtrl"
                     }
                 },
-                appData: {
+                "data": {
                     "serverTab": "recentlyFinished",
                     "showPlay": false,
                     "showParticipants": true,
-                    title: "LEADERBOARDS"
+                    "title": "LEADERBOARDS",
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        PopupService.confirmExitApp();
+                    }
                 }
             })
 
-            .state('app.tabs.friendsLeaderboard', {
-                url: '/friendsLeaderboard',
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.tabs.friendsLeaderboard", {
+                "url": "/friendsLeaderboard",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "friends");
                     }
                 },
-                views: {
-                    'leaderboardTab': {
-                        templateUrl: 'templates/friendsLeaderboard.html',
-                        controller: 'FriendsLeaderboardCtrl'
+                "views": {
+                    "leaderboardTab": {
+                        "templateUrl": "templates/friendsLeaderboard.html",
+                        "controller": "FriendsLeaderboardCtrl"
+                    }
+                },
+                "data": {
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        PopupService.confirmExitApp();
                     }
                 }
             })
 
-            .state('app.tabs.weeklyLeaderboard', {
-                url: '/weeklyLeaderboard',
-                resolve: {
-                    auth: function resolveAuthentication(UserService) {
+            .state("app.tabs.weeklyLeaderboard", {
+                "url": "/weeklyLeaderboard",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "weekly");
                     }
                 },
-                views: {
-                    'leaderboardTab': {
-                        templateUrl: 'templates/weeklyLeaderboard.html',
-                        controller: 'WeeklyLeaderboardCtrl'
+                "views": {
+                    "leaderboardTab": {
+                        "templateUrl": "templates/weeklyLeaderboard.html",
+                        "controller": "WeeklyLeaderboardCtrl"
+                    }
+                },
+                "data": {
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        PopupService.confirmExitApp();
                     }
                 }
             });
@@ -497,7 +542,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         });
     })
 
-    .directive('mustBeDifferent', function () {
+    .directive("mustBeDifferent", function () {
         return {
             require: "ngModel",
             scope: {
@@ -521,15 +566,15 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         };
     })
 
-    .directive('animationend', function () {
+    .directive("animationend", function () {
         return {
-            restrict: 'A',
+            restrict: "A",
             scope: {
-                animationend: '&'
+                animationend: "&"
             },
             link: function (scope, element) {
                 var callback = scope.animationend(),
-                    events = 'animationend webkitAnimationEnd MSAnimationEnd';
+                    events = "animationend webkitAnimationEnd MSAnimationEnd";
 
                 element.on(events, function (event) {
                     callback.call(element[0], element[0], event);
@@ -538,15 +583,15 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         };
     })
 
-    .directive('mytransitionend', function () {
+    .directive("mytransitionend", function () {
         return {
-            restrict: 'A',
+            restrict: "A",
             scope: {
-                mytransitionend: '&'
+                mytransitionend: "&"
             },
             link: function (scope, element) {
                 var callback = scope.mytransitionend(),
-                    events = 'animationend webkitAnimationEnd MSAnimationEnd' + 'transitionend webkitTransitionEnd';
+                    events = "animationend webkitAnimationEnd MSAnimationEnd" + "transitionend webkitTransitionEnd";
 
                 element.on(events, function (event) {
                     callback.call(element[0], element[0], event);
@@ -555,37 +600,37 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         };
     })
 
-    .directive('resize', function ($window) {
+    .directive("resize", function ($window) {
         return function (scope, element) {
             var w = angular.element($window);
 
-            w.bind('resize', function () {
+            w.bind("resize", function () {
                 scope.$broadcast("whoSmarter-windowResize");
                 scope.$apply();
             });
         }
     })
 
-    .directive('orientationchange', function ($window) {
+    .directive("orientationchange", function ($window) {
         return function (scope, element) {
             var w = angular.element($window);
 
-            w.bind('orientationchange', function () {
+            w.bind("orientationchange", function () {
                 scope.$broadcast("whoSmarter-orientationChanged");
                 scope.$apply();
             });
         }
     })
 
-    .directive('tabsSwipable', ['$ionicGesture', function ($ionicGesture) {
+    .directive("tabsSwipable", ["$ionicGesture", function ($ionicGesture) {
         //
         // make ionTabs swipable. leftswipe -> nextTab, rightswipe -> prevTab
         // Usage: just add this as an attribute in the ionTabs tag
         // <ion-tabs tabs-swipable> ... </ion-tabs>
         //
         return {
-            restrict: 'A',
-            require: 'ionTabs',
+            restrict: "A",
+            require: "ionTabs",
             link: function (scope, elm, attrs, tabsCtrl) {
                 var onSwipeLeft = function () {
                     var target = tabsCtrl.selectedIndex() + 1;
@@ -604,29 +649,29 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
 
                 var swipeGesture;
                 if (attrs.dir === "rtl") {
-                    swipeGesture = $ionicGesture.on('swipeleft', onSwipeRight, elm).on('swiperight', onSwipeLeft);
+                    swipeGesture = $ionicGesture.on("swipeleft", onSwipeRight, elm).on("swiperight", onSwipeLeft);
                 }
                 else {
-                    swipeGesture = $ionicGesture.on('swipeleft', onSwipeLeft, elm).on('swiperight', onSwipeRight);
+                    swipeGesture = $ionicGesture.on("swipeleft", onSwipeLeft, elm).on("swiperight", onSwipeRight);
                 }
 
-                scope.$on('$destroy', function () {
-                    $ionicGesture.off(swipeGesture, 'swipeleft', onSwipeLeft);
-                    $ionicGesture.off(swipeGesture, 'swiperight', onSwipeRight);
+                scope.$on("$destroy", function () {
+                    $ionicGesture.off(swipeGesture, "swipeleft", onSwipeLeft);
+                    $ionicGesture.off(swipeGesture, "swiperight", onSwipeRight);
                 });
             }
         };
     }])
 
-    .directive('analyticsOn', function () {
+    .directive("analyticsOn", function () {
         function isCommand(element) {
-            return ['a:', 'button:', 'button:button', 'button:submit', 'input:button', 'input:submit'].indexOf(
-                    element.tagName.toLowerCase() + ':' + (element.type || '')) >= 0;
+            return ["a:", "button:", "button:button", "button:submit", "input:button", "input:submit"].indexOf(
+                    element.tagName.toLowerCase() + ":" + (element.type || "")) >= 0;
         }
 
         function inferEventType(element) {
-            if (isCommand(element)) return 'click';
-            return 'click';
+            if (isCommand(element)) return "click";
+            return "click";
         }
 
         function inferEventName(element) {
@@ -635,12 +680,12 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         }
 
         function isProperty(name) {
-            return name.substr(0, 9) === 'analytics' && ['On', 'Event', 'If', 'Properties', 'EventType'].indexOf(name.substr(9)) === -1;
+            return name.substr(0, 9) === "analytics" && ["On", "Event", "If", "Properties", "EventType"].indexOf(name.substr(9)) === -1;
         }
 
         function propertyName(name) {
             var s = name.slice(9); // slice off the 'analytics' prefix
-            if (typeof s !== 'undefined' && s !== null && s.length > 0) {
+            if (typeof s !== "undefined" && s !== null && s.length > 0) {
                 return s.substring(0, 1).toLowerCase() + s.substring(1);
             }
             else {
@@ -649,7 +694,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         }
 
         return {
-            restrict: 'A',
+            restrict: "A",
             link: function ($scope, $element, $attrs) {
                 var eventType = $attrs.analyticsOn || inferEventType($element[0]);
                 var trackingData = {};
@@ -683,7 +728,7 @@ angular.module('whoSmarter.app', ['whoSmarter.services', 'whoSmarter.controllers
         }
     })
 
-    .filter('orderObjectBy', function () {
+    .filter("orderObjectBy", function () {
         return function (items, field, reverse) {
             var filtered = [];
             angular.forEach(items, function (item) {

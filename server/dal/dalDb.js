@@ -505,10 +505,15 @@ module.exports.createOrUpdateSession = function (data, callback) {
         "xp": data.user.xp,
         "rank": data.user.rank,
         "features": data.features,
-        "clientInfo": data.user.clientInfo
+        "clientInfo": data.user.clientInfo,
     };
+
     if (data.user.justRegistered) {
         setObject.justRegistered = true;
+    }
+
+    if (data.user.gcmRegistrationId) {
+        setObject.gcmRegistrationId = data.user.gcmRegistrationId
     }
 
     sessionsCollection.findAndModify({"userId": ObjectId(data.user._id)}, {},
@@ -528,6 +533,9 @@ module.exports.createOrUpdateSession = function (data, callback) {
             }
 
             data.session = session.value;
+            if (!data.user.gcmRegistrationId) {
+                data.session.noGcmRegistration = true
+            }
 
             //Write to session history
             var sessionsHistoryCollection = data.DbHelper.getCollection('SessionHistory');

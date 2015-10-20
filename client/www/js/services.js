@@ -71,10 +71,10 @@ angular.module('whoSmarter.services', [])
             }
             else {
                 //InfoService.getGeoInfo(function (geoResult, geoInfo) {
-                    //StoreService.setLanguage(geoResult.language);
-                    //service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
-                    StoreService.setLanguage("he");
-                    service.localInitUser(callbackOnSuccess, "he", geoInfo);
+                //StoreService.setLanguage(geoResult.language);
+                //service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
+                StoreService.setLanguage("he");
+                service.localInitUser(callbackOnSuccess, "he", geoInfo);
                 //});
             }
         };
@@ -143,6 +143,45 @@ angular.module('whoSmarter.services', [])
                     }
                     else {
                         FlurryAgent.logEvent("server/login");
+                    }
+
+                    if ($rootScope.user.clientInfo.platform === "android") {
+
+                        var push = PushNotification.init(
+                            {
+                                "android": $rootScope.settings.google.gcm,
+                                "ios": {"alert": "true", "badge": "true", "sound": "true"},
+                                "windows": {}
+                            }
+                        );
+
+                        push.on('registration', function (data) {
+                            StoreService.setGcmRegistration(data.registrationId);
+
+                            //Update the server with the registration id - if server has no registration or it has a different reg id
+                            //Just submit and forget
+                            if (!session.gcmRegistrationId || session.gcmRegistrationId !== data.registrationId) {
+                                ApiService.post(path, "setGcmRegistration", {"registrationId": data.registrationId}, null, null, {"blockUserInterface": false});
+                            }
+                        });
+
+                        push.on('notification', function (data) {
+                            if (data.additionalData && data.additionalData.contestId) {
+                                $rootScope.gotoView("app.contest", false, {id: data.additionalData.contestId});
+                            }
+                        });
+
+                        push.on('error', function (e) {
+                            FlurryAgent.myLogError("PushNotificationError", "Error during push: " + e.message);
+                        });
+
+                        var storedGcmRegistration = StoreService.getGcmRegistration();
+                        if (!storedGcmRegistration) {
+                        }
+                        else if (session.noGcmRegistration) {
+                            ApiService.post(path, "setGcmRegistration", {"registrationId": storedGcmRegistration}, null, null, {"blockUserInterface": false});
+                        }
+
                     }
 
                     callbackOnSuccess(session);
@@ -246,17 +285,8 @@ angular.module('whoSmarter.services', [])
 
                         $ionicPlatform.registerBackButtonAction(function (event) {
 
-                            if ($rootScope.user.clientInfo.platform === "android" &&
-                                (
-                                ($state.current.name.length >= 8 && $state.current.name.substring(0, 8) === "app.tabs" ) ||
-                                ($state.current.name === "home"))) {
-                                PopupService.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
-                                    FlurryAgent.endSession();
-                                    ionic.Platform.exitApp();
-                                });
-                            }
-                            else if ($state.current.name === "serverPopup" || ($state.current.name === "app.quiz" && $rootScope.preventBack)) {
-                                event.preventDefault();
+                            if ($state.current.data && $state.current.data.backButtonHandler) {
+                                $state.current.data.backButtonHandler(event, PopupService, $state.current, $rootScope);
                             }
                             else {
                                 $rootScope.goBack();
@@ -384,7 +414,6 @@ angular.module('whoSmarter.services', [])
                                 historyRoot: clearHistory,
                                 disableAnimate: disableAnimate
                             });
-
 
 
                             $state.go(viewName, params, {reload: true, inherit: true, location: true});
@@ -657,13 +686,13 @@ angular.module('whoSmarter.services', [])
 
         //Start quiz
         service.start = function (contestId, callbackOnSuccess, callbackOnError, config) {
-            var postData = {"contestId" : contestId};
+            var postData = {"contestId": contestId};
             return ApiService.post(path, "start", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         //Answer a quiz question
         service.answer = function (answerId, hintUsed, answerUsed, callbackOnSuccess, callbackOnError, config) {
-            var postData = {"id" : answerId};
+            var postData = {"id": answerId};
             if (hintUsed) {
                 postData.hintUsed = true;
             }
@@ -752,6 +781,12 @@ angular.module('whoSmarter.services', [])
             })
         }
 
+        service.confirmExitApp = function () {
+            service.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
+                FlurryAgent.endSession();
+                ionic.Platform.exitApp();
+            });
+        };
 
         return service;
     })
@@ -1095,6 +1130,14 @@ angular.module('whoSmarter.services', [])
             store.set("whoSmarter-language", language);
         }
 
+        service.getGcmRegistration = function () {
+            return store.get("whoSmarter-gcmRegistration");
+        }
+
+        service.setGcmRegistration = function (gcmRegistration) {
+            store.set("whoSmarter-gcmRegistration", gcmRegistration);
+        }
+
         return service;
 
     })
@@ -1166,7 +1209,7 @@ angular.module('whoSmarter.services', [])
         }
 
         service.processPayment = function (method, purchaseData, extraPurchaseData, callbackOnSuccess, callbackOnError, config) {
-            var postData = {"method" : method, "purchaseData" : purchaseData};
+            var postData = {"method": method, "purchaseData": purchaseData};
             if (extraPurchaseData) {
                 postData.extraPurchaseData = extraPurchaseData;
             }
@@ -1198,7 +1241,7 @@ angular.module('whoSmarter.services', [])
         //----------------------------------------------
         var service = this;
 
-        service.resizeCanvas = function() {
+        service.resizeCanvas = function () {
 
             if ($rootScope.user.clientInfo.mobile) {
                 return;
@@ -1229,16 +1272,16 @@ angular.module('whoSmarter.services', [])
         var service = this;
         var path = 'leaderboard/';
 
-        service.getContestLeaders = function(contestId, teamId, callbackOnSuccess, callbackOnError, config) {
+        service.getContestLeaders = function (contestId, teamId, callbackOnSuccess, callbackOnError, config) {
 
-            var postData = {"contestId" : contestId};
+            var postData = {"contestId": contestId};
             if (teamId === 0 || teamId === 1) {
                 postData.teamId = teamId;
             }
             return ApiService.post(path, "contest", postData, callbackOnSuccess, callbackOnError, config)
         };
 
-        service.getFriends = function(friendsPermissionJustGranted, callbackOnSuccess, callbackOnError, config) {
+        service.getFriends = function (friendsPermissionJustGranted, callbackOnSuccess, callbackOnError, config) {
             var postData = {};
             if (friendsPermissionJustGranted) {
                 postData.friendsPermissionJustGranted = friendsPermissionJustGranted;
@@ -1246,7 +1289,7 @@ angular.module('whoSmarter.services', [])
             return ApiService.post(path, "friends", postData, callbackOnSuccess, callbackOnError, config)
         };
 
-        service.getWeeklyLeaders = function(callbackOnSuccess, callbackOnError, config) {
+        service.getWeeklyLeaders = function (callbackOnSuccess, callbackOnError, config) {
             return ApiService.post(path, "weekly", null, callbackOnSuccess, callbackOnError, config)
         };
 
@@ -1272,7 +1315,7 @@ angular.module('whoSmarter.services', [])
             }
         }
 
-        service.getVariables = function(contest) {
+        service.getVariables = function (contest) {
 
             var shareVariables = {};
 
@@ -1289,7 +1332,10 @@ angular.module('whoSmarter.services', [])
                         team: contest.teams[contest.myTeam].name,
                         url: shareVariables.shareUrl + emailRef
                     });
-                    shareVariables.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL_WITH_CONTEST", {team: contest.teams[contest.myTeam].name, name: contest.name});
+                    shareVariables.shareBodyNoUrl = $translate.instant("SHARE_BODY_NO_URL_WITH_CONTEST", {
+                        team: contest.teams[contest.myTeam].name,
+                        name: contest.name
+                    });
                 }
                 else {
                     shareVariables.shareBody = $translate.instant("SHARE_BODY", {url: shareVariables.shareUrl});

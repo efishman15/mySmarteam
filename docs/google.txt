@@ -1,0 +1,32 @@
+                            if ($rootScope.user.clientInfo.platform === "android" &&
+                                (
+                                ($state.current.name.length >= 8 && $state.current.name.substring(0, 8) === "app.tabs" ) ||
+                                ($state.current.name === "home"))) {
+                                PopupService.confirm("EXIT_APP_TITLE", "EXIT_APP_MESSAGE", null, function () {
+                                    FlurryAgent.endSession();
+                                    ionic.Platform.exitApp();
+                                });
+                            }
+                            else if ($state.current.name === "serverPopup" || ($state.current.name === "app.quiz" && $rootScope.preventBack)) {
+                                event.preventDefault();
+                            }
+                            else {
+                                $rootScope.goBack();
+                            }
+
+
+
+742205400669
+
+AIzaSyAnQgWsWFgfcEF4CxtnJR645qXiBCzvndQ
+
+            <intent-filter>
+                <data android:host="open" android:scheme="whosmarter" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+
+
+C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\PC Connectivity Solution\;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\VSShell\Common7\IDE\;c:\Program Files (x86)\Microsoft SQL Server\100\DTS\Binn\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Google\Google Apps Sync\;C:\Program Files (x86)\Google\Google Apps Migration\;C:\Program Files\nodejs\;C:\Program Files (x86)\Git\cmd;C:\Dev\apache-ant-1.9.4\bin;C:\Program Files (x86)\Android\android-sdk\tools;C:\Program Files (x86)\Android\android-sdk\platform-tools;C:\Program Files\MongoDB\Server\3.0\bin;C:\Program Files\Java\jdk1.8.0_60\bin;C:\Dev\openssl;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Android\android-sdk\build-tools\22.0.1;C:\Program Files\Redis
