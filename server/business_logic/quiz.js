@@ -104,7 +104,7 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": 1, //generalUtils.settings.client.quiz.questions.score.length,
+                "totalQuestions": generalUtils.settings.client.quiz.questions.score.length,
                 "currentQuestionIndex": -1, //First question will be incremented to 0
                 "finished": false
             };
