@@ -104,7 +104,7 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": generalUtils.settings.client.quiz.questions.score.length,
+                "totalQuestions": 1, //generalUtils.settings.client.quiz.questions.score.length,
                 "currentQuestionIndex": -1, //First question will be incremented to 0
                 "finished": false
             };
@@ -264,11 +264,6 @@ module.exports.answer = function (req, res, next) {
             var store = false;
             if (data.session.quiz.clientData.finished) {
 
-                if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
-                    commonBusinessLogic.addXp(data, "quizFullScore");
-                    setPostStory(data, "gotPerfectScore");
-                }
-
                 //Update total score in profile
                 data.session.score += data.session.quiz.serverData.score;
                 store = true;
@@ -335,6 +330,12 @@ module.exports.answer = function (req, res, next) {
             var myTeam = data.contest.users[data.session.userId].team;
             var myContestUser = data.contest.users[data.session.userId];
 
+            //PerfectScore story
+            if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
+                commonBusinessLogic.addXp(data, "quizFullScore");
+                setPostStory(data, "gotPerfectScore", {"actionProperties" : {"team" : data.contest.teams[myTeam].link}});
+            }
+
             //Update all leaderboards with the score achieved - don't wait for any callbacks of the leaderboard - can
             //be done fully async and continue doing other stuff
             dalLeaderboard.addScore(data.contest._id, myTeam, data.session.quiz.serverData.score, data.session.facebookUserId, data.session.name, data.session.avatar);
@@ -359,7 +360,7 @@ module.exports.answer = function (req, res, next) {
                 data.setData["leader.userId"] = data.session.userId;
                 data.setData["leader.avatar"] = data.session.avatar;
                 data.setData["leader.name"] = data.session.name;
-                setPostStory(data, "becameContestLeader");
+                setPostStory(data, "becameContestLeader", {"actionProperties" : {"contestleader" : data.contest.leaderLink}});
             }
 
             // Check if need to replace the my team's leader
@@ -368,7 +369,7 @@ module.exports.answer = function (req, res, next) {
                 data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
                 data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
                 data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
-                setPostStory(data, "becameTeamLeader");
+                setPostStory(data, "becameTeamLeader", {"actionProperties" : {"teamleader" : data.contest.teams[myTeam].leaderLink}});
             }
 
             //Update the team score
@@ -380,11 +381,11 @@ module.exports.answer = function (req, res, next) {
             // 2. My team is very close to lead
             if (data.session.quiz.serverData.share.data.myTeamStartedBehind) {
                 if (data.contest.teams[myTeam].score > data.contest.teams[1 - myTeam].score) {
-                    setPostStory(data, "madeMyTeamLead");
+                    setPostStory(data, "madeMyTeamLead", {"actionProperties" : {"team" : data.contest.teams[myTeam].link}});
                 }
                 else if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score &&
                     contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) < generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
-                    setPostStory(data, "myTeamIsCloseToLead");
+                    setPostStory(data, "myTeamIsCloseToLead", {"actionProperties" : {"team" : data.contest.teams[myTeam].link}});
                 }
             }
 
@@ -448,7 +449,8 @@ module.exports.answer = function (req, res, next) {
                 data.clientResponse.results.data.animation = random.pick(generalUtils.settings.server.quiz.animations);
 
                 if (story.facebookPost) {
-                    data.clientResponse.results.data.facebookPost = story.facebookPost;
+                    data.clientResponse.results.data.facebookPost = JSON.parse(JSON.stringify(story.facebookPost));
+                    data.clientResponse.results.data.facebookPost.actionProperties = data.session.quiz.serverData.share.story.additionalInfo.actionProperties;
                 }
             }
             callback(null, data);

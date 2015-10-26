@@ -4,6 +4,7 @@ var dalBranchIo = require("../dal/dalBranchIo");
 var exceptions = require("../utils/exceptions");
 var mathjs = require("mathjs");
 var commonBusinessLogic = require("./common");
+var generalUtils = require("../utils/general");
 
 //---------------------------------------------------------------------
 // private functions
@@ -437,7 +438,7 @@ module.exports.setContest = function (req, res, next) {
         function (data, callback) {
             if (data.mode === "add") {
                 //In case of add - contest needed to be added in the previous operation first, to get an _id
-                dalBranchIo.createContestLink(data, callback);
+                dalBranchIo.createContestLinks(data, callback);
             }
             else {
                 callback(null, data);
@@ -447,8 +448,16 @@ module.exports.setContest = function (req, res, next) {
         //In case of update - create a branch link first before updating the db
         function (data, callback) {
             if (data.mode === "add") {
-                //In case of add - update the link to the contest object
-                data.setData = {"link" : data.contest.link};
+                //In case of add - update the links to the contest and team objects
+                data.setData = {
+                    "link": data.contest.link,
+                    "leaderLink": data.contest.leaderLink,
+                    "teams.0.link": data.contest.teams[0].link,
+                    "teams.0.leaderLink": data.contest.teams[0].leaderLink,
+                    "teams.1.link": data.contest.teams[1].link,
+                    "teams.1.leaderLink": data.contest.teams[1].leaderLink
+                };
+
                 dalDb.setContest(data, callback);
             }
             else {

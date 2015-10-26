@@ -94,7 +94,7 @@ angular.module('whoSmarter.services', [])
 
             FacebookService.getLoginStatus(function (response) {
                 if (response.authResponse && response.status && response.status == "connected") {
-                    if (!$rootScope.user || !$rootScope.user.thirdPary) {
+                    if (!$rootScope.user || !$rootScope.user.thirdParty) {
                         service.setFacebookCredentials(response.authResponse);
                         service.facebookServerConnect(function () {
                             callbackOnSuccess(response);
@@ -866,7 +866,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Facebook Service
-    .factory('FacebookService', function (ezfb) {
+    .factory('FacebookService', function (ezfb, $timeout) {
 
         //----------------------------------------------
         // Service Variables
@@ -876,32 +876,54 @@ angular.module('whoSmarter.services', [])
         //Login
         service.login = function (callbackOnSuccess, callbackOnError, permissions, rerequestDeclinedPermissions) {
             if (window.cordova) {
-                window.cordova.exec(callbackOnSuccess, callbackOnError, "FacebookConnectPlugin", "login", permissions);
+                facebookConnectPlugin.login(permissions, callbackOnSuccess, callbackOnError);
             }
             else {
-                var permissionObject = {};
-                if (permissions && permissions.length > 0) {
-                    permissionObject.scope = permissions.toString();
-                    if (rerequestDeclinedPermissions) {
-                        permissionObject.auth_type = "rerequest";
+                try {
+                    var permissionObject = {};
+                    if (permissions && permissions.length > 0) {
+                        permissionObject.scope = permissions.toString();
+                        if (rerequestDeclinedPermissions) {
+                            permissionObject.auth_type = "rerequest";
+                        }
                     }
-                }
 
-                ezfb.login(function (response) {
-                    if (response.authResponse) {
-                        callbackOnSuccess(response);
+                    ezfb.login(function (response) {
+                        if (response.authResponse) {
+                            callbackOnSuccess(response);
+                        }
+                        else if (callbackOnError) {
+                            callbackOnError(response.status);
+                        }
+                    }, permissionObject)
+                }
+                catch (error) {
+                    if (!callbackOnError) {
+                        FlurryAgent.myLogError("ezfbError", "Error during login: " + error.message);
+                    } else {
+                        callbackOnError(error.message);
                     }
-                    else if (callbackOnError) {
-                        callbackOnError(response.status);
-                    }
-                }, permissionObject)
+
+                }
             }
         };
 
         //Get Login Status
         service.getLoginStatus = function (callbackOnSuccess, callbackOnError) {
             if (window.cordova) {
-                window.cordova.exec(callbackOnSuccess, callbackOnError, "FacebookConnectPlugin", "getLoginStatus", []);
+                facebookConnectPlugin.getLoginStatus(function (response) {
+                    if (response && response.status === "unknown") {
+                        //Give it another try as facebook native is not yet initiated
+                        $timeout(function () {
+                            facebookConnectPlugin.getLoginStatus(callbackOnSuccess, callbackOnError);
+                        }, 500);
+                    }
+                    else {
+                        if (callbackOnSuccess) {
+                            callbackOnSuccess(response);
+                        }
+                    }
+                }, callbackOnError);
             }
             else {
                 try {
@@ -921,7 +943,7 @@ angular.module('whoSmarter.services', [])
         //Logout
         service.logout = function (callbackOnSuccess, callbackOnError) {
             if (window.cordova) {
-                window.cordova.exec(callbackOnSuccess, callbackOnError, "FacebookConnectPlugin", "logout", []);
+                facebookConnectPlugin.logout(callbackOnSuccess, callbackOnError);
             }
             else {
                 try {
@@ -937,6 +959,35 @@ angular.module('whoSmarter.services', [])
                 }
             }
         }
+
+        service.post = function (story, callbackOnSuccess, callbackOnError) {
+
+            var postObject = {
+                "method": "share_open_graph",
+                "action_type": story.action,
+                "action_properties": story.actionProperties,
+                "fb:explicitly_shared" : true
+            };
+
+            if (window.cordova) {
+                facebookConnectPlugin.showDialog(postObject, function(response) {
+                    callbackOnSuccess(response);
+                }, callbackOnError)
+            }
+            else {
+                try {
+                    ezfb.ui(postObject, function (response) {
+                        callbackOnSuccess(response);
+                    });
+                } catch (error) {
+                    if (!callbackOnError) {
+                        console.error(error.message);
+                    } else {
+                        callbackOnError(error.message);
+                    }
+                }
+            }
+        };
 
         return service;
     })

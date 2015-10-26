@@ -29,4 +29,11 @@ AIzaSyAnQgWsWFgfcEF4CxtnJR645qXiBCzvndQ
 
 
 
-C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\PC Connectivity Solution\;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\VSShell\Common7\IDE\;c:\Program Files (x86)\Microsoft SQL Server\100\DTS\Binn\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Google\Google Apps Sync\;C:\Program Files (x86)\Google\Google Apps Migration\;C:\Program Files\nodejs\;C:\Program Files (x86)\Git\cmd;C:\Dev\apache-ant-1.9.4\bin;C:\Program Files (x86)\Android\android-sdk\tools;C:\Program Files (x86)\Android\android-sdk\platform-tools;C:\Program Files\MongoDB\Server\3.0\bin;C:\Program Files\Java\jdk1.8.0_60\bin;C:\Dev\openssl;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Android\android-sdk\build-tools\22.0.1;C:\Program Files\Redis
+
+cordova -d plugin add https://github.com/uofmmike/phonegap-facebook-plugin.git --variable APP_ID="344342552056" --variable APP_NAME="whoSmarter"
+cordova plugin add cordova-plugin-facebook4 --save --variable APP_ID="344342552056" --variable APP_NAME="whoSmarter"
+
+efu0YlWS7MY:APA91bE8hmfoO_C8H6PFijOl7fNSOrT2yNMoXeJCxifcT2NAoAI_gWunl7sNT5QXjmYwFg5yLOEYm_pqyndslre-7rO8QgT1PjIjNRoUhin8i-IHzlpYpVVJ-0yaWkPIqDfe1UzeC38m
+
+
+{"title" : "הצטרפו לתחרות חדשה מגניבה - מי יותר חכם: שני או נגה?", "contestId" : "5625df26701d80c439966494"}

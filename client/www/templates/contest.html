@@ -53,9 +53,9 @@
         </div>
 
         <div ng-if="animateResults">
-            <div class="item-divider center long-animated {{lastQuizResults.animation}}">
-                <h4>{{lastQuizResults.clientKey + '_TITLE' | translate }}</h4>
-                <h5>{{lastQuizResults.clientKey + '_MESSAGE' | translate:{score : lastQuizResults.score, team :
+            <div class="item-divider center long-animated {{lastQuizResults.data.animation}}">
+                <h4>{{lastQuizResults.data.clientKey + '_TITLE' | translate }}</h4>
+                <h5>{{lastQuizResults.data.clientKey + '_MESSAGE' | translate:{score : lastQuizResults.data.score, team :
                     contestChart.contest.teams[contestChart.contest.myTeam].name} }}</h5>
             </div>
         </div>

@@ -1445,8 +1445,8 @@
             viewData.enableBack = true;
             //Contest is passed when clicking on chart from main screen,
             //But not passed when calling screen from direct link outside the app (Deep linking)
-            if ($stateParams.contest && !$scope.quizJustFinished) {
-                refreshContest($stateParams.contest);
+            if ($scope.lastQuizResults && $scope.lastQuizResults.data.facebookPost && $scope.animateResults) {
+                $rootScope.gotoView("app.facebookPost", false, {"quizResults" : $scope.lastQuizResults});
             }
         });
 
@@ -1530,7 +1530,6 @@
                 }
             },
             "dataLabelClick": function (eventObj, dataObj) {
-                console.log("dataLabelClick1");
                 if ($scope.buttonState === "join") {
                     teamClicked(dataObj.dataIndex, "label");
                     $scope.chartTeamEventHandled = true;
@@ -1555,8 +1554,9 @@
         $rootScope.$on('whoSmarter-quizFinished', function (event, results) {
 
             refreshContest(results.contest);
-            $scope.lastQuizResults = results.data;
+            $scope.lastQuizResults = results;
             $scope.animateResults = true;
+
             $timeout(function () {
                 SoundService.play(results.data.sound);
             }, 500);
@@ -1596,4 +1596,23 @@
         $scope.likeFacebookFanPage = function () {
             window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
         }
+    })
+
+    .controller("FacebookPostCtrl", function ($scope, $rootScope, $ionicConfig, $stateParams, FacebookService) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
+            $scope.quizResults = $stateParams.quizResults;
+        });
+
+        $scope.post = function () {
+            FacebookService.post($scope.quizResults.data.facebookPost, function(response) {
+                $rootScope.goBack();
+            })
+        }
     });
+
+

@@ -25,13 +25,14 @@
   "QUESTION_INDEX": "שאלה {{index}} מתוך {{total}}",
   "OK": "אישור",
   "CANCEL": "ביטול",
+  "NOT_NOW" : "לא עכשיו",
   "QUIZ": "תחרות",
   "QUIZ_RESULTS": "תוצאות",
   "NEW_CONTEST": "תחרות חדשה",
   "EDIT_CONTEST": "עדכון",
   "REMOVE_CONTEST": "הסרת תחרות",
-  "CONFIRM_REMOVE_TITLE": "הסירו את '{{name}}'?",
-  "CONFIRM_REMOVE_TEMPLATE": "האם אתם בטוחים שברצונכם להסיר את '{{name}}'?",
+  "CONFIRM_REMOVE_TITLE": "הסירו את '{{name}}'",
+  "CONFIRM_REMOVE_TEMPLATE": "האם אתם בטוחים שברצונכם להסיר את '{{name}}'",
   "WELCOME_NAME": "שלום {{name}}",
   "PLAY_CONTEST": "שחקו בתחרות",
   "TOOLS": "כלים",
@@ -137,5 +138,6 @@
   "STORY_GOT_SCORE_MESSAGE" : "תרמת לקבוצת {{team}} {{score}} נקודות!",
   "STORY_ZERO_SCORE_TITLE" : "נסו שוב",
   "STORY_ZERO_SCORE_MESSAGE" : "אנחנו בטוחים שאתם יכולים להצליח",
-  "LIKE" : "Like"
+  "LIKE" : "Like",
+  "FACEBOOK_POST_TITLE" : "שתפו בפייסבוק"
 }

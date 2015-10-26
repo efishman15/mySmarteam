@@ -294,6 +294,23 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 }
             })
 
+            .state("app.facebookPost", {
+                "url": "/facebookPost",
+                "cache": false,
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "facebookPost");
+                    }
+                },
+                "params": {"quizResults": null},
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/facebookPost.html",
+                        "controller": "FacebookPostCtrl"
+                    }
+                }
+            })
+
             .state("app.quiz", {
                 "url": "/quiz",
                 "cache": false,

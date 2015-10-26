@@ -1,0 +1,31 @@
+<ion-view view-title="{{'FACEBOOK_POST_TITLE' | translate}}">
+
+    <ion-content class="padding center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+
+        <image ng-show="quizResults.data.facebookPost.dialogImage" class="padding"
+               src="{{quizResults.data.facebookPost.dialogImage.url}}"
+               width="{{quizResults.data.facebookPost.dialogImage.width}}"
+               height="{{quizResults.data.facebookPost.dialogImage.height}}"></image>
+
+        <div class="item-divider center long-animated {{quizResults.data.animation}}">
+            <h4>{{quizResults.data.clientKey + '_TITLE' | translate }}</h4>
+            <h5>{{quizResults.data.clientKey + '_MESSAGE' | translate:{score : quizResults.data.score, team :
+                quizResults.contest.teams[quizResults.contest.myTeam].name} }}</h5>
+        </div>
+
+        <div class="padding">
+        </div>
+
+        <div class="button-bar padding">
+            <button class="button padding button-bar button-facebook" translate="SHARE"
+                    ng-click="post()"
+                    analytics-on="click" analytics-event="contest/post">
+            </button>
+            <button class="button padding button-bar button-clear" translate="NOT_NOW"
+                    ng-click="$root.goBack()"
+                    analytics-on="click" analytics-event="contest/cancelPost">
+            </button>
+        </div>
+
+    </ion-content>
+</ion-view>

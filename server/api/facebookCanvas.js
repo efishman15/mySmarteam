@@ -6,6 +6,80 @@ var sessionUtils = require("./../business_logic/session");
 var dalDb = require("../dal/dalDb");
 var paymentUtils = require("./../business_logic/payments");
 var logger = require("../utils/logger");
+var util = require("util");
+
+//------------------------------------------------------------------------------------------------
+// Private functions
+//------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------
+// renderContest
+//
+//----------------------------------------------------
+function renderContest(viewName, req, res, next) {
+
+    if (!req.params.contestId) {
+        new exceptions.ServerResponseException(res, "contestId is required", {}, "warn", 403);
+        return;
+    }
+
+    dalDb.connect(function(err, data) {
+
+        data.contestId = req.params.contestId;
+        data.closeConnection = true;
+
+        dalDb.getContest(data, function(err, data) {
+
+            res.render(viewName,
+                {
+                    "title": data.contest.name,
+                    "description": generalUtils.settings.server.text[data.contest.language].gameDescription,
+                    "contestId" : req.params.contestId
+                });
+        });
+    });
+};
+
+//----------------------------------------------------
+// renderTeam
+//
+//----------------------------------------------------
+function renderTeam(viewName, req, res, next) {
+
+    if (!req.params.contestId) {
+        new exceptions.ServerResponseException(res, "contestId is required", {}, "warn", 403);
+        return;
+    }
+
+    if (req.params.teamId == null) {
+        new exceptions.ServerResponseException(res, "teamId required", {}, "warn", 403);
+        return;
+    }
+    if (req.params.teamId !== "0" && req.params.teamId !== "1") {
+        new exceptions.ServerResponseException(res, "teamId must be 0 or 1", {}, "warn", 403);
+        return;
+    }
+
+    var teamId = parseInt(req.params.teamId, 10);
+
+    dalDb.connect(function(err, data) {
+
+        data.contestId = req.params.contestId;
+        data.closeConnection = true;
+
+        dalDb.getContest(data, function(err, data) {
+
+            res.render(viewName,
+                {
+                    "title": util.format(generalUtils.settings.server.text[data.contest.language].teamTitle, data.contest.teams[teamId].name, data.contest.name),
+                    "description": generalUtils.settings.server.text[data.contest.language].gameDescription,
+                    "contestId" : req.params.contestId,
+                    "teamId" : req.params.teamId
+                });
+        });
+    });
+
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // canvas
@@ -74,33 +148,53 @@ module.exports.getProductDetails = function (req, res, next) {
     }
 }
 
+module.exports.getGameDetails = function (req, res, next) {
+
+    if (!req.params.language) {
+        new exceptions.ServerResponseException(res, "language is required", {}, "warn", 403);
+        return;
+    }
+
+    res.render("fbgame",
+        {
+            "title": generalUtils.settings.server.text[req.params.language].gameTitle,
+            "description": generalUtils.settings.server.text[req.params.language].gameDescription,
+            "language" : req.params.language
+        });
+};
+
 //----------------------------------------------------
 // getContestDetails
 //
 //----------------------------------------------------
 module.exports.getContestDetails = function (req, res, next) {
-
-    if (!req.params.contestId) {
-        new exceptions.ServerResponseException(res, "contestId is required", {}, "warn", 403);
-        return;
-    }
-
-    dalDb.connect(function(err, data) {
-
-        data.contestId = req.params.contestId;
-        data.closeConnection = true;
-
-        dalDb.getContest(data, function(err, data) {
-
-            res.render("fbcontest",
-                {
-                    "title": data.contest.name,
-                    "description": generalUtils.settings.server.text[data.contest.language].gameDescription,
-                    "contestId" : req.params.contestId
-                });
-        });
-    });
+    renderContest("fbcontest", req, res, next);
 };
+
+//----------------------------------------------------
+// getContestLeaderDetails
+//
+//----------------------------------------------------
+module.exports.getContestLeaderDetails = function (req, res, next) {
+    renderContest("fbcontestleader", req, res, next);
+};
+
+//----------------------------------------------------
+// getTeamDetails
+//
+//----------------------------------------------------
+module.exports.getTeamDetails = function (req, res, next) {
+    renderTeam("fbteam", req, res, next);
+};
+
+//----------------------------------------------------
+// getTeamLeaderDetails
+//
+//----------------------------------------------------
+module.exports.getTeamLeaderDetails = function (req, res, next) {
+    renderTeam("fbteamleader", req, res, next);
+};
+
 
 //----------------------------------------------------
 // getChallenge

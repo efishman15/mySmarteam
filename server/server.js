@@ -107,7 +107,11 @@ dalDb.loadSettings(function (err, data) {
     app.post("/info/settings", generalUtils.getSettings);
     app.post("/facebook/canvas", facebookCanvas.canvas);
     app.get("/facebook/product/:productId/:language", facebookCanvas.getProductDetails);
+    app.get("/facebook/game/:language", facebookCanvas.getGameDetails);
     app.get("/facebook/contest/:contestId", facebookCanvas.getContestDetails);
+    app.get("/facebook/contestLeader/:contestId", facebookCanvas.getContestLeaderDetails);
+    app.get("/facebook/team/:contestId/:teamId", facebookCanvas.getTeamDetails);
+    app.get("/facebook/teamLeader/:contestId/:teamId", facebookCanvas.getTeamLeaderDetails);
     app.post("/facebook/dynamicPricing", facebookCanvas.dynamicPricing);
     app.get("/facebook/ipn", facebookCanvas.getChallenge);
     app.post("/facebook/ipn", facebookCanvas.ipn);

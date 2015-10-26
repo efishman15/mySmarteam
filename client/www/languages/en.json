@@ -25,13 +25,14 @@
   "QUESTION_INDEX" : "Question {{index}} of {{total}}",
   "OK" : "OK",
   "CANCEL" : "Cancel",
+  "NOT_NOW" : "Not now",
   "QUIZ" : "Contest",
   "QUIZ_RESULTS" : "Results",
   "NEW_CONTEST" : "New Contest",
   "EDIT_CONTEST" : "Edit",
   "REMOVE_CONTEST" : "Remove contest",
-  "CONFIRM_REMOVE_TITLE" : "Remove '{{name}}'?",
-  "CONFIRM_REMOVE_TEMPLATE" : "Are you sure you want to remove '{{name}}'?",
+  "CONFIRM_REMOVE_TITLE" : "Remove '{{name}}'",
+  "CONFIRM_REMOVE_TEMPLATE" : "Are you sure you want to remove '{{name}}'",
   "WELCOME_NAME" : "Welcome {{name}}",
   "PLAY_CONTEST" : "Play Contest",
   "TOOLS" : "Tools",
@@ -138,5 +139,6 @@
   "STORY_GOT_SCORE_MESSAGE" : "You have contributed {{score}} smartpoints to {{team}} team!",
   "STORY_ZERO_SCORE_TITLE" : "Try again",
   "STORY_ZERO_SCORE_MESSAGE" : "We are sure you can do better",
-  "LIKE" : "Like"
+  "LIKE" : "Like",
+  "FACEBOOK_POST_TITLE" : "Post to Facebook"
 }
