@@ -329,3 +329,30 @@ function getUserFriends(data, callback) {
         }
     });
 };
+
+//---------------------------------------------------------------------------------------------------------------------------------
+// getProfileInfo
+//
+// Returns basic info about a user
+//
+// data:
+// -----
+// input: facebookUserId
+// output: user object (id, first_name, last_name)
+//---------------------------------------------------------------------------------------------------------------------------------
+module.exports.getGeneralProfile = function (facebookUserId, callback) {
+
+    var fields = "id,first_name,last_name,name";
+
+    var options = {
+        "url": FACEBOOK_GRAPH_URL + "/" + facebookUserId,
+        "qs": {
+            "access_token": generalUtils.settings.server.facebook.appAccessToken,
+            "fields": fields
+        }
+    };
+
+    dalHttp.get(options, function (facebookData) {
+        callback(null, facebookData);
+    });
+};

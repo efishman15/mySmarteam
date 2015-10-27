@@ -7,6 +7,7 @@ var generalUtils = require("../utils/general");
 var contestsBusinessLogic = require("../business_logic/contests");
 var dalLeaderboard = require("../dal/dalLeaderboards");
 var commonBusinessLogic = require("./common");
+var util = require("util");
 
 //--------------------------------------------------------------------------
 //Private functions
@@ -43,18 +44,25 @@ function setQuestionDirection(data, callback) {
 // determines if the given story has a higher post priority than the current story and
 // replaces if necessary
 //----------------------------------------------------------------------------------------
-function setPostStory(data, story, additionalInfo) {
-    if (!data.session.quiz.serverData.share.story.name) {
-        data.session.quiz.serverData.share.story.name = story;
+function setPostStory(data, story, actionProperties) {
+
+    var replaced = false;
+
+    if (!data.session.quiz.serverData.share.story) {
+        data.session.quiz.serverData.share.story = JSON.parse(JSON.stringify(generalUtils.settings.server.quiz.stories[story]));
+        replaced = true;
     }
-    else if (generalUtils.settings.server.quiz.stories[story].priority > generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name].priority) {
+    else if (generalUtils.settings.server.quiz.stories[story].priority > data.session.quiz.serverData.share.story.priority) {
         //Replace the story with one with a higher priority
-        data.session.quiz.serverData.share.story.name = story;
+        data.session.quiz.serverData.share.story = JSON.parse(JSON.stringify(generalUtils.settings.server.quiz.stories[story]));
+        replaced = true;
     }
 
-    if (additionalInfo) {
-        data.session.quiz.serverData.share.story.additionalInfo = additionalInfo;
+    if (replaced && actionProperties && data.session.quiz.serverData.share.story.facebookPost) {
+        data.session.quiz.serverData.share.story.facebookPost.actionProperties = actionProperties;
     }
+
+    return replaced;
 }
 
 //--------------------------------------------------------------------------
@@ -104,7 +112,7 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": generalUtils.settings.client.quiz.questions.score.length,
+                "totalQuestions": 1, //generalUtils.settings.client.quiz.questions.score.length,
                 "currentQuestionIndex": -1, //First question will be incremented to 0
                 "finished": false
             };
@@ -114,7 +122,7 @@ module.exports.start = function (req, res, next) {
                 "contestId": data.contestId,
                 "score": 0,
                 "correctAnswers": 0,
-                "share": {"data": {}, "story": {}}
+                "share": {"data": {}}
             };
 
             var myTeam = data.contest.users[data.session.userId].team;
@@ -333,7 +341,7 @@ module.exports.answer = function (req, res, next) {
             //PerfectScore story
             if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
                 commonBusinessLogic.addXp(data, "quizFullScore");
-                setPostStory(data, "gotPerfectScore", {"actionProperties" : {"team" : data.contest.teams[myTeam].link}});
+                setPostStory(data, "gotPerfectScore", {"team" : data.contest.teams[myTeam].link});
             }
 
             //Update all leaderboards with the score achieved - don't wait for any callbacks of the leaderboard - can
@@ -360,7 +368,7 @@ module.exports.answer = function (req, res, next) {
                 data.setData["leader.userId"] = data.session.userId;
                 data.setData["leader.avatar"] = data.session.avatar;
                 data.setData["leader.name"] = data.session.name;
-                setPostStory(data, "becameContestLeader", {"actionProperties" : {"contestleader" : data.contest.leaderLink}});
+                setPostStory(data, "becameContestLeader", {"contestleader" : data.contest.leaderLink});
             }
 
             // Check if need to replace the my team's leader
@@ -369,7 +377,7 @@ module.exports.answer = function (req, res, next) {
                 data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
                 data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
                 data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
-                setPostStory(data, "becameTeamLeader", {"actionProperties" : {"teamleader" : data.contest.teams[myTeam].leaderLink}});
+                setPostStory(data, "becameTeamLeader", {"teamleader" : data.contest.teams[myTeam].leaderLink});
             }
 
             //Update the team score
@@ -381,11 +389,11 @@ module.exports.answer = function (req, res, next) {
             // 2. My team is very close to lead
             if (data.session.quiz.serverData.share.data.myTeamStartedBehind) {
                 if (data.contest.teams[myTeam].score > data.contest.teams[1 - myTeam].score) {
-                    setPostStory(data, "madeMyTeamLead", {"actionProperties" : {"team" : data.contest.teams[myTeam].link}});
+                    setPostStory(data, "madeMyTeamLead", {"team" : data.contest.teams[myTeam].link});
                 }
                 else if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score &&
                     contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) < generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
-                    setPostStory(data, "myTeamIsCloseToLead", {"actionProperties" : {"team" : data.contest.teams[myTeam].link}});
+                    setPostStory(data, "myTeamIsCloseToLead", {"team" : data.contest.teams[myTeam].link});
                 }
             }
 
@@ -394,8 +402,8 @@ module.exports.answer = function (req, res, next) {
             //Or the "passed friends" story is a "better" story in terms of priority
             data.session.quiz.serverData.share.data.friendsAboveMe &&
             (
-                !data.session.quiz.serverData.share.story.name ||
-                generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name].priority < generalUtils.settings.server.quiz.stories.passedFriendInLeaderboard.priority
+                !data.session.quiz.serverData.share.story ||
+                data.session.quiz.serverData.share.story.priority < generalUtils.settings.server.quiz.stories.passedFriendInLeaderboard.priority
             )
             ) {
                 data.friendsAboveMe = data.session.quiz.serverData.share.data.friendsAboveMe;
@@ -415,8 +423,18 @@ module.exports.answer = function (req, res, next) {
                 return;
             }
 
+            //Common data to be replaced in all potential messages
+            data.session.quiz.serverData.share.data.clientData = {
+                "score" : data.session.quiz.serverData.score,
+                "team" : data.contest.teams[data.contest.users[data.session.userId].team].name
+            }
+
             if (data.passedFriends && data.passedFriends.length > 0) {
-                setPostStory(data, "passedFriendInLeaderboard", {"passedFriends": data.passedFriends});
+                data.session.quiz.serverData.share.data.clientData.friend = data.passedFriends[0].name;
+                var replaced = setPostStory(data, "passedFriendInLeaderboard", {"profile": util.format(generalUtils.settings.server.facebook.userOpenGraphProfileUrl, data.passedFriends[0].id, data.session.settings.language)});
+                if (replaced) {
+                    data.session.quiz.serverData.share.story.facebookPost.dialogImage.url = util.format(data.session.quiz.serverData.share.story.facebookPost.dialogImage.url,data.passedFriends[0].id, data.session.quiz.serverData.share.story.facebookPost.dialogImage.width, data.session.quiz.serverData.share.story.facebookPost.dialogImage.height);
+                }
             }
 
             if (data.session.quiz.serverData.score > 0) {
@@ -442,15 +460,13 @@ module.exports.answer = function (req, res, next) {
 
                 data.clientResponse.results.data.score = data.session.quiz.serverData.score;
 
-                var story = generalUtils.settings.server.quiz.stories[data.session.quiz.serverData.share.story.name];
-
-                data.clientResponse.results.data.sound = random.pick(generalUtils.settings.server.quiz.sounds.finish[story.soundGroup]);
-                data.clientResponse.results.data.clientKey = story.clientKey
+                data.clientResponse.results.data.sound = random.pick(generalUtils.settings.server.quiz.sounds.finish[data.session.quiz.serverData.share.story.soundGroup]);
+                data.clientResponse.results.data.clientKey = data.session.quiz.serverData.share.story.clientKey;
+                data.clientResponse.results.data.clientValues = data.session.quiz.serverData.share.data.clientData;
                 data.clientResponse.results.data.animation = random.pick(generalUtils.settings.server.quiz.animations);
 
-                if (story.facebookPost) {
-                    data.clientResponse.results.data.facebookPost = JSON.parse(JSON.stringify(story.facebookPost));
-                    data.clientResponse.results.data.facebookPost.actionProperties = data.session.quiz.serverData.share.story.additionalInfo.actionProperties;
+                if (data.session.quiz.serverData.share.story.facebookPost) {
+                    data.clientResponse.results.data.facebookPost = data.session.quiz.serverData.share.story.facebookPost;
                 }
             }
             callback(null, data);
@@ -496,7 +512,7 @@ module.exports.nextQuestion = function (req, res, next) {
         //Sets the direction of the question
         setQuestionDirection,
 
-        //Stores the session with the quiz in the db
+        //Pick animatoin and store the session with the quiz in the db
         function (data, callback) {
             data.closeConnection = true;
             dalDb.storeSession(data, callback);

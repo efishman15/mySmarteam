@@ -602,14 +602,17 @@
             QuizService.nextQuestion(function (data) {
                 $scope.quiz = data;
                 FlurryAgent.logEvent("quiz/gotQuestion" + ($scope.quiz.currentQuestionIndex + 1));
+                $scope.quiz.currentQuestion.doAnimation = true; //Animation end will trigger quiz proceed
                 $scope.quiz.currentQuestion.answered = false;
-                $scope.quiz.currentQuestion.animation = true; //Animation end will trigger quiz proceed
                 drawQuizProgress();
             });
         }
 
         $scope.questionTransitionEnd = function () {
-            $scope.quiz.currentQuestion.animation = false; //Animation end will trigger quiz proceed
+            if ($scope.quiz && $scope.quiz.currentQuestion) {
+                $scope.quiz.currentQuestion.doAnimation = false; //Animation end will trigger quiz proceed
+                console.log("animation ended");
+            }
         }
 
         $scope.buttonAnimationEnded = function (button, event) {
@@ -1530,6 +1533,7 @@
                 }
             },
             "dataLabelClick": function (eventObj, dataObj) {
+                console.log("dataLabelClick1");
                 if ($scope.buttonState === "join") {
                     teamClicked(dataObj.dataIndex, "label");
                     $scope.chartTeamEventHandled = true;
@@ -1610,7 +1614,7 @@
 
         $scope.post = function () {
             FacebookService.post($scope.quizResults.data.facebookPost, function(response) {
-                $rootScope.goBack();
+                $rootScope.goBack()
             })
         }
     });

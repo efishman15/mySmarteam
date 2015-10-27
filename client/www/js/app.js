@@ -33,34 +33,34 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     //Hook into window.open
                     window.open = cordova.InAppBrowser.open;
 
-                    window.myHandleBranch = function (err, data) {
-                        try {
-                            if (err) {
-                                FlurryAgent.myLogError("BranchIoError", "Error received during branch init: " + err);
-                                return;
-                            }
-
-                            if (data.data_parsed && data.data_parsed.contestId) {
-                                //Will go to this contest
-                                $rootScope.deepLinkContestId = data.data_parsed.contestId;
-                            }
-                        }
-                        catch (e) {
-                            FlurryAgent.myLogError("BranchIoError", "Error parsing data during branch init, data= " + data + ", parsedData=" + parsedData + ", error: " + e);
-                        }
-                    };
-
-                    window.initBranch = function () {
-                        branch.init("key_live_pocRNjTcwzk0YWxsqcRv3olivweLVuVE", function (err, data) {
-                            if (window.myHandleBranch) {
-                                window.myHandleBranch(err, data);
-                            }
-                        });
-                    }
-
-                    initBranch();
-
                 }
+
+                window.myHandleBranch = function (err, data) {
+                    try {
+                        if (err) {
+                            FlurryAgent.myLogError("BranchIoError", "Error received during branch init: " + err);
+                            return;
+                        }
+
+                        if (data.data_parsed && data.data_parsed.contestId) {
+                            //Will go to this contest
+                            $rootScope.deepLinkContestId = data.data_parsed.contestId;
+                        }
+                    }
+                    catch (e) {
+                        FlurryAgent.myLogError("BranchIoError", "Error parsing data during branch init, data= " + data + ", parsedData=" + parsedData + ", error: " + e);
+                    }
+                };
+
+                window.initBranch = function () {
+                    branch.init("key_live_pocRNjTcwzk0YWxsqcRv3olivweLVuVE", function (err, data) {
+                        if (window.myHandleBranch) {
+                            window.myHandleBranch(err, data);
+                        }
+                    });
+                }
+
+                initBranch();
 
                 if (window.StatusBar) {
                     // org.apache.cordova.statusbar required
@@ -126,6 +126,13 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
         $ionicConfigProvider.backButton.text("");
         $ionicConfigProvider.backButton.previousTitleText("");
         $ionicConfigProvider.tabs.position("bottom");
+
+        if (window.cordova) {
+            loadJsFile("lib/branch/moblie.min.js");
+        }
+        else {
+            loadJsFile("lib/branch/web.min.js");
+        }
     })
 
     .config(function (ezfbProvider) {

@@ -962,21 +962,24 @@ angular.module('whoSmarter.services', [])
 
         service.post = function (story, callbackOnSuccess, callbackOnError) {
 
-            var postObject = {
-                "method": "share_open_graph",
-                "action_type": story.action,
-                "action_properties": story.actionProperties,
-                "fb:explicitly_shared" : true
-            };
-
             if (window.cordova) {
-                facebookConnectPlugin.showDialog(postObject, function(response) {
+                var mobilePostObject = {
+                    "method": "share_open_graph",
+                    "actionType": story.action,
+                    "objectId": "https://bnc.lt/m/zbNlRY3HZn"
+                };
+                facebookConnectPlugin.showDialog(mobilePostObject, function(response) {
                     callbackOnSuccess(response);
                 }, callbackOnError)
             }
             else {
+                var webPostObject = {
+                    "method": "share_open_graph",
+                    "action_type": story.action,
+                    "action_properties": story.actionProperties
+                };
                 try {
-                    ezfb.ui(postObject, function (response) {
+                    ezfb.ui(webPostObject, function (response) {
                         callbackOnSuccess(response);
                     });
                 } catch (error) {
@@ -1395,7 +1398,7 @@ angular.module('whoSmarter.services', [])
                 }
             }
             else {
-                shareVariables.shareUrl = adjustUrl($rootScope.settings.general.downloadUrl);
+                shareVariables.shareUrl = adjustUrl($rootScope.settings.general.downloadUrl[$rootScope.user.settings.language]);
                 shareVariables.shareSubject = $translate.instant("SHARE_SUBJECT");
                 shareVariables.shareBody = $translate.instant("SHARE_BODY", {url: shareVariables.shareUrl});
                 shareVariables.shareBodyEmail = $translate.instant("SHARE_BODY", {url: shareVariables.shareUrl + emailRef});

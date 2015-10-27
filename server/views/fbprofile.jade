@@ -1,0 +1,16 @@
+doctype html
+html
+    head(prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whosmarter: http://ogp.me/ns/fb/whosmarter#")
+        meta(property="fb:app_id" content="#{appId}")
+        meta(property="og:type" content="profile")
+        meta(property="og:title" content="#{name}")
+        meta(property="og:description" content="#{description}")
+        meta(property="og:first_name" content="#{firstName}")
+        meta(property="og:last_name" content="#{lastName}")
+        meta(property="og:url" content="http://www.whosmarter.com/facebook/profile/#{id}/he")
+        meta(property="og:image" content="https://graph.facebook.com/#{id}/picture?width=400&height=210")
+        meta(property="og:image:width" content="400")
+        meta(property="og:image:height" content="210")
+    body
+        script.
+                document.location.replace("#{redirectLink}");

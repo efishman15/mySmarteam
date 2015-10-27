@@ -32,6 +32,7 @@ function renderContest(viewName, req, res, next) {
 
             res.render(viewName,
                 {
+                    "appId": generalUtils.settings.server.facebook.appId,
                     "title": data.contest.name,
                     "description": generalUtils.settings.server.text[data.contest.language].gameDescription,
                     "contestId" : req.params.contestId
@@ -71,6 +72,7 @@ function renderTeam(viewName, req, res, next) {
 
             res.render(viewName,
                 {
+                    "appId": generalUtils.settings.server.facebook.appId,
                     "title": util.format(generalUtils.settings.server.text[data.contest.language].teamTitle, data.contest.teams[teamId].name, data.contest.name),
                     "description": generalUtils.settings.server.text[data.contest.language].gameDescription,
                     "contestId" : req.params.contestId,
@@ -148,6 +150,10 @@ module.exports.getProductDetails = function (req, res, next) {
     }
 }
 
+//----------------------------------------------------
+// getGameDetails
+//
+//----------------------------------------------------
 module.exports.getGameDetails = function (req, res, next) {
 
     if (!req.params.language) {
@@ -157,10 +163,50 @@ module.exports.getGameDetails = function (req, res, next) {
 
     res.render("fbgame",
         {
+            "appId": generalUtils.settings.server.facebook.appId,
             "title": generalUtils.settings.server.text[req.params.language].gameTitle,
             "description": generalUtils.settings.server.text[req.params.language].gameDescription,
             "language" : req.params.language
         });
+};
+
+//----------------------------------------------------
+// getProfileDetails
+//
+//----------------------------------------------------
+module.exports.getProfileDetails = function (req, res, next) {
+
+    if (!req.params.id) {
+        new exceptions.ServerResponseException(res, "id is required", {}, "warn", 403);
+        return;
+    }
+
+    if (!req.params.language) {
+        new exceptions.ServerResponseException(res, "language is required", {}, "warn", 403);
+        return;
+    }
+
+    dalFacebook.getGeneralProfile(req.params.id, function(err, facebookData) {
+
+        if (err) {
+            new exceptions.ServerResponseException(res, err.message, err, "warn", 403);
+            return;
+        }
+
+        res.render("fbprofile",
+            {
+                "appId": generalUtils.settings.server.facebook.appId,
+                "id" : facebookData.id,
+                "name" : facebookData.name,
+                "firstName": facebookData.first_name,
+                "lastName": facebookData.last_name,
+                "description" : generalUtils.settings.server.text[req.params.language].gameDescription,
+                "language" : req.params.language,
+                "redirectLink" : generalUtils.settings.client.general.downloadUrl[req.params.language]
+            });
+
+    });
+
 };
 
 //----------------------------------------------------

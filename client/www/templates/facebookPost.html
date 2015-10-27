@@ -9,8 +9,7 @@
 
         <div class="item-divider center long-animated {{quizResults.data.animation}}">
             <h4>{{quizResults.data.clientKey + '_TITLE' | translate }}</h4>
-            <h5>{{quizResults.data.clientKey + '_MESSAGE' | translate:{score : quizResults.data.score, team :
-                quizResults.contest.teams[quizResults.contest.myTeam].name} }}</h5>
+            <h5>{{quizResults.data.clientKey + '_MESSAGE' | translate: quizResults.data.clientValues }}</h5>
         </div>
 
         <div class="padding">

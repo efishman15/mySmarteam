@@ -747,9 +747,10 @@ module.exports.getQuestionsCount = getQuestionsCount;
 function getQuestionsCount(data, callback) {
     var questionsCollection = data.DbHelper.getCollection("Questions");
     questionsCollection.count(data.questionCriteria, function (err, count) {
-        if (err) {
-            callback(new exceptions.ServerException("Error retrieving number of questions from database", {
-                "data": data,
+        if (err || count === 0) {
+            callback(new exceptions.ServerException("Error retrieving number of questions from the database", {
+                "count": count,
+                "questionCriteria" : data.questionCriteria,
                 "dbError": err
             }, "error"));
             return;
@@ -778,7 +779,9 @@ function getNextQuestion(data, callback) {
     questionsCollection.findOne(data.questionCriteria, {skip: skip}, function (err, question) {
         if (err || !question) {
             callback(new exceptions.ServerException("Error retrieving next question from database", {
-                "data": data,
+                "questionsCount": data.questionsCount,
+                "questionCriteria" : data.questionCriteria,
+                "skip" : skip,
                 "dbError": err
             }, "error"));
             return;

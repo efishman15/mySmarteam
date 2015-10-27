@@ -2,14 +2,14 @@
 
     <ion-content class="center" dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
 
-        <canvas id="quizCanvas" height="{{$root.settings.quiz.canvas.height}}" class="quiz-canvas" ng-click="canvasClick($event)" style="height: {{$root.settings.quiz.canvas.height}}px">
+        <canvas id="quizCanvas" height="{{$root.settings.quiz.canvas.height}}" class="quiz-canvas"
+                ng-click="canvasClick($event)" style="height: {{$root.settings.quiz.canvas.height}}px">
         </canvas>
 
         <div dir="{{quiz.currentQuestion.direction}}"
-             mytransitionend="questionTransitionEnd"
-             ng-class="{'questionAnimationLtr' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
-                        'questionAnimationRtl' : quiz.currentQuestion.animation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}">
-
+            ng-class="{'animated' : quiz.currentQuestion.doAnimation,
+                        'bounceInLeft' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
+                        'bounceInRight' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}" mytransitionend="questionTransitionEnd">
             <div class="question-text center">
                 <span ng-bind-html="quiz.currentQuestion.text"></span>
             </div>

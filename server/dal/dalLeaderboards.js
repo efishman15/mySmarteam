@@ -258,7 +258,7 @@ function getPassedFriends(data, callback) {
         for (var i = 0; i < leaders.length; i++) {
 
             if (reachedMyself) {
-                data.passedFriends.push(friendsAfterMe, prepareLeaderObject(friendsAfterMe, leaders[i]))
+                data.passedFriends.push(prepareLeaderObject(leaders[i].member, leaders[i]));
                 friendsAfterMe++;
             }
             else if (leaders[i].member === data.session.facebookUserId) {
