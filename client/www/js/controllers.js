@@ -987,12 +987,12 @@
                                     }
                                 },
                                 function (error) {
-                                    FlurryAgent.mylogError("AndroidBillingError", "Error retrieving unconsumed items: " + error);
+                                    FlurryAgent.myLogError("AndroidBillingError", "Error retrieving unconsumed items: " + error);
                                 });
 
                         },
                         function (msg) {
-                            FlurryAgent.mylogError("AndroidBillingError", "Error getting product details: " + msg);
+                            FlurryAgent.myLogError("AndroidBillingError", "Error getting product details: " + msg);
                         }, $rootScope.session.features.newContest.purchaseData.productId);
 
 
@@ -1615,6 +1615,8 @@
         $scope.post = function () {
             FacebookService.post($scope.quizResults.data.facebookPost, function(response) {
                 $rootScope.goBack()
+            }, function(error) {
+                FlurryAgent.myLogError("FacebookPostError", "Error posting: " + error);
             })
         }
     });

@@ -965,9 +965,11 @@ angular.module('whoSmarter.services', [])
             if (window.cordova) {
                 var mobilePostObject = {
                     "method": "share_open_graph",
-                    "actionType": story.action,
-                    "objectId": "https://bnc.lt/m/zbNlRY3HZn"
+                    "action": story.action,
+                    "previewPropertyName" : story.object.name,
+                    "previewPropertyValue" : story.object.value
                 };
+
                 facebookConnectPlugin.showDialog(mobilePostObject, function(response) {
                     callbackOnSuccess(response);
                 }, callbackOnError)
@@ -976,8 +978,10 @@ angular.module('whoSmarter.services', [])
                 var webPostObject = {
                     "method": "share_open_graph",
                     "action_type": story.action,
-                    "action_properties": story.actionProperties
+                    "action_properties": {}
                 };
+                webPostObject.action_properties[story.object.name] = story.object.value;
+
                 try {
                     ezfb.ui(webPostObject, function (response) {
                         callbackOnSuccess(response);

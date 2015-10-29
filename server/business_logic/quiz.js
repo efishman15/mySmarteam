@@ -44,7 +44,7 @@ function setQuestionDirection(data, callback) {
 // determines if the given story has a higher post priority than the current story and
 // replaces if necessary
 //----------------------------------------------------------------------------------------
-function setPostStory(data, story, actionProperties) {
+function setPostStory(data, story, objectValue) {
 
     var replaced = false;
 
@@ -58,8 +58,8 @@ function setPostStory(data, story, actionProperties) {
         replaced = true;
     }
 
-    if (replaced && actionProperties && data.session.quiz.serverData.share.story.facebookPost) {
-        data.session.quiz.serverData.share.story.facebookPost.actionProperties = actionProperties;
+    if (replaced && data.session.quiz.serverData.share.story.facebookPost && data.session.quiz.serverData.share.story.facebookPost.object && objectValue) {
+        data.session.quiz.serverData.share.story.facebookPost.object.value = objectValue;
     }
 
     return replaced;
@@ -341,7 +341,7 @@ module.exports.answer = function (req, res, next) {
             //PerfectScore story
             if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
                 commonBusinessLogic.addXp(data, "quizFullScore");
-                setPostStory(data, "gotPerfectScore", {"team" : data.contest.teams[myTeam].link});
+                setPostStory(data, "gotPerfectScore", data.contest.teams[myTeam].link);
             }
 
             //Update all leaderboards with the score achieved - don't wait for any callbacks of the leaderboard - can
@@ -368,7 +368,7 @@ module.exports.answer = function (req, res, next) {
                 data.setData["leader.userId"] = data.session.userId;
                 data.setData["leader.avatar"] = data.session.avatar;
                 data.setData["leader.name"] = data.session.name;
-                setPostStory(data, "becameContestLeader", {"contestleader" : data.contest.leaderLink});
+                setPostStory(data, "becameContestLeader", data.contest.leaderLink);
             }
 
             // Check if need to replace the my team's leader
@@ -377,7 +377,7 @@ module.exports.answer = function (req, res, next) {
                 data.setData["teams." + myTeam + ".leader.userId"] = data.session.userId;
                 data.setData["teams." + myTeam + ".leader.avatar"] = data.session.avatar;
                 data.setData["teams." + myTeam + ".leader.name"] = data.session.name;
-                setPostStory(data, "becameTeamLeader", {"teamleader" : data.contest.teams[myTeam].leaderLink});
+                setPostStory(data, "becameTeamLeader", data.contest.teams[myTeam].leaderLink);
             }
 
             //Update the team score
@@ -389,11 +389,11 @@ module.exports.answer = function (req, res, next) {
             // 2. My team is very close to lead
             if (data.session.quiz.serverData.share.data.myTeamStartedBehind) {
                 if (data.contest.teams[myTeam].score > data.contest.teams[1 - myTeam].score) {
-                    setPostStory(data, "madeMyTeamLead", {"team" : data.contest.teams[myTeam].link});
+                    setPostStory(data, "madeMyTeamLead", data.contest.teams[myTeam].link);
                 }
                 else if (data.contest.teams[myTeam].score < data.contest.teams[1 - myTeam].score &&
                     contestsBusinessLogic.getTeamDistancePercent(data.contest, 1 - myTeam) < generalUtils.settings.server.quiz.teamPercentDistanceForShare) {
-                    setPostStory(data, "myTeamIsCloseToLead", {"team" : data.contest.teams[myTeam].link});
+                    setPostStory(data, "myTeamIsCloseToLead", data.contest.teams[myTeam].link);
                 }
             }
 
@@ -431,7 +431,7 @@ module.exports.answer = function (req, res, next) {
 
             if (data.passedFriends && data.passedFriends.length > 0) {
                 data.session.quiz.serverData.share.data.clientData.friend = data.passedFriends[0].name;
-                var replaced = setPostStory(data, "passedFriendInLeaderboard", {"profile": util.format(generalUtils.settings.server.facebook.userOpenGraphProfileUrl, data.passedFriends[0].id, data.session.settings.language)});
+                var replaced = setPostStory(data, "passedFriendInLeaderboard", util.format(generalUtils.settings.server.facebook.userOpenGraphProfileUrl, data.passedFriends[0].id, data.session.settings.language));
                 if (replaced) {
                     data.session.quiz.serverData.share.story.facebookPost.dialogImage.url = util.format(data.session.quiz.serverData.share.story.facebookPost.dialogImage.url,data.passedFriends[0].id, data.session.quiz.serverData.share.story.facebookPost.dialogImage.width, data.session.quiz.serverData.share.story.facebookPost.dialogImage.height);
                 }

@@ -286,7 +286,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             })
 
             .state("app.contest", {
-                "url": "/contest/:id",
+                "url": "/contest",
                 "resolve": {
                     "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "contest");
