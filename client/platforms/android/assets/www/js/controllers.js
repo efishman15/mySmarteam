@@ -601,17 +601,16 @@
         $scope.nextQuestion = function () {
             QuizService.nextQuestion(function (data) {
                 $scope.quiz = data;
-                FlurryAgent.logEvent("quiz/gotQuestion" + ($scope.quiz.currentQuestionIndex + 1));
-                $scope.quiz.currentQuestion.doAnimation = true; //Animation end will trigger quiz proceed
                 $scope.quiz.currentQuestion.answered = false;
+                $scope.quiz.currentQuestion.doAnimation = true; //Animation end will trigger quiz proceed
                 drawQuizProgress();
+                FlurryAgent.logEvent("quiz/gotQuestion" + ($scope.quiz.currentQuestionIndex + 1));
             });
         }
 
         $scope.questionTransitionEnd = function () {
             if ($scope.quiz && $scope.quiz.currentQuestion) {
                 $scope.quiz.currentQuestion.doAnimation = false; //Animation end will trigger quiz proceed
-                console.log("animation ended");
             }
         }
 

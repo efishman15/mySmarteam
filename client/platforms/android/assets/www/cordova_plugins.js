@@ -15,6 +15,13 @@ module.exports = [
         ]
     },
     {
+        "file": "plugins/cordova-plugin-facebook4/www/facebookConnectPlugin.js",
+        "id": "cordova-plugin-facebook4.FacebookConnectPlugin",
+        "clobbers": [
+            "facebookConnectPlugin"
+        ]
+    },
+    {
         "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
         "id": "cordova-plugin-inappbrowser.inappbrowser",
         "clobbers": [
@@ -69,13 +76,6 @@ module.exports = [
         "clobbers": [
             "cordova.getAppVersion"
         ]
-    },
-    {
-        "file": "plugins/cordova-plugin-facebook4/www/facebookConnectPlugin.js",
-        "id": "cordova-plugin-facebook4.FacebookConnectPlugin",
-        "clobbers": [
-            "facebookConnectPlugin"
-        ]
     }
 ];
 module.exports.metadata = 
@@ -83,6 +83,7 @@ module.exports.metadata =
 {
     "com.ionic.keyboard": "1.0.4",
     "com.smartmobilesoftware.androidinappbilling": "3.0.2",
+    "cordova-plugin-facebook4": "1.0.0",
     "cordova-plugin-inappbrowser": "1.0.2-dev",
     "cordova-plugin-splashscreen": "2.1.0",
     "cordova-plugin-whitelist": "1.0.0",
@@ -90,8 +91,7 @@ module.exports.metadata =
     "io.branch.sdk": "1.7.0",
     "org.apache.cordova.device": "0.3.0",
     "phonegap-plugin-push": "1.3.0",
-    "uk.co.whiteoctober.cordova.appversion": "0.1.7",
-    "cordova-plugin-facebook4": "1.0.0"
+    "uk.co.whiteoctober.cordova.appversion": "0.1.7"
 }
 // BOTTOM OF METADATA
 });

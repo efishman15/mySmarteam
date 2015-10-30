@@ -17,6 +17,30 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"FacebookConnectPlugin\"><param name=\"android-package\" value=\"org.apache.cordova.facebook.ConnectPlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<access origin=\"https://m.facebook.com\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<access origin=\"https://graph.facebook.com\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<access origin=\"https://api.facebook.com\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<access origin=\"https://*.fbcdn.net\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<access origin=\"https://*.akamaihd.net\" />",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
                             "count": 1
                         },
@@ -42,30 +66,6 @@
                         },
                         {
                             "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"FacebookConnectPlugin\"><param name=\"android-package\" value=\"org.apache.cordova.facebook.ConnectPlugin\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://m.facebook.com\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://graph.facebook.com\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://api.facebook.com\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://*.fbcdn.net\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://*.akamaihd.net\" />",
                             "count": 1
                         }
                     ]
@@ -109,10 +109,6 @@
                     ],
                     "application": [
                         {
-                            "xml": "<activity android:label=\"@string/app_name\" android:name=\"com.yourapp.SplashActivity\"><intent-filter><data android:host=\"open\" android:scheme=\"your_uri_here\" /><action android:name=\"android.intent.action.VIEW\" /><category android:name=\"android.intent.category.DEFAULT\" /><category android:name=\"android.intent.category.BROWSABLE\" /></intent-filter></activity>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<meta-data android:name=\"com.facebook.sdk.ApplicationId\" android:value=\"@string/fb_app_id\" />",
                             "count": 1
                         },
@@ -122,6 +118,10 @@
                         },
                         {
                             "xml": "<activity android:configChanges=\"keyboard|keyboardHidden|screenLayout|screenSize|orientation\" android:label=\"@string/fb_app_name\" android:name=\"com.facebook.FacebookActivity\" android:theme=\"@android:style/Theme.Translucent.NoTitleBar\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<activity android:label=\"@string/app_name\" android:name=\"com.yourapp.SplashActivity\"><intent-filter><data android:host=\"open\" android:scheme=\"your_uri_here\" /><action android:name=\"android.intent.action.VIEW\" /><category android:name=\"android.intent.category.DEFAULT\" /><category android:name=\"android.intent.category.BROWSABLE\" /></intent-filter></activity>",
                             "count": 1
                         }
                     ],
@@ -195,6 +195,11 @@
             "BILLING_KEY": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3IFP36K63k81wT0Fa+KfGVsJcomZDxHdHr5Kd+Evyy6Hqw2LXb8jzDhVQOPyKog1oOAnVro/i2qtm3lQXiV0sA8Yfh+FTspUzIv5si7MkI/q9sO2e1YYCgj/7tsqNoKSD0XG7Z06hkfzMpuljbUPATn3SuKncwl/UREC5bwWPkTqCJz6uKMFjdOTPy20LslZ38MzOzeNpJnvWuV+dRogROhScVbgvLGLynEjRxk35sNkanWtzwxNLSwQQJiCH0VSBL+YtFd+GFMfeMMCSAMw6f2rg/OVVeqAQylwdp0K1YjwbmvuM7kr1r+MBzliKt4TCPQ0tuqDVKVOT3aGvYRKDQIDAQAB",
             "PACKAGE_NAME": "com.fplabs.whosmarter"
         },
+        "cordova-plugin-facebook4": {
+            "APP_ID": "344342552056",
+            "APP_NAME": "whoSmarter",
+            "PACKAGE_NAME": "com.fplabs.whosmarter"
+        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "com.fplabs.whosmarter"
         },
@@ -217,11 +222,6 @@
             "PACKAGE_NAME": "com.fplabs.whosmarter"
         },
         "uk.co.whiteoctober.cordova.appversion": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
-        },
-        "cordova-plugin-facebook4": {
-            "APP_ID": "344342552056",
-            "APP_NAME": "whoSmarter",
             "PACKAGE_NAME": "com.fplabs.whosmarter"
         }
     },

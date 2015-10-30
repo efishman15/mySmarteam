@@ -1066,11 +1066,6 @@ angular.module('whoSmarter.services', [])
             centerX = service.canvas.width / 2;
             centerY = service.canvas.height / 2;
 
-            service.context.shadowOffsetX = $rootScope.settings.xpControl.shadow.offsetX;
-            service.context.shadowOffsetY = $rootScope.settings.xpControl.shadow.offsetY;
-            service.context.shadowBlur = $rootScope.settings.xpControl.shadow.blur;
-            service.context.shadowColor = $rootScope.settings.xpControl.shadow.color;
-
             //-------------------------------------------------------------------------------------
             // Draw the full circle representing the entire xp required for the next level
             //-------------------------------------------------------------------------------------
@@ -1092,7 +1087,6 @@ angular.module('whoSmarter.services', [])
             service.context.beginPath();
 
             // line color
-
             service.context.arc(centerX, centerY, $rootScope.settings.xpControl.radius, -(service.quarter), (($rootScope.session.xpProgress.current / $rootScope.session.xpProgress.max) * service.circle) - service.quarter, false);
             service.context.strokeStyle = $rootScope.settings.xpControl.progressLineColor;
             service.context.stroke();
@@ -1138,33 +1132,40 @@ angular.module('whoSmarter.services', [])
             var startPoint = $rootScope.session.xpProgress.current / $rootScope.session.xpProgress.max;
 
             //Occurs after xp has already been added to the session
-            for (var i = 1; i <= xpProgress.addition; i++) {
+            var addition = xpProgress.addition;
+            for (var i = 1; i <= addition; i++) {
                 myRequestAnimationFrame(function () {
                     var endPoint = ($rootScope.session.xpProgress.current + i) / $rootScope.session.xpProgress.max;
                     animateXpAddition(startPoint, endPoint, service.quarter, service.circle);
+
+                    //Last iteration should be performed after the animation frame event happened
+                    if (i >=  addition) {
+
+                        //Add the actual xp to the client side
+                        $rootScope.session.xpProgress = xpProgress;
+
+                        //Zero the addition
+                        $rootScope.session.xpProgress.addition = 0;
+
+                        if (xpProgress.rankChanged) {
+                            $rootScope.session.rank = xpProgress.rank;
+                            service.initXp();
+                            $rootScope.$broadcast("whoSmarter-rankChanged", {
+                                "xpProgress": xpProgress,
+                                "callback": callbackOnRankChange
+                            });
+                        }
+                    }
                 })
             }
 
-            //Add the actual xp to the client side
-            $rootScope.session.xpProgress = xpProgress;
-
-            //Zero the addition
-            $rootScope.session.xpProgress.addition = 0;
-
-            if (xpProgress.rankChanged) {
-                $rootScope.session.rank = xpProgress.rank;
-                service.initXp();
-                $rootScope.$broadcast("whoSmarter-rankChanged", {
-                    "xpProgress": xpProgress,
-                    "callback": callbackOnRankChange
-                });
-            }
         };
 
         function animateXpAddition(startPoint, endPoint) {
 
             service.context.beginPath();
             service.context.arc(centerX, centerY, $rootScope.settings.xpControl.radius, (service.circle * startPoint) - service.quarter, (service.circle * endPoint) - service.quarter, false);
+            service.context.strokeStyle = $rootScope.settings.xpControl.progressLineColor;
             service.context.stroke();
             service.context.closePath();
         }

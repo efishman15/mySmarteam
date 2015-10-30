@@ -388,10 +388,13 @@ public class ConnectPlugin extends CordovaPlugin {
             if (!params.containsKey("action")) {
                 callbackContext.error("Missing required parameter \"action\"");
             }
-            ShareOpenGraphAction openGraphAction = new ShareOpenGraphAction.Builder()
-                    .setActionType(params.get("action"))
-                    .putString(params.get("previewPropertyName"),params.get("previewPropertyValue"))
-                    .build();
+
+            ShareOpenGraphAction.Builder shareOpenGraphActionBuilder = new ShareOpenGraphAction.Builder();
+            shareOpenGraphActionBuilder.setActionType(params.get("action"));
+            if (params.containsKey("previewPropertyName") && params.containsKey("previewPropertyValue"))
+                shareOpenGraphActionBuilder.putString(params.get("previewPropertyName"), params.get("previewPropertyValue"));
+
+            ShareOpenGraphAction openGraphAction = shareOpenGraphActionBuilder.build();
 
             ShareOpenGraphContent.Builder content = new ShareOpenGraphContent.Builder()
                     .setAction(openGraphAction);
