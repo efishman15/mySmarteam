@@ -1,0 +1,517 @@
+@viewport {
+    orientation: portrait;
+}
+
+label.item.has-error {
+    border-bottom: 2px solid red;
+}
+
+label.item.has-error-lr {
+    border-left: 2px solid red;
+    border-right: 2px solid red;
+}
+
+label.item.valid-lr {
+    border-left: 2px solid green;
+    border-right: 2px solid green;
+}
+
+.form-errors {
+    margin: 5px 0
+}
+
+.form-error {
+    padding: 2px 0 2px 16px;
+    color: red;
+}
+
+.questionAnimationLtr {
+    position: relative;
+    left: -100%;
+    -webkit-animation: slideQuestionLtr 1s forwards;
+    animation: slideQuestionLtr 1s forwards;
+}
+
+@-webkit-keyframes slideQuestionLtr {
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes slideQuestionLtr {
+    100% {
+        left: 0;
+    }
+}
+
+.questionAnimationRtl {
+    position: relative;
+    right: -100%;
+    -webkit-animation: slideQuestionRtl 1s forwards;
+    animation: slideQuestionRtl 1s forwards;
+}
+
+@-webkit-keyframes slideQuestionRtl {
+    100% {
+        right: 0;
+    }
+}
+
+@keyframes slideQuestionRtl {
+    100% {
+        right: 0;
+    }
+}
+
+.blink {
+    -webkit-animation-name: blink;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: step-end;
+    -webkit-animation-iteration-count: 2;
+    animation-name: blink;
+    anmation-duration: 1s;
+    animation-timing-function: step-end;
+    animation-iteration-count: 2;
+}
+
+@-webkit-keyframes blink {
+    50% {
+        visibility: hidden
+    }
+    100% {
+        visibility: visible;
+    }
+}
+
+@keyframes blink {
+    50% {
+        visibility: hidden
+    }
+    100% {
+        visibility: visible;
+    }
+}
+
+.center {
+    text-align: center;
+}
+
+.question-text {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+}
+
+.translate-cloak {
+    display: none;
+}
+
+.ltr {
+    direction: ltr;
+    text-align: left;
+}
+
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+.item-radio input[type="radio"] {
+    display: none;
+}
+
+.button-facebook {
+    color: #fff;
+    background-color: #3b5998;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.button-facebook:hover, .button-facebook:focus, .button-facebook:active, .button-facebook.active, .open > .dropdown-toggle.button-facebook {
+    color: #fff;
+    background-color: #2d4373;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.button-facebook:active, .button-facebook.active, .open > .dropdown-toggle.button-facebook {
+    background-image: none
+}
+
+.button-facebook.disabled, .button-facebook[disabled], fieldset[disabled] .button-facebook, .button-facebook.disabled:hover, .button-facebook[disabled]:hover, fieldset[disabled] .button-facebook:hover, .button-facebook.disabled:focus, .button-facebook[disabled]:focus, fieldset[disabled] .button-facebook:focus, .button-facebook.disabled:active, .button-facebook[disabled]:active, fieldset[disabled] .button-facebook:active, .button-facebook.disabled.active, .button-facebook[disabled].active, fieldset[disabled] .button-facebook.active {
+    background-color: #3b5998;
+    border-color: rgba(0, 0, 0, 0.2)
+}
+
+.button-facebook .badge {
+    color: #3b5998;
+    background-color: #fff
+}
+
+.no-wrap-text {
+    overflow: visible !important;
+}
+
+.language {
+    color: #000000;
+    font-size: 80%;
+    cursor: pointer;
+    text-align: center;
+}
+
+.language:hover {
+    text-decoration: underline;
+}
+
+.bgHome {
+    background-image: url('../images/bg_home.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.bgQuestionMarks {
+    background-image: url('../images/bg_question_marks.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.gameHeader {
+    color: #FFFFFF;
+    font-weight: bolder;
+    padding-top: 40px;
+}
+
+.gameSubHeader {
+    color: #FFFFFF;
+}
+
+.tabs-top > .tabs, .tabs.tabs-top {
+    top: 44px;
+!important;
+}
+
+.contest-team {
+    width: 45%;
+}
+
+.scroll-full-height {
+    height: 100%;
+}
+
+.button.item.quiz-answer {
+    margin-bottom: 30px;
+    font-size: 18px;
+    line-height: 1em;
+}
+
+.contest-leader-wrapper {
+    height: 25px;
+    margin: 0px auto;
+}
+
+.avatar-leader {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.contests-avatar-leader {
+    position: relative;
+    top: 10px;
+    z-index: 500;
+}
+
+.contests-avatar-leader-ltr {
+    right: -15px;
+}
+
+.contests-avatar-leader-rtl {
+    left: -15px;
+}
+
+.quiz-results-avatar-leader-ltr {
+    position: relative;
+    top: -205px;
+    left: 130px;
+}
+
+.quiz-results-avatar-leader-rtl {
+    position: relative;
+    top: -205px;
+    left: -130px;
+}
+
+.menu-avatar-ltr {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    top: 4px;
+    right: 5px;
+}
+
+.menu-avatar-rtl {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    top: 4px;
+    left: 5px;
+}
+
+.menu-xp-ltr {
+    position: absolute;
+    top: 0px;
+    right: 50px;
+    z-index: 500;
+    display: block;
+}
+
+.menu-xp-rtl {
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    z-index: 500;
+    display: block
+}
+
+.menu-xp-menu-open {
+    display: none;
+}
+
+.round-button-left {
+    border-top-left-radius: 15px !important;
+    border-bottom-left-radius: 15px !important;
+    -moz-border-radius-topleft: 15px !important;
+    -moz-border-radius-bottomleft: 15px !important;
+    border-width: 2px !important;
+}
+
+.center-button-in-ellipse {
+    border-top-width: 2px !important;
+    border-bottom-width: 2px !important;
+}
+
+.round-button-right {
+    border-top-right-radius: 15px !important;
+    border-bottom-right-radius: 15px !important;
+    -moz-border-radius-topright: 15px !important;
+    -moz-border-radius-bottomright: 15px !important;
+    border-width: 2px !important;
+}
+
+.button-3d {
+    padding: 6px 20px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -o-border-radius: 5px;
+    -moz-transition: all .1s ease;
+    -webkit-transition: all .1s ease;
+    -o-transition: all .1s ease;
+    -ms-transition: all .1s ease;
+    transition: all .1s ease;
+    color: #ffffff !important;
+    font-size: 14px;
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+}
+
+.button-3d:hover {
+    color: #14396A !important;
+    background: #468CCF;
+    background: linear-gradient(top, #468CCF, #63B8EE);
+    background: -ms-linear-gradient(top, #468CCF, #63B8EE);
+    background: -webkit-gradient(linear, left top, left bottom, from(#468CCF), to(#63B8EE));
+    background: -moz-linear-gradient(top, #468CCF, #63B8EE);
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+}
+
+.button-3d-assertive {
+    color: #FFFFFF !important;
+    box-shadow: 1px 1px 1px #BEE2F9;
+    -webkit-box-shadow: 1px 1px 1px #BEE2F9;
+    -moz-box-shadow: 1px 1px 1px #BEE2F9;
+    background: #EF473A;
+    background: linear-gradient(top, #EF473A, #A33028);
+    background: -ms-linear-gradient(top, #EF473A, #A33028);
+    background: -webkit-gradient(linear, left top, left bottom, from(#EF473A), to(#A33028));
+    background: -moz-linear-gradient(top, #EF473A, #A33028);
+    font-size: 14px;
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+}
+
+.button-3d-balanced {
+    color: #FFFFFF !important;
+    box-shadow: 1px 1px 1px #BEE2F9;
+    -webkit-box-shadow: 1px 1px 1px #BEE2F9;
+    -moz-box-shadow: 1px 1px 1px #BEE2F9;
+    padding: 6px 5px !important;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #3866A3;
+    background: #EF473A;
+    background: linear-gradient(top, #33CD5F, #2DB554);
+    background: -ms-linear-gradient(top, #33CD5F, #2DB554);
+    background: -webkit-gradient(linear, left top, left bottom, from(#33CD5F), to(#2DB554));
+    background: -moz-linear-gradient(top, #33CD5F, #2DB554);
+    font-size: 14px;
+    font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+}
+
+.featureLockedText {
+    font-size: 14px;
+    color: red;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.button.small-font {
+    font-size: 90% !important;
+    line-height: 1.0em !important;
+    white-space: normal !important;
+}
+
+.bold {
+    font-weight: bold !important;
+}
+
+.my-item-note-left {
+    float: left;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.my-item-note-right {
+    float: right;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.my-toggle-rtl-fix {
+    margin: -45px;
+}
+
+.contest-or-between-teams {
+    padding-top: 4px;
+}
+
+.hide-vertical-scrollbar {
+    overflow-y: hidden;
+}
+
+.quiz-canvas {
+    width: 90%;
+    margin-top: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.col-100 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 100%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 100%;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.leader-avatar-in-leaderboard {
+    margin-top: -5px !important;
+}
+
+.leader-avatar-in-contest {
+    margin-top: -9px !important;
+}
+
+
+.leader-avatar-outside-leaderboard {
+    margin-top: -8px !important;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.chart {
+    box-shadow: 3px 3px 3px #CDCDCD;
+    -webkit-box-shadow: 3px 3px 3px #CDCDCD;
+    -moz-box-shadow: 3px 3px 3px #CDCDCD;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.zero-margin {
+    margin: 0px auto;
+}
+
+.tabs-striped.tabs-footer {
+    background-color: transparent;
+    border: 0px;
+    border-color: transparent;
+    border-top: transparent;
+    border-bottom: transparent;
+    background-image: none !important;
+}
+
+.tabs-striped .tab-item.footer-tab-item {
+    color: #232323 !important;
+}
+
+.bar-footer {
+    border: 0px !important;
+    border-bottom-color: transparent !important;
+    background-image: none;
+    border-bottom: none;
+}
+
+.bar-subheader {
+    border: 0px !important;
+    border-bottom-color: transparent !important;
+    background-image: none;
+    border-bottom: none;
+}
+
+.button.join-contest {
+    font-size: 90%;
+    line-height: 1.2em;
+    white-space: normal;
+    height: 40px;
+}
+
+.center-position {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.long-animated {
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.contest-leaders-note-left {
+    float: left;
+    text-decoration: underline;
+    font-size: 13px;
+}
+
+.contest-leaders-note-right {
+    float: right;
+    color: #aaa;
+    font-size: 13px;
+}
+
+.contest-leader {
+    font-size: 13px !important;
+}
+
+.chart-margin-top {
+    margin-top: 10px;
+}

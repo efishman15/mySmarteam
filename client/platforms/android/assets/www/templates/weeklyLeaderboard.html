@@ -1,0 +1,23 @@
+<ion-view class="bgQuestionMarks" title="{{'LEADERBOARDS' | translate}}">
+
+    <ion-header ng-include="'templates/roundTabs.html'">
+    </ion-header>
+
+    <!------------------------------------------------------------------------------>
+    <!-- This is a workaround - when navigating to other views, forcing the back
+    <!-- button to show the previous view title only from the ion-nav-title
+    <!------------------------------------------------------------------------------>
+    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
+                 overflow-scroll="true" class="hide-vertical-scrollbar has-subheader">
+
+        <ion-scroll class="scroll-full-height">
+
+            <div ng-include="'templates/leaders.html'">
+            </div>
+
+        </ion-scroll>
+
+    </ion-content>
+
+</ion-view>
+

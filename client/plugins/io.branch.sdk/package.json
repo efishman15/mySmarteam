@@ -1,0 +1,27 @@
+{
+  "name": "branch-cordova-sdk",
+  "version": "1.7.0",
+  "description": "Branch Metrics Cordova SDK",
+  "main": "dist/web/build.min.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK.git"
+  },
+  "author": "Dmitri Gaskin <dmitrig01@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK/issues"
+  },
+  "homepage": "https://github.com/BranchMetrics/Cordova-Ionic-PhoneGap-Deferred-Deep-Linking-SDK",
+  "devDependencies": {
+    "jsdoc": "3.2.2",
+    "jsdox": "0.4.9"
+  },
+  "dependencies": {
+    "request": "^2.55.0"
+  },
+  "build": "1.7.0"
+}

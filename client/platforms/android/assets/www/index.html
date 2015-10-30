@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <!-- Enable all requests, inline styles, and eval() -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://www.whosmarter.com https://www.whosmarter.com https://connect.facebook.net http://connect.facebook.net https://graph.facebook.com https://cdn.flurry.com https://data.flurry.com http://static.ak.facebook.com https://s-static.ak.facebook.com https://bnc.lt;">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="lib/animate.css/animate.min.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ionic/js/http-auth-interceptor.js"></script>
+    <script src="lib/angular-messages/angular-messages.min.js"></script>
+    <script src="lib/angular-translate/angular-translate.min.js"></script>
+    <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+    <script src="lib/fusioncharts-3.9.0/fusioncharts.js"></script>
+    <script src="lib/angular-fusioncharts-3.1/angular-fusioncharts.min.js"></script>
+    <script src="lib/angular-easyfb/angular-easyfb.min.js"></script>
+    <script src="lib/ionic-datepicker-0.9.0/ionic-datepicker.bundle.min.js"></script>
+    <script src="lib/angular-storage/angular-storage.min.js"></script>
+    <script src="lib/ngCordova/ng-cordova.min.js"></script>
+    <script src="lib/flurry/flurry.min.js"></script>
+
+    <script type="text/javascript">
+        function loadJsFile(filename) {
+            var fileReference = document.createElement("script");
+            fileReference.setAttribute("type", "text/javascript");
+            fileReference.setAttribute("src", filename);
+            document.getElementsByTagName("head")[0].appendChild(fileReference);
+        }
+    </script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
+
+</head>
+
+<body ng-app="whoSmarter.app" animation="slide-left-right-ios7" resize orientationchange translate-cloak class="platform-android platform-cordova platform-webview">
+
+<ion-nav-view id="myHostingView" animation="slide-left-right">
+</ion-nav-view>
+</body>
+
+</html>
