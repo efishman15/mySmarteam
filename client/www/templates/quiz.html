@@ -1,4 +1,4 @@
-<ion-view view-title="{{'QUIZ' | translate}}" class="bgQuestionMarks">
+<ion-view view-title="{{'QUIZ' | translate}}" class="bg-question-marks">
 
     <ion-content class="center" dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
 
@@ -8,10 +8,11 @@
 
         <div dir="{{quiz.currentQuestion.direction}}"
             ng-class="{'animated' : quiz.currentQuestion.doAnimation,
+                        'fix-animation-bug' : quiz.currentQuestion.doAnimation,
                         'bounceInLeft' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
                         'bounceInRight' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}" mytransitionend="questionTransitionEnd">
-            <div class="question-text center">
-                <span ng-bind-html="quiz.currentQuestion.text"></span>
+
+            <div class="question-text" ng-bind-html="quiz.currentQuestion.text">
             </div>
 
             <div class="list padding">

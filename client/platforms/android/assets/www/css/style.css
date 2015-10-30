@@ -25,44 +25,6 @@ label.item.valid-lr {
     color: red;
 }
 
-.questionAnimationLtr {
-    position: relative;
-    left: -100%;
-    -webkit-animation: slideQuestionLtr 1s forwards;
-    animation: slideQuestionLtr 1s forwards;
-}
-
-@-webkit-keyframes slideQuestionLtr {
-    100% {
-        left: 0;
-    }
-}
-
-@keyframes slideQuestionLtr {
-    100% {
-        left: 0;
-    }
-}
-
-.questionAnimationRtl {
-    position: relative;
-    right: -100%;
-    -webkit-animation: slideQuestionRtl 1s forwards;
-    animation: slideQuestionRtl 1s forwards;
-}
-
-@-webkit-keyframes slideQuestionRtl {
-    100% {
-        right: 0;
-    }
-}
-
-@keyframes slideQuestionRtl {
-    100% {
-        right: 0;
-    }
-}
-
 .blink {
     -webkit-animation-name: blink;
     -webkit-animation-duration: 1s;
@@ -97,13 +59,14 @@ label.item.valid-lr {
 }
 
 .question-text {
-    width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 20px;
     padding-left: 10px;
     padding-right: 10px;
     text-align: center;
+    z-index: 1 !important;
+    -webkit-transform: translateZ(0) !important;
 }
 
 .translate-cloak {
@@ -165,25 +128,25 @@ label.item.valid-lr {
     text-decoration: underline;
 }
 
-.bgHome {
+.bg-home {
     background-image: url('../images/bg_home.jpg');
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 
-.bgQuestionMarks {
+.bg-question-marks {
     background-image: url('../images/bg_question_marks.png');
     background-repeat: no-repeat;
     background-size: cover;
 }
 
-.gameHeader {
+.game-header {
     color: #FFFFFF;
     font-weight: bolder;
     padding-top: 40px;
 }
 
-.gameSubHeader {
+.game-sub-header {
     color: #FFFFFF;
 }
 
@@ -361,7 +324,7 @@ label.item.valid-lr {
     font-family: "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
 }
 
-.featureLockedText {
+.feature-locked-text {
     font-size: 14px;
     color: red;
 }
