@@ -24,8 +24,6 @@ function createContestLinks(data, callback) {
     postData.push({"feature": "team", "data": {"$og_redirect": util.format(generalUtils.settings.server.branch.teamLink, data.contest._id, 1) ,"contestId": data.contest._id, "teamId" : 1}});
     postData.push({"feature": "teamLeader", "data": {"$og_redirect": util.format(generalUtils.settings.server.branch.teamLeaderLink, data.contest._id, 1), "contestId": data.contest._id,"teamId" : 1}});
 
-    console.log("branch post=" + JSON.stringify(postData));
-
     var options = {
         "url": BRANCH_END_POINT_PREFIX + generalUtils.settings.server.branch.key,
         "body": postData,

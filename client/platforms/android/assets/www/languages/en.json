@@ -2,10 +2,11 @@
   "HOME_WELCOME" : "Play for your team and find out",
   "FACEBOOK_CONNECT" : "Connect with Facebook",
   "WHO_IS_SMARTER_QUESTION" : "Who is smarter ?",
+  "WHO_IS_SMARTER_QUESTION_CONTEST_FINISHED" : "Who is smarter ?",
   "WHO_IS_SMARTER" : "Who is smarter",
   "DEMO_TEAM0" : "Boys",
   "DEMO_TEAM1" : "Girls",
-  "CONTEST_NAME" : "{{team0}} or {{team1}}",
+  "CONTEST_NAME" : "{{team0}} or {{team1}} ?",
   "FULL_CONTEST_NAME" : "Who is smarter: {{team0}} or {{team1}}?",
   "CONTEST_ENDS_IN" : "Ends in {{number}} {{units}}",
   "CONTEST_ENDED" : "Contest ended {{number}} {{units}} ago",
@@ -140,5 +141,6 @@
   "STORY_ZERO_SCORE_TITLE" : "Try again",
   "STORY_ZERO_SCORE_MESSAGE" : "We are sure you can do better",
   "LIKE" : "Like",
-  "FACEBOOK_POST_TITLE" : "Post to Facebook"
+  "FACEBOOK_POST_TITLE" : "Post to Facebook",
+  "TIE" : "Tie"
 }

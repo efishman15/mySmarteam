@@ -604,20 +604,60 @@ angular.module('whoSmarter.services', [])
         };
 
         service.prepareContestChart = function (contest) {
-            var contestCaption = $translate.instant("WHO_IS_SMARTER");
+
+            var contestCaption;
+            var contestSubCaption;
+            var contestSubCaptionColor;
+            var contestEndsInColor;
+
             var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.contest));
             contestChart.contest = contest;
 
             contestChart.data = [];
             var teamsOrder;
+            if ($rootScope.settings.languages[$rootScope.user.settings.language].direction == "ltr") {
+                teamsOrder = [0, 1];
+            }
+            else {
+                teamsOrder = [1, 0];
+            }
 
             var contestEndTerm
-            if (contest.status != "finished") {
+            if (contest.status !== "finished") {
+                //Contest Running
+                contestCaption = $translate.instant("WHO_IS_SMARTER")
+                contestSubCaption = $translate.instant("CONTEST_NAME", {
+                    team0: contest.teams[0].name,
+                    team1: contest.teams[1].name
+                });
+
+                contestSubCaptionColor = $rootScope.settings.charts.subCaption.running.color;
+                contestEndsInColor = $rootScope.settings.charts.contestAnnotations.endsIn.running.color;
                 contestEndTerm = "CONTEST_ENDS_IN";
             }
             else {
+                //Contest Finished
+                contestCaption = $translate.instant("WHO_IS_SMARTER_QUESTION_CONTEST_FINISHED");
+
+                if (contest.teams[0].chartValue > contest.teams[1].chartValue) {
+                    contestSubCaption = contest.teams[0].name;
+                    contestChart.chart.paletteColors = $rootScope.settings.charts.finishedPalette[teamsOrder[0]];
+                }
+                else if (contest.teams[0].chartValue < contest.teams[1].chartValue) {
+                    contestSubCaption = contest.teams[1].name;
+                    contestChart.chart.paletteColors = $rootScope.settings.charts.finishedPalette[teamsOrder[1]];
+                }
+                else {
+                    contestSubCaption = $translate.instant("TIE");
+                    contestChart.chart.paletteColors = $rootScope.settings.charts.finishedPalette[2];
+                }
+
+                contestSubCaptionColor = $rootScope.settings.charts.subCaption.finished.color;
+                contestEndsInColor = $rootScope.settings.charts.contestAnnotations.endsIn.finished.color;
                 contestEndTerm = "CONTEST_ENDED";
+
             }
+
             var contestEndString = $translate.instant(contestEndTerm, {
                 number: contest.endsInNumber,
                 units: $translate.instant(contest.endsInUnits)
@@ -632,16 +672,11 @@ angular.module('whoSmarter.services', [])
 
             contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].text = contestEndString;
             contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].x = magicNumbers.endsIn.position + (contestEndsWidth / 2 + magicNumbers.endsIn.spacing);
+            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].fontColor = contestEndsInColor;
 
             contestChart.annotations.groups[0].items[magicNumbers.participants.id].text = contestParticipantsString;
             contestChart.annotations.groups[0].items[magicNumbers.participants.id].x = magicNumbers.participants.position + (contestParticipantsWidth / 2 + magicNumbers.participants.spacing);
 
-            if ($rootScope.settings.languages[$rootScope.user.settings.language].direction == "ltr") {
-                teamsOrder = [0, 1];
-            }
-            else {
-                teamsOrder = [1, 0];
-            }
 
             contestChart.data.push({
                 "label": contest.teams[teamsOrder[0]].name,
@@ -657,10 +692,8 @@ angular.module('whoSmarter.services', [])
             }
 
             contestChart.chart.caption = contestCaption;
-            contestChart.chart.subCaption = $translate.instant("CONTEST_NAME", {
-                team0: contest.teams[0].name,
-                team1: contest.teams[1].name
-            });
+            contestChart.chart.subCaption = contestSubCaption;
+            contestChart.chart.subCaptionFontColor = contestSubCaptionColor;
 
             return contestChart;
         };
