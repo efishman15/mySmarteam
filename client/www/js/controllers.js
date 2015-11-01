@@ -171,8 +171,7 @@
         };
 
         $scope.$on('whoSmarter-tabChanged', function () {
-            $scope.userClick = true;
-            $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()]);
+            $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()], true, {userClick: true});
         });
 
         $scope.doRefresh = function () {
