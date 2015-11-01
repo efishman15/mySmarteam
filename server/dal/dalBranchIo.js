@@ -1,7 +1,8 @@
+var path = require("path");
 var BRANCH_END_POINT_PREFIX = "https://api.branch.io/v1/url/bulk/";
-var generalUtils = require('../utils/general');
-var exceptions = require('../utils/exceptions');
-var dalHttp = require("./dalHttp");
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var dalHttp = require(path.resolve(__dirname,"./dalHttp"));
 var util = require("util");
 
 //---------------------------------------------------------------------------------------------------------------------------------

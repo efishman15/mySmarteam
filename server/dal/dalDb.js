@@ -1,11 +1,12 @@
+var path = require("path");
 var CONNECTION_STRING = "mongodb://localhost:27017/whoSmarter";
 
 var mongoClient = require("mongodb").MongoClient;
-var uuid = require('node-uuid');
-var exceptions = require("../utils/exceptions");
+var uuid = require("node-uuid");
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
 var ObjectId = require("mongodb").ObjectID;
-var random = require('../utils/random');
-var generalUtils = require('../utils/general');
+var random = require(path.resolve(__dirname,"../utils/random"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 var mathjs = require("mathjs");
 
 //---------------------------------------------------------------------

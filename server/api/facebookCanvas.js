@@ -1,11 +1,12 @@
+var path = require("path");
 var async = require('async');
-var dalFacebook = require("../dal/dalFacebook");
-var exceptions = require("../utils/exceptions");
-var generalUtils = require("../utils/general");
-var sessionUtils = require("./../business_logic/session");
-var dalDb = require("../dal/dalDb");
-var paymentUtils = require("./../business_logic/payments");
-var logger = require("../utils/logger");
+var dalFacebook = require(path.resolve(__dirname,"../dal/dalFacebook"));
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
+var sessionUtils = require(path.resolve(__dirname,"../business_logic/session"));
+var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
+var paymentUtils = require(path.resolve(__dirname,"../business_logic/payments"));
+var logger = require(path.resolve(__dirname,"../utils/logger"));
 var util = require("util");
 
 //------------------------------------------------------------------------------------------------

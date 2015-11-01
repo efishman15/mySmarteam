@@ -1,8 +1,8 @@
+var path = require("path");
 var async = require('async');
-var exceptions = require("../utils/exceptions");
-var dalDb = require("../dal/dalDb");
-var logger = require("../utils/logger");
-var paymentUtils = require("./../business_logic/payments");
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var logger = require(path.resolve(__dirname,"../utils/logger"));
+var paymentUtils = require(path.resolve(__dirname,"../business_logic/payments"));
 var https = require('https');
 var querystring = require('querystring');
 
@@ -32,7 +32,7 @@ module.exports.ipn = function (req, res, next) {
 
     //Set up the request to paypal
     var options = {
-        host: SANDBOX_URL,
+        host: LIVE_URL,
         port: 443,
         method: "POST",
         path: '/cgi-bin/webscr',

@@ -1,10 +1,11 @@
+var path = require("path");
 var async = require("async");
-var dalDb = require("../dal/dalDb");
-var dalBranchIo = require("../dal/dalBranchIo");
-var exceptions = require("../utils/exceptions");
+var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
+var dalBranchIo = require(path.resolve(__dirname,"../dal/dalBranchIo"));
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
 var mathjs = require("mathjs");
-var commonBusinessLogic = require("./common");
-var generalUtils = require("../utils/general");
+var commonBusinessLogic = require(path.resolve(__dirname,"./common"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 
 //---------------------------------------------------------------------
 // private functions

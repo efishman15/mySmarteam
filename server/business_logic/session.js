@@ -1,7 +1,8 @@
+var path = require("path");
 var async = require("async");
-var dalDb = require("../dal/dalDb");
-var exceptions = require("../utils/exceptions");
-var generalUtils = require("../utils/general");
+var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 
 //----------------------------------------------------
 // private functions

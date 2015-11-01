@@ -1,6 +1,7 @@
+var path = require("path");
 var mathjs = require("mathjs");
 var useragent = require("useragent");
-var logger = require("../utils/logger");
+var logger = require(path.resolve(__dirname,"./logger"));
 
 var settings;
 module.exports.injectSettings = function (dbSettings) {

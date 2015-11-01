@@ -1,9 +1,10 @@
-var exceptions = require("../utils/exceptions");
-var generalUtils = require("../utils/general");
+var path = require("path");
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 var Leaderboard = require("agoragames-leaderboard");
 
 //Open connection to general leaderboards (not timebased)
-var generalLeaderboard = new Leaderboard("general");
+var generalLeaderboard = new Leaderboard("whosmarter:general");
 
 //---------------------------------------------------------------------------------------------------------------------------
 // private functions
@@ -14,7 +15,7 @@ var generalLeaderboard = new Leaderboard("general");
 //---------------------------------------------------------------------------------------------------------------------------
 module.exports.getContestLeaderboard = getContestLeaderboard;
 function getContestLeaderboard(contestId) {
-    return new Leaderboard("contest_" + contestId);
+    return new Leaderboard("whosmarter:contest_" + contestId);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -22,7 +23,7 @@ function getContestLeaderboard(contestId) {
 //---------------------------------------------------------------------------------------------------------------------------
 module.exports.getTeamLeaderboard = getTeamLeaderboard;
 function getTeamLeaderboard(contestId, teamId) {
-    return new Leaderboard("contest_" + contestId + "_team" + teamId);
+    return new Leaderboard("whosmarter:contest_" + contestId + "_team" + teamId);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -30,7 +31,7 @@ function getTeamLeaderboard(contestId, teamId) {
 //---------------------------------------------------------------------------------------------------------------------------
 module.exports.getWeeklyLeaderboard = getWeeklyLeaderboard;
 function getWeeklyLeaderboard() {
-    return new Leaderboard("weekly_" + generalUtils.getYearWeek());
+    return new Leaderboard("whosmarter:weekly_" + generalUtils.getYearWeek());
 }
 
 //---------------------------------------------------------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+var path = require("path");
 var logger = require("bunyan");
 
 module.exports.console = logger.createLogger({
@@ -12,7 +13,7 @@ module.exports.server = logger.createLogger({
     name: "whoSmarterServer",
     streams: [{
         type: 'rotating-file',
-        path: './logs/server.log',
+        path: path.resolve(__dirname,"../logs/server.log"),
         period: '1d',   // daily rotation
         count: 30        // keep back copies
     }],
@@ -25,7 +26,7 @@ module.exports.paypalIPN = logger.createLogger({
     name: "whoSmarterPayPalIPN",
     streams: [{
         type: 'rotating-file',
-        path: './logs/paypal/paypalIPN.log',
+        path: path.resolve(__dirname,"../logs/paypal/paypalIPN.log"),
         period: '1d',   // daily rotation
         count: 180        // keep back copies
     }],
@@ -38,7 +39,7 @@ module.exports.facebookIPN = logger.createLogger({
     name: "whoSmarterFacebookIPN",
     streams: [{
         type: 'rotating-file',
-        path: './logs/facebook/facebookIPN.log',
+        path: path.resolve(__dirname,"../logs/facebook/facebookIPN.log"),
         period: '1d',   // daily rotation
         count: 180        // keep back copies
     }],

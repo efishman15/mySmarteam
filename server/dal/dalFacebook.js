@@ -1,9 +1,10 @@
+var path = require("path");
 var FACEBOOK_GRAPH_DOMAIN = "graph.facebook.com";
 var FACEBOOK_GRAPH_URL = "https://" + FACEBOOK_GRAPH_DOMAIN;
-var exceptions = require("../utils/exceptions");
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
 var crypto = require("crypto");
-var generalUtils = require("../utils/general");
-var dalHttp = require("./dalHttp");
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
+var dalHttp = require(path.resolve(__dirname,"./dalHttp"));
 
 //---------------------------------------------------------------------------------------------------------------------------------
 // getUserInfo

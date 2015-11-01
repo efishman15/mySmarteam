@@ -1,12 +1,13 @@
-var sessionUtils = require("../business_logic/session");
+var path = require("path");
+var sessionUtils = require(path.resolve(__dirname,"../business_logic/session"));
 var async = require("async");
-var exceptions = require("../utils/exceptions");
-var random = require("../utils/random");
-var dalDb = require("../dal/dalDb");
-var generalUtils = require("../utils/general");
-var contestsBusinessLogic = require("../business_logic/contests");
-var dalLeaderboard = require("../dal/dalLeaderboards");
-var commonBusinessLogic = require("./common");
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var random = require(path.resolve(__dirname,"../utils/random"));
+var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
+var contestsBusinessLogic = require(path.resolve(__dirname,"../business_logic/contests"));
+var dalLeaderboard = require(path.resolve(__dirname,"../dal/dalLeaderboards"));
+var commonBusinessLogic = require(path.resolve(__dirname,"./common"));
 var util = require("util");
 
 //--------------------------------------------------------------------------

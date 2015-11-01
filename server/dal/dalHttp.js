@@ -1,5 +1,6 @@
-var exceptions = require('../utils/exceptions');
-var generalUtils = require('../utils/general');
+var path = require("path");
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 var request = require("request");
 
 //---------------------------------------------------------------------------------------------------------------------------------

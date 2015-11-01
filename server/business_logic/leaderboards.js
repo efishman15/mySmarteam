@@ -1,12 +1,13 @@
-var exceptions = require("../utils/exceptions");
-var generalUtils = require("../utils/general");
+var path = require("path");
+var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 var Leaderboard = require("agoragames-leaderboard");
-var logger = require("../utils/logger");
+var logger = require(path.resolve(__dirname,"../utils/logger"));
 var async = require("async");
-var sessionUtils = require("./session");
-var dalLeaderboards = require("../dal/dalLeaderboards");
-var dalFacebook = require("../dal/dalFacebook");
-var dalDb = require("../dal/dalDb");
+var sessionUtils = require(path.resolve(__dirname,"./session"));
+var dalLeaderboards = require(path.resolve(__dirname,"../dal/dalLeaderboards"));
+var dalFacebook = require(path.resolve(__dirname,"../dal/dalFacebook"));
+var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
 
 //--------------------------------------------------------------------------
 // private functions

@@ -1,4 +1,5 @@
-var logger = require("./logger");
+var path = require("path");
+var logger = require(path.resolve(__dirname,"./logger"));
 
 //-------------------------------------------------------------------------------------
 // Class ServerMessageException

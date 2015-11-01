@@ -1,23 +1,24 @@
 //----------------------------------------------------
 // Globals
 //----------------------------------------------------
+var path = require("path");
 var express = require("express");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
-var credentials = require("./business_logic/credentials")
-var quiz = require("./business_logic/quiz")
-var contests = require("./business_logic/contests");
-var exceptions = require("./utils/exceptions")
-var generalUtils = require("./utils/general");
-var sessionUtils = require("./business_logic/session");
-var payments = require("./business_logic/payments");
-var dalDb = require("./dal/dalDb");
+var credentials = require(path.resolve(__dirname,"./business_logic/credentials"))
+var quiz = require(path.resolve(__dirname,"./business_logic/quiz"))
+var contests = require(path.resolve(__dirname,"./business_logic/contests"));
+var exceptions = require(path.resolve(__dirname,"./utils/exceptions"))
+var generalUtils = require(path.resolve(__dirname,"./utils/general"));
+var sessionUtils = require(path.resolve(__dirname,"./business_logic/session"));
+var payments = require(path.resolve(__dirname,"./business_logic/payments"));
+var dalDb = require(path.resolve(__dirname,"./dal/dalDb"));
 var http = require("http");
 var https = require("https");
 var fs = require("fs");
-var facebookCanvas = require("./api/facebookCanvas");
-var paypalIPN = require("./api/paypalPN");
-var leaderboards = require("./business_logic/leaderboards");
+var facebookCanvas = require(path.resolve(__dirname,"./api/facebookCanvas"));
+var paypalIPN = require(path.resolve(__dirname,"./api/paypalPN"));
+var leaderboards = require(path.resolve(__dirname,"./business_logic/leaderboards"));
 
 var domain = require("domain");
 
@@ -25,7 +26,7 @@ var app = express();
 
 app.use(bodyParser());          // pull information from html in POST
 app.use(methodOverride());      // simulate DELETE and PUT
-app.use(express.static("../client/www"));
+app.use(express.static(path.resolve(__dirname, "../client/www")));
 
 //Jade
 app.set('views', "./views");
@@ -128,9 +129,9 @@ dalDb.loadSettings(function (err, data) {
     });
 
     var certificate = {
-        key: fs.readFileSync('./certificates/whosmarter.com.key'),
-        ca: [fs.readFileSync('./certificates/gd_bundle-g2-g1.crt')],
-        cert: fs.readFileSync('./certificates/whosmarter.crt')
+        key: fs.readFileSync(path.resolve(__dirname,"./certificates/whosmarter.com.key")),
+        ca: [fs.readFileSync(path.resolve(__dirname,"./certificates/gd_bundle-g2-g1.crt"))],
+        cert: fs.readFileSync(path.resolve(__dirname,"./certificates/whosmarter.crt"))
     }
 
     http.createServer(app).listen(80);
@@ -138,5 +139,3 @@ dalDb.loadSettings(function (err, data) {
 
     console.log("server up!");
 })
-
-
