@@ -171,6 +171,7 @@
         };
 
         $scope.$on('whoSmarter-tabChanged', function () {
+            $scope.userClick = true;
             $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()]);
         });
 
@@ -233,7 +234,7 @@
             ContestsService.getContests(clientContestCount, $state.current.data.serverTab, function (contestsResult) {
                 $scope.totalContests = contestsResult.count;
 
-                if (!$stateParams.userClick && $scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
+                if (!$scope.userClick && $scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
                     //If no "my contests" - switch to running contests
                     $rootScope.gotoView(tabs[1]);
                     return;
