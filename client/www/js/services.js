@@ -1461,3 +1461,27 @@ angular.module('whoSmarter.services', [])
         return service;
 
     })
+
+    //System tools Service.
+    .factory('SystemToolsService', function ($http, ApiService) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+        var path = 'system/';
+
+        //Clear Cache
+        service.clearCache = function (callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "clearCache", null, callbackOnSuccess, callbackOnError, config)
+        };
+
+        //Restart Server
+        service.restartServer = function (callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "restart", null, callbackOnSuccess, callbackOnError, config)
+        };
+
+        return service;
+    })
+
+

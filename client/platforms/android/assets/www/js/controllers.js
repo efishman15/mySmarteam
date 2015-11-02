@@ -1586,19 +1586,38 @@
         };
     })
 
-    .controller("LikeCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate, $stateParams) {
+    .controller("SystemToolsCtrl", function ($scope, $rootScope, $ionicConfig, SystemToolsService, PopupService, $ionicSideMenuDelegate) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            //A bug - if putting "menu-close" in menu.html - back button won't show - have to close the menu programatically
+            if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
+            else {
+                $ionicSideMenuDelegate.toggleRight();
+            }
+            $ionicSideMenuDelegate.canDragContent(false);
+
             viewData.enableBack = true;
-            $scope.contest = $stateParams.contest;
         });
 
-        $scope.likeFacebookFanPage = function () {
-            window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
-        }
+        $scope.clearCache = function () {
+            SystemToolsService.clearCache(function(data) {
+                $rootScope.settings = data;
+                $rootScope.goBack();
+            });
+        };
+
+        $scope.restartServer = function () {
+            PopupService.confirm("SYSTEM_RESTART_CONFIRM_TITLE", "SYSTEM_RESTART_CONFIRM_TEMPLATE", {}, function () {
+                SystemToolsService.restartServer(function (data) {
+                        $rootScope.goBack();
+                    });
+            });
+        };
     })
 
     .controller("FacebookPostCtrl", function ($scope, $rootScope, $ionicConfig, $stateParams, FacebookService) {
@@ -1618,6 +1637,23 @@
                 FlurryAgent.myLogError("FacebookPostError", "Error posting: " + error);
             })
         }
-    });
+    })
+
+    .controller("LikeCtrl", function ($scope, $rootScope, $ionicConfig, $cordovaSocialSharing, $translate, $stateParams) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
+            $scope.contest = $stateParams.contest;
+        });
+
+        $scope.likeFacebookFanPage = function () {
+            window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
+        }
+    })
+
+
 
 

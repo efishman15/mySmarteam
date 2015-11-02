@@ -2,6 +2,7 @@
 // Globals
 //----------------------------------------------------
 var path = require("path");
+var logger = require(path.resolve(__dirname,"./utils/logger"));
 var express = require("express");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
@@ -19,6 +20,7 @@ var fs = require("fs");
 var facebookCanvas = require(path.resolve(__dirname,"./api/facebookCanvas"));
 var paypalIPN = require(path.resolve(__dirname,"./api/paypalPN"));
 var leaderboards = require(path.resolve(__dirname,"./business_logic/leaderboards"));
+var systemBusinessLogic = require(path.resolve(__dirname, "./business_logic/system"));
 
 var domain = require("domain");
 
@@ -74,7 +76,7 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-dalDb.loadSettings(function (err, data) {
+dalDb.loadSettings(null, function (err, data) {
 
     //Block server listener until settings loaded from db
     generalUtils.injectSettings(data.settings);
@@ -99,6 +101,8 @@ dalDb.loadSettings(function (err, data) {
     app.post("/leaderboard/contest", isAuthenticated, leaderboards.getContestLeaders);
     app.post("/leaderboard/friends", isAuthenticated, leaderboards.getFriends);
     app.post("/leaderboard/weekly", isAuthenticated, leaderboards.getWeeklyLeaders);
+    app.post("/system/clearCache", isAuthenticated, systemBusinessLogic.clearCache);
+    app.post("/system/restart", isAuthenticated, systemBusinessLogic.restart);
 
     //----------------------------------------------------
     // API's that do NOT require authentication
@@ -137,5 +141,6 @@ dalDb.loadSettings(function (err, data) {
     http.createServer(app).listen(80);
     https.createServer(certificate, app).listen(443);
 
-    console.log("server up!");
+    logger.console.info(null, "server up!");
+    logger.server.info(null, "server up!");
 })

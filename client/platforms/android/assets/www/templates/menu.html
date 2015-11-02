@@ -44,6 +44,9 @@
                           analytics-event="menu/settings/click">
                     {{ 'SETTINGS' | translate}}
                 </ion-item>
+                <ion-item ng-if="$root.session.isAdmin" class="ion-settings" ng-click="$root.gotoView('app.systemTools', false)">
+                    {{ 'SYSTEM_TOOLS' | translate}}
+                </ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>
@@ -75,6 +78,9 @@
                           analytics-on="click"
                           analytics-event="menu/settings/click">
                     {{ 'SETTINGS' | translate}}
+                </ion-item>
+                <ion-item ng-if="$root.session.isAdmin" class="ion-settings" ng-click="$root.gotoView('app.systemTools', false)">
+                          {{ 'SYSTEM_TOOLS' | translate}}
                 </ion-item>
             </ion-list>
         </ion-content>

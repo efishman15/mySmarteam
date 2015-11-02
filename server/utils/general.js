@@ -116,7 +116,6 @@ module.exports.getSettings = function (req, res, next) {
 
     var response;
 
-
     if (data.clientInfo && data.clientInfo.appVersion) {
 
         if (versionCompare(settings.server.versions.mustUpdate.minVersion, data.clientInfo.appVersion) === 1) {

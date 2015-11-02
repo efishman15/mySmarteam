@@ -409,6 +409,21 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 }
             })
 
+            .state("app.systemTools", {
+                "url": "/systemTools",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "systemTools");
+                    }
+                },
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/systemTools.html",
+                        "controller": "SystemToolsCtrl"
+                    }
+                }
+            })
+
             .state("logout", {
                 "url": "/logout",
                 "resolve": {

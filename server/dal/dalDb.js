@@ -149,29 +149,38 @@ function connect(callback) {
 // loads settings object from db
 //------------------------------------------------------------------------------------------------
 module.exports.loadSettings = loadSettings;
-function loadSettings(callback) {
+function loadSettings(data, callback) {
 
-    connect(function (err, data) {
-        var settingsCollection = data.DbHelper.getCollection("Settings");
-        settingsCollection.findOne({}, {}, function (err, settings) {
-            if (err || !settings) {
-
-                closeDb(data);
-
-                callback(new exceptions.ServerException("Error finding contest", {
-                    "data": data,
-                    "dbError": err
-                }, "error"));
-
-                return;
+    if (!data || !data.DbHelper) {
+        connect(function (err, connectData) {
+            if (!data) {
+                data = {"closeConnection" : true};
             }
+            data.DbHelper = connectData.DbHelper;
+            loadSettings(data, callback);
+        });
+        return;
+    }
+
+    var settingsCollection = data.DbHelper.getCollection("Settings");
+    settingsCollection.findOne({}, {}, function (err, settings) {
+        if (err || !settings) {
 
             closeDb(data);
 
-            data.settings = settings;
+            callback(new exceptions.ServerException("Error finding contest", {
+                "data": data,
+                "dbError": err
+            }, "error"));
 
-            callback(null, data);
-        })
+            return;
+        }
+
+        checkToCloseDb(data);
+
+        data.settings = settings;
+
+        callback(null, data);
     })
 };
 
@@ -277,6 +286,20 @@ function retrieveSession(data, callback) {
         }
     )
 }
+
+module.exports.retrieveAdminSession = retrieveAdminSession;
+function retrieveAdminSession(data, callback) {
+
+    retrieveSession(data, function(err, data) {
+        if (!data.session.isAdmin) {
+            callback(new exceptions.ServerException("This action is permitted for admins only", {"sessionId": data.token}, "warn", 403));
+            return;
+        }
+
+        callback(null, data);
+    })
+}
+
 
 //---------------------------------------------------------------------
 // storeSession

@@ -69,6 +69,39 @@ module.exports.getSession = function (data, callback) {
 };
 
 //----------------------------------------------------
+// getAdminSession
+
+// data
+//
+// data:
+// input: token
+// output: session
+//----------------------------------------------------
+module.exports.getAdminSession = function (data, callback) {
+
+    var operations = [
+
+        //Connect to the database (so connection will stay open until we decide to close it)
+        dalDb.connect,
+
+        function (connectData, callback) {
+            data.DbHelper = connectData.DbHelper;
+            dalDb.retrieveAdminSession(data, callback);
+        }
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            callback(null, data);
+        }
+        else {
+            callback(err);
+        }
+    });
+};
+
+
+//----------------------------------------------------
 // saveSettings
 //
 // data: settings
