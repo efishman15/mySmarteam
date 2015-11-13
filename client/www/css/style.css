@@ -343,6 +343,14 @@ label.item.valid-lr {
     font-weight: bold !important;
 }
 
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
 .my-item-note-left {
     float: left;
     color: #aaa;
@@ -391,7 +399,6 @@ label.item.valid-lr {
 .leader-avatar-in-contest {
     margin-top: -9px !important;
 }
-
 
 .leader-avatar-outside-leaderboard {
     margin-top: -8px !important;
@@ -478,3 +485,64 @@ label.item.valid-lr {
 .chart-margin-top {
     margin-top: 10px;
 }
+
+.middle {
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.set-contest-user-questions-area {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.set-contest-user-questions-title {
+    font-size: 14px !important;
+    font-family: 'Helvetica Neue', 'Roboto', 'Segoe UI', 'sans-serif' !important;
+    position: absolute;
+    top: 16px !important;
+}
+
+.set-contest-user-questions-list {
+    margin-top: 38px;
+}
+
+.small-horizontal-margin {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.question-editor-characters-length {
+    font-size: 10px;
+    color: #c2c2c2;
+}
+
+.question-editor-label {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #c2c2c2;
+}
+
+.question-editor-correct-answer-label {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #9ACD32;
+}
+
+.question-editor-wrong-answer-label {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #FF6347;
+}
+
+.question-editor-input {
+    resize: none;
+}
+
+.question-editor-set-button {
+    padding-top: 30px;
+}
+

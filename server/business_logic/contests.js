@@ -21,12 +21,15 @@ var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 function validateContestData(data, callback) {
 
     //Data validations
+
+    //Empty contest
     if (!data.contest) {
         callback(new exceptions.ServerException("Contest not supplied"));
         return;
     }
 
-    if (data.mode == "add" && data.session.features.newContest.locked) {
+    //Adding new contest is locked
+    if (data.mode === "add" && data.session.features.newContest.locked) {
         callback(new exceptions.ServerException("Attempt to create a new contest without having an eligable rank or feature asset", {
             "session": data.session,
             "contest": data.contest
@@ -34,40 +37,113 @@ function validateContestData(data, callback) {
         return;
     }
 
-    if (!data.contest.startDate || !data.contest.endDate || !data.contest.teams) {
-        callback(new exceptions.ServerException("One of the required fields not supplied: startDate, endDate, teams"));
+    //Required fields
+    if (!data.contest.startDate || !data.contest.endDate || !data.contest.teams || !data.contest.questionsSource) {
+        callback(new exceptions.ServerException("One of the required fields not supplied: startDate, endDate, teams, questionsSource"));
         return;
     }
 
+    //End date must be AFTER start date
     if (data.contest.startDate > data.contest.endDate) {
         callback(new exceptions.ServerException("Contest end date must be later than contest start date"));
         return;
     }
 
-    if (data.contest.teams.length != 2) {
+    //Only 2 teams are allowed
+    if (data.contest.teams.length !== 2) {
         callback(new exceptions.ServerException("Number of teams must be 2"));
         return;
     }
 
+    //One or more of the team names is missing
     if (!data.contest.teams[0].name || !data.contest.teams[1].name) {
         callback(new exceptions.ServerException("One or more of the team names are missing"));
         return;
     }
 
+    //Teams must have different names
     if (data.contest.teams[0].name.trim() === data.contest.teams[1].name.trim()) {
         callback(new exceptions.ServerMessageException("SERVER_ERROR_TEAMS_MUST_HAVE_DIFFERENT_NAMES"));
         return;
     }
 
-    if ((data.contest.teams[0].score || data.contest.teams[1].score) &&
-        (!data.session.isAdmin)) {
+    //Only admins can set team scores
+    if ((data.contest.teams[0].score || data.contest.teams[1].score) && (!data.session.isAdmin)) {
         callback(new exceptions.ServerException("Only admins are allowed to set team scores"));
         return;
     }
 
-    if (data.mode == "edit" && !data.contest._id) {
+    //Contest _id must be supplied in edit mode
+    if (data.mode === "edit" && !data.contest._id) {
         callback(new exceptions.ServerException("Contest _id not supplied in edit mode"));
         return;
+    }
+
+    //Illegal question source
+    if (data.contest.questionsSource !== "system" && data.contest.questionsSource !== "user") {
+        callback(new exceptions.ServerException("questionsSource must be 'system' or 'user'", {"questionsSource" : data.questionsSource}));
+        return;
+    }
+
+    //User questions validations
+    if (data.contest.questionsSource === "user") {
+
+        //Minimum check
+        if (!data.contest.questions || data.contest.questions.visibleCount < generalUtils.settings.client.newContest.privateQuestions.min)  {
+            if (generalUtils.settings.client.newContest.privateQuestions.min === 1) {
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"minimum" : generalUtils.settings.client.newContest.privateQuestions.min} ));
+            }
+            else {
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_MAXIMUM_USER_QUESTIONS", {"minimum" : generalUtils.settings.client.newContest.privateQuestions.min}));
+            }
+            return;
+        }
+
+        //Maximum check
+        if (data.contest.questions && data.contest.questions.visibleCount > generalUtils.settings.client.newContest.privateQuestions.max)  {
+            callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"maximum" : generalUtils.settings.client.newContest.privateQuestions.max}));
+            return;
+        }
+
+        //Question list not supplied
+        if (!data.contest.questions.list || !data.contest.questions.list.length) {
+            callback(new exceptions.ServerException("questions.list must contain the array of questions"));
+            return;
+        }
+
+        var questionHash = {};
+        for (var i=0; i<data.contest.questions.list.length; i++) {
+
+            //Question must contain text
+            if (!data.contest.questions.list[i].text) {
+                callback(new exceptions.ServerException("Question must contain text"));
+                return;
+            }
+
+            //Question must contain answers
+            if (!data.contest.questions.list[i].answers || !data.contest.questions.list[i].answers.length || data.contest.questions.list[i].answers.length !== 4) {
+                callback(new exceptions.ServerException("Question must contain 4 answers"));
+                return;
+            }
+
+            //Count duplicate questions
+            if (!data.contest.questions.list[i].deleted) {
+                if (questionHash[data.contest.questions.list[i].text]) {
+                    callback(new exceptions.ServerMessageException("SERVER_ERROR_QUESTION_ALREADY_EXISTS", {"question" : data.contest.questions.list[i]}));
+                }
+                questionHash[data.contest.questions.list[i].text] = true;
+            }
+
+            //Count duplicate answers inside a question
+            var answersHash = {};
+            for (var j=0; j<data.contest.questions.list[i].answers[j]; j++) {
+                if (answersHash[data.contest.questions.list[i].answers[j]]) {
+                    callback(new exceptions.ServerMessageException("SERVER_ERROR_ENTER_DIFFERENT_ANSWERS", {"question" : data.contest.questions.list[i]}));
+                    return;
+                }
+                answersHash[data.contest.questions.list[i].answers[j]] = true;
+            }
+        }
     }
 
     if (data.mode == "add") {

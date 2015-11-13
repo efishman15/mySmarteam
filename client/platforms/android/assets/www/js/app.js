@@ -1,6 +1,4 @@
 angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers", "ui.router", "ionic", "http-auth-interceptor", "ngMessages", "pascalprecht.translate", "ng-fusioncharts", "ezfb", "ionic-datepicker", "angular-storage", "ngCordova"])
-    .constant("ENDPOINT_URI", "http://www.whosmarter.com/")
-    .constant("ENDPOINT_URI_SECURED", "https://www.whosmarter.com/")
     .run(function ($ionicPlatform, $rootScope, $location) {
         $ionicPlatform.ready(function () {
 
@@ -247,7 +245,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             .state("app.share", {
                 "url": "/share",
                 "params": {"contest": null},
-                "cache": false,
                 "views": {
                     "menuContent": {
                         "templateUrl": "templates/share.html",
@@ -259,7 +256,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             .state("app.like", {
                 "url": "/like",
                 "params": {"contest": null},
-                "cache": false,
                 "views": {
                     "menuContent": {
                         "templateUrl": "templates/like.html",
@@ -270,7 +266,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
 
             .state("app.contestParticipants", {
                 "url": "/contestParticipants",
-                "cache": false,
                 "resolve": {
                     "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "contestParticipants");
@@ -303,7 +298,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
 
             .state("app.facebookPost", {
                 "url": "/facebookPost",
-                "cache": false,
                 "resolve": {
                     "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "facebookPost");
@@ -320,7 +314,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
 
             .state("app.quiz", {
                 "url": "/quiz",
-                "cache": false,
                 "resolve": {
                     "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "quiz");
@@ -353,7 +346,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         return UserService.resolveAuthentication(null, "setContest");
                     }
                 },
-                "cache": false,
                 "views": {
                     "menuContent": {
                         "templateUrl": "templates/setContest.html",

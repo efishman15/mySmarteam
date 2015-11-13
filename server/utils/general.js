@@ -21,6 +21,8 @@ module.exports.injectSettings = function (dbSettings) {
         settings.client.quiz.questions.score.push(settings.server.quiz.questions.levels[i].score);
     }
 
+    settings.client.newContest.systemTotalQuestions = settings.server.quiz.questions.levels.length;
+
     module.exports.settings = settings;
 
 }

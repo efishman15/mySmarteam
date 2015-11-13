@@ -146,6 +146,16 @@
   "SYSTEM_CLEAR_CACHE" : "אתחול זכרון מטמון",
   "SYSTEM_RESTART_SERVER" : "אתחול שרת",
   "SYSTEM_RESTART_CONFIRM_TITLE" : "אתחול שרת",
-  "SYSTEM_RESTART_CONFIRM_TEMPLATE" : "האם אתם בטוחים שברצונכם לאתחל את השרת?"
-
+  "SYSTEM_RESTART_CONFIRM_TEMPLATE" : "האם אתם בטוחים שברצונכם לאתחל את השרת?",
+  "MY_QUESTIONS" : "שאלות משלי",
+  "MY_QUESTIONS_ON_NOTE" : "אנא הזינו {{min}}-{{max}} שאלות",
+  "MY_QUESTIONS_OFF_NOTE" : "{{totalQuestions}} שאלות אקראיות ממאגר המערכת",
+  "NO_QUESTIONS_ENTERED" : "לחצו 'הוספה' להוספת שאלות חדשות לתחרות",
+  "MY_CONTEST_QUESTIONS" : "השאלות שלי בתחרות ({{count}})",
+  "ADD" : "הוספה",
+  "QUESTION" : "שאלה",
+  "CORRECT_ANSWER" : "תשובה נכונה",
+  "WRONG_ANSWER" : "תשובה שגויה",
+  "NEW_QUESTION" : "שאלה חדשה",
+  "EDIT_QUESTION" : "עריכת שאלה"
 }

@@ -842,14 +842,14 @@ angular.module('whoSmarter.services', [])
     })
 
     //Api Service
-    .factory('ApiService', function ($http, ENDPOINT_URI, ENDPOINT_URI_SECURED) {
+    .factory('ApiService', function ($http, $location) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
 
-        service.endPoint = (window.location.protocol != "https:" ? ENDPOINT_URI : ENDPOINT_URI_SECURED)
+        service.endPoint = $location.$$protocol + "://" + $location.$$host + "/";
 
         //----------------------------------------------
         // Service Private functions

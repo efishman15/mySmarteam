@@ -343,6 +343,14 @@ label.item.valid-lr {
     font-weight: bold !important;
 }
 
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
 .my-item-note-left {
     float: left;
     color: #aaa;
@@ -477,4 +485,17 @@ label.item.valid-lr {
 
 .chart-margin-top {
     margin-top: 10px;
+}
+
+.set-contest-add-question-button {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.middle {
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
 }

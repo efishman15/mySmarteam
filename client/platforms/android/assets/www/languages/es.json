@@ -147,5 +147,16 @@
   "SYSTEM_CLEAR_CACHE" : "Caché limpio",
   "SYSTEM_RESTART_SERVER" : "Reiniciar servidor",
   "SYSTEM_RESTART_CONFIRM_TITLE" : "Reiniciar servidor",
-  "SYSTEM_RESTART_CONFIRM_TEMPLATE" : "¿Estás seguro de que deseas reiniciar el servidor ?"
+  "SYSTEM_RESTART_CONFIRM_TEMPLATE" : "¿Estás seguro de que deseas reiniciar el servidor ?",
+  "MY_QUESTIONS" : "Mis preguntas",
+  "MY_QUESTIONS_ON_NOTE" : "Por favor, introduzca {{min}}-{{max}} preguntas",
+  "MY_QUESTIONS_OFF_NOTE" : "{{totalQuestions}} preguntas al azar del sistema",
+  "NO_QUESTIONS_ENTERED" : "Toque en 'añadir' para agregar nuevas preguntas",
+  "MY_CONTEST_QUESTIONS" : "Mis preguntas del concurso ({{count}})",
+  "ADD" : "añadir",
+  "QUESTION" : "Pregunta",
+  "CORRECT_ANSWER" : "Respuesta correcta",
+  "WRONG_ANSWER" : "Respuesta incorrecta",
+  "NEW_QUESTION" : "Nueva pregunta",
+  "EDIT_QUESTION" : "Editar pregunta"
 }

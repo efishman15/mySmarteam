@@ -1,7 +1,7 @@
 <ion-view title="{{getTitle()}}">
 
     <ion-content has-header="true" padding="true"
-                 dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
+                 dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false" ng-controller="SetContestCtrl">
         <div class="padding" ng-if="$root.session.features.newContest.locked">
             <span class="feature-locked-text">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.session.features.newContest.unlockRank} }}</span>
             <button class="button button-full button-small button-3d button-3d-balanced"
@@ -18,7 +18,7 @@
                 $root.session.features.newContest.purchaseData.currencySymbol} }}
             </button>
         </div>
-        <form name="contestForm" novalidate="novalidate">
+        <form name="$parent.contestForm" novalidate="novalidate">
             <h4 class="center padding">{{'WHO_IS_SMARTER_QUESTION' | translate}}</h4>
 
             <div class="padding row">
@@ -78,6 +78,37 @@
                         date:'dd-MM-yyyy'}}
                     </button>
                 </ionic-datepicker>
+            </div>
+
+            <div class="padding">
+                <ion-toggle ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
+                                    'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                            ng-model="localViewData.usePrivateQuestions"
+                            class="item toggle-small"
+                            toggle-class="toggle-royal">
+                    <span ng-class="{'my-toggle-rtl-fix' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}">{{ 'MY_QUESTIONS' | translate}}</span>
+                    <i ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"
+                       class="icon ion-help-circled"></i>
+
+                    <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"><p>
+                        {{localViewData.usePrivateQuestions ? 'MY_QUESTIONS_ON_NOTE' : 'MY_QUESTIONS_OFF_NOTE' |
+                        translate:{min : $root.settings.newContest.privateQuestions.min, max:
+                        $root.settings.newContest.privateQuestions.max, totalQuestions:
+                        $root.settings.newContest.systemTotalQuestions} }}</p></span>
+                    <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'rtl'"
+                      class="my-item-note-left">{{localViewData.usePrivateQuestions ? 'MY_QUESTIONS_ON_NOTE' : 'MY_QUESTIONS_OFF_NOTE' | translate:{min : $root.settings.newContest.privateQuestions.min, max: $root.settings.newContest.privateQuestions.max, totalQuestions: $root.settings.newContest.systemTotalQuestions} }}</span>
+                </ion-toggle>
+
+                <div class="item item-divider padding" ng-show="localViewData.usePrivateQuestions">
+                        <div class="padding-left padding-right" ng-show="!localViewData.questions || localViewData.questions.length === 0">
+                            <span class="middle">
+                                {{!localViewData.questions || localViewData.questions.length === 0 ? 'NO_QUESTIONS_ENTERED' : 'MY_CONTEST_QUESTIONS' | translate : {count : (localViewData.questions ? localViewData.questions.length : 0)} }}
+                            </span>
+                            <button ng-class="{'float-right' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','float-left' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
+                                  ng-click="addPrivateQuestion($event)" class="set-contest-add-question-button button button-small button-assertive">{{'ADD' | translate}}</button>
+                        </div>
+                </div>
+
             </div>
 
             <div class="padding" ng-hide="!$root.session.isAdmin">

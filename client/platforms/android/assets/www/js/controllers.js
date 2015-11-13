@@ -105,7 +105,7 @@
         $scope.$on('$ionicView.beforeEnter', function () {
 
             if ($rootScope.session) {
-                $rootScope.gotoView("app.tabs.myContests");
+                $rootScope.gotoRootView();
             }
             else if (!$rootScope.user) {
                 UserService.initUser(function () {
@@ -125,7 +125,7 @@
 
         $scope.facebookConnect = function () {
             UserService.facebookClientConnect(function (session) {
-                $rootScope.gotoView("app.tabs.myContests");
+                $rootScope.gotoRootView();
             })
         };
     })
@@ -304,7 +304,9 @@
         };
 
         //Hardware back button handlers
-        $state.current.data.questionInfo.isOpenHandler = function() {return $scope.questionInfoModal.isShown()};
+        $state.current.data.questionInfo.isOpenHandler = function () {
+            return $scope.questionInfoModal.isShown()
+        };
         $state.current.data.questionInfo.closeHandler = $scope.closeQuestionInfoModal;
 
         //Cleanup the modal when we're done with it!
@@ -580,7 +582,7 @@
         function startQuiz() {
 
             if (!$stateParams.contestId) {
-                $rootScope.gotoView("app.tabs.myContests");
+                $rootScope.gotoRootView();
                 return;
             }
 
@@ -901,117 +903,149 @@
             $scope.contestEndsInPopover.hide();
         };
 
+        //-------------------------------------------------------
+        // Question popover
+        // -------------------------------------------------------
+        $ionicPopover.fromTemplateUrl('templates/question.html', {
+            scope: $scope
+        }).then(function (questionPopover) {
+            $scope.questionPopover = questionPopover;
+        });
+
+        $scope.openQuestionPopover = function ($event, mode) {
+            if (mode === "add") {
+                $scope.questionPopoverTitle = $translate.instant("NEW_QUESTION");
+            }
+            else {
+                $scope.questionPopoverTitle = $translate.instant("EDIT_QUESTION");
+            }
+            $scope.questionPopover.show($event);
+        };
+
+        $scope.closeQuestionPopover = function () {
+            $scope.questionPopover.hide();
+        };
+
+        $scope.addPrivateQuestion = function ($event) {
+            $scope.openQuestionPopover($event, "add");
+        };
+
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
             if ($scope.contestEndsInPopover) {
                 $scope.contestEndsInPopover.remove();
             }
+            if ($scope.questionPopover) {
+                $scope.questionPopover.remove();
+            }
         });
 
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+                if ($stateParams.mode) {
+                    $scope.mode = $stateParams.mode;
+                    if ($stateParams.mode === "edit") {
+                        if ($stateParams.contest) {
+                            $scope.localViewData = JSON.parse(JSON.stringify($stateParams.contest));
+                            //Server stores in epoch - client uses real DATE objects
+                            $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
+                            $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
 
-            if ($stateParams.mode) {
-                $scope.mode = $stateParams.mode;
-                if ($stateParams.mode == "edit") {
-                    if ($stateParams.contest) {
-                        $scope.localViewData = JSON.parse(JSON.stringify($stateParams.contest));
-                        //Server stores in epoch - client uses real DATE objects
-                        $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
-                        $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
-
-                        if ($scope.localViewData.participants > 0) {
-                            $scope.showStartDate = false;
+                            if ($scope.localViewData.participants > 0) {
+                                $scope.showStartDate = false;
+                            }
+                            else {
+                                $scope.showStartDate = true;
+                            }
+                            $scope.contestForm.$setUntouched();
                         }
                         else {
-                            $scope.showStartDate = true;
+                            $rootScope.goBack();
+                            return;
                         }
                     }
-                    else {
-                        $rootScope.goBack();
-                        return;
+                    else if ($stateParams.mode === "add") {
+                        //Create new local instance of a contest
+                        $scope.localViewData = {
+                            "startDate": startDate,
+                            "endDate": endDate,
+                            "endOption": "h24",
+                            "participants": 0,
+                            "manualParticipants": 0,
+                            "manualRating": 0,
+                            "teams": [{"name": null, "score": 0}, {"name": null, "score": 0}]
+                        };
+                    }
+
+                    $scope.showStartDate = true;
+
+                }
+                else {
+                    $rootScope.gotoRootView();
+                    return;
+                }
+
+                $rootScope.session.features.newContest.purchaseData.retrieved = false;
+
+                $scope.showRemoveContest = ($stateParams.mode === "edit" && $rootScope.session.isAdmin);
+
+                //-------------------------------------------------------------------------------------------------------------
+                //Android Billing
+                //-------------------------------------------------------------------------------------------------------------
+                if ($rootScope.user.clientInfo.platform === "android" && $rootScope.session.features.newContest.locked) {
+                    if (!$rootScope.session.features.newContest.purchaseData.retrieved) {
+
+                        //-------------------------------------------------------------------------------------------------------------
+                        //pricing - replace cost/currency with the google store pricing (local currency, etc.)
+                        //-------------------------------------------------------------------------------------------------------------
+                        inappbilling.getProductDetails(function (products) {
+                                //In android - the price already contains the symbol
+                                $rootScope.session.features.newContest.purchaseData.formattedCost = products[0].price;
+                                $rootScope.session.features.newContest.purchaseData.cost = products[0].price_amount_micros / 1000000;
+                                $rootScope.session.features.newContest.purchaseData.currency = products[0].price_currency_code;
+
+                                $rootScope.session.features.newContest.purchaseData.retrieved = true;
+
+                                //-------------------------------------------------------------------------------------------------------------
+                                //Retrieve unconsumed items - and checking if user has an unconsumed "new contest unlock key"
+                                //-------------------------------------------------------------------------------------------------------------
+                                inappbilling.getPurchases(function (unconsumedItems) {
+                                        if (unconsumedItems && unconsumedItems.length > 0) {
+                                            for (var i = 0; i < unconsumedItems.length; i++) {
+                                                if (unconsumedItems[i].productId === $rootScope.session.features.newContest.purchaseData.productId) {
+                                                    processAndroidPurchase(unconsumedItems[i]);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    },
+                                    function (error) {
+                                        FlurryAgent.myLogError("AndroidBillingError", "Error retrieving unconsumed items: " + error);
+                                    });
+
+                            },
+                            function (msg) {
+                                FlurryAgent.myLogError("AndroidBillingError", "Error getting product details: " + msg);
+                            }, $rootScope.session.features.newContest.purchaseData.productId);
+
+
                     }
                 }
                 else {
-                    //Create new local instance of a contest
-                    $scope.localViewData = {
-                        "startDate": startDate,
-                        "endDate": endDate,
-                        "endOption": "h24",
-                        "participants": 0,
-                        "manualParticipants": 0,
-                        "manualRating": 0,
-                        "teams": [{"name": null, "score": 0}, {"name": null, "score": 0}]
-                    };
-
-                    $scope.showStartDate = true;
+                    $rootScope.session.features.newContest.purchaseData.retrieved = true;
                 }
+
+                viewData.enableBack = true;
+
+                $scope.localViewData.totalParticipants = $scope.localViewData.participants + $scope.localViewData.manualParticipants;
+                $scope.showAdminInfo = false;
+
+                //Bug - currently not working - issue opened
+                $scope.contestStartDatePicker.inputDate = startDate;
+                $scope.contestEndDatePicker.inputDate = endDate;
+                $scope.datePickerLoaded = true;
+
             }
-            else {
-                $rootScope.gotoView("app.tabs.myContests");
-                return;
-            }
-
-            $rootScope.session.features.newContest.purchaseData.retrieved = false;
-
-            $scope.showRemoveContest = ($stateParams.mode === "edit" && $rootScope.session.isAdmin);
-
-            //-------------------------------------------------------------------------------------------------------------
-            //Android Billing
-            //-------------------------------------------------------------------------------------------------------------
-            if ($rootScope.user.clientInfo.platform === "android" && $rootScope.session.features.newContest.locked) {
-                if (!$rootScope.session.features.newContest.purchaseData.retrieved) {
-
-                    //-------------------------------------------------------------------------------------------------------------
-                    //pricing - replace cost/currency with the google store pricing (local currency, etc.)
-                    //-------------------------------------------------------------------------------------------------------------
-                    inappbilling.getProductDetails(function (products) {
-                            //In android - the price already contains the symbol
-                            $rootScope.session.features.newContest.purchaseData.formattedCost = products[0].price;
-                            $rootScope.session.features.newContest.purchaseData.cost = products[0].price_amount_micros / 1000000;
-                            $rootScope.session.features.newContest.purchaseData.currency = products[0].price_currency_code;
-
-                            $rootScope.session.features.newContest.purchaseData.retrieved = true;
-
-                            //-------------------------------------------------------------------------------------------------------------
-                            //Retrieve unconsumed items - and checking if user has an unconsumed "new contest unlock key"
-                            //-------------------------------------------------------------------------------------------------------------
-                            inappbilling.getPurchases(function (unconsumedItems) {
-                                    if (unconsumedItems && unconsumedItems.length > 0) {
-                                        for (var i = 0; i < unconsumedItems.length; i++) {
-                                            if (unconsumedItems[i].productId === $rootScope.session.features.newContest.purchaseData.productId) {
-                                                processAndroidPurchase(unconsumedItems[i]);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                },
-                                function (error) {
-                                    FlurryAgent.myLogError("AndroidBillingError", "Error retrieving unconsumed items: " + error);
-                                });
-
-                        },
-                        function (msg) {
-                            FlurryAgent.myLogError("AndroidBillingError", "Error getting product details: " + msg);
-                        }, $rootScope.session.features.newContest.purchaseData.productId);
-
-
-                }
-            }
-            else {
-                $rootScope.session.features.newContest.purchaseData.retrieved = true;
-            }
-
-            viewData.enableBack = true;
-
-            $scope.localViewData.totalParticipants = $scope.localViewData.participants + $scope.localViewData.manualParticipants;
-            $scope.showAdminInfo = false;
-
-            //Bug - currently not working - issue opened
-            $scope.contestStartDatePicker.inputDate = startDate;
-            $scope.contestEndDatePicker.inputDate = endDate;
-            $scope.datePickerLoaded = true;
-
-        });
+        );
 
         $scope.toggleAdminInfo = function () {
             if ($scope.localViewData.teams[0].name && $scope.localViewData.teams[1].name) {
@@ -1181,6 +1215,14 @@
 
             });
         };
+
+        $rootScope.$on("whoSmarter-questionSet", function () {
+            $scope.questionSet = true;
+        });
+
+        $rootScope.$on("whoSmarter-questionCancel", function () {
+            $scope.questionCancel = true;
+        });
 
         $scope.buyNewContestUnlockKey = function (isMobile) {
             $scope.buyInProgress = true;
@@ -1448,7 +1490,7 @@
             //Contest is passed when clicking on chart from main screen,
             //But not passed when calling screen from direct link outside the app (Deep linking)
             if ($scope.lastQuizResults && $scope.lastQuizResults.data.facebookPost && $scope.animateResults) {
-                $rootScope.gotoView("app.facebookPost", false, {"quizResults" : $scope.lastQuizResults});
+                $rootScope.gotoView("app.facebookPost", false, {"quizResults": $scope.lastQuizResults});
             }
         });
 
@@ -1532,7 +1574,6 @@
                 }
             },
             "dataLabelClick": function (eventObj, dataObj) {
-                console.log("dataLabelClick1");
                 if ($scope.buttonState === "join") {
                     teamClicked(dataObj.dataIndex, "label");
                     $scope.chartTeamEventHandled = true;
@@ -1605,7 +1646,7 @@
         });
 
         $scope.clearCache = function () {
-            SystemToolsService.clearCache(function(data) {
+            SystemToolsService.clearCache(function (data) {
                 $rootScope.settings = data;
                 $rootScope.goBack();
             });
@@ -1614,8 +1655,8 @@
         $scope.restartServer = function () {
             PopupService.confirm("SYSTEM_RESTART_CONFIRM_TITLE", "SYSTEM_RESTART_CONFIRM_TEMPLATE", {}, function () {
                 SystemToolsService.restartServer(function (data) {
-                        $rootScope.goBack();
-                    });
+                    $rootScope.goBack();
+                });
             });
         };
     })
@@ -1631,9 +1672,9 @@
         });
 
         $scope.post = function () {
-            FacebookService.post($scope.quizResults.data.facebookPost, function(response) {
+            FacebookService.post($scope.quizResults.data.facebookPost, function (response) {
                 $rootScope.goBack()
-            }, function(error) {
+            }, function (error) {
                 FlurryAgent.myLogError("FacebookPostError", "Error posting: " + error);
             })
         }
@@ -1653,7 +1694,3 @@
             window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
         }
     })
-
-
-
-

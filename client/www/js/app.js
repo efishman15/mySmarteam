@@ -1,6 +1,4 @@
 angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers", "ui.router", "ionic", "http-auth-interceptor", "ngMessages", "pascalprecht.translate", "ng-fusioncharts", "ezfb", "ionic-datepicker", "angular-storage", "ngCordova"])
-    .constant("ENDPOINT_URI", "http://www.whosmarter.com/")
-    .constant("ENDPOINT_URI_SECURED", "https://www.whosmarter.com/")
     .run(function ($ionicPlatform, $rootScope, $location) {
         $ionicPlatform.ready(function () {
 
@@ -247,7 +245,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             .state("app.share", {
                 "url": "/share",
                 "params": {"contest": null},
-                "cache": false,
                 "views": {
                     "menuContent": {
                         "templateUrl": "templates/share.html",
@@ -259,7 +256,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             .state("app.like", {
                 "url": "/like",
                 "params": {"contest": null},
-                "cache": false,
                 "views": {
                     "menuContent": {
                         "templateUrl": "templates/like.html",
@@ -270,7 +266,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
 
             .state("app.contestParticipants", {
                 "url": "/contestParticipants",
-                "cache": false,
                 "resolve": {
                     "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "contestParticipants");
@@ -303,7 +298,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
 
             .state("app.facebookPost", {
                 "url": "/facebookPost",
-                "cache": false,
                 "resolve": {
                     "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "facebookPost");
@@ -320,7 +314,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
 
             .state("app.quiz", {
                 "url": "/quiz",
-                "cache": false,
                 "resolve": {
                     "auth": function resolveAuthentication(UserService) {
                         return UserService.resolveAuthentication(null, "quiz");
@@ -353,14 +346,24 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         return UserService.resolveAuthentication(null, "setContest");
                     }
                 },
-                "cache": false,
                 "views": {
                     "menuContent": {
                         "templateUrl": "templates/setContest.html",
                         "controller": "SetContestCtrl"
                     }
                 },
-                "params": {"mode": null, "contest": null}
+                "params": {"mode": null, "contest": null},
+                "data": {
+                    "questionModal" : {"isOpenHandler" : null, closeHandler: null},
+                    "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
+                        if (currentState.data.questionModal.isOpenHandler && currentState.data.questionModal.isOpenHandler() && currentState.data.questionModal.closeHandler) {
+                            currentState.data.questionModal.closeHandler();
+                        }
+                        else {
+                            $rootScope.goBack();
+                        }
+                    }
+                }
             })
 
             .state("payPalPaymentSuccess", {
@@ -585,20 +588,25 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
         return {
             require: "ngModel",
             scope: {
-                otherModelValue: "=mustBeDifferent"
+                otherModelValues: "=mustBeDifferent"
             },
             link: function (scope, element, attributes, ngModel) {
 
                 ngModel.$validators.mustBeDifferent = function (modelValue) {
-                    if (modelValue && scope.otherModelValue) {
-                        return modelValue.trim() != scope.otherModelValue.$modelValue.trim();
+                    if (modelValue && scope.otherModelValues) {
+                        for(var i=0; i<scope.otherModelValues.length; i++) {
+                            if (modelValue && scope.otherModelValues[i].$modelValue && modelValue.trim() === scope.otherModelValues[i].$modelValue.trim()) {
+                                return false;
+                            }
+                        }
+                        return true;
                     }
                     else {
                         return true;
                     }
                 };
 
-                scope.$watch("otherModelValue", function () {
+                scope.$watch("otherModelValues", function () {
                     ngModel.$validate();
                 });
             }
@@ -660,6 +668,27 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             });
         }
     })
+
+    .directive("scopeFormLevel", function () {
+        return {
+            restrict: "A",
+            require: "form",
+            link: function (scope, element, attrs, formCtrl) {
+                var currentScope = scope;
+                var level = parseInt(attrs.scopeFormLevel,10);
+                for(var i=0; i<level; i++) {
+                    currentScope = currentScope.$parent;
+                    if (!currentScope) {
+                        break;
+                    }
+                }
+
+                //Let the top level scope (as level was set) hold a pointer to this form
+                if (currentScope) {
+                    currentScope[element[0].name] = formCtrl;
+                }
+            }
+    }})
 
     .directive("tabsSwipable", ["$ionicGesture", function ($ionicGesture) {
         //

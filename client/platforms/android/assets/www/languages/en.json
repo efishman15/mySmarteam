@@ -147,5 +147,16 @@
   "SYSTEM_CLEAR_CACHE" : "Clear Cache",
   "SYSTEM_RESTART_SERVER" : "Restart Server",
   "SYSTEM_RESTART_CONFIRM_TITLE" : "Restart Server",
-  "SYSTEM_RESTART_CONFIRM_TEMPLATE" : "Are you sure you would like to restart the server?"
+  "SYSTEM_RESTART_CONFIRM_TEMPLATE" : "Are you sure you would like to restart the server?",
+  "MY_QUESTIONS" : "My questions",
+  "MY_QUESTIONS_ON_NOTE" : "Please enter {{min}}-{{max}} questions",
+  "MY_QUESTIONS_OFF_NOTE" : "System's {{totalQuestions}} random questions",
+  "NO_QUESTIONS_ENTERED" : "Tap 'Add' to add new questions",
+  "MY_CONTEST_QUESTIONS" : "My contest questions ({{count}})",
+  "ADD" : "Add",
+  "QUESTION" : "Question",
+  "CORRECT_ANSWER" : "Correct answer",
+  "WRONG_ANSWER" : "Wrong answer",
+  "NEW_QUESTION" : "New question",
+  "EDIT_QUESTION" : "Edit question"
 }
