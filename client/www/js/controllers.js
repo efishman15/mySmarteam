@@ -31,7 +31,7 @@
         });
 
         $scope.openNewRankModal = function () {
-            FlurryAgent.logEvent("newRank", {"rank": "" + $rootScope.session.rank})
+            FlurryAgent.logEvent("newRank", {"rank": "" + $rootScope.session.rank});
             $scope.newRankModal.show();
         };
 
@@ -49,11 +49,30 @@
 
         });
 
-        $scope.$on("modal.hidden", function () {
+        $scope.$on("modal.hidden", function (event, viewData) {
             if ($scope.callbackAfterModal) {
                 $scope.callbackAfterModal();
             }
         });
+
+        //-------------------------------------------------------
+        // contest Type modal form
+        //-------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/contestType.html", function (contestTypeModal) {
+            $scope.contestTypeModal = contestTypeModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        $scope.openContestTypeModal = function () {
+            FlurryAgent.logEvent("selectContestType");
+            $scope.contestTypeModal.show();
+        };
+
+        $scope.closeContestTypeModal = function () {
+            $scope.contestTypeModal.hide();
+        };
 
         $scope.canvas = document.createElement("canvas");
         $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
@@ -88,6 +107,10 @@
             }
         };
 
+        $scope.selectContestType = function(contestType) {
+            $scope.closeContestTypeModal();
+            $rootScope.gotoView("app.setContest", false, {"mode" : "add", "contestType" : contestType});
+        };
     })
 
     .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, ScreenService, StoreService) {
@@ -546,8 +569,16 @@
             var circleOffsets = (quizCanvas.width - $scope.quiz.totalQuestions * $rootScope.settings.quiz.canvas.radius * 2) / ($scope.quiz.totalQuestions - 1);
             for (var i = 0; i < $scope.quiz.totalQuestions; i++) {
 
+                var questionScore;
+                if (!$scope.quiz.reviewMode) {
+                    questionScore = $scope.questionHistory[i].score;
+                }
+                else {
+                    questionScore = 0;
+                }
+
                 //Draw question score
-                var textWidth = quizContext.measureText($scope.questionHistory[i].score).width;
+                var textWidth = quizContext.measureText(questionScore).width;
                 var scoreColor = $rootScope.settings.quiz.canvas.inactiveColor;
 
                 if ($scope.questionHistory[i].answer && !$scope.questionHistory[i].answerUsed) {
@@ -557,7 +588,7 @@
                 //Draw the score at the top of the circle
                 quizContext.beginPath();
                 quizContext.fillStyle = scoreColor;
-                quizContext.fillText($scope.questionHistory[i].score, currentX + textWidth / 2, $rootScope.settings.quiz.canvas.scores.top);
+                quizContext.fillText(questionScore, currentX + textWidth / 2, $rootScope.settings.quiz.canvas.scores.top);
                 quizContext.closePath();
 
                 if ($rootScope.settings.languages[$rootScope.user.settings.language].direction === "ltr") {
@@ -597,6 +628,10 @@
                     drawQuizProgress();
 
                     $scope.quiz.currentQuestion.answered = false;
+
+                    if ($scope.quiz.reviewMode && $scope.quiz.reviewMode.reason) {
+                        PopupService.alert($translate.instant($scope.quiz.reviewMode.reason));
+                    }
                 });
         }
 
@@ -690,17 +725,17 @@
                         FlurryAgent.logEvent("quiz/question" + ($scope.quiz.currentQuestionIndex + 1) + "/answered/correct");
 
                         correctAnswerId = answerId;
-                        $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
+                        $scope.quiz.currentQuestion.answers[answerId].answeredCorrectly = true;
                         SoundService.play("audio/click_ok");
                     }
                     else {
                         FlurryAgent.logEvent("quiz/question" + ($scope.quiz.currentQuestionIndex + 1) + "/answered/incorrect");
                         SoundService.play("audio/click_wrong");
                         correctAnswerId = data.question.correctAnswerId;
-                        $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
+                        $scope.quiz.currentQuestion.answers[answerId].answeredCorrectly = false;
                         $timeout(function () {
                             $scope.$apply(function () {
-                                $scope.quiz.currentQuestion.answers[data.question.correctAnswerId - 1].correct = true;
+                                $scope.quiz.currentQuestion.answers[data.question.correctAnswerId].correct = true;
                             })
                         }, 3000);
                     }
@@ -932,6 +967,9 @@
 
         $scope.closeQuestionsSourcePopover = function (questionSource) {
             $scope.localViewData.questionsSource = questionSource.value;
+            if ($scope.localViewData.questionsSource === "user" && !$scope.localViewData.questions && $scope.localViewData.userQuestions && $scope.localViewData.userQuestions.length > 0) {
+                retrieveUserQuestions();
+            }
             $scope.questionsSourcePopover.hide();
         };
 
@@ -984,7 +1022,7 @@
                 }
             }
 
-            if ($scope.question.mode === "add" && matchCount > 0 || $scope.question.mode === "edit" && matchCount > 1) {
+            if (($scope.question.mode === "add") && matchCount > 0 || ($scope.question.mode === "edit" && matchCount > 1)) {
                 //In edit mode - the question text will be matched at least once - to the current question in the list
                 if (!$scope.questionForm.question.$error) {
                     $scope.questionForm.question.$error = {};
@@ -998,6 +1036,10 @@
                 $scope.question.mode = "edit"
                 $scope.localViewData.questions.list.push($scope.question);
                 $scope.localViewData.questions.visibleCount++;
+            }
+            else {
+                //Set dirty flag for the question - so server will update it in the db
+                $scope.question.isDirty = true;
             }
             $scope.closeQuestionModal();
         });
@@ -1034,6 +1076,12 @@
         };
         $state.current.data.questionModal.closeHandler = $scope.closeQuestionModal;
 
+        function retrieveUserQuestions() {
+            ContestsService.getQuestions($scope.localViewData.userQuestions, function(questions) {
+               $scope.localViewData.questions = {"visibleCount" : questions.length, "list" : questions};
+            });
+        }
+
         $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
                 if ($stateParams.mode) {
                     $scope.mode = $stateParams.mode;
@@ -1050,7 +1098,10 @@
                             else {
                                 $scope.showStartDate = true;
                             }
-                            $scope.contestForm.$setUntouched();
+
+                            if ($scope.localViewData.questionsSource === "user") {
+                                retrieveUserQuestions();
+                            }
                         }
                         else {
                             $rootScope.goBack();
@@ -1063,13 +1114,12 @@
                             "startDate": startDate,
                             "endDate": endDate,
                             "endOption": "h24",
-                            "questionsSource": "system",
+                            "questionsSource": $stateParams.contestType,
                             "participants": 0,
                             "manualParticipants": 0,
                             "manualRating": 0,
                             "teams": [{"name": null, "score": 0}, {"name": null, "score": 0}]
                         };
-
                     }
 
                     $scope.contestForm.$setPristine();
@@ -1241,6 +1291,10 @@
                 }
 
                 ContestsService.setContest($scope.localViewData, $stateParams.mode, function (contest) {
+
+                    $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
+                    $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
+
                     //Report to Flurry
                     var contestParams = {
                         "team0": $scope.localViewData.teams[0].name,
@@ -1261,8 +1315,8 @@
                     }
 
                 }, function (status, error) {
-                    $scope.localViewData.startDate = startDate;
-                    $scope.localViewData.endDate = endDate;
+                    $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
+                    $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
                 });
             }
             else {

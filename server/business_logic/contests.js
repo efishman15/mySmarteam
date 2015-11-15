@@ -1,15 +1,97 @@
 var path = require("path");
 var async = require("async");
-var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
-var dalBranchIo = require(path.resolve(__dirname,"../dal/dalBranchIo"));
-var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var dalDb = require(path.resolve(__dirname, "../dal/dalDb"));
+var dalBranchIo = require(path.resolve(__dirname, "../dal/dalBranchIo"));
+var exceptions = require(path.resolve(__dirname, "../utils/exceptions"));
 var mathjs = require("mathjs");
-var commonBusinessLogic = require(path.resolve(__dirname,"./common"));
-var generalUtils = require(path.resolve(__dirname,"../utils/general"));
+var commonBusinessLogic = require(path.resolve(__dirname, "./common"));
+var generalUtils = require(path.resolve(__dirname, "../utils/general"));
 
 //---------------------------------------------------------------------
 // private functions
 //---------------------------------------------------------------------
+
+//setUserQuestions
+function setUserQuestions(questionIndex, data, callback) {
+
+    if (!data.contest.questions.list[questionIndex]._id) {
+        //Add question
+        data.newQuestion = {};
+        data.newQuestion.text = data.contest.questions.list[questionIndex].text;
+        data.newQuestion.answers = [];
+        for (var j = 0; j < data.contest.questions.list[questionIndex].answers.length; j++) {
+            var answer = {"text": data.contest.questions.list[questionIndex].answers[j]};
+            if (j === 0) {
+                answer.correct = true;
+            }
+            data.newQuestion.answers.push(answer);
+        }
+        dalDb.insertQuestion(data, function (err, result) {
+            data.contest.questions.list[questionIndex]._id = data.newQuestion._id;
+            if (questionIndex === data.contest.questions.list.length - 1) {
+                setUserQuestionIds(data, callback);
+            }
+            else {
+                setUserQuestions(questionIndex + 1, data, callback);
+            }
+        });
+    }
+    else {
+        if (data.contest.questions.list[questionIndex].deleted) {
+            //Remove question
+            data.questionId = data.contest.questions.list[questionIndex]._id;
+            dalDb.removeQuestion(data, function (err, result) {
+                if (questionIndex === data.contest.questions.list.length - 1) {
+                    setUserQuestionIds(data, callback);
+                }
+                else {
+                    setUserQuestions(questionIndex + 1, data, callback);
+                }
+            });
+        }
+        else if (data.contest.questions.list[questionIndex].isDirty) {
+            //Set question
+            data.questionId = data.contest.questions.list[questionIndex]._id;
+            data.setData = {};
+            data.setData.text = data.contest.questions.list[questionIndex].text;
+            for (var j = 0; j < data.contest.questions.list[questionIndex].answers.length; j++) {
+                data.setData["answers." + j + ".text"] = data.contest.questions.list[questionIndex].answers[j];
+            }
+            dalDb.setQuestion(data, function (err, result) {
+                if (questionIndex === data.contest.questions.list.length - 1) {
+                    setUserQuestionIds(data, callback);
+                }
+                else {
+                    setUserQuestions(questionIndex + 1, data, callback);
+                }
+            });
+        }
+        else {
+            //Not deleted nor updated
+            if (questionIndex === data.contest.questions.list.length - 1) {
+                setUserQuestionIds(data, callback);
+            }
+            else {
+                setUserQuestions(questionIndex + 1, data, callback);
+            }
+        }
+    }
+}
+
+//setUserQuestionIds
+function setUserQuestionIds(data, callback) {
+    data.contest.userQuestions = [];
+    for(var i=0; i<data.contest.questions.list.length; i++) {
+        if (!data.contest.questions.list[i].deleted) {
+            data.contest.userQuestions.push(data.contest.questions.list[i]._id);
+        }
+    }
+
+    delete data.contest.questions;
+
+    callback(null, data);
+}
+
 
 //----------------------------------------------------
 // validateContestData
@@ -49,6 +131,14 @@ function validateContestData(data, callback) {
         return;
     }
 
+    //Status
+    var now = (new Date()).getTime();
+
+    //Cannot edit an ended contest
+    if (data.contest.endDate < now && !data.session.isAdmin) {
+        callback(new exceptions.ServerException("You cannot edit a contest that has already been finished", data));
+    }
+
     //Only 2 teams are allowed
     if (data.contest.teams.length !== 2) {
         callback(new exceptions.ServerException("Number of teams must be 2"));
@@ -81,7 +171,7 @@ function validateContestData(data, callback) {
 
     //Illegal question source
     if (data.contest.questionsSource !== "system" && data.contest.questionsSource !== "user") {
-        callback(new exceptions.ServerException("questionsSource must be 'system' or 'user'", {"questionsSource" : data.questionsSource}));
+        callback(new exceptions.ServerException("questionsSource must be 'system' or 'user'", {"questionsSource": data.questionsSource}));
         return;
     }
 
@@ -89,19 +179,19 @@ function validateContestData(data, callback) {
     if (data.contest.questionsSource === "user") {
 
         //Minimum check
-        if (!data.contest.questions || data.contest.questions.visibleCount < generalUtils.settings.client.newContest.privateQuestions.min)  {
+        if (!data.contest.questions || data.contest.questions.visibleCount < generalUtils.settings.client.newContest.privateQuestions.min) {
             if (generalUtils.settings.client.newContest.privateQuestions.min === 1) {
-                callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"minimum" : generalUtils.settings.client.newContest.privateQuestions.min} ));
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"minimum": generalUtils.settings.client.newContest.privateQuestions.min}));
             }
             else {
-                callback(new exceptions.ServerMessageException("SERVER_ERROR_MAXIMUM_USER_QUESTIONS", {"minimum" : generalUtils.settings.client.newContest.privateQuestions.min}));
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_MAXIMUM_USER_QUESTIONS", {"minimum": generalUtils.settings.client.newContest.privateQuestions.min}));
             }
             return;
         }
 
         //Maximum check
-        if (data.contest.questions && data.contest.questions.visibleCount > generalUtils.settings.client.newContest.privateQuestions.max)  {
-            callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"maximum" : generalUtils.settings.client.newContest.privateQuestions.max}));
+        if (data.contest.questions && data.contest.questions.visibleCount > generalUtils.settings.client.newContest.privateQuestions.max) {
+            callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"maximum": generalUtils.settings.client.newContest.privateQuestions.max}));
             return;
         }
 
@@ -112,7 +202,7 @@ function validateContestData(data, callback) {
         }
 
         var questionHash = {};
-        for (var i=0; i<data.contest.questions.list.length; i++) {
+        for (var i = 0; i < data.contest.questions.list.length; i++) {
 
             //Question must contain text
             if (!data.contest.questions.list[i].text) {
@@ -128,35 +218,52 @@ function validateContestData(data, callback) {
 
             //Count duplicate questions
             if (!data.contest.questions.list[i].deleted) {
-                if (questionHash[data.contest.questions.list[i].text]) {
-                    callback(new exceptions.ServerMessageException("SERVER_ERROR_QUESTION_ALREADY_EXISTS", {"question" : data.contest.questions.list[i]}));
+                if (questionHash[data.contest.questions.list[i].text.trim()]) {
+                    callback(new exceptions.ServerMessageException("SERVER_ERROR_QUESTION_ALREADY_EXISTS", {"question": data.contest.questions.list[i]}));
                 }
-                questionHash[data.contest.questions.list[i].text] = true;
+                questionHash[data.contest.questions.list[i].text.trim()] = true;
             }
 
             //Count duplicate answers inside a question
             var answersHash = {};
-            for (var j=0; j<data.contest.questions.list[i].answers[j]; j++) {
-                if (answersHash[data.contest.questions.list[i].answers[j]]) {
-                    callback(new exceptions.ServerMessageException("SERVER_ERROR_ENTER_DIFFERENT_ANSWERS", {"question" : data.contest.questions.list[i]}));
+            for (var j = 0; j < data.contest.questions.list[i].answers[j]; j++) {
+                if (answersHash[data.contest.questions.list[i].answers[j].trim()]) {
+                    callback(new exceptions.ServerMessageException("SERVER_ERROR_ENTER_DIFFERENT_ANSWERS", {"question": data.contest.questions.list[i]}));
                     return;
                 }
-                answersHash[data.contest.questions.list[i].answers[j]] = true;
+                answersHash[data.contest.questions.list[i].answers[j].trim()] = true;
             }
         }
     }
 
     if (data.mode == "add") {
-        data.contest.language = data.session.settings.language;
-        data.contest.participants = 0;
-        data.contest.score = 0; //The total score gained for this contest
-        data.contest.userIdCreated = data.session.userId;
-        if (!data.contest.teams[0].score) {
-            data.contest.teams[0].score = 0;
+
+        var cleanContest = {};
+        cleanContest.startDate = data.contest.startDate;
+        cleanContest.endDate = data.contest.endDate;
+        cleanContest.endOption = data.contest.endOption;
+        cleanContest.participants = 0;
+        cleanContest.manualParticipants = 0;
+        cleanContest.manualRating = 0;
+        cleanContest.teams = data.contest.teams;
+        cleanContest.name = data.contest.name;
+        cleanContest.language = data.session.settings.language;
+        cleanContest.score = 0; //The total score gained for this contest
+        cleanContest.userIdCreated = data.session.userId;
+        cleanContest.questionsSource = data.contest.questionsSource;
+        if (cleanContest.questionsSource === "user") {
+            cleanContest.questions = data.contest.questions;
         }
-        if (!data.contest.teams[1].score) {
-            data.contest.teams[1].score = 0;
+
+        if (!cleanContest.teams[0].score) {
+            cleanContest.teams[0].score = 0;
         }
+        if (!cleanContest.teams[1].score) {
+            cleanContest.teams[1].score = 0;
+        }
+
+        //Now the data.contest object is "clean" and contains only fields that passed validation
+        data.contest = cleanContest;
     }
 
     //Do not count on status from the client
@@ -206,6 +313,11 @@ function updateContest(data, callback) {
     //If team names are changing - a new link is created in branch.io with the new contest teams /name
     if (data.contest.link) {
         data.setData["link"] = data.contest.link;
+    }
+
+    data.setData.questionsSource = data.contest.questionsSource;
+    if (data.contest.userQuestions) {
+        data.setData.userQuestions = data.contest.userQuestions;
     }
 
     //Admin fields
@@ -318,6 +430,13 @@ function setContestScores(contest) {
     }
 }
 
+//---------------------------------------------------------------------
+// joinContest
+//
+// data:
+// input: contestId, teamId
+// output: modified contest with server logic
+//---------------------------------------------------------------------
 module.exports.joinContest = joinContest;
 function joinContest(req, res, next) {
 
@@ -499,6 +618,16 @@ module.exports.setContest = function (req, res, next) {
         //Check contest fields and extend from with server side data
         validateContestData,
 
+        //Add/set the contest questions (if we have)
+        function (data, callback) {
+            if (data.contest.questions) {
+                setUserQuestions(0, data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
+
         //Add/set the contest
         function (data, callback) {
             data.closeConnection = true;
@@ -641,8 +770,6 @@ module.exports.getContests = function (req, res, next) {
 
         dalDb.prepareContestsQuery,
 
-        dalDb.getContestsCount,
-
         //Get contests from db
         function (data, callback) {
             data.closeConnection = true;
@@ -719,6 +846,53 @@ module.exports.getContest = function (req, res, next) {
         }
     });
 };
+
+
+//-------------------------------------------------------------------------------------
+// getContestQuestions
+
+// data: userQuestions
+// output: contest
+//-------------------------------------------------------------------------------------
+module.exports.getQuestions = function (req, res, next) {
+    var token = req.headers.authorization;
+    var data = req.body;
+
+    if (!data.userQuestions) {
+        exceptions.ServerResponseException(res, "userQuestions not supplied", null, "warn", 424);
+        return;
+    }
+
+    var operations = [
+
+        //Connect to the database (so connection will stay open until we decide to close it)
+        dalDb.connect,
+
+        //Retrieve the session
+        function (connectData, callback) {
+
+            data.DbHelper = connectData.DbHelper;
+            data.token = token;
+            dalDb.retrieveSession(data, callback);
+        },
+
+        //Retrieve the contest
+        function (data, callback) {
+            data.closeConnection = true;
+            dalDb.getQuestionsByIds(data,callback);
+        }
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            res.json(data.questions);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    });
+};
+
 
 
 //-------------------------------------------------------------------------------------

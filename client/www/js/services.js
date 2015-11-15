@@ -176,12 +176,9 @@ angular.module("whoSmarter.services", [])
                         });
 
                         var storedGcmRegistration = StoreService.getGcmRegistration();
-                        if (!storedGcmRegistration) {
-                        }
-                        else if (session.noGcmRegistration) {
+                        if (storedGcmRegistration && !session.gcmRegistrationId) {
                             ApiService.post(path, "setGcmRegistration", {"registrationId": storedGcmRegistration}, null, null, {"blockUserInterface": false});
                         }
-
                     }
 
                     callbackOnSuccess(session);
@@ -704,6 +701,11 @@ angular.module("whoSmarter.services", [])
             return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError, config)
         };
 
+        //Retrieve Contest User Questions
+        service.getQuestions = function (userQuestions, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"userQuestions": userQuestions};
+            return ApiService.post(path, "getQuestions", postData, callbackOnSuccess, callbackOnError, config)
+        };
 
         return service;
     })

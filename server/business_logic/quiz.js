@@ -21,22 +21,30 @@ var util = require("util");
 //--------------------------------------------------------------------------
 function setQuestionDirection(data, callback) {
 
-    data.topicId = data.session.quiz.serverData.currentQuestion.topicId;
-    dalDb.getTopic(data, function (err, topic) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        if (topic.forceDirection) {
-            data.session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
-        }
-        else {
-            data.session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(data.session.settings.language);
-        }
+    if (!data.session.quiz.serverData.userQuestions) {
 
+
+        data.topicId = data.session.quiz.serverData.currentQuestion.topicId;
+        dalDb.getTopic(data, function (err, topic) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            if (topic.forceDirection) {
+                data.session.quiz.clientData.currentQuestion.direction = topic.forceDirection;
+            }
+            else {
+                data.session.quiz.clientData.currentQuestion.direction = generalUtils.getDirectionByLanguage(data.session.settings.language);
+            }
+
+            callback(null, data);
+
+        });
+    }
+    else {
+        data.session.quiz.clientData.currentQuestion.direction = generalUtils.settings.client.languages[data.session.settings.language].direction;
         callback(null, data);
-
-    });
+    }
 }
 
 //----------------------------------------------------------------------------------------
@@ -104,7 +112,7 @@ module.exports.start = function (req, res, next) {
                 callback(new exceptions.ServerMessageException("SERVER_ERROR_NOT_JOINED_TO_CONTEST"));
             }
             else {
-                callback(null, data)
+                callback(null, data);
             }
         },
 
@@ -113,18 +121,35 @@ module.exports.start = function (req, res, next) {
 
             var quiz = {};
             quiz.clientData = {
-                "totalQuestions": generalUtils.settings.client.quiz.questions.score.length,
                 "currentQuestionIndex": -1, //First question will be incremented to 0
                 "finished": false
             };
 
             quiz.serverData = {
-                "previousQuestions": [],
                 "contestId": data.contestId,
                 "score": 0,
                 "correctAnswers": 0,
                 "share": {"data": {}}
             };
+
+            if (data.contest.questionsSource === "user" && data.contest.userIdCreated.toString() === data.session.userId.toString()) {
+                quiz.clientData.reviewMode = {"reason" : "REVIEW_MODE_OWNER"};
+            }
+            else if (data.contest.questionsSource === "user" && data.contest.users[data.session.userId].lastPlayed) {
+                //user is allowed to play a user-based questions contest that he DID NOT create - only once for real points
+                //other plays - are for review only
+                quiz.clientData.reviewMode = {"reason" : "REVIEW_MODE_PLAY_AGAIN"};
+            }
+
+            //Number of questions (either entered by user or X random questions from the system
+            if (data.contest.questionsSource !== "user") {
+                quiz.clientData.totalQuestions = generalUtils.settings.client.quiz.questions.score.length;
+                quiz.serverData.previousQuestions = [];
+            }
+            else {
+                quiz.clientData.totalQuestions = data.contest.userQuestions.length;
+                quiz.serverData.userQuestions = data.contest.userQuestions;
+            }
 
             var myTeam = data.contest.users[data.session.userId].team;
 
@@ -177,7 +202,14 @@ module.exports.start = function (req, res, next) {
         dalDb.prepareQuestionCriteria,
 
         //Count number of questions excluding the previous questions
-        dalDb.getQuestionsCount,
+        function (data, callback) {
+            if (!data.session.quiz.serverData.userQuestions) {
+                dalDb.getQuestionsCount(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
 
         //Get the next question for the quiz
         dalDb.getNextQuestion,
@@ -205,7 +237,7 @@ module.exports.start = function (req, res, next) {
 //--------------------------------------------------------------------------
 // answer
 //
-// data: id (answerId), hintUsed (optional), answerUsed (optional)
+// data: id (answerId = 0 based), hintUsed (optional), answerUsed (optional)
 //--------------------------------------------------------------------------
 module.exports.answer = function (req, res, next) {
     var token = req.headers.authorization;
@@ -231,25 +263,31 @@ module.exports.answer = function (req, res, next) {
             }
 
             var answers = data.session.quiz.serverData.currentQuestion.answers;
-            var answerId = parseInt(data.id, 10);
-            if (answerId < 1 || answerId > answers.length) {
+            if (data.id < 0 || data.id > answers.length - 1) {
                 callback(new exceptions.ServerException("Invalid answer id", {"answerId": data.id}));
             }
 
-            data.clientResponse.question.answerId = answerId;
-            if (answers[answerId - 1].correct) {
+            data.clientResponse.question.answerId = data.id;
+            if (answers[data.id].correct) {
                 data.clientResponse.question.correct = true;
 
                 data.session.quiz.serverData.correctAnswers++;
 
                 commonBusinessLogic.addXp(data, "correctAnswer");
 
-                var questionScore = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex].score;
-                if (data.answerUsed && data.session.quiz.clientData.currentQuestion.answerCost) {
-                    questionScore -= data.session.quiz.clientData.currentQuestion.answerCost;
+                var questionScore;
+                if (!data.session.quiz.clientData.reviewMode) {
+                    questionScore = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex].score;
+                    if (data.answerUsed && data.session.quiz.clientData.currentQuestion.answerCost) {
+                        questionScore -= data.session.quiz.clientData.currentQuestion.answerCost;
+                    }
+                    else if (data.hintUsed && data.session.quiz.clientData.currentQuestion.hintCost) {
+                        questionScore -= data.session.quiz.clientData.currentQuestion.hintCost;
+                    }
                 }
-                else if (data.hintUsed && data.session.quiz.clientData.currentQuestion.hintCost) {
-                    questionScore -= data.session.quiz.clientData.currentQuestion.hintCost;
+                else {
+                    //In review mode - no scores
+                    questionScore = 0;
                 }
 
                 data.session.quiz.serverData.score += questionScore;
@@ -258,13 +296,18 @@ module.exports.answer = function (req, res, next) {
                 data.clientResponse.question.correct = false;
                 for (i = 0; i < answers.length; i++) {
                     if (answers[i].correct && answers[i].correct) {
-                        data.clientResponse.question.correctAnswerId = i + 1;
+                        data.clientResponse.question.correctAnswerId = i;
                         break;
                     }
                 }
             }
 
-            dalDb.updateQuestionStatistics(data, callback);
+            if (!data.session.quiz.clientData.reviewMode) {
+                dalDb.updateQuestionStatistics(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
         },
 
         //Store session
@@ -331,7 +374,7 @@ module.exports.answer = function (req, res, next) {
         //Check to save the quiz score into the contest object - when quiz is finished
         function (data, callback) {
 
-            if (!data.session.quiz.clientData.finished) {
+            if (!data.session.quiz.clientData.finished || data.session.quiz.clientData.reviewMode) {
                 callback(null, data);
                 return;
             }
@@ -418,7 +461,7 @@ module.exports.answer = function (req, res, next) {
         //Check the passedFriends story and save the contest
         function (data, callback) {
 
-            if (!data.session.quiz.clientData.finished) {
+            if (!data.session.quiz.clientData.finished || data.session.quiz.clientData.reviewMode) {
                 dalDb.closeDb(data);
                 callback(null, data);
                 return;
@@ -454,6 +497,21 @@ module.exports.answer = function (req, res, next) {
         //AFTER contest has been saved to db
         function (data, callback) {
             if (data.session.quiz.clientData.finished) {
+
+                if (data.session.quiz.clientData.reviewMode) {
+
+                    if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
+                        setPostStory(data, "reviewPerfectScore");
+                        data.session.quiz.serverData.share.data.clientData = {"correct" : data.session.quiz.serverData.correctAnswers, "questions" : data.session.quiz.clientData.totalQuestions};
+                    }
+                    else if (data.session.quiz.serverData.correctAnswers > 0) {
+                        setPostStory(data, "reviewGotScore");
+                        data.session.quiz.serverData.share.data.clientData = {"correct" : data.session.quiz.serverData.correctAnswers, "questions" : data.session.quiz.clientData.totalQuestions};
+                    }
+                    else {
+                        setPostStory(data, "reviewZeroScore");
+                    }
+                }
 
                 data.clientResponse.results = {"contest": data.contest, "data": {}};
 
@@ -505,7 +563,14 @@ module.exports.nextQuestion = function (req, res, next) {
         dalDb.prepareQuestionCriteria,
 
         //Count number of questions excluding the previous questions
-        dalDb.getQuestionsCount,
+        function (data, callback) {
+            if (!data.session.quiz.serverData.userQuestions) {
+                dalDb.getQuestionsCount(data, callback);
+            }
+            else {
+                callback(null, data);
+            }
+        },
 
         //Get the next question for the quiz
         dalDb.getNextQuestion,

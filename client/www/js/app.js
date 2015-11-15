@@ -352,7 +352,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "controller": "SetContestCtrl"
                     }
                 },
-                "params": {"mode": null, "contest": null},
+                "params": {"mode": null, "contest" : null, "contestType": null},
                 "data": {
                     "questionModal" : {"isOpenHandler" : null, closeHandler: null},
                     "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {

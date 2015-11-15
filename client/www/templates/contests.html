@@ -38,12 +38,5 @@
 
             </ion-list>
         </ion-scroll>
-        <ion-infinite-scroll
-                on-infinite="infiniteLoadMoreContests()"
-                distance="{{$root.settings.contestList.distance}}"
-                ng-if="haveMoreContests()"
-                icon="ion-loading-c"
-                immediate-check="false">
-        </ion-infinite-scroll>
     </ion-content>
 </ion-view>

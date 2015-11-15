@@ -83,7 +83,7 @@
                 </ionic-datepicker>
             </div>
 
-            <div class="padding" ng-click="openQuestionsSourcePopover($event)">
+            <div ng-if="mode==='edit'" class="padding" ng-click="openQuestionsSourcePopover($event)">
                 <span translate="QUESTIONS_SOURCE"></span>
                     <span class="pointer padding">
                     <strong>{{ contestQuestionSources[localViewData.questionsSource].displayName | translate}} {{
@@ -92,7 +92,7 @@
                     </span>
             </div>
 
-            <div class="item item-divider padding set-contest-user-questions-area" ng-show="localViewData.questionsSource === 'user'">
+            <div class="item item-divider set-contest-user-questions-area" ng-if="localViewData.questionsSource === 'user'">
                 <span class="set-contest-user-questions-title">
                     {{!localViewData.questions || localViewData.questions.visibleCount === 0 ? 'NO_QUESTIONS_ENTERED' : 'MY_CONTEST_QUESTIONS' | translate : {count : (localViewData.questions ? localViewData.questions.visibleCount : 0)} }}
                 </span>
@@ -100,7 +100,7 @@
                         ng-click="openQuestionModal('add')">
                 </button>
 
-                <input type="hidden" name="userQuestions"  ng-model="localViewData.questions">
+                <input type="hidden" name="userQuestions" ng-model="localViewData.questions">
                 <div class="set-contest-user-questions-list" ng-if="localViewData.questions && localViewData.questions.visibleCount > 0">
                     <div class="list">
                         <div class="item pointer item-icon-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}"
@@ -109,7 +109,7 @@
                             <div title="{{'EDIT_QUESTION' | translate}}" class="pointer " ng-click="openQuestionModal('edit', question)">
                                 {{question.text}}
                             </div>
-                            <div class="float-left">
+                            <div class="float-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}">
                                 <i title="{{'REMOVE_QUESTION' | translate}}" class="pointer icon ion-close-circled" ng-click="removeQuestion($index)">
                                 </i>
                             </div>
@@ -119,7 +119,7 @@
 
             </div>
             <div class="error-container last-error-container form-errors padding"
-                 ng-show="contestForm.userQuestions.$error && contestForm.$submitted"
+                 ng-if="localViewData.questionsSource === 'user' && contestForm.userQuestions.$error && contestForm.$submitted"
                  ng-messages="contestForm.userQuestions.$error"
                  ng-messages-include="templates/setContest-error-list.html">
             </div>

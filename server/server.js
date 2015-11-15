@@ -96,6 +96,7 @@ dalDb.loadSettings(null, function (err, data) {
     app.post("/contests/remove", isAuthenticated, contests.removeContest);
     app.post("/contests/list", isAuthenticated, contests.getContests);
     app.post("/contests/join", isAuthenticated, contests.joinContest);
+    app.post("/contests/getQuestions", isAuthenticated, contests.getQuestions);
     app.post("/payments/paypal/buy", isAuthenticated, payments.payPalBuy);
     app.post("/payments/process", isAuthenticated, payments.processPayment);
     app.post("/leaderboard/contest", isAuthenticated, leaderboards.getContestLeaders);

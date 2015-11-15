@@ -1,0 +1,20 @@
+db.Questions.update({},{$unset : {"questionId" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.0.id" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.1.id" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.2.id" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.3.id" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.0.answered" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.0.answerRatio" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.1.answered" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.1.answerRatio" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.2.answered" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.2.answerRatio" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.3.answered" : 1}},false,true)
+db.Questions.update({},{$unset : {"answer.3.answerRatio" : 1}},false,true)
+db.Questions.update({},{$set : {"correctAnswers" : 0, "wrongAnswers" : 0, "correctRatio" : 0}},false,true)
+db.Questions.update({},{$unset : {"createDate" : 1}}, false,true)
+db.Questions.update({},{$set : {"created" : (new Date()).getTime()}},false,true)
+
+
+
+C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\PC Connectivity Solution\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\VSShell\Common7\IDE\;c:\Program Files (x86)\Microsoft SQL Server\100\DTS\Binn\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Google\Google Apps Sync\;C:\Program Files (x86)\Google\Google Apps Migration\;C:\Program Files\nodejs\;C:\Program Files (x86)\Git\cmd;C:\Dev\apache-ant-1.9.4\bin;C:\Program Files (x86)\Android\android-sdk\tools;C:\Program Files (x86)\Android\android-sdk\platform-tools;C:\Program Files\MongoDB\Server\3.0\bin;C:\Program Files\Java\jdk1.8.0_60\bin;C:\Dev\openssl;C:\Program Files (x86)\Skype\Phone\;C:\Program Files (x86)\Android\android-sdk\build-tools\22.0.1;C:\Program Files\Redis;C:\Users\Eddy\AppData\Roaming\npm;C:\Program Files (x86)\OpenSSH\bin

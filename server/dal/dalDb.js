@@ -3,10 +3,10 @@ var CONNECTION_STRING = "mongodb://localhost:27017/whoSmarter";
 
 var mongoClient = require("mongodb").MongoClient;
 var uuid = require("node-uuid");
-var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
+var exceptions = require(path.resolve(__dirname, "../utils/exceptions"));
 var ObjectId = require("mongodb").ObjectID;
-var random = require(path.resolve(__dirname,"../utils/random"));
-var generalUtils = require(path.resolve(__dirname,"../utils/general"));
+var random = require(path.resolve(__dirname, "../utils/random"));
+var generalUtils = require(path.resolve(__dirname, "../utils/general"));
 var mathjs = require("mathjs");
 
 //---------------------------------------------------------------------
@@ -154,7 +154,7 @@ function loadSettings(data, callback) {
     if (!data || !data.DbHelper) {
         connect(function (err, connectData) {
             if (!data) {
-                data = {"closeConnection" : true};
+                data = {"closeConnection": true};
             }
             data.DbHelper = connectData.DbHelper;
             loadSettings(data, callback);
@@ -290,7 +290,7 @@ function retrieveSession(data, callback) {
 module.exports.retrieveAdminSession = retrieveAdminSession;
 function retrieveAdminSession(data, callback) {
 
-    retrieveSession(data, function(err, data) {
+    retrieveSession(data, function (err, data) {
         if (!data.session.isAdmin) {
             callback(new exceptions.ServerException("This action is permitted for admins only", {"sessionId": data.token}, "warn", 403));
             return;
@@ -349,13 +349,14 @@ module.exports.storeSession = function (data, callback) {
 module.exports.setUser = function (data, callback) {
 
     if (!data.setData && !data.unsetData) {
-        callback(new exceptions.ServerException("Cannot updating user, either setData or unsetData must be supplied", {
-            "setUserWhereClause": data.setUserWhereClause,
+        callback(new exceptions.ServerException("Cannot update user, either setData or unsetData must be supplied", {
+            "setData": data.setData,
+            "unsetData": data.unsetData,
             "dbError": err
         }, "error"));
     }
 
-    var usersCollection = data.DbHelper.getCollection('Users');
+    var usersCollection = data.DbHelper.getCollection("Users");
 
     if (!data.setUserWhereClause) {
         data.setUserWhereClause = {"_id": ObjectId(data.session.userId)};
@@ -405,7 +406,7 @@ module.exports.setUser = function (data, callback) {
 //---------------------------------------------------------------------
 module.exports.facebookLogin = function (data, callback) {
 
-    var usersCollection = data.DbHelper.getCollection('Users');
+    var usersCollection = data.DbHelper.getCollection("Users");
 
     //Save avatar which is a computed field
     //The findAndModify will bring a "fresh" user object from db
@@ -507,7 +508,7 @@ module.exports.facebookLogin = function (data, callback) {
 module.exports.createOrUpdateSession = function (data, callback) {
 
     var userToken = uuid.v1();
-    var sessionsCollection = data.DbHelper.getCollection('Sessions');
+    var sessionsCollection = data.DbHelper.getCollection("Sessions");
 
     var now = new Date();
     var nowEpoch = now.getTime();
@@ -515,7 +516,7 @@ module.exports.createOrUpdateSession = function (data, callback) {
     var setObject = {
         "userId": ObjectId(data.user._id),
         "facebookUserId": data.user.facebookUserId,
-        "friends" : data.user.thirdParty.friends,
+        "friends": data.user.thirdParty.friends,
         "isAdmin": data.user.isAdmin,
         "facebookAccessToken": data.user.facebookAccessToken,
         "name": data.user.name,
@@ -557,12 +558,9 @@ module.exports.createOrUpdateSession = function (data, callback) {
             }
 
             data.session = session.value;
-            if (!data.user.gcmRegistrationId) {
-                data.session.noGcmRegistration = true
-            }
 
             //Write to session history
-            var sessionsHistoryCollection = data.DbHelper.getCollection('SessionHistory');
+            var sessionsHistoryCollection = data.DbHelper.getCollection("SessionHistory");
             var sessionHistoryRecord = JSON.parse(JSON.stringify(data.session));
             sessionHistoryRecord.sessionId = sessionHistoryRecord._id;
             delete sessionHistoryRecord._id;
@@ -720,38 +718,47 @@ function logAction(data, callback) {
 module.exports.prepareQuestionCriteria = prepareQuestionCriteria;
 function prepareQuestionCriteria(data, callback) {
 
+    var questionCriteria;
+
     data.session.quiz.clientData.currentQuestionIndex++;
 
-    var questionLevel = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex];
+    if (!data.session.quiz.serverData.userQuestions) {
 
-    var questionCriteria = {
-        "$and": [
-            {"_id": {"$nin": data.session.quiz.serverData.previousQuestions}},
-            {"topicId": {"$in": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]}},
-            {
-                "$or": [
-                    {"correctAnswers": 0, "wrongAnswers": 0},
-                    {
-                        "$and": [
-                            {"correctRatio": {$gte: questionLevel.minCorrectRatio}},
-                            {"correctRatio": {$lt: questionLevel.maxCorrectRatio}}
-                        ]
-                    }]
+        //System generated questions
+        var questionLevel = generalUtils.settings.server.quiz.questions.levels[data.session.quiz.clientData.currentQuestionIndex];
+
+        questionCriteria = {
+            "$and": [
+                {"_id": {"$nin": data.session.quiz.serverData.previousQuestions}},
+                {"topicId": {"$in": generalUtils.settings.server.triviaTopicsPerLanguage[data.session.settings.language]}},
+                {
+                    "$or": [
+                        {"correctAnswers": 0, "wrongAnswers": 0},
+                        {
+                            "$and": [
+                                {"correctRatio": {$gte: questionLevel.minCorrectRatio}},
+                                {"correctRatio": {$lt: questionLevel.maxCorrectRatio}}
+                            ]
+                        }]
+                }
+            ]
+        };
+
+        //Filter by age if available
+        if (data.session.ageRange) {
+            if (data.session.ageRange.min) {
+                questionCriteria["$and"].push({"minAge": {$lte: data.session.ageRange.min}});
             }
-        ]
-    };
 
-    //Filter by age if available
-    if (data.session.ageRange) {
-        if (data.session.ageRange.min) {
-            questionCriteria["$and"].push({"minAge": {$lte: data.session.ageRange.min}});
-        }
-
-        if (data.session.ageRange.max) {
-            questionCriteria["$and"].push({"maxAge": {$gte: data.session.ageRange.max}});
+            if (data.session.ageRange.max) {
+                questionCriteria["$and"].push({"maxAge": {$gte: data.session.ageRange.max}});
+            }
         }
     }
-
+    else {
+        //User questions - get the exact current question in the quiz
+        questionCriteria = {"_id" : ObjectId(data.session.quiz.serverData.userQuestions[data.session.quiz.clientData.currentQuestionIndex])}
+    }
     data.questionCriteria = questionCriteria;
 
     callback(null, data);
@@ -774,7 +781,7 @@ function getQuestionsCount(data, callback) {
         if (err || count === 0) {
             callback(new exceptions.ServerException("Error retrieving number of questions from the database", {
                 "count": count,
-                "questionCriteria" : data.questionCriteria,
+                "questionCriteria": data.questionCriteria,
                 "dbError": err
             }, "error"));
             return;
@@ -786,26 +793,34 @@ function getQuestionsCount(data, callback) {
     })
 };
 
-//---------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------
 // getNextQuestion
 //
 // Get the next question
 //
 // data:
 // -----
-// input: DbHelper, session, questionCriteria, questionsCount
+// input: DbHelper, session, questionCriteria, questionsCount (optional if contest has user questions)
 // output: questionsCount
-//---------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------
 module.exports.getNextQuestion = getNextQuestion;
 function getNextQuestion(data, callback) {
-    var skip = random.rnd(0, data.questionsCount - 1);
+    var skip
+
+    if (!data.session.quiz.serverData.userQuestions) {
+        skip = random.rnd(0, data.questionsCount - 1);
+    }
+    else {
+        skip = 0;
+    }
+
     var questionsCollection = data.DbHelper.getCollection("Questions");
     questionsCollection.findOne(data.questionCriteria, {skip: skip}, function (err, question) {
         if (err || !question) {
             callback(new exceptions.ServerException("Error retrieving next question from database", {
                 "questionsCount": data.questionsCount,
-                "questionCriteria" : data.questionCriteria,
-                "skip" : skip,
+                "questionCriteria": data.questionCriteria,
+                "skip": skip,
                 "dbError": err
             }, "error"));
             return;
@@ -873,7 +888,9 @@ function getNextQuestion(data, callback) {
         }
 
         //Add this question id to the list of questions already asked during this quiz
-        data.session.quiz.serverData.previousQuestions.push(question._id);
+        if (data.session.quiz.serverData.previousQuestions) {
+            data.session.quiz.serverData.previousQuestions.push(question._id);
+        }
 
         callback(null, data);
     })
@@ -923,9 +940,9 @@ function addContest(data, callback) {
 //------------------------------------------------------------------------------------------------
 module.exports.setContest = setContest;
 function setContest(data, callback) {
-    var contestsCollection = data.DbHelper.getCollection('Contests');
+    var contestsCollection = data.DbHelper.getCollection("Contests");
 
-    var whereClause = {"_id" : ObjectId(data.contest._id)};
+    var whereClause = {"_id": ObjectId(data.contest._id)};
 
     //Only contest owners or admins can update the contest
     if (data.checkOwner && !data.session.isAdmin) {
@@ -941,8 +958,8 @@ function setContest(data, callback) {
                 closeDb(data);
 
                 callback(new exceptions.ServerException("Error setting contest", {
-                    "whereClause" : whereClause,
-                    "session" : data.session,
+                    "whereClause": whereClause,
+                    "session": data.session,
                     "setData": data.setData,
                     "contestId": data.contestId,
                     "dbError": err
@@ -971,7 +988,7 @@ function setContest(data, callback) {
 module.exports.removeContest = removeContest;
 function removeContest(data, callback) {
 
-    var contestsCollection = data.DbHelper.getCollection('Contests');
+    var contestsCollection = data.DbHelper.getCollection("Contests");
     contestsCollection.remove(
         {
             "_id": ObjectId(data.contestId)
@@ -1009,7 +1026,7 @@ function removeContest(data, callback) {
 module.exports.getContest = getContest;
 function getContest(data, callback) {
 
-    var contestsCollection = data.DbHelper.getCollection('Contests');
+    var contestsCollection = data.DbHelper.getCollection("Contests");
     contestsCollection.findOne({
         "_id": ObjectId(data.contestId)
     }, {}, function (err, contest) {
@@ -1042,26 +1059,33 @@ function getContest(data, callback) {
 module.exports.prepareContestsQuery = prepareContestsQuery;
 function prepareContestsQuery(data, callback) {
 
-    var contestsCriteria = {"language": data.session.settings.language};
-    var contestsOrder = [];
+    data.contestQuery = {};
+    data.contestQuery.where = {"language": data.session.settings.language};
+    data.contestQuery.sort = [];
 
     var now = (new Date()).getTime();
 
     switch (data.tab) {
         case "mine":
-            contestsCriteria.endDate = {$gte: now}; //not finished yet
-            contestsCriteria["users." + data.session.userId] = {$exists: true};
-            contestsOrder.push(["participants", "desc"]);  //order by participants descending
+            data.contestQuery.where.endDate = {$gte: now}; //not finished yet
+            data.contestQuery.where["users." + data.session.userId] = {$exists: true};
+            data.contestQuery.limit = 0; //Retrieve ALL my running contest
+            data.contestQuery.sort.push(["participants", "desc"]);  //order by participants descending
             break;
 
         case "running":
-            contestsCriteria.endDate = {$gte: now}; //not finished yet
-            contestsOrder.push(["participants", "desc"]);  //order by participants descending
+            data.contestQuery.where.endDate = {$gte: now}; //not finished yet
+            data.contestQuery.limit = generalUtils.settings.server.contestList.pageSize;
+            data.contestQuery.sort.push(["participants", "desc"]);  //order by participants descending
             break;
 
         case "recentlyFinished":
-            contestsCriteria.endDate = {$lt: now, $gte: now - (generalUtils.settings.server.contestList.recentlyFinishedDays * 24 * 60 * 60 * 1000)}; //finished in the past 2 days
-            contestsOrder.push(["endDate", "desc"]);  //order by participants descending
+            data.contestQuery.where.endDate = {
+                $lt: now,
+                $gte: now - (generalUtils.settings.server.contestList.recentlyFinishedDays * 24 * 60 * 60 * 1000)
+            }; //finished in the past 2 days
+            data.contestQuery.limit = generalUtils.settings.server.contestList.pageSize;
+            data.contestQuery.sort.push(["endDate", "desc"]);  //order by participants descending
             break;
 
         default:
@@ -1073,39 +1097,8 @@ function prepareContestsQuery(data, callback) {
             return;
     }
 
-    data.contestsCriteria = contestsCriteria;
-    data.contestsOrder = contestsOrder;
-
     callback(null, data);
 }
-
-//---------------------------------------------------------------------
-// getContestsCount
-//
-// Count contests based on the prepared criteria
-//
-// data:
-// -----
-// input: DbHelper, session, contestCriteria
-// output: contestsCount
-//---------------------------------------------------------------------
-module.exports.getContestsCount = getContestsCount;
-function getContestsCount(data, callback) {
-    var contestsCollection = data.DbHelper.getCollection("Contests");
-    contestsCollection.count(data.contestsCriteria, function (err, count) {
-        if (err) {
-            callback(new exceptions.ServerException("Error retrieving number of contests from database", {
-                "data": data,
-                "dbError": err
-            }, "error"));
-            return;
-        }
-
-        data.contestsCount = count;
-
-        callback(null, data);
-    })
-};
 
 //------------------------------------------------------------------------------------------------
 // getContests
@@ -1114,17 +1107,16 @@ function getContestsCount(data, callback) {
 //
 // data:
 // -----
-// input: DbHelper, session, contest
+// input: DbHelper, session, contestQuery
 // output: <NA>
 //------------------------------------------------------------------------------------------------
 module.exports.getContests = getContests;
 function getContests(data, callback) {
-    var contestsCollection = data.DbHelper.getCollection('Contests');
-    contestsCollection.find(data.contestsCriteria,
+    var contestsCollection = data.DbHelper.getCollection("Contests");
+    contestsCollection.find(data.contestQuery.where,
         {
-            skip: data.clientContestCount,
-            limit: generalUtils.settings.client.contestList.pageSize,
-            sort: data.contestsOrder
+            limit: data.contestQuery.limit,
+            sort: data.contestQuery.sort
         },
         function (err, contestsCursor) {
             if (err || !contestsCursor) {
@@ -1152,7 +1144,7 @@ function getContests(data, callback) {
 //
 // data:
 // -----
-// input: DbHelper, session, response.question.correct
+// input: id (answerId 1 based - e.g. 1,2,3,4), DbHelper, session, response.question.correct
 // output: <NA>
 //------------------------------------------------------------------------------------------------
 module.exports.updateQuestionStatistics = updateQuestionStatistics;
@@ -1184,9 +1176,27 @@ function updateQuestionStatistics(data, callback) {
         }
         var correctRatio = correctAnswers / (correctAnswers + wrongAnswers);
 
+        var answered;
+        var answerRatio;
+        if (!question.answers[data.id].answered) {
+            answered = 0;
+        }
+        else {
+            answered = question.answers[data.id].answered;
+        }
+        answered++;
+        answerRatio = answered / (correctAnswers + wrongAnswers);
+
+        var setClause = {};
+        setClause.correctAnswers = correctAnswers;
+        setClause.wrongAnswers = wrongAnswers;
+        setClause.correctRatio = correctRatio;
+        setClause["answers." + data.id + ".answered"] = answered;
+        setClause["answers." + data.id + ".answerRatio"] = answerRatio;
+
         questionsCollection.updateOne({"_id": ObjectId(data.session.quiz.serverData.currentQuestion._id)},
             {
-                $set: {"correctAnswers": correctAnswers, "wrongAnswers": wrongAnswers, "correctRatio": correctRatio}
+                $set: setClause
             }, function (err, results) {
 
                 if (err || results.nModified < 1) {
@@ -1194,7 +1204,7 @@ function updateQuestionStatistics(data, callback) {
                     closeDb(data);
 
                     callback(new exceptions.ServerException("Error updating question statistics", {
-                        "quesitonId": data.session.quiz.serverData.currentQuestion.questionId,
+                        "quesitonId": data.session.quiz.serverData.currentQuestion._id,
                         "updateResults": results,
                         "dbError": err
                     }, "error"));
@@ -1264,9 +1274,9 @@ function insertPurchase(data, callback) {
 }
 
 //--------------------------------------------------------------------------------------------------------------
-// insertPurchase
+// getContestTopParticipants
 //
-// Inserts a new purchase record - duplicates are catched and switches data.duplicatePurchase to true
+// Retrieve the leaders of a contest
 //
 // data:
 // -----
@@ -1303,4 +1313,175 @@ function getContestTopParticipants(data, callback) {
 
             callback(null, data);
         });
+}
+
+//--------------------------------------------------------------------------------------------------------------
+// insertQuestion
+//
+// Inserts a new question record
+//
+// data:
+// -----
+// input: DbHelper, newQuestion, session, contest
+// output: possibly duplicatePurchase=true
+//--------------------------------------------------------------------------------------------------------------
+module.exports.insertQuestion = insertQuestion;
+function insertQuestion(data, callback) {
+
+    var questionsCollection = data.DbHelper.getCollection("Questions");
+
+    data.newQuestion.created = (new Date()).getTime();
+    data.newQuestion.userIdCreated = data.session.userId;
+    data.newQuestion.minAge = 0;
+    data.newQuestion.maxAge = 120;
+    data.newQuestion.correctAnswers = 0;
+    data.newQuestion.wrongAnswers = 0;
+    data.newQuestion.correctRatio = 0;
+
+    //Associate the question with a contest
+    data.newQuestion.contests = {};
+    data.newQuestion.contests[data.contest._id] = true;
+
+    questionsCollection.insert(data.newQuestion
+        , {}, function (err, insertResult) {
+            if (err) {
+
+                closeDb(data);
+
+                callback(new exceptions.ServerException("Error inserting question record", {
+                    "questionRecord": data.newQuestion,
+                    "dbError": err
+                }, "error"));
+
+                return;
+            }
+
+            checkToCloseDb(data);
+
+            callback(null, data);
+        });
+}
+
+//---------------------------------------------------------------------
+// setQuestion
+//
+// Saves specific data into the questions's object in db
+//
+// data:
+// -----
+// input: DbHelper, session, questionId, setData (properties and their values to set)
+// output: <NA>
+//---------------------------------------------------------------------
+module.exports.setQuestion = function (data, callback) {
+
+    if (!data.setData) {
+        callback(new exceptions.ServerException("Cannot update question, setData must be supplied", {
+            "dbError": err
+        }, "error"));
+    }
+
+    var questionsCollection = data.DbHelper.getCollection("Questions");
+
+    questionsCollection.updateOne({"_id": ObjectId(data.questionId)}, {$set: data.setData},
+        function (err, results) {
+
+            if (err || results.nModified < 1) {
+
+                closeDb(data);
+
+                callback(new exceptions.ServerException("Error updating question", {
+                    "setData": data.setData,
+                    "dbError": err
+                }, "error"));
+
+                return;
+            }
+
+            checkToCloseDb(data);
+
+            callback(null, data);
+        });
+};
+
+
+//---------------------------------------------------------------------
+// removeQuestion
+// removes a question from db
+//
+// data:
+// -----
+// input: DbHelper, questionId
+// output: <NA>
+//---------------------------------------------------------------------
+module.exports.removeQuestion = function (data, callback) {
+    var questionsCollection = data.DbHelper.getCollection("Questions");
+
+    questionsCollection.remove(
+        {
+            "_id": ObjectId(data.questionId)
+        }
+        , {w: 1, single: true},
+        function (err, numberOfRemovedDocs) {
+            if (err || numberOfRemovedDocs.ok == 0) {
+                //Question does not exist - stop the call chain
+
+                closeDb(data);
+
+                callback(new exceptions.ServerException("Error removing question", {
+                    "questionId": data.questionId,
+                    "dbError": err
+                }, "warn"));
+                return;
+            }
+
+            checkToCloseDb(data);
+
+            callback(null, data);
+        }
+    );
+};
+
+//------------------------------------------------------------------------------------------------
+// getQuestionsByIds
+//
+// Get all questions by their ids.
+//
+// data:
+// -----
+// input: DbHelper, session, userQuestions (array of id's)
+// output: questions
+//------------------------------------------------------------------------------------------------
+module.exports.getQuestionsByIds = getQuestionsByIds;
+function getQuestionsByIds(data, callback) {
+    var questionsCollection = data.DbHelper.getCollection("Questions");
+
+    for (var i = 0; i < data.userQuestions.length; i++) {
+        data.userQuestions[i] = ObjectId(data.userQuestions[i]);
+    }
+
+    questionsCollection.find({"_id": {$in: data.userQuestions}}, {}, function (err, questionsCursor) {
+        if (err || !questionsCursor) {
+
+            callback(new exceptions.ServerException("Error retrieving questions", {
+                "userQuestions": userQuestions,
+                "dbError": err
+            }, "error"));
+
+            return;
+        }
+
+        questionsCursor.toArray(function (err, questions) {
+
+            data.questions = [];
+            for (var i = 0; i < questions.length; i++) {
+                data.questions.push({"_id" : questions[i]._id, "text": questions[i].text});
+                data.questions[i].answers = [];
+                for (var j = 0; j < questions[i].answers.length; j++) {
+                    data.questions[i].answers.push(questions[i].answers[j].text);
+                }
+            }
+            callback(null, data);
+        });
+
+    });
 }
