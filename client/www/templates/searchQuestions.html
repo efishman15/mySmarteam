@@ -1,0 +1,26 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-stable bar-dark" align-title="center"
+                    dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+        <h1 class="title">{{'SEARCH_MY_QUESTIONS' | translate}}</h1>
+
+        <div class="button button-clear" ng-click="closeSearchQuestionsModal(false)">
+            <span class="icon ion-close"></span>
+        </div>
+    </ion-header-bar>
+    <ion-content class="padding" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+        <div class="list list-inset">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input ng-model="searchText" autofocus type="text" placeholder="{{'SEARCH_MY_QUESTIONS' | translate}}">
+            </label>
+        </div>
+    </ion-content>
+
+    <div ng-if="questionsSearchResult" class="bar bar-footer search-questions-footer">
+        <button class="button button-full padding button-calm" translate="OK"
+                ng-click="closeSearchQuestionsModal(true)"
+                analytics-on="click" analytics-event="questions/search/select">
+        </button>
+    </div>
+
+</ion-modal-view>

@@ -355,9 +355,13 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 "params": {"mode": null, "contest" : null, "contestType": null},
                 "data": {
                     "questionModal" : {"isOpenHandler" : null, closeHandler: null},
+                    "searchQuestionsModal" : {"isOpenHandler" : null, closeHandler: null},
                     "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
                         if (currentState.data.questionModal.isOpenHandler && currentState.data.questionModal.isOpenHandler() && currentState.data.questionModal.closeHandler) {
                             currentState.data.questionModal.closeHandler();
+                        }
+                        else if (currentState.data.searchQuestionsModal.isOpenHandler && currentState.data.searchQuestionsModal.isOpenHandler() && currentState.data.searchQuestionsModal.closeHandler) {
+                            currentState.data.searchQuestionsModal.closeHandler();
                         }
                         else {
                             $rootScope.goBack();

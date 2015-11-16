@@ -974,7 +974,7 @@
         };
 
         //-------------------------------------------------------
-        // Question popover
+        // Question modal
         // -------------------------------------------------------
         $ionicModal.fromTemplateUrl("templates/question.html", function (questionModal) {
             $scope.questionModal = questionModal;
@@ -1004,6 +1004,26 @@
 
         $scope.closeQuestionModal = function () {
             $scope.questionModal.hide();
+        };
+
+        //-------------------------------------------------------
+        // Search Questions modal
+        // -------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/searchQuestions.html", function (searchQuestionsModal) {
+            $scope.searchQuestionsModal = searchQuestionsModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        $scope.openSearchQuestionsModal = function () {
+
+            $scope.searchText = null;
+            $scope.searchQuestionsModal.show();
+        };
+
+        $scope.closeSearchQuestionsModal = function (selected) {
+            $scope.searchQuestionsModal.hide();
         };
 
         $scope.$on("modal.hidden", function () {
@@ -1068,6 +1088,9 @@
             if ($scope.questionModal) {
                 $scope.questionModal.remove();
             }
+            if ($scope.searchQuestionsModal) {
+                $scope.searchQuestionsModal.remove();
+            }
         });
 
         //Hardware back button handlers
@@ -1075,6 +1098,12 @@
             return $scope.questionModal.isShown()
         };
         $state.current.data.questionModal.closeHandler = $scope.closeQuestionModal;
+
+        $state.current.data.searchQuestionsModal.isOpenHandler = function () {
+            return $scope.searchQuestionsModal.isShown()
+        };
+        $state.current.data.searchQuestionsModal.closeHandler = $scope.closeSearchQuestionsModal;
+
 
         function retrieveUserQuestions() {
             ContestsService.getQuestions($scope.localViewData.userQuestions, function(questions) {

@@ -65,7 +65,7 @@
                 </div>
             </div>
 
-            <div class="padding" ng-click="openContestEndsInPopover($event)" ng-show="mode==='add'">
+            <div class="padding" ng-click="openContestEndsInPopover($event)" ng-if="mode==='add'">
                 <span translate="ENDS_IN"></span>
                     <span class="pointer padding">
                     <strong>{{ contestEndOptions[localViewData.endOption].units | translate:{number :
@@ -74,7 +74,7 @@
                     </span>
             </div>
 
-            <div class="padding" ng-show="mode==='edit'">
+            <div class="padding" ng-if="mode==='edit'">
                 <span>{{'CONTEST_END' | translate}}</span>
                 <ionic-datepicker input-obj="contestEndDatePicker" dir="ltr">
                     <button class="button button-block button-positive">{{localViewData.endDate |
@@ -92,25 +92,42 @@
                     </span>
             </div>
 
-            <div class="item item-divider set-contest-user-questions-area" ng-if="localViewData.questionsSource === 'user'">
-                <span class="set-contest-user-questions-title">
-                    {{!localViewData.questions || localViewData.questions.visibleCount === 0 ? 'NO_QUESTIONS_ENTERED' : 'MY_CONTEST_QUESTIONS' | translate : {count : (localViewData.questions ? localViewData.questions.visibleCount : 0)} }}
-                </span>
-                <button ng-show="!localViewData.questions || localViewData.questions.visibleCount < $root.settings.newContest.privateQuestions.max" class="button button-small button-assertive float-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}" translate="ADD"
-                        ng-click="openQuestionModal('add')">
-                </button>
+            <div class="item item-divider set-contest-user-questions-area"
+                 ng-if="localViewData.questionsSource === 'user'">
+                <div class="row full-width">
+                    <button ng-if="!localViewData.questions || localViewData.questions.visibleCount < $root.settings.newContest.privateQuestions.max"
+                            class="set-contest-question-buttons medium-horizontal-margin icon-{{$root.settings.languages[$root.user.settings.language].align}} ion-plus-round button button-small button-assertive"
+                            translate="ADD"
+                            ng-click="openQuestionModal('add')">
+                    </button>
+
+                        <span class="col set-contest-user-questions-title padding-right padding-left">
+                            {{'MY_CONTEST_QUESTIONS' | translate : {count : (localViewData.questions ? localViewData.questions.visibleCount : 0)} }}
+                        </span>
+
+                    <button ng-if="!localViewData.questions || localViewData.questions.visibleCount < $root.settings.newContest.privateQuestions.max"
+                            class="set-contest-question-buttons icon-{{$root.settings.languages[$root.user.settings.language].align}} ion-search button button-small button-assertive"
+                            translate="SEARCH"
+                            ng-click="openSearchQuestionsModal()">
+                    </button>
+                </div>
 
                 <input type="hidden" name="userQuestions" ng-model="localViewData.questions">
-                <div class="set-contest-user-questions-list" ng-if="localViewData.questions && localViewData.questions.visibleCount > 0">
+
+                <div class="set-contest-user-questions-list"
+                     ng-if="localViewData.questions && localViewData.questions.visibleCount > 0">
                     <div class="list">
                         <div class="item pointer item-icon-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}"
-                             ng-repeat="question in localViewData.questions.list track by $index" ng-if="!question.deleted"
+                             ng-repeat="question in localViewData.questions.list track by $index"
+                             ng-if="!question.deleted"
                              item="question">
-                            <div title="{{'EDIT_QUESTION' | translate}}" class="pointer " ng-click="openQuestionModal('edit', question)">
+                            <div title="{{'EDIT_QUESTION' | translate}}" class="pointer "
+                                 ng-click="openQuestionModal('edit', question)">
                                 {{question.text}}
                             </div>
                             <div class="float-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}">
-                                <i title="{{'REMOVE_QUESTION' | translate}}" class="pointer icon ion-close-circled" ng-click="removeQuestion($index)">
+                                <i title="{{'REMOVE_QUESTION' | translate}}" class="pointer icon ion-close-circled"
+                                   ng-click="removeQuestion($index)">
                                 </i>
                             </div>
                         </div>
@@ -128,7 +145,7 @@
                 <span class="pointer" ng-click="toggleAdminInfo()">{{'CONTEST_ADMIN_INFO' | translate}} {{getArrowDirection(!showAdminInfo)}}</span>
 
                 <div ng-hide="!showAdminInfo && contestForm.team0 && contestForm.team1">
-                    <div class="padding" ng-show="showStartDate===true">
+                    <div class="padding" ng-if="showStartDate===true">
                         <span>{{'CONTEST_START' | translate}}</span>
                         <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
                             <button class="button button-block button-positive">{{localViewData.startDate |
@@ -198,7 +215,7 @@
                 </div>
             </div>
 
-            <div class="button-bar padding">
+            <div class="button-bar padding set-contest-ok-button">
                 <button class="button padding button-bar button-calm" translate="OK"
                         ng-click="contestForm.$valid && setContest()"
                         analytics-on="click" analytics-event="contest/set">
