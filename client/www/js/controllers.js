@@ -161,9 +161,8 @@
 
         UserService.resolveEvents();
 
-        var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
-
         $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
+
             if (!$rootScope.session) {
                 $rootScope.gotoView("home");
                 return;
@@ -185,7 +184,7 @@
 
             $scope.roundTabState[0] = true;
 
-            $scope.doRefresh();
+            $scope.loadContests()
         });
 
         $scope.roundTabSwitch = function (viewName) {
@@ -197,66 +196,11 @@
             $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()], true, {userClick: true});
         });
 
-        $scope.doRefresh = function () {
+        $scope.loadContests = function () {
 
-            if ($scope.contestCharts) {
-                $scope.contestCharts.length = 0;
-            }
+            ContestsService.getContests($state.current.data.serverTab, function (contestsResult) {
 
-            $scope.totalContests = -1;
-
-            //That bug again...prevent inifinite firing twice
-            shouldTriggerScrollInfiniteRealFunction = false;
-
-            $scope.loadMoreContests(true);
-        };
-
-        $scope.showContestParticipants = function () {
-            return ($state.current.data && $state.current.data.showParticipants);
-        };
-
-        $scope.haveMoreContests = function () {
-            return ($scope.totalContests === -1 || //never retrieved from the server
-            ($scope.totalContests > 0 && $scope.contestCharts.length < $scope.totalContests)); //retrieved, server has data, and I have less than the server
-        };
-
-        $scope.showParticipants = function () {
-            //TODO: show top 10 contest participants!
-            PopupService.alert("TODO: show top 10 contest participants!");
-        }
-
-        $scope.infiniteLoadMoreContests = function () {
-            $timeout(function () {
-                if (!shouldTriggerScrollInfiniteRealFunction) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
-                    shouldTriggerScrollInfiniteRealFunction = true; // set the boolean to true so that the real load function is called next time infinite scrolling triggers
-                    $scope.$broadcast("scroll.infiniteScrollComplete");
-                }
-                else {  // here it will be the real need for scrolling
-                    $scope.loadMoreContests();
-                }
-            }, 100);
-        };
-
-        $scope.loadMoreContests = function (fullRefresh) {
-
-            var clientContestCount;
-
-            if ($scope.contestCharts) {
-                clientContestCount = $scope.contestCharts.length;
-            }
-            else {
-                clientContestCount = 0;
-            }
-
-            var config;
-            if ($scope.totalContests !== -1) {
-                config = {"blockUserInterface": false}
-            }
-
-            ContestsService.getContests(clientContestCount, $state.current.data.serverTab, function (contestsResult) {
-                $scope.totalContests = contestsResult.count;
-
-                if (!$scope.userClick && $scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
+                if (!$scope.userClick && $ionicTabsDelegate.selectedIndex() === 0) {
                     //If no "my contests" - switch to running contests
                     $rootScope.gotoView(tabs[1]);
                     return;
@@ -267,18 +211,11 @@
                 }
 
                 //Add server contests to the end of the array
-                var contestChartsCount = $scope.contestCharts.length;
                 for (var i = 0; i < contestsResult.list.length; i++) {
-                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], contestChartsCount + i);
+                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i],i);
                     $scope.contestCharts.push(contestChart);
                 }
-
-                $scope.$broadcast("scroll.infiniteScrollComplete");
-
-                if (fullRefresh) {
-                    $scope.$broadcast("scroll.refreshComplete");
-                }
-            }, null, config);
+            });
         }
 
         $rootScope.$on("whoSmarter-contestCreated", function (event, contest) {
@@ -933,6 +870,8 @@
 
         $scope.showRemoveContest = false;
 
+        $scope.searchQuestions = {"searchText" : null};
+
         //-------------------------------------------------------
         // Choose Contest end option Popover
         // -------------------------------------------------------
@@ -983,9 +922,17 @@
             animation: "slide-in-up"
         });
 
+        function maxQuestionsReached() {
+            return ($scope.localViewData.questions && $scope.localViewData.questions.visibleCount === $rootScope.settings.newContest.privateQuestions.max);
+        }
+
         $scope.openQuestionModal = function (mode, question) {
 
             if (mode === "add") {
+                if (maxQuestionsReached()) {
+                    PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max : $rootScope.settings.newContest.privateQuestions.max }))
+                    return;
+                }
                 $scope.questionModalTitle = $translate.instant("NEW_QUESTION");
                 $scope.question = {"mode": mode, "text": null, answers: [null, null, null, null]};
             }
@@ -1018,16 +965,46 @@
 
         $scope.openSearchQuestionsModal = function () {
 
-            $scope.searchText = null;
+            if (maxQuestionsReached()) {
+                PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max : $rootScope.settings.newContest.privateQuestions.max }))
+                return;
+            }
+
+            $scope.searchQuestions = {};
+            $scope.searchQuestionsForm.$setPristine();
+            $scope.searchQuestionsForm.$setUntouched();
             $scope.searchQuestionsModal.show();
         };
 
         $scope.closeSearchQuestionsModal = function (selected) {
+            if (selected && $scope.searchQuestions.result) {
+
+                //return ($scope.localViewData.questions && $scope.localViewData.questions.visibleCount === $rootScope.settings.newContest.privateQuestions.max);
+                var selectedCount = 0
+                for (var i=0; i<$scope.searchQuestions.result.length; i++) {
+                    if ($scope.searchQuestions.result[i].checked) {
+                        selectedCount++;
+                    }
+                }
+                if (!$scope.localViewData.questions) {
+                    $scope.localViewData.questions = {"visibleCount": 0, "list": []};
+                }
+
+                if (selectedCount > 0 && $scope.localViewData.questions.list.length + selectedCount > $rootScope.settings.newContest.privateQuestions.max) {
+                    PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max : $rootScope.settings.newContest.privateQuestions.max }))
+                    return;
+                }
+
+                for (var i=0; i<$scope.searchQuestions.result.length; i++) {
+                    if ($scope.searchQuestions.result[i].checked) {
+                        $scope.localViewData.questions.visibleCount++;
+                        $scope.localViewData.questions.list.push($scope.searchQuestions.result[i]);
+                    }
+                }
+            }
+
             $scope.searchQuestionsModal.hide();
         };
-
-        $scope.$on("modal.hidden", function () {
-        });
 
         $scope.$on("whoSmarter-questionSet", function () {
             if (!$scope.localViewData.questions) {
@@ -1104,6 +1081,20 @@
         };
         $state.current.data.searchQuestionsModal.closeHandler = $scope.closeSearchQuestionsModal;
 
+        $scope.searchSubmitted = function() {
+            var existingQuestionIds = [];
+            if ($scope.localViewData.questions && $scope.localViewData.questions.visibleCount > 0) {
+                for(var i=0; i<$scope.localViewData.questions.list.length; i++) {
+                    if ($scope.localViewData.questions.list[i]._id && !$scope.localViewData.questions.list[i].deleted) {
+                        existingQuestionIds.push($scope.localViewData.questions.list[i]._id);
+                    }
+                }
+            }
+
+            ContestsService.searchMyQuestions($scope.searchQuestions.searchText, existingQuestionIds, function(questions) {
+                $scope.searchQuestions.result = questions;
+            })
+        };
 
         function retrieveUserQuestions() {
             ContestsService.getQuestions($scope.localViewData.userQuestions, function(questions) {
@@ -1276,7 +1267,6 @@
         }
 
         $scope.setContest = function () {
-
             if ($scope.localViewData.questionsSource === "user") {
                 if (!$scope.localViewData.questions || $scope.localViewData.questions.visibleCount < $rootScope.settings.newContest.privateQuestions.min) {
                     if (!$scope.contestForm.userQuestions.$error) {

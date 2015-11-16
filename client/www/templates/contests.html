@@ -7,7 +7,7 @@
                  overflow-scroll="true" class="hide-vertical-scrollbar"
                  ng-class="{'has-subheader' : tab==='recentlyFinished'}">
 
-        <h4 class="padding center" ng-if="userClick && totalContests === 0">{{'JOIN_A_CONTEST_MESSAGE' | translate}}</h4>
+        <h4 class="padding center" ng-if="userClick && contestCharts && contestCharts.length === 0">{{'JOIN_A_CONTEST_MESSAGE' | translate}}</h4>
 
         <ion-scroll class="scroll-full-height">
 

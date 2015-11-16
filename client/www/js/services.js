@@ -595,8 +595,8 @@ angular.module("whoSmarter.services", [])
         };
 
         //Get Contests
-        service.getContests = function (clientContestCount, tab, callbackOnSuccess, callbackOnError, config) {
-            var postData = {"clientContestCount": clientContestCount, "tab": tab};
+        service.getContests = function (tab, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"tab": tab};
             return ApiService.post(path, "list", postData, callbackOnSuccess, callbackOnError, config)
         };
 
@@ -705,6 +705,12 @@ angular.module("whoSmarter.services", [])
         service.getQuestions = function (userQuestions, callbackOnSuccess, callbackOnError, config) {
             var postData = {"userQuestions": userQuestions};
             return ApiService.post(path, "getQuestions", postData, callbackOnSuccess, callbackOnError, config)
+        };
+
+        //Retrieve Contest User Questions
+        service.searchMyQuestions = function (text, existingQuestionIds, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"text": text, "existingQuestionIds" : existingQuestionIds};
+            return ApiService.post(path, "searchMyQuestions", postData, callbackOnSuccess, callbackOnError, config)
         };
 
         return service;

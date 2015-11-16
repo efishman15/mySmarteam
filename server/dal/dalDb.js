@@ -43,6 +43,32 @@ function checkToCloseDb(data) {
     }
 }
 
+//---------------------------------------------------------------------
+// buildQuestionsResult
+//---------------------------------------------------------------------
+function buildQuestionsResult(questions) {
+
+    questionsResult = [];
+    for (var i = 0; i < questions.length; i++) {
+
+        var question = {
+            "_id": questions[i]._id,
+            "text": questions[i].text,
+            "contests": questions[i].contests
+        };
+
+        questionsResult.push(question);
+
+
+        questionsResult[i].answers = [];
+        for (var j = 0; j < questions[i].answers.length; j++) {
+            questionsResult[i].answers.push(questions[i].answers[j].text);
+        }
+    }
+
+    return questionsResult;
+}
+
 //------------------------------------------------------------------------------------------------
 // register
 //
@@ -757,7 +783,7 @@ function prepareQuestionCriteria(data, callback) {
     }
     else {
         //User questions - get the exact current question in the quiz
-        questionCriteria = {"_id" : ObjectId(data.session.quiz.serverData.userQuestions[data.session.quiz.clientData.currentQuestionIndex])}
+        questionCriteria = {"_id": ObjectId(data.session.quiz.serverData.userQuestions[data.session.quiz.clientData.currentQuestionIndex])}
     }
     data.questionCriteria = questionCriteria;
 
@@ -1053,7 +1079,7 @@ function getContest(data, callback) {
 //
 // data:
 // -----
-// input: DbHelper, session, clientContestsCount, tab
+// input: DbHelper, session, tab
 // output: contestsCriteria
 //---------------------------------------------------------------------
 module.exports.prepareContestsQuery = prepareContestsQuery;
@@ -1462,6 +1488,8 @@ function getQuestionsByIds(data, callback) {
     questionsCollection.find({"_id": {$in: data.userQuestions}}, {}, function (err, questionsCursor) {
         if (err || !questionsCursor) {
 
+            closeDb(data);
+
             callback(new exceptions.ServerException("Error retrieving questions", {
                 "userQuestions": userQuestions,
                 "dbError": err
@@ -1472,14 +1500,73 @@ function getQuestionsByIds(data, callback) {
 
         questionsCursor.toArray(function (err, questions) {
 
-            data.questions = [];
-            for (var i = 0; i < questions.length; i++) {
-                data.questions.push({"_id" : questions[i]._id, "text": questions[i].text});
-                data.questions[i].answers = [];
-                for (var j = 0; j < questions[i].answers.length; j++) {
-                    data.questions[i].answers.push(questions[i].answers[j].text);
-                }
+            data.questions = buildQuestionsResult(questions);
+
+            checkToCloseDb(data);
+
+            callback(null, data);
+        });
+
+    });
+}
+
+//------------------------------------------------------------------------------------------------
+// searchMyQuestions
+//
+// Get all questions by their ids.
+//
+// data:
+// -----
+// input: DbHelper, session, text (search text), existingQuestionIds
+// output: questions
+//------------------------------------------------------------------------------------------------
+module.exports.searchMyQuestions = searchMyQuestions;
+function searchMyQuestions(data, callback) {
+
+    var questionsCollection = data.DbHelper.getCollection("Questions");
+
+    for (var i = 0; i < data.existingQuestionIds.length; i++) {
+        data.existingQuestionIds[i] = ObjectId(data.existingQuestionIds[i]);
+    }
+
+    var criteria =
+    {
+        $and: [
+            {"userIdCreated": ObjectId(data.session.userId)},
+            {"_id": {"$nin": data.existingQuestionIds}},
+            {
+                $or: [
+                    {"text": {$regex: ".*" + data.text + ".*"}},
+                    {"answers.0.text": {$regex: ".*" + data.text + ".*"}},
+                    {"answers.1.text": {$regex: ".*" + data.text + ".*"}},
+                    {"answers.2.text": {$regex: ".*" + data.text + ".*"}},
+                    {"answers.3.text": {$regex: ".*" + data.text + ".*"}}
+                ]
             }
+        ]
+    };
+
+    var sort = [["created", "desc"]];  //order by participants descending
+
+    questionsCollection.find(criteria, {sort: sort}, function (err, questionsCursor) {
+        if (err || !questionsCursor) {
+
+            closeDb(data);
+
+            callback(new exceptions.ServerException("Error retrieving questions by search text", {
+                "text": data.text,
+                "dbError": err
+            }, "error"));
+
+            return;
+        }
+
+        questionsCursor.toArray(function (err, questions) {
+
+            data.questions = buildQuestionsResult(questions);
+
+            checkToCloseDb(data);
+
             callback(null, data);
         });
 

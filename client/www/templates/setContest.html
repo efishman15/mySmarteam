@@ -95,7 +95,7 @@
             <div class="item item-divider set-contest-user-questions-area"
                  ng-if="localViewData.questionsSource === 'user'">
                 <div class="row full-width">
-                    <button ng-if="!localViewData.questions || localViewData.questions.visibleCount < $root.settings.newContest.privateQuestions.max"
+                    <button
                             class="set-contest-question-buttons medium-horizontal-margin icon-{{$root.settings.languages[$root.user.settings.language].align}} ion-plus-round button button-small button-assertive"
                             translate="ADD"
                             ng-click="openQuestionModal('add')">
@@ -105,7 +105,7 @@
                             {{'MY_CONTEST_QUESTIONS' | translate : {count : (localViewData.questions ? localViewData.questions.visibleCount : 0)} }}
                         </span>
 
-                    <button ng-if="!localViewData.questions || localViewData.questions.visibleCount < $root.settings.newContest.privateQuestions.max"
+                    <button
                             class="set-contest-question-buttons icon-{{$root.settings.languages[$root.user.settings.language].align}} ion-search button button-small button-assertive"
                             translate="SEARCH"
                             ng-click="openSearchQuestionsModal()">
@@ -114,7 +114,7 @@
 
                 <input type="hidden" name="userQuestions" ng-model="localViewData.questions">
 
-                <div class="set-contest-user-questions-list"
+                <div class="set-contest-user-questions-list small-horizontal-margin"
                      ng-if="localViewData.questions && localViewData.questions.visibleCount > 0">
                     <div class="list">
                         <div class="item pointer item-icon-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}"

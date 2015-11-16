@@ -510,7 +510,7 @@ label.item.valid-lr {
 }
 
 .set-contest-user-questions-list {
-    margin-top: 38px;
+    margin-top: 5px;
 }
 
 .small-horizontal-margin {
@@ -567,4 +567,8 @@ label.item.valid-lr {
     width: 60px;
     margin-right: -10px;
     margin-left: -10px;
+}
+
+.my-check-rtl-fix {
+    margin: 35px;
 }

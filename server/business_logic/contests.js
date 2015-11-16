@@ -15,6 +15,7 @@ var generalUtils = require(path.resolve(__dirname, "../utils/general"));
 function setUserQuestions(questionIndex, data, callback) {
 
     if (!data.contest.questions.list[questionIndex]._id) {
+
         //Add question
         data.newQuestion = {};
         data.newQuestion.text = data.contest.questions.list[questionIndex].text;
@@ -37,6 +38,7 @@ function setUserQuestions(questionIndex, data, callback) {
         });
     }
     else {
+        //question exists in the db
         if (data.contest.questions.list[questionIndex].deleted) {
             //Remove question
             data.questionId = data.contest.questions.list[questionIndex]._id;
@@ -184,14 +186,14 @@ function validateContestData(data, callback) {
                 callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"minimum": generalUtils.settings.client.newContest.privateQuestions.min}));
             }
             else {
-                callback(new exceptions.ServerMessageException("SERVER_ERROR_MAXIMUM_USER_QUESTIONS", {"minimum": generalUtils.settings.client.newContest.privateQuestions.min}));
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_PLURAL", {"minimum": generalUtils.settings.client.newContest.privateQuestions.min}));
             }
             return;
         }
 
         //Maximum check
         if (data.contest.questions && data.contest.questions.visibleCount > generalUtils.settings.client.newContest.privateQuestions.max) {
-            callback(new exceptions.ServerMessageException("SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE", {"maximum": generalUtils.settings.client.newContest.privateQuestions.max}));
+            callback(new exceptions.ServerMessageException("SERVER_ERROR_MAXIMUM_USER_QUESTIONS", {"maximum": generalUtils.settings.client.newContest.privateQuestions.max}));
             return;
         }
 
@@ -389,7 +391,7 @@ function prepareContestForClient(contest, session) {
     setContestScores(contest);
 
     if (contest.status !== "finished") {
-        if (contest.userIdCreated === session.userId || session.isAdmin) {
+        if (contest.userIdCreated.toString() === session.userId.toString() || session.isAdmin) {
             contest.owner = true;
         }
     }
@@ -741,19 +743,13 @@ module.exports.removeContest = function (req, res, next) {
 // getContests
 
 // data:
-// input: clientContestCount (how many contest does the client have currently to show,
-//        tab (myContests,runningContests)
+// input: tab (myContests,runningContests,recentlyFinishedContests)
 //
 // output: <NA>
 //-------------------------------------------------------------------------------------
 module.exports.getContests = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
-
-    if (data.clientContestCount == null) {
-        exceptions.ServerResponseException(res, "clientContestCount not supplied", null, "warn", 424);
-        return;
-    }
 
     var operations = [
 
@@ -847,14 +843,13 @@ module.exports.getContest = function (req, res, next) {
     });
 };
 
-
 //-------------------------------------------------------------------------------------
-// getContestQuestions
-
+// getQuestionsByIds
+//
 // data: userQuestions
 // output: contest
 //-------------------------------------------------------------------------------------
-module.exports.getQuestions = function (req, res, next) {
+module.exports.getQuestionsByIds = function (req, res, next) {
     var token = req.headers.authorization;
     var data = req.body;
 
@@ -893,7 +888,50 @@ module.exports.getQuestions = function (req, res, next) {
     });
 };
 
+//-------------------------------------------------------------------------------------
+// searchMyQuestions
+//
+// data: text, existingQuestionIds
+// output: contest
+//-------------------------------------------------------------------------------------
+module.exports.searchMyQuestions = function (req, res, next) {
+    var token = req.headers.authorization;
+    var data = req.body;
 
+    if (!data.text) {
+        exceptions.ServerResponseException(res, "text not supplied", null, "warn", 424);
+        return;
+    }
+
+    var operations = [
+
+        //Connect to the database (so connection will stay open until we decide to close it)
+        dalDb.connect,
+
+        //Retrieve the session
+        function (connectData, callback) {
+
+            data.DbHelper = connectData.DbHelper;
+            data.token = token;
+            dalDb.retrieveSession(data, callback);
+        },
+
+        //Retrieve the contest
+        function (data, callback) {
+            data.closeConnection = true;
+            dalDb.searchMyQuestions(data, callback);
+        }
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            res.json(data.questions);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    });
+};
 
 //-------------------------------------------------------------------------------------
 // getTeamDistancePercent
