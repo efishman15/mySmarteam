@@ -64,17 +64,17 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/phonegap-plugin-push/www/push.js",
-        "id": "phonegap-plugin-push.PushNotification",
-        "clobbers": [
-            "PushNotification"
-        ]
-    },
-    {
         "file": "plugins/uk.co.whiteoctober.cordova.appversion/www/AppVersionPlugin.js",
         "id": "uk.co.whiteoctober.cordova.appversion.AppVersionPlugin",
         "clobbers": [
             "cordova.getAppVersion"
+        ]
+    },
+    {
+        "file": "plugins/phonegap-plugin-push/www/push.js",
+        "id": "phonegap-plugin-push.PushNotification",
+        "clobbers": [
+            "PushNotification"
         ]
     }
 ];
@@ -90,8 +90,8 @@ module.exports.metadata =
     "cordova-plugin-x-socialsharing": "5.0.4",
     "io.branch.sdk": "1.7.0",
     "org.apache.cordova.device": "0.3.0",
-    "phonegap-plugin-push": "1.3.0",
-    "uk.co.whiteoctober.cordova.appversion": "0.1.7"
+    "uk.co.whiteoctober.cordova.appversion": "0.1.7",
+    "phonegap-plugin-push": "1.4.2"
 }
 // BOTTOM OF METADATA
 });

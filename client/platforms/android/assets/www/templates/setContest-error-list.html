@@ -4,13 +4,21 @@
 </div>
 <div class="form-error" ng-message="minlength">
     <i class="ion-information-circled"></i>
-    {{ 'MINIMUM_CHARACTERS' | translate:'{minimum: 2 }' }}
+    {{ 'MINIMUM_CHARACTERS' | translate:{minimum: 2 } }}
 </div>
 <div class="form-error" ng-message="maxlength">
     <i class="ion-information-circled"></i>
-    {{ 'MAXIMUM_CHARACTERS' | translate:'{maximum: 15 }' }}
+    {{ 'MAXIMUM_CHARACTERS' | translate:{maximum: 15} }}
 </div>
 <div class="form-error" ng-message="mustBeDifferent">
     <i class="ion-information-circled"></i>
     {{ 'SERVER_ERROR_TEAMS_MUST_HAVE_DIFFERENT_NAMES_MESSAGE' | translate }}
+</div>
+<div class="form-error" ng-message="minimumQuestionsSingle">
+    <i class="ion-information-circled"></i>
+    {{ 'SERVER_ERROR_MINIMUM_USER_QUESTIONS_SINGLE_MESSAGE' | translate : {minimum : $root.settings.newContest.privateQuestions.min} }}
+</div>
+<div class="form-error" ng-message="minimumQuestionsPlural">
+    <i class="ion-information-circled"></i>
+    {{ 'SERVER_ERROR_MINIMUM_USER_QUESTIONS_PLURAL_MESSAGE' | translate : {minimum : $root.settings.newContest.privateQuestions.min} }}
 </div>

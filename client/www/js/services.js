@@ -156,6 +156,11 @@ angular.module("whoSmarter.services", [])
                         );
 
                         push.on("registration", function (data) {
+
+                            if (!data || !data.registrationId) {
+                                return;
+                            }
+
                             StoreService.setGcmRegistration(data.registrationId);
 
                             //Update the server with the registration id - if server has no registration or it has a different reg id

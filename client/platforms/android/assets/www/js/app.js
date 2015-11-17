@@ -352,7 +352,22 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "controller": "SetContestCtrl"
                     }
                 },
-                "params": {"mode": null, "contest": null}
+                "params": {"mode": null, "contest" : null, "contestType": null},
+                "data": {
+                    "questionModal" : {"isOpenHandler" : null, closeHandler: null},
+                    "searchQuestionsModal" : {"isOpenHandler" : null, closeHandler: null},
+                    "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
+                        if (currentState.data.questionModal.isOpenHandler && currentState.data.questionModal.isOpenHandler() && currentState.data.questionModal.closeHandler) {
+                            currentState.data.questionModal.closeHandler();
+                        }
+                        else if (currentState.data.searchQuestionsModal.isOpenHandler && currentState.data.searchQuestionsModal.isOpenHandler() && currentState.data.searchQuestionsModal.closeHandler) {
+                            currentState.data.searchQuestionsModal.closeHandler();
+                        }
+                        else {
+                            $rootScope.goBack();
+                        }
+                    }
+                }
             })
 
             .state("payPalPaymentSuccess", {
@@ -577,20 +592,25 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
         return {
             require: "ngModel",
             scope: {
-                otherModelValue: "=mustBeDifferent"
+                otherModelValues: "=mustBeDifferent"
             },
             link: function (scope, element, attributes, ngModel) {
 
                 ngModel.$validators.mustBeDifferent = function (modelValue) {
-                    if (modelValue && scope.otherModelValue) {
-                        return modelValue.trim() != scope.otherModelValue.$modelValue.trim();
+                    if (modelValue && scope.otherModelValues) {
+                        for(var i=0; i<scope.otherModelValues.length; i++) {
+                            if (modelValue && scope.otherModelValues[i].$modelValue && modelValue.trim() === scope.otherModelValues[i].$modelValue.trim()) {
+                                return false;
+                            }
+                        }
+                        return true;
                     }
                     else {
                         return true;
                     }
                 };
 
-                scope.$watch("otherModelValue", function () {
+                scope.$watch("otherModelValues", function () {
                     ngModel.$validate();
                 });
             }
@@ -652,6 +672,27 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             });
         }
     })
+
+    .directive("scopeFormLevel", function () {
+        return {
+            restrict: "A",
+            require: "form",
+            link: function (scope, element, attrs, formCtrl) {
+                var currentScope = scope;
+                var level = parseInt(attrs.scopeFormLevel,10);
+                for(var i=0; i<level; i++) {
+                    currentScope = currentScope.$parent;
+                    if (!currentScope) {
+                        break;
+                    }
+                }
+
+                //Let the top level scope (as level was set) hold a pointer to this form
+                if (currentScope) {
+                    currentScope[element[0].name] = formCtrl;
+                }
+            }
+    }})
 
     .directive("tabsSwipable", ["$ionicGesture", function ($ionicGesture) {
         //

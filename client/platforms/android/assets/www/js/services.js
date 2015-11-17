@@ -1,13 +1,13 @@
-angular.module('whoSmarter.services', [])
+angular.module("whoSmarter.services", [])
 
     //User Service
-    .factory('UserService', function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform, StoreService) {
+    .factory("UserService", function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform, StoreService) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var path = 'user/';
+        var path = "user/";
         var resolveRequests = [];
         var resolveEvents = [];
 
@@ -130,10 +130,10 @@ angular.module('whoSmarter.services', [])
                     $rootScope.session = session;
 
                     if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
-                        $ionicConfig.backButton.icon('ion-chevron-left');
+                        $ionicConfig.backButton.icon("ion-chevron-left");
                     }
                     else {
-                        $ionicConfig.backButton.icon('ion-chevron-right');
+                        $ionicConfig.backButton.icon("ion-chevron-right");
                     }
 
                     FlurryAgent.setUserId(session.userId);
@@ -155,7 +155,12 @@ angular.module('whoSmarter.services', [])
                             }
                         );
 
-                        push.on('registration', function (data) {
+                        push.on("registration", function (data) {
+
+                            if (!data || !data.registrationId) {
+                                return;
+                            }
+
                             StoreService.setGcmRegistration(data.registrationId);
 
                             //Update the server with the registration id - if server has no registration or it has a different reg id
@@ -165,23 +170,20 @@ angular.module('whoSmarter.services', [])
                             }
                         });
 
-                        push.on('notification', function (data) {
+                        push.on("notification", function (data) {
                             if (data.additionalData && data.additionalData.contestId) {
                                 $rootScope.gotoView("app.contest", false, {id: data.additionalData.contestId});
                             }
                         });
 
-                        push.on('error', function (e) {
+                        push.on("error", function (e) {
                             FlurryAgent.myLogError("PushNotificationError", "Error during push: " + e.message);
                         });
 
                         var storedGcmRegistration = StoreService.getGcmRegistration();
-                        if (!storedGcmRegistration) {
-                        }
-                        else if (session.noGcmRegistration) {
+                        if (storedGcmRegistration && !session.gcmRegistrationId) {
                             ApiService.post(path, "setGcmRegistration", {"registrationId": storedGcmRegistration}, null, null, {"blockUserInterface": false});
                         }
-
                     }
 
                     callbackOnSuccess(session);
@@ -309,7 +311,7 @@ angular.module('whoSmarter.services', [])
                                     direction = "rtl";
                                 }
                                 $ionicLoading.show({
-                                        animation: 'fade-in',
+                                        animation: "fade-in",
                                         showBackdrop: true,
                                         showDelay: 50
                                     }
@@ -376,7 +378,7 @@ angular.module('whoSmarter.services', [])
                                 });
                         });
 
-                        $rootScope.$on('$translateChangeEnd', function (event, data) {
+                        $rootScope.$on("$translateChangeEnd", function (event, data) {
                             $rootScope.$broadcast("whoSmarter-languageChanged");
                         });
 
@@ -472,13 +474,13 @@ angular.module('whoSmarter.services', [])
     })
 
     //Info service
-    .factory('InfoService', function ($http, ApiService, $rootScope, $timeout) {
+    .factory("InfoService", function ($http, ApiService, $rootScope, $timeout) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var path = 'info/';
+        var path = "info/";
 
         var geoProviders = ["http://www.telize.com/geoip", "http://freegeoip.net/json"];
 
@@ -567,13 +569,13 @@ angular.module('whoSmarter.services', [])
     })
 
     //Sound Service.
-    .factory('ContestsService', function ($http, ApiService, $rootScope, $translate) {
+    .factory("ContestsService", function ($http, ApiService, $rootScope, $translate) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var path = 'contests/';
+        var path = "contests/";
 
         var canvas = document.createElement("canvas");
         var canvasContext = canvas.getContext("2d");
@@ -598,8 +600,8 @@ angular.module('whoSmarter.services', [])
         };
 
         //Get Contests
-        service.getContests = function (clientContestCount, tab, callbackOnSuccess, callbackOnError, config) {
-            var postData = {"clientContestCount": clientContestCount, "tab": tab};
+        service.getContests = function (tab, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"tab": tab};
             return ApiService.post(path, "list", postData, callbackOnSuccess, callbackOnError, config)
         };
 
@@ -704,18 +706,29 @@ angular.module('whoSmarter.services', [])
             return ApiService.post(path, "join", postData, callbackOnSuccess, callbackOnError, config)
         };
 
+        //Retrieve Contest User Questions
+        service.getQuestions = function (userQuestions, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"userQuestions": userQuestions};
+            return ApiService.post(path, "getQuestions", postData, callbackOnSuccess, callbackOnError, config)
+        };
+
+        //Retrieve Contest User Questions
+        service.searchMyQuestions = function (text, existingQuestionIds, callbackOnSuccess, callbackOnError, config) {
+            var postData = {"text": text, "existingQuestionIds" : existingQuestionIds};
+            return ApiService.post(path, "searchMyQuestions", postData, callbackOnSuccess, callbackOnError, config)
+        };
 
         return service;
     })
 
     //Quiz Service.
-    .factory('QuizService', function ($http, ApiService) {
+    .factory("QuizService", function ($http, ApiService) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var path = 'quiz/';
+        var path = "quiz/";
 
         //Start quiz
         service.start = function (contestId, callbackOnSuccess, callbackOnError, config) {
@@ -740,11 +753,16 @@ angular.module('whoSmarter.services', [])
             return ApiService.post(path, "nextQuestion", null, callbackOnSuccess, callbackOnError, config)
         };
 
+        //Set Question By Admin
+        service.setQuestionByAdmin = function (question, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "setQuestionByAdmin", {"question" : question}, callbackOnSuccess, callbackOnError, config)
+        };
+
         return service;
     })
 
     //Error Service
-    .factory('PopupService', function ($ionicPopup, $translate, $rootScope) {
+    .factory("PopupService", function ($ionicPopup, $translate, $rootScope) {
 
         //----------------------------------------------
         // Service Variables
@@ -780,7 +798,7 @@ angular.module('whoSmarter.services', [])
 
             var okButton = {
                 text: $translate.instant("OK"),
-                type: 'button-positive',
+                type: "button-positive",
                 onTap: function (e) {
                     // Returning a value will cause the promise to resolve with the given value.
                     return "OK";
@@ -788,7 +806,7 @@ angular.module('whoSmarter.services', [])
             };
             var cancelButton = {
                 text: $translate.instant("CANCEL"),
-                type: 'button-default',
+                type: "button-default",
                 onTap: function (e) {
                     return null;
                 }
@@ -825,7 +843,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //MyAuthService Service
-    .factory('MyAuthService', function () {
+    .factory("MyAuthService", function () {
 
         //----------------------------------------------
         // Service Variables
@@ -834,7 +852,7 @@ angular.module('whoSmarter.services', [])
 
         //Confirm login
         service.confirmLogin = function (token, config) {
-            config.headers['Authorization'] = token;
+            config.headers["Authorization"] = token;
             return config;
         };
 
@@ -842,14 +860,19 @@ angular.module('whoSmarter.services', [])
     })
 
     //Api Service
-    .factory('ApiService', function ($http, $location) {
+    .factory("ApiService", function ($http, $location) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
 
-        service.endPoint = $location.$$protocol + "://" + $location.$$host + "/";
+        if (!window.cordova) {
+            service.endPoint = $location.$$protocol + "://" + $location.$$host + "/";
+        }
+        else {
+            service.endPoint = "http://www.whosmarter.com/"
+        }
 
         //----------------------------------------------
         // Service Private functions
@@ -899,7 +922,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Facebook Service
-    .factory('FacebookService', function (ezfb, $timeout) {
+    .factory("FacebookService", function (ezfb, $timeout) {
 
         //----------------------------------------------
         // Service Variables
@@ -1033,15 +1056,15 @@ angular.module('whoSmarter.services', [])
     })
 
     //Sound Service
-    .factory('SoundService', function ($rootScope) {
+    .factory("SoundService", function ($rootScope) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
         var audio = new Audio();
-        var playOgg = !!(audio.canPlayType && audio.canPlayType('audio/ogg; codecs="vorbis"').replace(/no/, ''));
-        var playMp3 = !!(audio.canPlayType && audio.canPlayType('audio/mpeg').replace(/no/, ''));
+        var playOgg = !!(audio.canPlayType && audio.canPlayType("audio/ogg; codecs='vorbis'").replace(/no/, ""));
+        var playMp3 = !!(audio.canPlayType && audio.canPlayType("audio/mpeg").replace(/no/, ""));
 
         //Play
         service.play = function (sound) {
@@ -1071,7 +1094,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //XpService Service
-    .factory('XpService', function ($rootScope, $window) {
+    .factory("XpService", function ($rootScope, $window) {
 
         //----------------------------------------------
         // Service Variables
@@ -1207,7 +1230,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Store Service
-    .factory('StoreService', function (ApiService, store) {
+    .factory("StoreService", function (ApiService, store) {
 
         //----------------------------------------------
         // Service Variables
@@ -1235,13 +1258,13 @@ angular.module('whoSmarter.services', [])
     })
 
     //Payment Service
-    .factory('PaymentService', function ($rootScope, ApiService, $translate, ezfb) {
+    .factory("PaymentService", function ($rootScope, ApiService, $translate, ezfb) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var path = 'payments/';
+        var path = "payments/";
 
         service.buy = function (feature, isMobile, callbackOnSuccess, callbackOnError, config) {
 
@@ -1326,7 +1349,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Screen Service
-    .factory('ScreenService', function ($rootScope) {
+    .factory("ScreenService", function ($rootScope) {
 
         //----------------------------------------------
         // Service Variables
@@ -1356,13 +1379,13 @@ angular.module('whoSmarter.services', [])
     })
 
     //Leaderboard Service
-    .factory('LeaderboardService', function (ApiService) {
+    .factory("LeaderboardService", function (ApiService) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var path = 'leaderboard/';
+        var path = "leaderboard/";
 
         service.getContestLeaders = function (contestId, teamId, callbackOnSuccess, callbackOnError, config) {
 
@@ -1390,7 +1413,7 @@ angular.module('whoSmarter.services', [])
     })
 
     //Leaderboard Service
-    .factory('ShareService', function ($translate, $rootScope, $cordovaSocialSharing) {
+    .factory("ShareService", function ($translate, $rootScope, $cordovaSocialSharing) {
 
         //----------------------------------------------
         // Service Variables
@@ -1463,13 +1486,13 @@ angular.module('whoSmarter.services', [])
     })
 
     //System tools Service.
-    .factory('SystemToolsService', function ($http, ApiService) {
+    .factory("SystemToolsService", function ($http, ApiService) {
 
         //----------------------------------------------
         // Service Variables
         //----------------------------------------------
         var service = this;
-        var path = 'system/';
+        var path = "system/";
 
         //Clear Cache
         service.clearCache = function (callbackOnSuccess, callbackOnError, config) {

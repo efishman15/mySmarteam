@@ -1,7 +1,10 @@
 <ion-view title="{{getTitle()}}">
 
     <ion-content has-header="true" padding="true"
-                 dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false" ng-controller="SetContestCtrl">
+                 dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
+
+        <h4 class="center">{{'WHO_IS_SMARTER_QUESTION' | translate}}</h4>
+
         <div class="padding" ng-if="$root.session.features.newContest.locked">
             <span class="feature-locked-text">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.session.features.newContest.unlockRank} }}</span>
             <button class="button button-full button-small button-3d button-3d-balanced"
@@ -18,8 +21,7 @@
                 $root.session.features.newContest.purchaseData.currencySymbol} }}
             </button>
         </div>
-        <form name="$parent.contestForm" novalidate="novalidate">
-            <h4 class="center padding">{{'WHO_IS_SMARTER_QUESTION' | translate}}</h4>
+        <form name="contestForm" novalidate="novalidate" scope-form-level="1">
 
             <div class="padding row">
                 <div class="contest-team">
@@ -29,6 +31,7 @@
                         <input ng-disabled="$root.session.features.newContest.locked" type="text"
                                placeholder="{{ 'TEAM0' | translate }}"
                                name="team0"
+                               must-be-different="[contestForm.team1]"
                                ng-model="localViewData.teams[0].name" autofocus
                                ng-minlength="2" ng-maxlength="15" maxlength="15" required>
                     </label>
@@ -50,8 +53,8 @@
                                placeholder="{{ 'TEAM1' | translate }}"
                                name="team1"
                                ng-model="localViewData.teams[1].name"
-                               ng-minlength="2" ng-maxlength="15" maxlength="15" required
-                               must-be-different="contestForm.team0">
+                               must-be-different="[contestForm.team0]"
+                               ng-minlength="2" ng-maxlength="15" maxlength="15" required>
                     </label>
 
                     <div class="error-container last-error-container form-errors"
@@ -62,16 +65,16 @@
                 </div>
             </div>
 
-            <div class="padding" ng-click="openContestEndsInPopover($event)" ng-show="mode==='add'">
+            <div class="padding" ng-click="openContestEndsInPopover($event)" ng-if="mode==='add'">
                 <span translate="ENDS_IN"></span>
                     <span class="pointer padding">
-                    <strong>{{ contestEndOptions[localViewData.endOption].units | translate:{number :
-                        contestEndOptions[localViewData.endOption].number} }} {{ getArrowDirection(true) }}
+                    <strong>{{ $root.settings.newContest.endOptions[localViewData.endOption].units | translate:{number :
+                        $root.settings.newContest.endOptions[localViewData.endOption].number} }} {{ getArrowDirection(true) }}
                     </strong>
                     </span>
             </div>
 
-            <div class="padding" ng-show="mode==='edit'">
+            <div class="padding" ng-if="mode==='edit'">
                 <span>{{'CONTEST_END' | translate}}</span>
                 <ionic-datepicker input-obj="contestEndDatePicker" dir="ltr">
                     <button class="button button-block button-positive">{{localViewData.endDate |
@@ -80,42 +83,69 @@
                 </ionic-datepicker>
             </div>
 
-            <div class="padding">
-                <ion-toggle ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
-                                    'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
-                            ng-model="localViewData.usePrivateQuestions"
-                            class="item toggle-small"
-                            toggle-class="toggle-royal">
-                    <span ng-class="{'my-toggle-rtl-fix' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}">{{ 'MY_QUESTIONS' | translate}}</span>
-                    <i ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"
-                       class="icon ion-help-circled"></i>
+            <div ng-if="mode==='edit'" class="padding" ng-click="openQuestionsSourcePopover($event)">
+                <span translate="QUESTIONS_SOURCE"></span>
+                    <span class="pointer padding">
+                    <strong>{{ contestQuestionSources[localViewData.questionsSource].displayName | translate}} {{
+                        getArrowDirection(true) }}
+                    </strong>
+                    </span>
+            </div>
 
-                    <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"><p>
-                        {{localViewData.usePrivateQuestions ? 'MY_QUESTIONS_ON_NOTE' : 'MY_QUESTIONS_OFF_NOTE' |
-                        translate:{min : $root.settings.newContest.privateQuestions.min, max:
-                        $root.settings.newContest.privateQuestions.max, totalQuestions:
-                        $root.settings.newContest.systemTotalQuestions} }}</p></span>
-                    <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'rtl'"
-                      class="my-item-note-left">{{localViewData.usePrivateQuestions ? 'MY_QUESTIONS_ON_NOTE' : 'MY_QUESTIONS_OFF_NOTE' | translate:{min : $root.settings.newContest.privateQuestions.min, max: $root.settings.newContest.privateQuestions.max, totalQuestions: $root.settings.newContest.systemTotalQuestions} }}</span>
-                </ion-toggle>
+            <div class="item item-divider set-contest-user-questions-area"
+                 ng-if="localViewData.questionsSource === 'user'">
+                <div class="row full-width">
+                    <button
+                            class="set-contest-question-buttons medium-horizontal-margin icon-{{$root.settings.languages[$root.user.settings.language].align}} ion-plus-round button button-small button-assertive"
+                            translate="ADD"
+                            ng-click="openQuestionModal('add')">
+                    </button>
 
-                <div class="item item-divider padding" ng-show="localViewData.usePrivateQuestions">
-                        <div class="padding-left padding-right" ng-show="!localViewData.questions || localViewData.questions.length === 0">
-                            <span class="middle">
-                                {{!localViewData.questions || localViewData.questions.length === 0 ? 'NO_QUESTIONS_ENTERED' : 'MY_CONTEST_QUESTIONS' | translate : {count : (localViewData.questions ? localViewData.questions.length : 0)} }}
-                            </span>
-                            <button ng-class="{'float-right' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','float-left' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
-                                  ng-click="addPrivateQuestion($event)" class="set-contest-add-question-button button button-small button-assertive">{{'ADD' | translate}}</button>
-                        </div>
+                        <span class="col set-contest-user-questions-title padding-right padding-left">
+                            {{'MY_CONTEST_QUESTIONS' | translate : {count : (localViewData.questions ? localViewData.questions.visibleCount : 0)} }}
+                        </span>
+
+                    <button
+                            class="set-contest-question-buttons icon-{{$root.settings.languages[$root.user.settings.language].align}} ion-search button button-small button-assertive"
+                            translate="SEARCH"
+                            ng-click="openSearchQuestionsModal()">
+                    </button>
                 </div>
 
+                <input type="hidden" name="userQuestions" ng-model="localViewData.questions">
+
+                <div class="set-contest-user-questions-list small-horizontal-margin"
+                     ng-if="localViewData.questions && localViewData.questions.visibleCount > 0">
+                    <div class="list">
+                        <div class="item pointer item-icon-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}"
+                             ng-repeat="question in localViewData.questions.list track by $index"
+                             ng-if="!question.deleted"
+                             item="question">
+                            <div title="{{'EDIT_QUESTION' | translate}}" class="pointer "
+                                 ng-click="openQuestionModal('edit', question)">
+                                {{question.text}}
+                            </div>
+                            <div class="float-{{$root.settings.languages[$root.user.settings.language].oppositeAlign}}">
+                                <i title="{{'REMOVE_QUESTION' | translate}}" class="pointer icon ion-close-circled"
+                                   ng-click="removeQuestion($index)">
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="error-container last-error-container form-errors padding"
+                 ng-if="localViewData.questionsSource === 'user' && contestForm.userQuestions.$error && contestForm.$submitted"
+                 ng-messages="contestForm.userQuestions.$error"
+                 ng-messages-include="templates/setContest-error-list.html">
             </div>
 
             <div class="padding" ng-hide="!$root.session.isAdmin">
                 <span class="pointer" ng-click="toggleAdminInfo()">{{'CONTEST_ADMIN_INFO' | translate}} {{getArrowDirection(!showAdminInfo)}}</span>
 
                 <div ng-hide="!showAdminInfo && contestForm.team0 && contestForm.team1">
-                    <div class="padding" ng-show="showStartDate===true">
+                    <div class="padding" ng-if="showStartDate===true">
                         <span>{{'CONTEST_START' | translate}}</span>
                         <ionic-datepicker input-obj="contestStartDatePicker" dir="ltr">
                             <button class="button button-block button-positive">{{localViewData.startDate |
@@ -185,7 +215,7 @@
                 </div>
             </div>
 
-            <div class="button-bar padding">
+            <div class="button-bar padding set-contest-ok-button">
                 <button class="button padding button-bar button-calm" translate="OK"
                         ng-click="contestForm.$valid && setContest()"
                         analytics-on="click" analytics-event="contest/set">
@@ -197,4 +227,4 @@
 
 
 </ion-view>
-                           
+                        

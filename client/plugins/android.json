@@ -61,11 +61,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"PushNotification\"><param name=\"android-package\" value=\"com.adobe.phonegap.push.PushPlugin\" /></feature>",
+                            "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"AppVersion\"><param name=\"android-package\" value=\"uk.co.whiteoctober.cordova.AppVersion\" /></feature>",
+                            "xml": "<feature name=\"PushNotification\"><param name=\"android-package\" value=\"com.adobe.phonegap.push.PushPlugin\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -218,10 +218,10 @@
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.fplabs.whosmarter"
         },
-        "phonegap-plugin-push": {
+        "uk.co.whiteoctober.cordova.appversion": {
             "PACKAGE_NAME": "com.fplabs.whosmarter"
         },
-        "uk.co.whiteoctober.cordova.appversion": {
+        "phonegap-plugin-push": {
             "PACKAGE_NAME": "com.fplabs.whosmarter"
         }
     },

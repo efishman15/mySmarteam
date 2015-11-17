@@ -12,10 +12,8 @@
                 </p>
             </a>
 
-            <ion-toggle ng-class="{'item-icon-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr',
-                                    'item-icon-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}"
-                        ng-model="localViewData.sound"
-                        class="item toggle-small"
+            <ion-toggle ng-model="localViewData.sound"
+                        class="item toggle-small item-icon-{{$root.settings.languages[$root.user.settings.language].align}}"
                         toggle-class="toggle-royal"
                         analytics-on="click" analytics-event="settings/sound/{{localViewData.sound}}">
                 <span ng-class="{'my-toggle-rtl-fix' : $root.settings.languages[$root.user.settings.language].direction === 'rtl'}">{{ 'SOUND' | translate}}</span>

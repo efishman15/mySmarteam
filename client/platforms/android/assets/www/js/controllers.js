@@ -1,8 +1,8 @@
-﻿angular.module('whoSmarter.controllers', ['whoSmarter.services', 'ngAnimate'])
+﻿angular.module("whoSmarter.controllers", ["whoSmarter.services", "ngAnimate"])
 
     .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService, ShareService) {
 
-        $rootScope.$on('whoSmarter-directionChanged', function () {
+        $rootScope.$on("whoSmarter-directionChanged", function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
         });
 
@@ -23,15 +23,15 @@
         //-------------------------------------------------------
         // New rank modal form
         //-------------------------------------------------------
-        $ionicModal.fromTemplateUrl('templates/newRank.html', function (newRankModal) {
+        $ionicModal.fromTemplateUrl("templates/newRank.html", function (newRankModal) {
             $scope.newRankModal = newRankModal;
         }, {
             scope: $scope,
-            animation: 'slide-in-up'
+            animation: "slide-in-up"
         });
 
         $scope.openNewRankModal = function () {
-            FlurryAgent.logEvent("newRank", {"rank": "" + $rootScope.session.rank})
+            FlurryAgent.logEvent("newRank", {"rank": "" + $rootScope.session.rank});
             $scope.newRankModal.show();
         };
 
@@ -49,17 +49,36 @@
 
         });
 
-        $scope.$on('modal.hidden', function () {
+        $scope.$on("modal.hidden", function (event, viewData) {
             if ($scope.callbackAfterModal) {
                 $scope.callbackAfterModal();
             }
         });
 
+        //-------------------------------------------------------
+        // contest Type modal form
+        //-------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/contestType.html", function (contestTypeModal) {
+            $scope.contestTypeModal = contestTypeModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        $scope.openContestTypeModal = function () {
+            FlurryAgent.logEvent("selectContestType");
+            $scope.contestTypeModal.show();
+        };
+
+        $scope.closeContestTypeModal = function () {
+            $scope.contestTypeModal.hide();
+        };
+
         $scope.canvas = document.createElement("canvas");
         $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
         $scope.canvas.height = $rootScope.settings.xpControl.canvas.height;
 
-        $scope.context = $scope.canvas.getContext('2d');
+        $scope.context = $scope.canvas.getContext("2d");
 
         angular.element(document.querySelector("#canvasWrapper")).append($scope.canvas);
 
@@ -88,6 +107,10 @@
             }
         };
 
+        $scope.selectContestType = function (contestType) {
+            $scope.closeContestTypeModal();
+            $rootScope.gotoView("app.setContest", false, {"mode": "add", "contestType": contestType});
+        };
     })
 
     .controller("HomeCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $ionicPopup, $translate, ScreenService, StoreService) {
@@ -102,7 +125,7 @@
             ScreenService.resizeCanvas();
         });
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on("$ionicView.beforeEnter", function () {
 
             if ($rootScope.session) {
                 $rootScope.gotoRootView();
@@ -138,9 +161,8 @@
 
         UserService.resolveEvents();
 
-        var shouldTriggerScrollInfiniteRealFunction = false; //handling ionic bug regarding scroll infinite called twice
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             if (!$rootScope.session) {
                 $rootScope.gotoView("home");
                 return;
@@ -162,7 +184,7 @@
 
             $scope.roundTabState[0] = true;
 
-            $scope.doRefresh();
+            $scope.loadContests()
         });
 
         $scope.roundTabSwitch = function (viewName) {
@@ -170,92 +192,28 @@
             $rootScope.gotoView(viewName, false, {}, false, true);
         };
 
-        $scope.$on('whoSmarter-tabChanged', function () {
+        $scope.$on("whoSmarter-tabChanged", function () {
             $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()], true, {userClick: true});
         });
 
-        $scope.doRefresh = function () {
+        $scope.loadContests = function () {
 
-            if ($scope.contestCharts) {
-                $scope.contestCharts.length = 0;
-            }
+            ContestsService.getContests($state.current.data.serverTab, function (contestsResult) {
 
-            $scope.totalContests = -1;
-
-            //That bug again...prevent inifinite firing twice
-            shouldTriggerScrollInfiniteRealFunction = false;
-
-            $scope.loadMoreContests(true);
-        };
-
-        $scope.showContestParticipants = function () {
-            return ($state.current.data && $state.current.data.showParticipants);
-        };
-
-        $scope.haveMoreContests = function () {
-            return ($scope.totalContests === -1 || //never retrieved from the server
-            ($scope.totalContests > 0 && $scope.contestCharts.length < $scope.totalContests)); //retrieved, server has data, and I have less than the server
-        };
-
-        $scope.showParticipants = function () {
-            //TODO: show top 10 contest participants!
-            PopupService.alert("TODO: show top 10 contest participants!");
-        }
-
-        $scope.infiniteLoadMoreContests = function () {
-            $timeout(function () {
-                if (!shouldTriggerScrollInfiniteRealFunction) {  //let the first time triggers this code that does nothing but completing the buggy first infinite scroll triggering
-                    shouldTriggerScrollInfiniteRealFunction = true; // set the boolean to true so that the real load function is called next time infinite scrolling triggers
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                }
-                else {  // here it will be the real need for scrolling
-                    $scope.loadMoreContests();
-                }
-            }, 100);
-        };
-
-        $scope.loadMoreContests = function (fullRefresh) {
-
-            var clientContestCount;
-
-            if ($scope.contestCharts) {
-                clientContestCount = $scope.contestCharts.length;
-            }
-            else {
-                clientContestCount = 0;
-            }
-
-            var config;
-            if ($scope.totalContests !== -1) {
-                config = {"blockUserInterface": false}
-            }
-
-            ContestsService.getContests(clientContestCount, $state.current.data.serverTab, function (contestsResult) {
-                $scope.totalContests = contestsResult.count;
-
-                if (!$scope.userClick && $scope.totalContests === 0 && $ionicTabsDelegate.selectedIndex() === 0) {
+                if (!$scope.userClick && $ionicTabsDelegate.selectedIndex() === 0) {
                     //If no "my contests" - switch to running contests
                     $rootScope.gotoView(tabs[1]);
                     return;
                 }
 
-                if (!$scope.contestCharts) {
-                    $scope.contestCharts = [];
-                }
+                $scope.contestCharts = [];
 
                 //Add server contests to the end of the array
-                var contestChartsCount = $scope.contestCharts.length;
                 for (var i = 0; i < contestsResult.list.length; i++) {
-                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], contestChartsCount + i);
+                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], i);
                     $scope.contestCharts.push(contestChart);
                 }
-
-                $scope.$broadcast('scroll.infiniteScrollComplete');
-
-                if (fullRefresh) {
-                    $scope.$broadcast('scroll.refreshComplete');
-                }
-            }, null, config);
+            });
         }
 
         $rootScope.$on("whoSmarter-contestCreated", function (event, contest) {
@@ -284,9 +242,9 @@
         //-------------------------------------------------------
         // Question stats Popover
         //-------------------------------------------------------
-        $ionicModal.fromTemplateUrl('templates/questionInfo.html', {
+        $ionicModal.fromTemplateUrl("templates/questionInfo.html", {
             scope: $scope,
-            animation: 'slide-in-up'
+            animation: "slide-in-up"
         }).then(function (questionInfoModal) {
             $scope.questionInfoModal = questionInfoModal;
         });
@@ -303,6 +261,51 @@
             $scope.questionInfoModal.hide();
         };
 
+        //-------------------------------------------------------
+        // Question modal
+        // -------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/question.html", function (questionModal) {
+            $scope.questionModal = questionModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        $scope.openQuestionModal = function () {
+
+            $scope.questionModalTitle = $translate.instant("EDIT_QUESTION");
+
+            $scope.question = {
+                "_id": $scope.quiz.currentQuestion._id,
+                "text": $scope.quiz.currentQuestion.text,
+                "answers": []
+            };
+
+            for (var i=0; i<$scope.quiz.currentQuestion.answers.length; i++) {
+                $scope.question.answers[$scope.quiz.currentQuestion.answers[i].originalIndex] = $scope.quiz.currentQuestion.answers[i].text;
+            }
+
+            $scope.questionForm.$setPristine();
+            $scope.questionForm.$setUntouched();
+            $scope.questionModal.show();
+        };
+
+        $scope.closeQuestionModal = function (questionSet) {
+
+            if (!questionSet) {
+                $scope.questionModal.hide();
+                return;
+            }
+
+            QuizService.setQuestionByAdmin($scope.question, function (result) {
+                $scope.quiz.currentQuestion.text = $scope.question.text;
+                for (var i=0; i<$scope.question.answers.length; i++) {
+                    $scope.quiz.currentQuestion.answers[i].text = $scope.question.answers[$scope.quiz.currentQuestion.answers[i].originalIndex];
+                }
+                $scope.questionModal.hide();
+            })
+        };
+
         //Hardware back button handlers
         $state.current.data.questionInfo.isOpenHandler = function () {
             return $scope.questionInfoModal.isShown()
@@ -310,7 +313,7 @@
         $state.current.data.questionInfo.closeHandler = $scope.closeQuestionInfoModal;
 
         //Cleanup the modal when we're done with it!
-        $scope.$on('$destroy', function () {
+        $scope.$on("$destroy", function () {
             if ($scope.questionInfoModal) {
                 $scope.questionInfoModal.remove();
             }
@@ -398,7 +401,7 @@
         initDrawImageQueue(imgErrorSrc);
         initDrawImageQueue(imgQuestionInfoSrc);
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
 
             $ionicConfig.backButton.previousTitleText("");
             $ionicConfig.backButton.text("");
@@ -546,8 +549,16 @@
             var circleOffsets = (quizCanvas.width - $scope.quiz.totalQuestions * $rootScope.settings.quiz.canvas.radius * 2) / ($scope.quiz.totalQuestions - 1);
             for (var i = 0; i < $scope.quiz.totalQuestions; i++) {
 
+                var questionScore;
+                if (!$scope.quiz.reviewMode) {
+                    questionScore = $scope.questionHistory[i].score;
+                }
+                else {
+                    questionScore = 0;
+                }
+
                 //Draw question score
-                var textWidth = quizContext.measureText($scope.questionHistory[i].score).width;
+                var textWidth = quizContext.measureText(questionScore).width;
                 var scoreColor = $rootScope.settings.quiz.canvas.inactiveColor;
 
                 if ($scope.questionHistory[i].answer && !$scope.questionHistory[i].answerUsed) {
@@ -557,7 +568,7 @@
                 //Draw the score at the top of the circle
                 quizContext.beginPath();
                 quizContext.fillStyle = scoreColor;
-                quizContext.fillText($scope.questionHistory[i].score, currentX + textWidth / 2, $rootScope.settings.quiz.canvas.scores.top);
+                quizContext.fillText(questionScore, currentX + textWidth / 2, $rootScope.settings.quiz.canvas.scores.top);
                 quizContext.closePath();
 
                 if ($rootScope.settings.languages[$rootScope.user.settings.language].direction === "ltr") {
@@ -597,6 +608,10 @@
                     drawQuizProgress();
 
                     $scope.quiz.currentQuestion.answered = false;
+
+                    if ($scope.quiz.reviewMode && $scope.quiz.reviewMode.reason) {
+                        PopupService.alert($translate.instant($scope.quiz.reviewMode.reason));
+                    }
                 });
         }
 
@@ -690,17 +705,17 @@
                         FlurryAgent.logEvent("quiz/question" + ($scope.quiz.currentQuestionIndex + 1) + "/answered/correct");
 
                         correctAnswerId = answerId;
-                        $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = true;
+                        $scope.quiz.currentQuestion.answers[answerId].answeredCorrectly = true;
                         SoundService.play("audio/click_ok");
                     }
                     else {
                         FlurryAgent.logEvent("quiz/question" + ($scope.quiz.currentQuestionIndex + 1) + "/answered/incorrect");
                         SoundService.play("audio/click_wrong");
                         correctAnswerId = data.question.correctAnswerId;
-                        $scope.quiz.currentQuestion.answers[answerId - 1].answeredCorrectly = false;
+                        $scope.quiz.currentQuestion.answers[answerId].answeredCorrectly = false;
                         $timeout(function () {
                             $scope.$apply(function () {
-                                $scope.quiz.currentQuestion.answers[data.question.correctAnswerId - 1].correct = true;
+                                $scope.quiz.currentQuestion.answers[data.question.correctAnswerId].correct = true;
                             })
                         }, 3000);
                     }
@@ -729,7 +744,7 @@
 
     .controller("LogoutCtrl", function ($scope, $rootScope, $state, UserService, PopupService, $ionicHistory, $translate) {
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on("$ionicView.beforeEnter", function () {
             var language = $rootScope.user.settings.language;
             UserService.logout(function () {
                 if (language !== $rootScope.user.settings.language) {
@@ -748,7 +763,7 @@
 
         //Clone the user settings from the root object - all screen changes will work on the local cloned object
         //only "Apply" button will send the changes to the server
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
             $scope.localViewData = JSON.parse(JSON.stringify($rootScope.session.settings));
             //A bug - if putting "menu-close" in menu.html - back button won't show - have to close the menu programatically
             if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
@@ -766,7 +781,7 @@
         //-------------------------------------------------------
         // Choose Language Popover
         //-------------------------------------------------------
-        $ionicPopover.fromTemplateUrl('templates/chooseLanguage.html', {
+        $ionicPopover.fromTemplateUrl("templates/chooseLanguage.html", {
             scope: $scope
         }).then(function (languagePopover) {
             $scope.languagePopover = languagePopover;
@@ -781,13 +796,13 @@
         };
 
         //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function () {
+        $scope.$on("$destroy", function () {
             if ($scope.languagePopover) {
                 $scope.languagePopover.remove();
             }
         });
 
-        $scope.$on('$ionicView.beforeLeave', function () {
+        $scope.$on("$ionicView.beforeLeave", function () {
             if (JSON.stringify($scope.localViewData) != JSON.stringify($rootScope.session.settings)) {
                 //Dirty settings - save to server
 
@@ -802,7 +817,7 @@
 
                             //Check to fire directionChanged event
                             if ($rootScope.settings.languages[$scope.localViewData.language].direction != $rootScope.settings.languages[prevLanguage].direction) {
-                                $rootScope.$broadcast('whoSmarter-directionChanged');
+                                $rootScope.$broadcast("whoSmarter-directionChanged");
                             }
                         }
                     });
@@ -811,12 +826,12 @@
     })
 
     .controller("OtherwiseCtrl", function ($scope, $rootScope, $state) {
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on("$ionicView.beforeEnter", function () {
             $rootScope.gotoRootView();
         });
     })
 
-    .controller("SetContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig, $ionicLoading) {
+    .controller("SetContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig, $ionicLoading, $ionicModal) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -837,13 +852,13 @@
             closeLabel: datePickerClose,
             setLabel: datePickerSet,
             errorMsgLabel: datePickerErrorMessage,
-            setButtonType: 'button-assertive',
+            setButtonType: "button-assertive",
             mondayFirst: false,
             weekDaysList: datePickerWeekDays,
             monthList: datePickerMonths,
-            templateType: 'popup',
-            modalHeaderColor: 'bar-positive',
-            modalFooterColor: 'bar-positive',
+            templateType: "popup",
+            modalHeaderColor: "bar-positive",
+            modalFooterColor: "bar-positive",
             callback: startDateCallback
         };
 
@@ -853,13 +868,13 @@
             closeLabel: datePickerClose,
             setLabel: datePickerSet,
             errorMsgLabel: datePickerErrorMessage,
-            setButtonType: 'button-assertive',
+            setButtonType: "button-assertive",
             mondayFirst: false,
             weekDaysList: datePickerWeekDays,
             monthList: datePickerMonths,
-            templateType: 'popup',
-            modalHeaderColor: 'bar-positive',
-            modalFooterColor: 'bar-positive',
+            templateType: "popup",
+            modalHeaderColor: "bar-positive",
+            modalFooterColor: "bar-positive",
             //from: new Date(), //do not allow past dates
             callback: endDateCallback
         };
@@ -875,19 +890,28 @@
             $scope.contestEndDatePicker.from = pastDate;
         }
 
-        $scope.contestEndOptions = {
-            "m30": {"value": "m30", "number": 30, "units": "ENDS_IN_MINUTES", "msecMultiplier": 60 * 1000},
-            "h4": {"value": "h4", "number": 4, "units": "ENDS_IN_HOURS", "msecMultiplier": 60 * 60 * 1000},
-            "h24": {"value": "h24", "number": 24, "units": "ENDS_IN_HOURS", "msecMultiplier": 60 * 60 * 1000},
-            "d3": {"value": "d3", "number": 3, "units": "ENDS_IN_DAYS", "msecMultiplier": 24 * 60 * 60 * 1000}
+        $scope.contestQuestionSources = {
+            "system": {
+                "value": "system",
+                "displayName": $translate.instant("SYSTEM_QUESTIONS_SOURCE", {totalQuestions: $rootScope.settings.newContest.systemTotalQuestions})
+            },
+            "user": {
+                "value": "user",
+                "displayName": $translate.instant("USER_QUESTIONS_SOURCE", {
+                    min: $rootScope.settings.newContest.privateQuestions.min,
+                    max: $rootScope.settings.newContest.privateQuestions.max
+                })
+            }
         }
 
         $scope.showRemoveContest = false;
 
+        $scope.searchQuestions = {"searchText": null};
+
         //-------------------------------------------------------
         // Choose Contest end option Popover
         // -------------------------------------------------------
-        $ionicPopover.fromTemplateUrl('templates/chooseEndsIn.html', {
+        $ionicPopover.fromTemplateUrl("templates/chooseEndsIn.html", {
             scope: $scope
         }).then(function (contestEndsInPopover) {
             $scope.contestEndsInPopover = contestEndsInPopover;
@@ -899,48 +923,246 @@
 
         $scope.closeContestEndsInPopover = function (contestEndsInOption) {
             $scope.localViewData.endOption = contestEndsInOption.value;
-            $scope.localViewData.endDate = new Date((new Date()).getTime() + $scope.contestEndOptions[contestEndsInOption.value].number * $scope.contestEndOptions[contestEndsInOption.value].msecMultiplier);
+            $scope.localViewData.endDate = new Date((new Date()).getTime() + $rootScope.settings.newContest.endOptions[contestEndsInOption.value].number * $rootScope.settings.newContest.endOptions[contestEndsInOption.value].msecMultiplier);
             $scope.contestEndsInPopover.hide();
         };
 
         //-------------------------------------------------------
-        // Question popover
+        // Choose Questions Source Popover
         // -------------------------------------------------------
-        $ionicPopover.fromTemplateUrl('templates/question.html', {
+        $ionicPopover.fromTemplateUrl("templates/chooseQuestionsSource.html", {
             scope: $scope
-        }).then(function (questionPopover) {
-            $scope.questionPopover = questionPopover;
+        }).then(function (questionsSourcePopover) {
+            $scope.questionsSourcePopover = questionsSourcePopover;
         });
 
-        $scope.openQuestionPopover = function ($event, mode) {
+        $scope.openQuestionsSourcePopover = function ($event) {
+            $scope.questionsSourcePopover.show($event);
+        };
+
+        $scope.closeQuestionsSourcePopover = function (questionSource) {
+            $scope.localViewData.questionsSource = questionSource.value;
+            if ($scope.localViewData.questionsSource === "user" && !$scope.localViewData.questions && $scope.localViewData.userQuestions && $scope.localViewData.userQuestions.length > 0) {
+                retrieveUserQuestions();
+            }
+            $scope.questionsSourcePopover.hide();
+        };
+
+        //-------------------------------------------------------
+        // Question modal
+        // -------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/question.html", function (questionModal) {
+            $scope.questionModal = questionModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        function maxQuestionsReached() {
+            return ($scope.localViewData.questions && $scope.localViewData.questions.visibleCount === $rootScope.settings.newContest.privateQuestions.max);
+        }
+
+        $scope.openQuestionModal = function (mode, question) {
+
             if (mode === "add") {
-                $scope.questionPopoverTitle = $translate.instant("NEW_QUESTION");
+                if (maxQuestionsReached()) {
+                    PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max: $rootScope.settings.newContest.privateQuestions.max}))
+                    return;
+                }
+                $scope.questionModalTitle = $translate.instant("NEW_QUESTION");
+                $scope.question = {"text": null, answers: [null, null, null, null]};
+            }
+            else if (mode === "edit") {
+                $scope.questionModalTitle = $translate.instant("EDIT_QUESTION");
+                $scope.question = question;
             }
             else {
-                $scope.questionPopoverTitle = $translate.instant("EDIT_QUESTION");
+                return;
             }
-            $scope.questionPopover.show($event);
+
+            $scope.questionForm.$setPristine();
+            $scope.questionForm.$setUntouched();
+            $scope.questionModal.show();
         };
 
-        $scope.closeQuestionPopover = function () {
-            $scope.questionPopover.hide();
+        $scope.closeQuestionModal = function (questionSet) {
+
+            if (!questionSet) {
+                $scope.questionModal.hide();
+                return;
+            }
+
+            if (!$scope.localViewData.questions) {
+                $scope.localViewData.questions = {"visibleCount": 0, "list": []};
+            }
+
+            //Check if question exists
+            var matchCount = 0;
+            for (var i = 0; i < $scope.localViewData.questions.list.length; i++) {
+                if ($scope.question.text.trim() === $scope.localViewData.questions.list[i].text.trim()) {
+                    matchCount++;
+                }
+            }
+
+            if ((!$scope.question._id && matchCount > 0) || matchCount > 1) {
+                //In edit mode - the question text will be matched at least once - to the current question in the list
+                if (!$scope.questionForm.question.$error) {
+                    $scope.questionForm.question.$error = {};
+                }
+                $scope.questionForm.question.$error["questionAlreadyExists"] = true;
+                $scope.questionForm.question.$invalid = true;
+                return;
+            }
+
+            if (!$scope.question._id) {
+                //New questions
+                $scope.question._id = "new";
+                $scope.localViewData.questions.list.push($scope.question);
+                $scope.localViewData.questions.visibleCount++;
+            }
+            else if ($scope.question._id !== "new") {
+                //Set dirty flag for the question - so server will update it in the db
+                $scope.question.isDirty = true;
+            }
+
+            $scope.questionModal.hide();
         };
 
-        $scope.addPrivateQuestion = function ($event) {
-            $scope.openQuestionPopover($event, "add");
+        //-------------------------------------------------------
+        // Search Questions modal
+        // -------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/searchQuestions.html", function (searchQuestionsModal) {
+            $scope.searchQuestionsModal = searchQuestionsModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        $scope.openSearchQuestionsModal = function () {
+
+            if (maxQuestionsReached()) {
+                PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max: $rootScope.settings.newContest.privateQuestions.max}))
+                return;
+            }
+
+            $scope.searchQuestions = {};
+            $scope.searchQuestionsForm.$setPristine();
+            $scope.searchQuestionsForm.$setUntouched();
+            $scope.searchQuestionsModal.show();
+        };
+
+        $scope.closeSearchQuestionsModal = function (selected) {
+
+            if (!selected || !$scope.searchQuestions.result) {
+                $scope.searchQuestionsModal.hide();
+                return;
+            }
+
+            //Find how many selected
+            var selectedCount = 0
+            for (var i = 0; i < $scope.searchQuestions.result.length; i++) {
+                if ($scope.searchQuestions.result[i].checked) {
+                    selectedCount++;
+                }
+            }
+
+            if (!$scope.localViewData.questions) {
+                $scope.localViewData.questions = {"visibleCount": 0, "list": []};
+            }
+
+            //Check if max reached together with the current questions in the contest
+            if (selectedCount > 0 && $scope.localViewData.questions.visibleCount + selectedCount > $rootScope.settings.newContest.privateQuestions.max) {
+                PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max: $rootScope.settings.newContest.privateQuestions.max}))
+                return;
+            }
+
+            for (var i = 0; i < $scope.searchQuestions.result.length; i++) {
+
+                if (!$scope.searchQuestions.result[i].checked) {
+                    continue;
+                }
+
+                var questionExist = false;
+                for (var j = 0; j < $scope.localViewData.questions.list.length; j++) {
+                    //Check if question was marked as "deleted", and now re-instated
+                    if ($scope.searchQuestions.result[i]._id === $scope.localViewData.questions.list[j]._id && $scope.localViewData.questions.list[j].deleted) {
+                        $scope.localViewData.questions.list[j].deleted = false;
+                        questionExist = true;
+                        break;
+                    }
+                }
+
+                if (!questionExist) {
+                    $scope.localViewData.questions.visibleCount++;
+                    $scope.localViewData.questions.list.push($scope.searchQuestions.result[i]);
+                }
+            }
+
+            $scope.searchQuestionsModal.hide();
+        };
+
+        $scope.removeQuestion = function (index) {
+            PopupService.confirm("REMOVE_QUESTION", "CONFIRM_REMOVE_QUESTION", {}, function () {
+                if ($scope.localViewData.questions.list && index < $scope.localViewData.questions.list.length) {
+                    if ($scope.localViewData.questions.list[index]._id && $scope.localViewData.questions.list[index]._id !== "new") {
+                        //Question has an id in the database - logically remove
+                        $scope.localViewData.questions.list[index].deleted = true;
+                    }
+                    else {
+                        //Question does not have an actual id in the database - physically remove
+                        $scope.localViewData.questions.list.splice(index, 1);
+                    }
+                    $scope.localViewData.questions.visibleCount--;
+                }
+            });
         };
 
         //Cleanup the popover when we're done with it!
-        $scope.$on('$destroy', function () {
+        $scope.$on("$destroy", function () {
             if ($scope.contestEndsInPopover) {
                 $scope.contestEndsInPopover.remove();
             }
-            if ($scope.questionPopover) {
-                $scope.questionPopover.remove();
+            if ($scope.questionModal) {
+                $scope.questionModal.remove();
+            }
+            if ($scope.searchQuestionsModal) {
+                $scope.searchQuestionsModal.remove();
             }
         });
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        //Hardware back button handlers
+        $state.current.data.questionModal.isOpenHandler = function () {
+            return $scope.questionModal.isShown()
+        };
+        $state.current.data.questionModal.closeHandler = $scope.closeQuestionModal;
+
+        $state.current.data.searchQuestionsModal.isOpenHandler = function () {
+            return $scope.searchQuestionsModal.isShown()
+        };
+        $state.current.data.searchQuestionsModal.closeHandler = $scope.closeSearchQuestionsModal;
+
+        $scope.searchSubmitted = function () {
+            var existingQuestionIds = [];
+            if ($scope.localViewData.questions && $scope.localViewData.questions.visibleCount > 0) {
+                for (var i = 0; i < $scope.localViewData.questions.list.length; i++) {
+                    if ($scope.localViewData.questions.list[i]._id && !$scope.localViewData.questions.list[i].deleted) {
+                        existingQuestionIds.push($scope.localViewData.questions.list[i]._id);
+                    }
+                }
+            }
+
+            ContestsService.searchMyQuestions($scope.searchQuestions.searchText, existingQuestionIds, function (questions) {
+                $scope.searchQuestions.result = questions;
+            })
+        };
+
+        function retrieveUserQuestions() {
+            ContestsService.getQuestions($scope.localViewData.userQuestions, function (questions) {
+                $scope.localViewData.questions = {"visibleCount": questions.length, "list": questions};
+            });
+        }
+
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
                 if ($stateParams.mode) {
                     $scope.mode = $stateParams.mode;
                     if ($stateParams.mode === "edit") {
@@ -956,7 +1178,10 @@
                             else {
                                 $scope.showStartDate = true;
                             }
-                            $scope.contestForm.$setUntouched();
+
+                            if ($scope.localViewData.questionsSource === "user") {
+                                retrieveUserQuestions();
+                            }
                         }
                         else {
                             $rootScope.goBack();
@@ -969,12 +1194,16 @@
                             "startDate": startDate,
                             "endDate": endDate,
                             "endOption": "h24",
+                            "questionsSource": $stateParams.contestType,
                             "participants": 0,
                             "manualParticipants": 0,
                             "manualRating": 0,
                             "teams": [{"name": null, "score": 0}, {"name": null, "score": 0}]
                         };
                     }
+
+                    $scope.contestForm.$setPristine();
+                    $scope.contestForm.$setUntouched();
 
                     $scope.showStartDate = true;
 
@@ -1098,6 +1327,22 @@
         }
 
         $scope.setContest = function () {
+            if ($scope.localViewData.questionsSource === "user") {
+                if (!$scope.localViewData.questions || $scope.localViewData.questions.visibleCount < $rootScope.settings.newContest.privateQuestions.min) {
+                    if (!$scope.contestForm.userQuestions.$error) {
+                        $scope.contestForm.userQuestions.$error = {};
+                    }
+                    if ($rootScope.settings.newContest.privateQuestions.min === 1) {
+                        $scope.contestForm.userQuestions.$error["minimumQuestionsSingle"] = true;
+                    }
+                    else {
+                        $scope.contestForm.userQuestions.$error["minimumQuestionsPlural"] = true;
+                    }
+                    $scope.contestForm.userQuestions.$invalid = true;
+
+                    return;
+                }
+            }
 
             //Tweak the manual participants
             if ($scope.localViewData.totalParticipants > $scope.localViewData.participants + $scope.localViewData.manualParticipants) {
@@ -1125,11 +1370,16 @@
                 }
 
                 ContestsService.setContest($scope.localViewData, $stateParams.mode, function (contest) {
+
+                    $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
+                    $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
+
                     //Report to Flurry
                     var contestParams = {
                         "team0": $scope.localViewData.teams[0].name,
                         "team1": $scope.localViewData.teams[1].name,
-                        "duration": $scope.localViewData.endOption
+                        "duration": $scope.localViewData.endOption,
+                        "questionsSource": $scope.localViewData.questionsSource
                     };
 
                     $rootScope.goBack();
@@ -1144,8 +1394,8 @@
                     }
 
                 }, function (status, error) {
-                    $scope.localViewData.startDate = startDate;
-                    $scope.localViewData.endDate = endDate;
+                    $scope.localViewData.startDate = new Date($scope.localViewData.startDate);
+                    $scope.localViewData.endDate = new Date($scope.localViewData.endDate);
                 });
             }
             else {
@@ -1164,7 +1414,7 @@
             PaymentService.processPayment("android", purchaseData, extraPurchaseData, function (serverPurchaseData) {
 
                 $ionicLoading.show({
-                        animation: 'fade-in',
+                        animation: "fade-in",
                         showBackdrop: true,
                         showDelay: 50
                     }
@@ -1188,7 +1438,7 @@
 
             var okButton = {
                 text: $translate.instant("OK"),
-                type: 'button-positive',
+                type: "button-positive",
                 onTap: function (e) {
                     // Returning a value will cause the promise to resolve with the given value.
                     return "OK";
@@ -1196,7 +1446,7 @@
             };
             var cancelButton = {
                 text: $translate.instant("CANCEL"),
-                type: 'button-default',
+                type: "button-default",
                 onTap: function (e) {
                     return null;
                 }
@@ -1215,14 +1465,6 @@
 
             });
         };
-
-        $rootScope.$on("whoSmarter-questionSet", function () {
-            $scope.questionSet = true;
-        });
-
-        $rootScope.$on("whoSmarter-questionCancel", function () {
-            $scope.questionCancel = true;
-        });
 
         $scope.buyNewContestUnlockKey = function (isMobile) {
             $scope.buyInProgress = true;
@@ -1272,7 +1514,7 @@
 
     .controller("PayPalPaymentSuccessCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, PopupService) {
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on("$ionicView.beforeEnter", function () {
 
             var transactionData = {"method": "paypal"};
             transactionData.purchaseData = {};
@@ -1292,7 +1534,7 @@
 
     .controller("PaymentCtrl", function ($scope, $rootScope, $state, $stateParams, PaymentService, $translate) {
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on("$ionicView.beforeEnter", function () {
 
             $scope.nextView = $stateParams.nextView;
             $scope.unlockText = $translate.instant($rootScope.session.features[$stateParams.featurePurchased].unlockText);
@@ -1310,7 +1552,7 @@
 
     .controller("ServerPopupCtrl", function ($scope, $rootScope, $state, $stateParams, $ionicHistory, $timeout, $ionicPlatform) {
 
-        $scope.$on('$ionicView.beforeEnter', function () {
+        $scope.$on("$ionicView.beforeEnter", function () {
             if (!$stateParams.serverPopup) {
                 $rootScope.gotoRootView();
             }
@@ -1355,7 +1597,7 @@
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
 
             viewData.enableBack = true;
 
@@ -1369,7 +1611,7 @@
 
         $scope.roundTabState = [false, true, false];
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
             viewData.enableBack = false;
 
             $scope.roundTabState[1] = true;
@@ -1408,7 +1650,7 @@
 
         $scope.roundTabState = [false, false, true];
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
 
             viewData.enableBack = false;
 
@@ -1451,7 +1693,7 @@
 
         };
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
 
             if (!$stateParams.contest) {
                 $rootScope.gotoRootView();
@@ -1485,7 +1727,7 @@
             refreshContest(contest);
         });
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
             viewData.enableBack = true;
             //Contest is passed when clicking on chart from main screen,
             //But not passed when calling screen from direct link outside the app (Deep linking)
@@ -1494,7 +1736,7 @@
             }
         });
 
-        $scope.$on('$ionicView.afterLeave', function (event, viewData) {
+        $scope.$on("$ionicView.afterLeave", function (event, viewData) {
             $scope.animateResults = false;
         });
 
@@ -1595,25 +1837,24 @@
             $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
         };
 
-        $rootScope.$on('whoSmarter-quizFinished', function (event, results) {
+        $rootScope.$on("whoSmarter-quizFinished", function (event, results) {
 
             refreshContest(results.contest);
             $scope.lastQuizResults = results;
             $scope.animateResults = true;
-
             $timeout(function () {
                 SoundService.play(results.data.sound);
             }, 500);
         });
 
-        $rootScope.$on('whoSmarter-contestRemoved', function () {
+        $rootScope.$on("whoSmarter-contestRemoved", function () {
             $timeout(function () {
                 $rootScope.goBack();
             }, 500);
 
         });
 
-        $rootScope.$on('whoSmarter-contestUpdated', function (event, contest) {
+        $rootScope.$on("whoSmarter-contestUpdated", function (event, contest) {
             refreshContest(contest);
         });
 
@@ -1632,7 +1873,7 @@
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
             //A bug - if putting "menu-close" in menu.html - back button won't show - have to close the menu programatically
             if ($rootScope.settings.languages[$rootScope.session.settings.language].direction == "ltr") {
                 $ionicSideMenuDelegate.toggleLeft();
@@ -1666,7 +1907,7 @@
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
             viewData.enableBack = true;
             $scope.quizResults = $stateParams.quizResults;
         });
@@ -1685,7 +1926,7 @@
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
 
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
             viewData.enableBack = true;
             $scope.contest = $stateParams.contest;
         });
