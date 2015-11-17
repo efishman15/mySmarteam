@@ -1,13 +1,13 @@
 var path = require("path");
-var sessionUtils = require(path.resolve(__dirname,"../business_logic/session"));
+var sessionUtils = require(path.resolve(__dirname, "../business_logic/session"));
 var async = require("async");
-var exceptions = require(path.resolve(__dirname,"../utils/exceptions"));
-var random = require(path.resolve(__dirname,"../utils/random"));
-var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
-var generalUtils = require(path.resolve(__dirname,"../utils/general"));
-var contestsBusinessLogic = require(path.resolve(__dirname,"../business_logic/contests"));
-var dalLeaderboard = require(path.resolve(__dirname,"../dal/dalLeaderboards"));
-var commonBusinessLogic = require(path.resolve(__dirname,"./common"));
+var exceptions = require(path.resolve(__dirname, "../utils/exceptions"));
+var random = require(path.resolve(__dirname, "../utils/random"));
+var dalDb = require(path.resolve(__dirname, "../dal/dalDb"));
+var generalUtils = require(path.resolve(__dirname, "../utils/general"));
+var contestsBusinessLogic = require(path.resolve(__dirname, "../business_logic/contests"));
+var dalLeaderboard = require(path.resolve(__dirname, "../dal/dalLeaderboards"));
+var commonBusinessLogic = require(path.resolve(__dirname, "./common"));
 var util = require("util");
 
 //--------------------------------------------------------------------------
@@ -133,12 +133,12 @@ module.exports.start = function (req, res, next) {
             };
 
             if (data.contest.questionsSource === "user" && data.contest.userIdCreated.toString() === data.session.userId.toString()) {
-                quiz.clientData.reviewMode = {"reason" : "REVIEW_MODE_OWNER"};
+                quiz.clientData.reviewMode = {"reason": "REVIEW_MODE_OWNER"};
             }
             else if (data.contest.questionsSource === "user" && data.contest.users[data.session.userId].lastPlayed) {
                 //user is allowed to play a user-based questions contest that he DID NOT create - only once for real points
                 //other plays - are for review only
-                quiz.clientData.reviewMode = {"reason" : "REVIEW_MODE_PLAY_AGAIN"};
+                quiz.clientData.reviewMode = {"reason": "REVIEW_MODE_PLAY_AGAIN"};
             }
 
             //Number of questions (either entered by user or X random questions from the system
@@ -469,15 +469,15 @@ module.exports.answer = function (req, res, next) {
 
             //Common data to be replaced in all potential messages
             data.session.quiz.serverData.share.data.clientData = {
-                "score" : data.session.quiz.serverData.score,
-                "team" : data.contest.teams[data.contest.users[data.session.userId].team].name
+                "score": data.session.quiz.serverData.score,
+                "team": data.contest.teams[data.contest.users[data.session.userId].team].name
             }
 
             if (data.passedFriends && data.passedFriends.length > 0) {
                 data.session.quiz.serverData.share.data.clientData.friend = data.passedFriends[0].name;
                 var replaced = setPostStory(data, "passedFriendInLeaderboard", util.format(generalUtils.settings.server.facebook.userOpenGraphProfileUrl, data.passedFriends[0].id, data.session.settings.language));
                 if (replaced) {
-                    data.session.quiz.serverData.share.story.facebookPost.dialogImage.url = util.format(data.session.quiz.serverData.share.story.facebookPost.dialogImage.url,data.passedFriends[0].id, data.session.quiz.serverData.share.story.facebookPost.dialogImage.width, data.session.quiz.serverData.share.story.facebookPost.dialogImage.height);
+                    data.session.quiz.serverData.share.story.facebookPost.dialogImage.url = util.format(data.session.quiz.serverData.share.story.facebookPost.dialogImage.url, data.passedFriends[0].id, data.session.quiz.serverData.share.story.facebookPost.dialogImage.width, data.session.quiz.serverData.share.story.facebookPost.dialogImage.height);
                 }
             }
 
@@ -502,11 +502,17 @@ module.exports.answer = function (req, res, next) {
 
                     if (data.session.quiz.serverData.correctAnswers === data.session.quiz.clientData.totalQuestions) {
                         setPostStory(data, "reviewPerfectScore");
-                        data.session.quiz.serverData.share.data.clientData = {"correct" : data.session.quiz.serverData.correctAnswers, "questions" : data.session.quiz.clientData.totalQuestions};
+                        data.session.quiz.serverData.share.data.clientData = {
+                            "correct": data.session.quiz.serverData.correctAnswers,
+                            "questions": data.session.quiz.clientData.totalQuestions
+                        };
                     }
                     else if (data.session.quiz.serverData.correctAnswers > 0) {
                         setPostStory(data, "reviewGotScore");
-                        data.session.quiz.serverData.share.data.clientData = {"correct" : data.session.quiz.serverData.correctAnswers, "questions" : data.session.quiz.clientData.totalQuestions};
+                        data.session.quiz.serverData.share.data.clientData = {
+                            "correct": data.session.quiz.serverData.correctAnswers,
+                            "questions": data.session.quiz.clientData.totalQuestions
+                        };
                     }
                     else {
                         setPostStory(data, "reviewZeroScore");
@@ -588,6 +594,64 @@ module.exports.nextQuestion = function (req, res, next) {
     async.waterfall(operations, function (err, data) {
         if (!err) {
             res.send(200, data.session.quiz.clientData);
+        }
+        else {
+            res.send(err.httpStatus, err);
+        }
+    })
+};
+
+//--------------------------------------------------------------------------
+// setQuestionByAdmin
+//
+// data: question (including _id, text, answers)
+//--------------------------------------------------------------------------
+module.exports.setQuestionByAdmin = function (req, res, next) {
+
+    var data = req.body;
+
+    if (!data.question ||
+        !data.question._id ||
+        !data.question.text ||
+        !data.question.answers |
+        data.question.answers.length < 4) {
+        exceptions.ServerResponseException(res, "question required data is not supplied", data, "warn", 424);
+        return;
+    }
+
+    var token = req.headers.authorization;
+
+    var operations = [
+
+        //getSession
+        function (callback) {
+            data.token = token;
+            sessionUtils.getSession(data, callback);
+        },
+
+        //Count number of questions excluding the previous questions
+        function (data, callback) {
+            if (!data.session.isAdmin) {
+                dalDb.closeDb(data);
+                callback(new exceptions.ServerMessageException("SERVER_ERROR_SESSION_EXPIRED_DURING_QUIZ", null, 403));
+                return;
+            }
+
+            data.questionId = data.question._id;
+            data.setData = {};
+            data.setData.text = data.question.text;
+            for (j = 0; j < data.question.answers.length; j++) {
+                data.setData["answers." + j + ".text"] = data.question.answers[j];
+            }
+
+            data.closeConnection = true;
+            dalDb.setQuestion(data, callback);
+        }
+    ];
+
+    async.waterfall(operations, function (err, data) {
+        if (!err) {
+            res.send(200, "OK");
         }
         else {
             res.send(err.httpStatus, err);

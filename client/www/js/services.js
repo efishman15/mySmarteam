@@ -748,6 +748,11 @@ angular.module("whoSmarter.services", [])
             return ApiService.post(path, "nextQuestion", null, callbackOnSuccess, callbackOnError, config)
         };
 
+        //Set Question By Admin
+        service.setQuestionByAdmin = function (question, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "setQuestionByAdmin", {"question" : question}, callbackOnSuccess, callbackOnError, config)
+        };
+
         return service;
     })
 
@@ -857,7 +862,12 @@ angular.module("whoSmarter.services", [])
         //----------------------------------------------
         var service = this;
 
-        service.endPoint = $location.$$protocol + "://" + $location.$$host + "/";
+        if (!window.cordova) {
+            service.endPoint = $location.$$protocol + "://" + $location.$$host + "/";
+        }
+        else {
+            service.endPoint = "http://www.whosmarter.com/"
+        }
 
         //----------------------------------------------
         // Service Private functions

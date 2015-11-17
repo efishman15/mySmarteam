@@ -390,10 +390,10 @@ module.exports.setUser = function (data, callback) {
 
     var updateClause = {};
     if (data.setData) {
-        updateClause = {$set: data.setData};
+        updateClause["$set"] = data.setData;
     }
     if (data.unsetData) {
-        updateClause = {$unset: data.unsetData};
+        updateClause["$unset"] = data.unsetData;
     }
 
     usersCollection.updateOne(data.setUserWhereClause, updateClause,
@@ -882,15 +882,44 @@ function getNextQuestion(data, callback) {
             }
         }
 
-        //Shuffle the answers
-        question.answers = random.shuffle(question.answers);
-
         data.session.quiz.serverData.currentQuestion = question;
 
         data.session.quiz.clientData.currentQuestion = {
             "text": question.text,
             "answers": []
         };
+
+        //For admins only - give the original answers (in their original order, item0 is the correct answer
+        //including the _id - to allow editing the question within the quiz
+
+        var originalAnswers = [];
+        if (data.session.isAdmin) {
+            data.session.quiz.clientData.currentQuestion._id = question._id;
+            for (var i = 0; i < question.answers.length; i++) {
+                originalAnswers.push(question.answers[i].text);
+            }
+        }
+
+        //Shuffle the answers
+        question.answers = random.shuffle(question.answers);
+
+        //Add them to the client question shuffled
+        for (var i = 0; i < question.answers.length; i++) {
+            data.session.quiz.clientData.currentQuestion.answers.push({"text" : question.answers[i].text});
+        }
+
+        if (data.session.isAdmin) {
+            //Index of this array is the original order (item0 = correct)
+            //value of the cell of the array points to the index of the answer in the shuffled array
+            for(var i=0; i<originalAnswers.length; i++) {
+                for (var j=0; j<question.answers.length; j++) {
+                    if (originalAnswers[i] === data.session.quiz.clientData.currentQuestion.answers[j].text) {
+                        data.session.quiz.clientData.currentQuestion.answers[j].originalIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
 
         if (question.wikipediaHint) {
             data.session.quiz.clientData.currentQuestion.wikipediaHint = question.wikipediaHint;
@@ -904,13 +933,6 @@ function getNextQuestion(data, callback) {
 
         if (question.correctAnswers > 0 || question.wrongAnswers > 0) {
             data.session.quiz.clientData.currentQuestion.correctRatio = question.correctRatio;
-        }
-
-        for (var i = 0; i < question.answers.length; i++) {
-            data.session.quiz.clientData.currentQuestion.answers.push({
-                "id": i + 1,
-                "text": question.answers[i].text
-            })
         }
 
         //Add this question id to the list of questions already asked during this quiz
@@ -1364,9 +1386,11 @@ function insertQuestion(data, callback) {
     data.newQuestion.wrongAnswers = 0;
     data.newQuestion.correctRatio = 0;
 
-    //Associate the question with a contest
-    data.newQuestion.contests = {};
-    data.newQuestion.contests[data.contest._id] = true;
+    //Associate the question with a contest - if an existing contest in db (contest edit mode)
+    if (data.contest && data.contest._id) {
+        data.newQuestion.contests = {};
+        data.newQuestion.contests[data.contest._id] = true;
+    }
 
     questionsCollection.insert(data.newQuestion
         , {}, function (err, insertResult) {
@@ -1400,15 +1424,25 @@ function insertQuestion(data, callback) {
 //---------------------------------------------------------------------
 module.exports.setQuestion = function (data, callback) {
 
-    if (!data.setData) {
-        callback(new exceptions.ServerException("Cannot update question, setData must be supplied", {
-            "dbError": err
-        }, "error"));
+    if (!data.setData && !data.unsetData) {
+        callback(new exceptions.ServerException("Cannot update question, setData or unsetData must be supplied", {}, "error"));
+        return;
     }
 
     var questionsCollection = data.DbHelper.getCollection("Questions");
 
-    questionsCollection.updateOne({"_id": ObjectId(data.questionId)}, {$set: data.setData},
+    var updateClause = {};
+    if (data.setData) {
+        updateClause["$set"] = data.setData;
+    }
+    if (data.unsetData) {
+        updateClause["$unset"] = data.unsetData;
+    }
+
+    var whereClause = {"_id": ObjectId(data.questionId)};
+
+
+    questionsCollection.updateOne(whereClause, updateClause,
         function (err, results) {
 
             if (err || results.nModified < 1) {
@@ -1427,44 +1461,6 @@ module.exports.setQuestion = function (data, callback) {
 
             callback(null, data);
         });
-};
-
-
-//---------------------------------------------------------------------
-// removeQuestion
-// removes a question from db
-//
-// data:
-// -----
-// input: DbHelper, questionId
-// output: <NA>
-//---------------------------------------------------------------------
-module.exports.removeQuestion = function (data, callback) {
-    var questionsCollection = data.DbHelper.getCollection("Questions");
-
-    questionsCollection.remove(
-        {
-            "_id": ObjectId(data.questionId)
-        }
-        , {w: 1, single: true},
-        function (err, numberOfRemovedDocs) {
-            if (err || numberOfRemovedDocs.ok == 0) {
-                //Question does not exist - stop the call chain
-
-                closeDb(data);
-
-                callback(new exceptions.ServerException("Error removing question", {
-                    "questionId": data.questionId,
-                    "dbError": err
-                }, "warn"));
-                return;
-            }
-
-            checkToCloseDb(data);
-
-            callback(null, data);
-        }
-    );
 };
 
 //------------------------------------------------------------------------------------------------

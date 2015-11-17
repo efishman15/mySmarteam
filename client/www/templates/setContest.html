@@ -68,8 +68,8 @@
             <div class="padding" ng-click="openContestEndsInPopover($event)" ng-if="mode==='add'">
                 <span translate="ENDS_IN"></span>
                     <span class="pointer padding">
-                    <strong>{{ contestEndOptions[localViewData.endOption].units | translate:{number :
-                        contestEndOptions[localViewData.endOption].number} }} {{ getArrowDirection(true) }}
+                    <strong>{{ $root.settings.newContest.endOptions[localViewData.endOption].units | translate:{number :
+                        $root.settings.newContest.endOptions[localViewData.endOption].number} }} {{ getArrowDirection(true) }}
                     </strong>
                     </span>
             </div>

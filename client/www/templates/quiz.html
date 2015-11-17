@@ -12,7 +12,10 @@
                         'bounceInLeft' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
                         'bounceInRight' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}" mytransitionend="questionTransitionEnd">
 
-            <div class="question-text" ng-bind-html="quiz.currentQuestion.text">
+            <div class="question-text"
+                 ng-class="{'pointer' : $root.session.isAdmin}"
+                 ng-bind-html="quiz.currentQuestion.text"
+                 ng-click="$root.session.isAdmin && openQuestionModal()">
             </div>
 
             <div class="list padding">

@@ -107,9 +107,9 @@
             }
         };
 
-        $scope.selectContestType = function(contestType) {
+        $scope.selectContestType = function (contestType) {
             $scope.closeContestTypeModal();
-            $rootScope.gotoView("app.setContest", false, {"mode" : "add", "contestType" : contestType});
+            $rootScope.gotoView("app.setContest", false, {"mode": "add", "contestType": contestType});
         };
     })
 
@@ -206,13 +206,11 @@
                     return;
                 }
 
-                if (!$scope.contestCharts) {
-                    $scope.contestCharts = [];
-                }
+                $scope.contestCharts = [];
 
                 //Add server contests to the end of the array
                 for (var i = 0; i < contestsResult.list.length; i++) {
-                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i],i);
+                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], i);
                     $scope.contestCharts.push(contestChart);
                 }
             });
@@ -261,6 +259,51 @@
 
         $scope.closeQuestionInfoModal = function () {
             $scope.questionInfoModal.hide();
+        };
+
+        //-------------------------------------------------------
+        // Question modal
+        // -------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/question.html", function (questionModal) {
+            $scope.questionModal = questionModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        $scope.openQuestionModal = function () {
+
+            $scope.questionModalTitle = $translate.instant("EDIT_QUESTION");
+
+            $scope.question = {
+                "_id": $scope.quiz.currentQuestion._id,
+                "text": $scope.quiz.currentQuestion.text,
+                "answers": []
+            };
+
+            for (var i=0; i<$scope.quiz.currentQuestion.answers.length; i++) {
+                $scope.question.answers[$scope.quiz.currentQuestion.answers[i].originalIndex] = $scope.quiz.currentQuestion.answers[i].text;
+            }
+
+            $scope.questionForm.$setPristine();
+            $scope.questionForm.$setUntouched();
+            $scope.questionModal.show();
+        };
+
+        $scope.closeQuestionModal = function (questionSet) {
+
+            if (!questionSet) {
+                $scope.questionModal.hide();
+                return;
+            }
+
+            QuizService.setQuestionByAdmin($scope.question, function (result) {
+                $scope.quiz.currentQuestion.text = $scope.question.text;
+                for (var i=0; i<$scope.question.answers.length; i++) {
+                    $scope.quiz.currentQuestion.answers[i].text = $scope.question.answers[$scope.quiz.currentQuestion.answers[i].originalIndex];
+                }
+                $scope.questionModal.hide();
+            })
         };
 
         //Hardware back button handlers
@@ -847,13 +890,6 @@
             $scope.contestEndDatePicker.from = pastDate;
         }
 
-        $scope.contestEndOptions = {
-            "m30": {"value": "m30", "number": 30, "units": "ENDS_IN_MINUTES", "msecMultiplier": 60 * 1000},
-            "h4": {"value": "h4", "number": 4, "units": "ENDS_IN_HOURS", "msecMultiplier": 60 * 60 * 1000},
-            "h24": {"value": "h24", "number": 24, "units": "ENDS_IN_HOURS", "msecMultiplier": 60 * 60 * 1000},
-            "d3": {"value": "d3", "number": 3, "units": "ENDS_IN_DAYS", "msecMultiplier": 24 * 60 * 60 * 1000}
-        }
-
         $scope.contestQuestionSources = {
             "system": {
                 "value": "system",
@@ -870,7 +906,7 @@
 
         $scope.showRemoveContest = false;
 
-        $scope.searchQuestions = {"searchText" : null};
+        $scope.searchQuestions = {"searchText": null};
 
         //-------------------------------------------------------
         // Choose Contest end option Popover
@@ -887,7 +923,7 @@
 
         $scope.closeContestEndsInPopover = function (contestEndsInOption) {
             $scope.localViewData.endOption = contestEndsInOption.value;
-            $scope.localViewData.endDate = new Date((new Date()).getTime() + $scope.contestEndOptions[contestEndsInOption.value].number * $scope.contestEndOptions[contestEndsInOption.value].msecMultiplier);
+            $scope.localViewData.endDate = new Date((new Date()).getTime() + $rootScope.settings.newContest.endOptions[contestEndsInOption.value].number * $rootScope.settings.newContest.endOptions[contestEndsInOption.value].msecMultiplier);
             $scope.contestEndsInPopover.hide();
         };
 
@@ -930,11 +966,11 @@
 
             if (mode === "add") {
                 if (maxQuestionsReached()) {
-                    PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max : $rootScope.settings.newContest.privateQuestions.max }))
+                    PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max: $rootScope.settings.newContest.privateQuestions.max}))
                     return;
                 }
                 $scope.questionModalTitle = $translate.instant("NEW_QUESTION");
-                $scope.question = {"mode": mode, "text": null, answers: [null, null, null, null]};
+                $scope.question = {"text": null, answers: [null, null, null, null]};
             }
             else if (mode === "edit") {
                 $scope.questionModalTitle = $translate.instant("EDIT_QUESTION");
@@ -949,7 +985,46 @@
             $scope.questionModal.show();
         };
 
-        $scope.closeQuestionModal = function () {
+        $scope.closeQuestionModal = function (questionSet) {
+
+            if (!questionSet) {
+                $scope.questionModal.hide();
+                return;
+            }
+
+            if (!$scope.localViewData.questions) {
+                $scope.localViewData.questions = {"visibleCount": 0, "list": []};
+            }
+
+            //Check if question exists
+            var matchCount = 0;
+            for (var i = 0; i < $scope.localViewData.questions.list.length; i++) {
+                if ($scope.question.text.trim() === $scope.localViewData.questions.list[i].text.trim()) {
+                    matchCount++;
+                }
+            }
+
+            if ((!$scope.question._id && matchCount > 0) || matchCount > 1) {
+                //In edit mode - the question text will be matched at least once - to the current question in the list
+                if (!$scope.questionForm.question.$error) {
+                    $scope.questionForm.question.$error = {};
+                }
+                $scope.questionForm.question.$error["questionAlreadyExists"] = true;
+                $scope.questionForm.question.$invalid = true;
+                return;
+            }
+
+            if (!$scope.question._id) {
+                //New questions
+                $scope.question._id = "new";
+                $scope.localViewData.questions.list.push($scope.question);
+                $scope.localViewData.questions.visibleCount++;
+            }
+            else if ($scope.question._id !== "new") {
+                //Set dirty flag for the question - so server will update it in the db
+                $scope.question.isDirty = true;
+            }
+
             $scope.questionModal.hide();
         };
 
@@ -966,7 +1041,7 @@
         $scope.openSearchQuestionsModal = function () {
 
             if (maxQuestionsReached()) {
-                PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max : $rootScope.settings.newContest.privateQuestions.max }))
+                PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max: $rootScope.settings.newContest.privateQuestions.max}))
                 return;
             }
 
@@ -977,79 +1052,64 @@
         };
 
         $scope.closeSearchQuestionsModal = function (selected) {
-            if (selected && $scope.searchQuestions.result) {
 
-                //return ($scope.localViewData.questions && $scope.localViewData.questions.visibleCount === $rootScope.settings.newContest.privateQuestions.max);
-                var selectedCount = 0
-                for (var i=0; i<$scope.searchQuestions.result.length; i++) {
-                    if ($scope.searchQuestions.result[i].checked) {
-                        selectedCount++;
+            if (!selected || !$scope.searchQuestions.result) {
+                $scope.searchQuestionsModal.hide();
+                return;
+            }
+
+            //Find how many selected
+            var selectedCount = 0
+            for (var i = 0; i < $scope.searchQuestions.result.length; i++) {
+                if ($scope.searchQuestions.result[i].checked) {
+                    selectedCount++;
+                }
+            }
+
+            if (!$scope.localViewData.questions) {
+                $scope.localViewData.questions = {"visibleCount": 0, "list": []};
+            }
+
+            //Check if max reached together with the current questions in the contest
+            if (selectedCount > 0 && $scope.localViewData.questions.visibleCount + selectedCount > $rootScope.settings.newContest.privateQuestions.max) {
+                PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max: $rootScope.settings.newContest.privateQuestions.max}))
+                return;
+            }
+
+            for (var i = 0; i < $scope.searchQuestions.result.length; i++) {
+
+                if (!$scope.searchQuestions.result[i].checked) {
+                    continue;
+                }
+
+                var questionExist = false;
+                for (var j = 0; j < $scope.localViewData.questions.list.length; j++) {
+                    //Check if question was marked as "deleted", and now re-instated
+                    if ($scope.searchQuestions.result[i]._id === $scope.localViewData.questions.list[j]._id && $scope.localViewData.questions.list[j].deleted) {
+                        $scope.localViewData.questions.list[j].deleted = false;
+                        questionExist = true;
+                        break;
                     }
                 }
-                if (!$scope.localViewData.questions) {
-                    $scope.localViewData.questions = {"visibleCount": 0, "list": []};
-                }
 
-                if (selectedCount > 0 && $scope.localViewData.questions.list.length + selectedCount > $rootScope.settings.newContest.privateQuestions.max) {
-                    PopupService.alert($translate.instant("MAX_USER_QUESTIONS_REACHED", {max : $rootScope.settings.newContest.privateQuestions.max }))
-                    return;
-                }
-
-                for (var i=0; i<$scope.searchQuestions.result.length; i++) {
-                    if ($scope.searchQuestions.result[i].checked) {
-                        $scope.localViewData.questions.visibleCount++;
-                        $scope.localViewData.questions.list.push($scope.searchQuestions.result[i]);
-                    }
+                if (!questionExist) {
+                    $scope.localViewData.questions.visibleCount++;
+                    $scope.localViewData.questions.list.push($scope.searchQuestions.result[i]);
                 }
             }
 
             $scope.searchQuestionsModal.hide();
         };
 
-        $scope.$on("whoSmarter-questionSet", function () {
-            if (!$scope.localViewData.questions) {
-                $scope.localViewData.questions = {"visibleCount": 0, "list": []};
-            }
-
-            //Check if question exists
-            var matchCount = 0;
-            for (var i = 0; i < $scope.localViewData.questions.list.length; i++) {
-                if ($scope.question.text.trim() === $scope.localViewData.questions.list[i].text.trim()) {
-                    matchCount++;
-                }
-            }
-
-            if (($scope.question.mode === "add") && matchCount > 0 || ($scope.question.mode === "edit" && matchCount > 1)) {
-                //In edit mode - the question text will be matched at least once - to the current question in the list
-                if (!$scope.questionForm.question.$error) {
-                    $scope.questionForm.question.$error = {};
-                }
-                $scope.questionForm.question.$error["questionAlreadyExists"] = true;
-                $scope.questionForm.question.$invalid = true;
-                return;
-            }
-
-            if ($scope.question.mode === "add") {
-                $scope.question.mode = "edit"
-                $scope.localViewData.questions.list.push($scope.question);
-                $scope.localViewData.questions.visibleCount++;
-            }
-            else {
-                //Set dirty flag for the question - so server will update it in the db
-                $scope.question.isDirty = true;
-            }
-            $scope.closeQuestionModal();
-        });
-
         $scope.removeQuestion = function (index) {
             PopupService.confirm("REMOVE_QUESTION", "CONFIRM_REMOVE_QUESTION", {}, function () {
                 if ($scope.localViewData.questions.list && index < $scope.localViewData.questions.list.length) {
-                    if ($scope.localViewData.questions.list[index]._id) {
+                    if ($scope.localViewData.questions.list[index]._id && $scope.localViewData.questions.list[index]._id !== "new") {
                         //Question has an id in the database - logically remove
                         $scope.localViewData.questions.list[index].deleted = true;
                     }
                     else {
-                        //Question does not have an id in the database - physically remove
+                        //Question does not have an actual id in the database - physically remove
                         $scope.localViewData.questions.list.splice(index, 1);
                     }
                     $scope.localViewData.questions.visibleCount--;
@@ -1081,24 +1141,24 @@
         };
         $state.current.data.searchQuestionsModal.closeHandler = $scope.closeSearchQuestionsModal;
 
-        $scope.searchSubmitted = function() {
+        $scope.searchSubmitted = function () {
             var existingQuestionIds = [];
             if ($scope.localViewData.questions && $scope.localViewData.questions.visibleCount > 0) {
-                for(var i=0; i<$scope.localViewData.questions.list.length; i++) {
+                for (var i = 0; i < $scope.localViewData.questions.list.length; i++) {
                     if ($scope.localViewData.questions.list[i]._id && !$scope.localViewData.questions.list[i].deleted) {
                         existingQuestionIds.push($scope.localViewData.questions.list[i]._id);
                     }
                 }
             }
 
-            ContestsService.searchMyQuestions($scope.searchQuestions.searchText, existingQuestionIds, function(questions) {
+            ContestsService.searchMyQuestions($scope.searchQuestions.searchText, existingQuestionIds, function (questions) {
                 $scope.searchQuestions.result = questions;
             })
         };
 
         function retrieveUserQuestions() {
-            ContestsService.getQuestions($scope.localViewData.userQuestions, function(questions) {
-               $scope.localViewData.questions = {"visibleCount" : questions.length, "list" : questions};
+            ContestsService.getQuestions($scope.localViewData.userQuestions, function (questions) {
+                $scope.localViewData.questions = {"visibleCount": questions.length, "list": questions};
             });
         }
 
@@ -1782,7 +1842,6 @@
             refreshContest(results.contest);
             $scope.lastQuizResults = results;
             $scope.animateResults = true;
-
             $timeout(function () {
                 SoundService.play(results.data.sound);
             }, 500);

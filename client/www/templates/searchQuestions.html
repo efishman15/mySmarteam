@@ -30,8 +30,8 @@
             </div>
 
             <div class="padding" ng-if="searchQuestions.result">
-                <div class="center bold">{{ searchQuestions.result.length > 0 ? 'RESULTS' : 'NO_RESULTS' | translate}}
-                </div>
+                <h3 class="center bold">{{ searchQuestions.result.length > 0 ? 'RESULTS' : 'NO_RESULTS' | translate}}
+                </h3>
                 <ion-checkbox class="item item-divider" ng-repeat="question in searchQuestions.result track by $index"
                               ng-model="question.checked">
                     <span ng-class="{'my-check-rtl-fix' : $root.settings.languages[$root.user.settings.language].direction = 'rtl'}">{{question.text}}</span>

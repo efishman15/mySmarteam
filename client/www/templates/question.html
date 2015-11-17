@@ -3,7 +3,7 @@
     <ion-header-bar align-title="center" class="bar bar-dark bar-stable">
         <h1 class="title">{{questionModalTitle}}</h1>
 
-        <div class="button button-clear" ng-click="closeQuestionModal()">
+        <div class="button button-clear" ng-click="closeQuestionModal(false)">
             <span class="icon ion-close"></span>
         </div>
     </ion-header-bar>
@@ -167,7 +167,7 @@
 
             <div class="button-bar padding question-editor-set-button">
                 <button class="button button-bar button-calm" translate="OK"
-                        ng-click="questionForm.$valid && $emit('whoSmarter-questionSet')"
+                        ng-click="questionForm.$valid && closeQuestionModal(true)"
                         analytics-on="click" analytics-event="question/set">
                 </button>
             </div>

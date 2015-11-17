@@ -6,6 +6,7 @@ var exceptions = require(path.resolve(__dirname, "../utils/exceptions"));
 var mathjs = require("mathjs");
 var commonBusinessLogic = require(path.resolve(__dirname, "./common"));
 var generalUtils = require(path.resolve(__dirname, "../utils/general"));
+var ObjectId = require("mongodb").ObjectID;
 
 //---------------------------------------------------------------------
 // private functions
@@ -13,12 +14,30 @@ var generalUtils = require(path.resolve(__dirname, "../utils/general"));
 
 //setUserQuestions
 function setUserQuestions(questionIndex, data, callback) {
+    //Check if finished recursion cycle
+    if (questionIndex === data.contest.questions.list.length) {
+        setUserQuestionIds(data, callback);
+        return;
+    }
 
-    if (!data.contest.questions.list[questionIndex]._id) {
+    if (data.mode === "add" &&
+        data.contest.questions.list[questionIndex]._id !== "new" &&
+        data.contest.questions.list[questionIndex].deleted
+    ) {
+        //Proceed to next question - when adding a new contest, and a physical question
+        //Has been added and deleted, this question also belongs to another existing contest
+        //Disregard this question
+        setUserQuestions(questionIndex + 1, data, callback);
+        return;
+    }
 
-        //Add question
+    if (data.contest.questions.list[questionIndex]._id === "new") {
+
+        //Add question text
         data.newQuestion = {};
         data.newQuestion.text = data.contest.questions.list[questionIndex].text;
+
+        //Add Answers
         data.newQuestion.answers = [];
         for (var j = 0; j < data.contest.questions.list[questionIndex].answers.length; j++) {
             var answer = {"text": data.contest.questions.list[questionIndex].answers[j]};
@@ -27,63 +46,55 @@ function setUserQuestions(questionIndex, data, callback) {
             }
             data.newQuestion.answers.push(answer);
         }
+
         dalDb.insertQuestion(data, function (err, result) {
+
+            if (err) {
+                callback(new exceptions.ServerException("Error adding a new user question", data));
+                return;
+            }
+
             data.contest.questions.list[questionIndex]._id = data.newQuestion._id;
-            if (questionIndex === data.contest.questions.list.length - 1) {
-                setUserQuestionIds(data, callback);
-            }
-            else {
-                setUserQuestions(questionIndex + 1, data, callback);
-            }
+
+            setUserQuestions(questionIndex + 1, data, callback);
         });
     }
-    else {
-        //question exists in the db
-        if (data.contest.questions.list[questionIndex].deleted) {
-            //Remove question
-            data.questionId = data.contest.questions.list[questionIndex]._id;
-            dalDb.removeQuestion(data, function (err, result) {
-                if (questionIndex === data.contest.questions.list.length - 1) {
-                    setUserQuestionIds(data, callback);
-                }
-                else {
-                    setUserQuestions(questionIndex + 1, data, callback);
-                }
-            });
-        }
-        else if (data.contest.questions.list[questionIndex].isDirty) {
-            //Set question
-            data.questionId = data.contest.questions.list[questionIndex]._id;
-            data.setData = {};
+    else if (data.contest.questions.list[questionIndex].isDirty) {
+        //Set question - update text/answers and/or associate to the current contest
+        data.questionId = data.contest.questions.list[questionIndex]._id;
+
+        data.unsetData = null;
+        data.setData = {};
+
+        if (data.contest.questions.list[questionIndex].isDirty) {
+
+            //Question text or answers text has been modified
             data.setData.text = data.contest.questions.list[questionIndex].text;
-            for (var j = 0; j < data.contest.questions.list[questionIndex].answers.length; j++) {
+            for (j = 0; j < data.contest.questions.list[questionIndex].answers.length; j++) {
                 data.setData["answers." + j + ".text"] = data.contest.questions.list[questionIndex].answers[j];
             }
-            dalDb.setQuestion(data, function (err, result) {
-                if (questionIndex === data.contest.questions.list.length - 1) {
-                    setUserQuestionIds(data, callback);
+
+            dalDb.setQuestion(data, function(err, result) {
+                if (err) {
+                    callback(new exceptions.ServerException("Error updating question", data));
+                    return;
                 }
-                else {
-                    setUserQuestions(questionIndex + 1, data, callback);
-                }
+                setUserQuestions(questionIndex + 1, data, callback);
             });
         }
         else {
-            //Not deleted nor updated
-            if (questionIndex === data.contest.questions.list.length - 1) {
-                setUserQuestionIds(data, callback);
-            }
-            else {
-                setUserQuestions(questionIndex + 1, data, callback);
-            }
+            setUserQuestions(questionIndex + 1, data, callback);
         }
+    }
+    else {
+        setUserQuestions(questionIndex + 1, data, callback);
     }
 }
 
 //setUserQuestionIds
 function setUserQuestionIds(data, callback) {
     data.contest.userQuestions = [];
-    for(var i=0; i<data.contest.questions.list.length; i++) {
+    for (var i = 0; i < data.contest.questions.list.length; i++) {
         if (!data.contest.questions.list[i].deleted) {
             data.contest.userQuestions.push(data.contest.questions.list[i]._id);
         }
@@ -114,7 +125,7 @@ function validateContestData(data, callback) {
 
     //Adding new contest is locked
     if (data.mode === "add" && data.session.features.newContest.locked) {
-        callback(new exceptions.ServerException("Attempt to create a new contest without having an eligable rank or feature asset", {
+        callback(new exceptions.ServerException("Attempt to create a new contest without having an eligible rank or feature asset", {
             "session": data.session,
             "contest": data.contest
         }));
@@ -588,7 +599,7 @@ function joinToContestObject(contest, teamId, session) {
         "team": teamId,
         "score": 0,
         "teamScores": [0, 0]
-    }
+    };
 
     return newJoin;
 }
@@ -632,7 +643,6 @@ module.exports.setContest = function (req, res, next) {
 
         //Add/set the contest
         function (data, callback) {
-            data.closeConnection = true;
             if (data.mode == "add") {
                 //Join by default to the first team (on screen appears as "my team")
                 joinToContestObject(data.contest, 0, data.session);
@@ -666,9 +676,11 @@ module.exports.setContest = function (req, res, next) {
                     "teams.1.leaderLink": data.contest.teams[1].leaderLink
                 };
 
+                data.closeConnection = true;
                 dalDb.setContest(data, callback);
             }
             else {
+                dalDb.closeDb(data);
                 callback(null, data);
             }
         },
@@ -737,7 +749,7 @@ module.exports.removeContest = function (req, res, next) {
             res.send(err.httpStatus, err);
         }
     });
-}
+};
 
 //-------------------------------------------------------------------------------------
 // getContests
@@ -874,7 +886,7 @@ module.exports.getQuestionsByIds = function (req, res, next) {
         //Retrieve the contest
         function (data, callback) {
             data.closeConnection = true;
-            dalDb.getQuestionsByIds(data,callback);
+            dalDb.getQuestionsByIds(data, callback);
         }
     ];
 

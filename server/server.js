@@ -91,6 +91,8 @@ dalDb.loadSettings(null, function (err, data) {
     app.post("/quiz/start", isAuthenticated, quiz.start);
     app.post("/quiz/answer", isAuthenticated, quiz.answer);
     app.post("/quiz/nextQuestion", isAuthenticated, quiz.nextQuestion);
+    app.post("/quiz/setQuestionByAdmin", isAuthenticated, quiz.setQuestionByAdmin);
+
     app.post("/contests/get", isAuthenticated, contests.getContest);
     app.post("/contests/set", isAuthenticated, contests.setContest);
     app.post("/contests/remove", isAuthenticated, contests.removeContest);
