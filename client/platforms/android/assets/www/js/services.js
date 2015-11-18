@@ -1,7 +1,7 @@
 angular.module("whoSmarter.services", [])
 
     //User Service
-    .factory("UserService", function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform, StoreService) {
+    .factory("UserService", function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform, StoreService, $timeout) {
 
         //----------------------------------------------
         // Service Variables
@@ -328,12 +328,7 @@ angular.module("whoSmarter.services", [])
                                     "name": "whoSmarter-serverPopup",
                                     "data": response.data.serverPopup
                                 };
-                                if (resolveRequests.length > 0) {
-                                    resolveEvents.push(popupEvent);
-                                }
-                                else {
-                                    $rootScope.$broadcast(popupEvent.name, popupEvent.data);
-                                }
+                                resolveEvents.push(popupEvent);
                             }
                         });
 
@@ -423,7 +418,10 @@ angular.module("whoSmarter.services", [])
                         };
 
                         $rootScope.$on("whoSmarter-serverPopup", function (event, data) {
-                            $rootScope.gotoView("serverPopup", false, {serverPopup: data})
+                            //Show the popup with a delay since it might be shown right on app init/login
+                            $timeout(function() {
+                                $rootScope.gotoView("serverPopup", false, {serverPopup: data})
+                            },1000);
                         });
 
                         if (!$rootScope.settings) {
@@ -452,8 +450,7 @@ angular.module("whoSmarter.services", [])
                     }
                     ,
                     (resolveData && resolveData.language ? resolveData.language : null), null
-                )
-                ;
+                );
             }
 
             return deferred.promise;
@@ -549,6 +546,7 @@ angular.module("whoSmarter.services", [])
             var postData = {};
 
             postData.language = $rootScope.user.settings.language;
+
             postData.clientInfo = $rootScope.user.clientInfo;
 
             return ApiService.post(path, "settings", postData,

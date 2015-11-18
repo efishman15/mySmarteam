@@ -17,6 +17,10 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 }
 
                 if (window.cordova) {
+
+                    //Must be set manually for keyboard issue when opened - to scroll elements of the focused field
+                    ionic.Platform.isFullScreen = true;
+
                     cordova.getAppVersion(function (version) {
                         if ($rootScope.user && $rootScope.user.clientInfo) {
                             $rootScope.user.clientInfo.appVersion = version;
@@ -191,8 +195,14 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 "controller": "HomeCtrl",
                 "templateUrl": "templates/home.html",
                 "data": {
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        PopupService.confirmExitApp();
+                    "exitApp" : true,
+                    "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
+                        if (currentState && currentState.data && currentState.data.exitApp) {
+                            PopupService.confirmExitApp();
+                        }
+                        else {
+                            $rootScope.goBack();
+                        }
                     }
                 }
             })
@@ -203,8 +213,14 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 "controller": "ServerPopupCtrl",
                 "templateUrl": "templates/serverPopup.html",
                 "data": {
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        event.preventDefault();
+                    "currentPopup": null,
+                    "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
+                        if (currentState.data.currentPopup && currentState.data.currentPopup.preventBack) {
+                            event.preventDefault();
+                        }
+                        else {
+                            $rootScope.goBack();
+                        }
                     }
                 }
             })
@@ -327,7 +343,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     }
                 },
                 "data": {
-                    "questionInfo" : {"isOpenHandler" : null, closeHandler: null},
+                    "questionInfo": {"isOpenHandler": null, closeHandler: null},
                     "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
                         if (currentState.data.questionInfo.isOpenHandler && currentState.data.questionInfo.isOpenHandler() && currentState.data.questionInfo.closeHandler) {
                             currentState.data.questionInfo.closeHandler();
@@ -352,10 +368,10 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "controller": "SetContestCtrl"
                     }
                 },
-                "params": {"mode": null, "contest" : null, "contestType": null},
+                "params": {"mode": null, "contest": null, "contestType": null},
                 "data": {
-                    "questionModal" : {"isOpenHandler" : null, closeHandler: null},
-                    "searchQuestionsModal" : {"isOpenHandler" : null, closeHandler: null},
+                    "questionModal": {"isOpenHandler": null, closeHandler: null},
+                    "searchQuestionsModal": {"isOpenHandler": null, closeHandler: null},
                     "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
                         if (currentState.data.questionModal.isOpenHandler && currentState.data.questionModal.isOpenHandler() && currentState.data.questionModal.closeHandler) {
                             currentState.data.questionModal.closeHandler();
@@ -452,8 +468,20 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 templateUrl: "templates/menu.html",
                 controller: "AppCtrl",
                 "data": {
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        PopupService.confirmExitApp();
+                    "contestType": {"isOpenHandler": null, closeHandler: null},
+                    "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
+                        if (currentState.data.contestType.isOpenHandler && currentState.data.contestType.isOpenHandler() && currentState.data.contestType.closeHandler) {
+                            currentState.data.contestType.closeHandler();
+                        }
+                        else {
+                            if (currentState && currentState.data && currentState.data.exitApp) {
+                                PopupService.confirmExitApp();
+                            }
+                            else
+                            {
+                                $rootScope.goBack();
+                            }
+                        }
                     }
                 }
             })
@@ -489,6 +517,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     }
                 },
                 "data": {
+                    "exitApp" : true,
                     "serverTab": "mine",
                     "showPlay": true,
                     "showParticipants": false,
@@ -510,6 +539,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     }
                 },
                 data: {
+                    "exitApp" : true,
                     "serverTab": "running",
                     "showPlay": true,
                     "showParticipants": false,
@@ -531,6 +561,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     }
                 },
                 "data": {
+                    "exitApp" : true,
                     "serverTab": "recentlyFinished",
                     "showPlay": false,
                     "showParticipants": true,
@@ -550,6 +581,9 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "templateUrl": "templates/friendsLeaderboard.html",
                         "controller": "FriendsLeaderboardCtrl"
                     }
+                },
+                "data" : {
+                    "exitApp" : true
                 }
             })
 
@@ -565,6 +599,9 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "templateUrl": "templates/weeklyLeaderboard.html",
                         "controller": "WeeklyLeaderboardCtrl"
                     }
+                },
+                "data" : {
+                    "exitApp" : true
                 }
             });
 
@@ -584,7 +621,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
 
                 ngModel.$validators.mustBeDifferent = function (modelValue) {
                     if (modelValue && scope.otherModelValues) {
-                        for(var i=0; i<scope.otherModelValues.length; i++) {
+                        for (var i = 0; i < scope.otherModelValues.length; i++) {
                             if (modelValue && scope.otherModelValues[i].$modelValue && modelValue.trim() === scope.otherModelValues[i].$modelValue.trim()) {
                                 return false;
                             }
@@ -665,8 +702,8 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             require: "form",
             link: function (scope, element, attrs, formCtrl) {
                 var currentScope = scope;
-                var level = parseInt(attrs.scopeFormLevel,10);
-                for(var i=0; i<level; i++) {
+                var level = parseInt(attrs.scopeFormLevel, 10);
+                for (var i = 0; i < level; i++) {
                     currentScope = currentScope.$parent;
                     if (!currentScope) {
                         break;
@@ -678,7 +715,8 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     currentScope[element[0].name] = formCtrl;
                 }
             }
-    }})
+        }
+    })
 
     .directive("tabsSwipable", ["$ionicGesture", function ($ionicGesture) {
         //

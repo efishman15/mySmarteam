@@ -1,6 +1,6 @@
 ﻿angular.module("whoSmarter.controllers", ["whoSmarter.services", "ngAnimate"])
 
-    .controller("AppCtrl", function ($scope, $rootScope, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService, ShareService) {
+    .controller("AppCtrl", function ($scope, $rootScope, $state, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService, ShareService) {
 
         $rootScope.$on("whoSmarter-directionChanged", function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
@@ -74,6 +74,13 @@
             $scope.contestTypeModal.hide();
         };
 
+        //Hardware back button handlers
+        $state.current.data.contestType.isOpenHandler = function () {
+            return $scope.contestTypeModal.isShown()
+        };
+        $state.current.data.contestType.closeHandler = $scope.closeContestTypeModal;
+
+
         $scope.canvas = document.createElement("canvas");
         $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
         $scope.canvas.height = $rootScope.settings.xpControl.canvas.height;
@@ -131,13 +138,13 @@
                 $rootScope.gotoRootView();
             }
             else if (!$rootScope.user) {
-                UserService.initUser(function () {
-                    UserService.resolveEvents();
-                });
+                UserService.initUser();
             }
-            else {
-                UserService.resolveEvents();
-            }
+        });
+
+        $scope.$on("$ionicView.afterEnter", function (event, viewData) {
+            //Might have popups waiting to be shown such as must update popup etc.
+            UserService.resolveEvents();
         });
 
         $scope.changeLanguage = function (language) {
@@ -159,7 +166,10 @@
 
         $scope.roundTabState = [true, false, false];
 
-        UserService.resolveEvents();
+        $scope.$on("$ionicView.afterEnter", function (event, viewData) {
+            //Might have popups waiting to be shown such as must update popup etc.
+            UserService.resolveEvents();
+        });
 
         $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
 
@@ -1556,9 +1566,12 @@
             if (!$stateParams.serverPopup) {
                 $rootScope.gotoRootView();
             }
-        });
 
-        $scope.serverPopup = $stateParams.serverPopup;
+            $scope.serverPopup = $stateParams.serverPopup;
+
+            $state.current.data.currentPopup = $stateParams.serverPopup;
+
+        });
 
         $scope.buttonAction = function (button) {
             switch (button.action) {
@@ -1734,6 +1747,7 @@
             if ($scope.lastQuizResults && $scope.lastQuizResults.data.facebookPost && $scope.animateResults) {
                 $rootScope.gotoView("app.facebookPost", false, {"quizResults": $scope.lastQuizResults});
             }
+
         });
 
         $scope.$on("$ionicView.afterLeave", function (event, viewData) {

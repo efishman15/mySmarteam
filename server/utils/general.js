@@ -125,22 +125,22 @@ module.exports.getSettings = function (req, res, next) {
 
             response.serverPopup = JSON.parse(JSON.stringify(settings.server.versions.mustUpdate.popup));
 
-            if (settings.server.versions.mustUpdate.popup.title) {
+            if (response.serverPopup.title) {
                 //Convert the text array to a simple string picking only the required language
-                settings.server.versions.mustUpdate.popup.title = settings.server.versions.mustUpdate.popup.title[data.language];
+                response.serverPopup.title = response.serverPopup.title[data.language];
             }
-            if (settings.server.versions.mustUpdate.popup.message) {
+            if (response.serverPopup.message) {
                 //Convert the text array to a simple string picking only the required language
-                settings.server.versions.mustUpdate.popup.message = settings.server.versions.mustUpdate.popup.message[data.language];
+                response.serverPopup.message = response.serverPopup.message[data.language];
             }
 
-            for (var i = 0; i < settings.server.versions.mustUpdate.popup.buttons.length; i++) {
-                if (settings.server.versions.mustUpdate.popup.buttons[i].text) {
+            for (var i = 0; i < response.serverPopup.buttons.length; i++) {
+                if (response.serverPopup.buttons[i].text) {
                     //Convert the text array to a simple string picking only the required language
-                    settings.server.versions.mustUpdate.popup.buttons[i].text = settings.server.versions.mustUpdate.popup.buttons[i].text[data.language];
+                    response.serverPopup.buttons[i].text = response.serverPopup.buttons[i].text[data.language];
                 }
-                if (settings.server.versions.mustUpdate.popup.buttons[i].link && settings.server.versions.mustUpdate.popup.buttons[i].link.indexOf("#storeLink#") > -1) {
-                    settings.server.versions.mustUpdate.popup.buttons[i].link = settings.server.versions.mustUpdate.popup.buttons[i].link.replace("#storeLink#",settings.server.platforms[data.clientInfo.platform].storeLink);
+                if (response.serverPopup.buttons[i].link && response.serverPopup.buttons[i].link.indexOf("#storeLink#") > -1) {
+                    response.serverPopup.buttons[i].link = response.serverPopup.buttons[i].link.replace("#storeLink#",settings.server.platforms[data.clientInfo.platform].storeLink);
                 }
             }
         }
