@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="io.branch.sdk" version="1.7.0">
-	<name>BranchSDK</name>
-	<description>Branch SDK Plugin</description>
-	<license>Apache 2.0</license>
-	<keywords>branch</keywords>
-	<js-module src="dist/build.js" name="branch">
-		<clobbers target="branch" />
-		<clobbers target="Branch" />
-	</js-module>
-	<platform name="ios">
-		<config-file target="config.xml" parent="/*">
-			<feature name="BranchDevice">
-				<param name="ios-package" value="BNCDevice" />
-				<param name="onload" value="true" />
-			</feature>
-		</config-file>
-		<header-file src="cordova-src/ios/BNCDevice.h" />
-		<source-file src="cordova-src/ios/BNCDevice.m" />
-	</platform>
-	<platform name="android">
-		<config-file target="config.xml" parent="/*">
-			<feature name="BranchDevice">
-				<param name="android-package" value="io.branch.BranchDevice"/>
-				<param name="onload" value="true" />
-			</feature>
-		</config-file>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
+        id="io.branch.sdk" version="1.7.0">
+    <name>BranchSDK</name>
+    <description>Branch SDK Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>branch</keywords>
+    <js-module src="dist/build.js" name="branch">
+        <clobbers target="branch"/>
+        <clobbers target="Branch"/>
+    </js-module>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BranchDevice">
+                <param name="ios-package" value="BNCDevice"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
+        <header-file src="cordova-src/ios/BNCDevice.h"/>
+        <source-file src="cordova-src/ios/BNCDevice.m"/>
+    </platform>
+    <platform name="android">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BranchDevice">
+                <param name="android-package" value="io.branch.BranchDevice"/>
+                <param name="onload" value="true"/>
+            </feature>
+        </config-file>
 
-		<config-file target="AndroidManifest.xml" parent="application">
-			<activity
-					android:name="com.yourapp.SplashActivity"
-					android:label="@string/app_name" >
+        <config-file target="AndroidManifest.xml" parent="application">
+            <activity
+                    android:name="com.fplabs.whosmarter.MainhActivity"
+                    android:label="@string/app_name">
 
-				<!-- Add this intent filter below, and change yourapp to your app name -->
-				<intent-filter>
-					<data android:scheme="your_uri_here" android:host="open" />
-					<action android:name="android.intent.action.VIEW" />
-					<category android:name="android.intent.category.DEFAULT" />
-					<category android:name="android.intent.category.BROWSABLE" />
-				</intent-filter>
-			</activity>		</config-file>
+                <!-- Add this intent filter below, and change yourapp to your app name -->
+                <intent-filter>
+                    <data android:scheme="whosmarter" android:host="open"/>
+                    <action android:name="android.intent.action.VIEW"/>
+                    <category android:name="android.intent.category.DEFAULT"/>
+                    <category android:name="android.intent.category.BROWSABLE"/>
+                </intent-filter>
+            </activity>
+        </config-file>
 
-		<source-file src="cordova-src/android/BranchDevice.java" target-dir="src/io/branch" />
-	</platform>
+        <source-file src="cordova-src/android/BranchDevice.java" target-dir="src/io/branch"/>
+    </platform>
 </plugin>
