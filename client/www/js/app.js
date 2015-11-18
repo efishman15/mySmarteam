@@ -450,7 +450,12 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 },
                 abstract: true,
                 templateUrl: "templates/menu.html",
-                controller: "AppCtrl"
+                controller: "AppCtrl",
+                "data": {
+                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
+                        PopupService.confirmExitApp();
+                    }
+                }
             })
 
             // setup an abstract state for the tabs directive
@@ -487,10 +492,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     "serverTab": "mine",
                     "showPlay": true,
                     "showParticipants": false,
-                    "title": "MY_CONTESTS",
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        PopupService.confirmExitApp();
-                    }
+                    "title": "MY_CONTESTS"
                 }
             })
 
@@ -511,10 +513,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     "serverTab": "running",
                     "showPlay": true,
                     "showParticipants": false,
-                    "title": "RUNNING_CONTESTS",
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        PopupService.confirmExitApp();
-                    }
+                    "title": "RUNNING_CONTESTS"
                 }
             })
 
@@ -535,10 +534,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     "serverTab": "recentlyFinished",
                     "showPlay": false,
                     "showParticipants": true,
-                    "title": "LEADERBOARDS",
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        PopupService.confirmExitApp();
-                    }
+                    "title": "LEADERBOARDS"
                 }
             })
 
@@ -554,11 +550,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "templateUrl": "templates/friendsLeaderboard.html",
                         "controller": "FriendsLeaderboardCtrl"
                     }
-                },
-                "data": {
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        PopupService.confirmExitApp();
-                    }
                 }
             })
 
@@ -573,11 +564,6 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     "leaderboardTab": {
                         "templateUrl": "templates/weeklyLeaderboard.html",
                         "controller": "WeeklyLeaderboardCtrl"
-                    }
-                },
-                "data": {
-                    "backButtonHandler": function backHandler(event, PopupService, currentState) {
-                        PopupService.confirmExitApp();
                     }
                 }
             });

@@ -117,6 +117,10 @@ label.item.valid-lr {
     overflow: visible !important;
 }
 
+.white-space-pre-line {
+    white-space: pre-line !important;
+}
+
 .language {
     color: #000000;
     font-size: 80%;
