@@ -31,8 +31,9 @@ app.use(methodOverride());      // simulate DELETE and PUT
 app.use(express.static(path.resolve(__dirname, "../client/www")));
 
 //Jade
-app.set('views', "./views");
+app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+app.set('view options', { layout: true });
 
 //----------------------------------------------------
 // Main request processor function
