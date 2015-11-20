@@ -303,7 +303,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         return UserService.resolveAuthentication(null, "contest");
                     }
                 },
-                "params": {"id": null},
+                "params": {"id": null, "justCreated" : false},
                 "views": {
                     "menuContent": {
                         "templateUrl": "templates/contest.html",

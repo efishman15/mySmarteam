@@ -13,7 +13,7 @@
 
             <ion-refresher dir="{{$root.settings.languages[$root.user.settings.language].direction}}"
                            pulling-text="{{'PULL_TO_REFRESH'  | translate}}" pulling-icon="on-android-arrow-down"
-                           on-refresh="doRefresh()">
+                           on-refresh="loadContests(true)">
             </ion-refresher>
             <ion-list ng-repeat="contestChart in contestCharts track by $index">
                 <div class="full-width">

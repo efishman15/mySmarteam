@@ -206,7 +206,7 @@
             $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()], true, {userClick: true});
         });
 
-        $scope.loadContests = function () {
+        $scope.loadContests = function (fromScroll) {
 
             ContestsService.getContests($state.current.data.serverTab, function (contestsResult) {
 
@@ -223,11 +223,16 @@
                     var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], i);
                     $scope.contestCharts.push(contestChart);
                 }
+
+                if (fromScroll) {
+                    $scope.$broadcast("scroll.refreshComplete");
+                }
             });
         }
 
         $rootScope.$on("whoSmarter-contestCreated", function (event, contest) {
             $rootScope.deepLinkContestId = contest._id;
+            $rootScope.contestJustCreated = true;
         });
 
         $scope.fcEvents = {
@@ -1722,7 +1727,7 @@
 
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout, ShareService) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout, ShareService, $ionicPopover) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -1736,8 +1741,37 @@
             return;
         }
 
+        $scope.animateResults = false;
+
         ContestsService.getContest($stateParams.id, function (contest) {
             refreshContest(contest);
+        });
+
+        //-------------------------------------------------------
+        // Choose Contest end option Popover
+        // -------------------------------------------------------
+        $ionicPopover.fromTemplateUrl("templates/mobileSharePopup.html", {
+            scope: $scope
+        }).then(function (mobileSharePopover) {
+            $scope.mobileSharePopover = mobileSharePopover;
+        });
+
+        $scope.openMobileSharePopover = function () {
+            $scope.mobileSharePopover.show("<ion-content>");
+        };
+
+        $scope.closeMobileSharePopover = function (sharePressed) {
+            if (sharePressed) {
+                $scope.share();
+            }
+            $scope.mobileSharePopover.hide();
+        };
+
+        //Cleanup the popover when we're done with it!
+        $scope.$on("$destroy", function () {
+            if ($scope.mobileSharePopover) {
+                $scope.mobileSharePopover.remove();
+            }
         });
 
         $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
@@ -1750,8 +1784,20 @@
 
         });
 
-        $scope.$on("$ionicView.afterLeave", function (event, viewData) {
+        $scope.$on("$ionicView.afterEnter", function (event, viewData) {
+            if ($rootScope.contestJustCreated) {
+                if ($rootScope.user.clientInfo.mobile) {
+                    $scope.openMobileSharePopover();
+                }
+                else {
+                    $scope.share();
+                }
+            }
+        });
+
+        $scope.$on("$ionicView.leave", function (event, viewData) {
             $scope.animateResults = false;
+            $rootScope.contestJustCreated = false;
         });
 
         function refreshContest(contest) {
