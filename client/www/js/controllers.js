@@ -80,7 +80,6 @@
         };
         $state.current.data.contestType.closeHandler = $scope.closeContestTypeModal;
 
-
         $scope.canvas = document.createElement("canvas");
         $scope.canvas.width = $rootScope.settings.xpControl.canvas.width;
         $scope.canvas.height = $rootScope.settings.xpControl.canvas.height;
@@ -566,10 +565,10 @@
 
                 var questionScore;
                 if (!$scope.quiz.reviewMode) {
-                    questionScore = $scope.questionHistory[i].score;
+                    questionScore = "" + $scope.questionHistory[i].score;
                 }
                 else {
-                    questionScore = 0;
+                    questionScore = "";
                 }
 
                 //Draw question score
@@ -1752,27 +1751,28 @@
         // -------------------------------------------------------
         $ionicModal.fromTemplateUrl("templates/mobileSharePopup.html", function (mobileShareModal) {
             $scope.mobileShareModal = mobileShareModal;
+
+            $scope.openMobileShareModal = function () {
+                $scope.mobileShareModal.show();
+            };
+
+            $scope.closeMobileShareModal = function (sharePressed) {
+                if (sharePressed) {
+                    $scope.share();
+                }
+                $scope.mobileShareModal.hide();
+            };
+
+            //Hardware back button handlers
+            $state.current.data.mobileShareModal.isOpenHandler = function () {
+                return $scope.mobileShareModal.isShown()
+            };
+            $state.current.data.mobileShareModal.closeHandler = $scope.closeMobileShareModal;
+
         }, {
             scope: $scope,
             animation: "slide-in-up"
         });
-
-        $scope.openMobileShareModal = function () {
-            $scope.mobileShareModal.show();
-        };
-
-        $scope.closeMobileShareModal = function (sharePressed) {
-            if (sharePressed) {
-                $scope.share();
-            }
-            $scope.mobileShareModal.hide();
-        };
-
-        //Hardware back button handlers
-        $state.current.data.mobileShareModal.isOpenHandler = function () {
-            return $scope.mobileShareModal.isShown()
-        };
-        $state.current.data.mobileShareModal.closeHandler = $scope.closeMobileShareModal;
 
         //Cleanup the popover when we're done with it!
         $scope.$on("$destroy", function () {
