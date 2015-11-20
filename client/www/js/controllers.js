@@ -1793,6 +1793,7 @@
 
         $scope.$on("$ionicView.afterEnter", function (event, viewData) {
             if ($rootScope.contestJustCreated) {
+                $rootScope.contestJustCreated = false;
                 if ($rootScope.user.clientInfo.mobile) {
                     $scope.openMobileShareModal();
                 }

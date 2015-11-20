@@ -2,7 +2,12 @@
     <ion-header-bar align-title="center" class="bar bar-dark">
         <h1 class="title">{{'SHARE_WITH_FRIENDS_TITLE' | translate}}</h1>
     </ion-header-bar>
+
     <ion-content class="padding center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+
+        <div class="padding" ng-include="'templates/chart.html'">
+        </div>
+
         <h3 class="padding">{{contestChart.contest.name}}</h3>
         <h5>{{'SHARE_WITH_FRIENDS_MESSAGE' | translate}}</h5>
 
@@ -11,7 +16,7 @@
 
         <div class="button-bar padding">
             <button class="button padding button-bar button-facebook" translate="SHARE"
-                    ng-click="closeMobileShareModalPopover(true)"
+                    ng-click="closeMobileShareModal(true)"
                     analytics-on="click" analytics-event="contest/popup/share">
             </button>
             <button class="button padding button-bar button-clear" translate="NOT_NOW"

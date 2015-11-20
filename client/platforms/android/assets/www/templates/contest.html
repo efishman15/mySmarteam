@@ -15,15 +15,9 @@
                 </div>
             </div>
 
-            <div class="chart chart-margin-top"
-                 fusioncharts
-                 width="{{$root.settings.charts.size.width}}"
-                 height="{{$root.settings.charts.size.height}}"
-                 type="column2d"
-                 dataSource="{{contestChart}}"
-                 events="fcEvents"
-                 style="width: {{$root.settings.charts.size.width}}px; height: {{$root.settings.charts.size.height}}px;">
+            <div ng-include="'templates/chart.html'">
             </div>
+
         </div>
 
         <div class="padding center">
