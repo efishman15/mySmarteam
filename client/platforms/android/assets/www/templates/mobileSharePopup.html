@@ -1,4 +1,4 @@
-<ion-popover-view dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+<ion-modal-view dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
     <ion-header-bar align-title="center" class="bar bar-dark">
         <h1 class="title">{{'SHARE_WITH_FRIENDS_TITLE' | translate}}</h1>
     </ion-header-bar>
@@ -11,14 +11,14 @@
 
         <div class="button-bar padding">
             <button class="button padding button-bar button-facebook" translate="SHARE"
-                    ng-click="closeMobileSharePopover(true)"
+                    ng-click="closeMobileShareModalPopover(true)"
                     analytics-on="click" analytics-event="contest/popup/share">
             </button>
             <button class="button padding button-bar button-clear" translate="NOT_NOW"
-                    ng-click="closeMobileSharePopover()"
+                    ng-click="closeMobileShareModal()"
                     analytics-on="click" analytics-event="contest/popup/share/cancel">
             </button>
         </div>
 
     </ion-content>
-</ion-popover-view>
+</ion-modal-view>

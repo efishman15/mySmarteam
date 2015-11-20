@@ -1727,7 +1727,7 @@
 
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout, ShareService, $ionicPopover) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout, ShareService, $ionicModal, $state) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -1748,29 +1748,36 @@
         });
 
         //-------------------------------------------------------
-        // Choose Contest end option Popover
+        // Propose to share immediately after contest is created
         // -------------------------------------------------------
-        $ionicPopover.fromTemplateUrl("templates/mobileSharePopup.html", {
-            scope: $scope
-        }).then(function (mobileSharePopover) {
-            $scope.mobileSharePopover = mobileSharePopover;
+        $ionicModal.fromTemplateUrl("templates/mobileSharePopup.html", function (mobileShareModal) {
+            $scope.mobileShareModal = mobileShareModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
         });
 
-        $scope.openMobileSharePopover = function () {
-            $scope.mobileSharePopover.show("<ion-content>");
+        $scope.openMobileShareModal = function () {
+            $scope.mobileShareModal.show();
         };
 
-        $scope.closeMobileSharePopover = function (sharePressed) {
+        $scope.closeMobileShareModal = function (sharePressed) {
             if (sharePressed) {
                 $scope.share();
             }
-            $scope.mobileSharePopover.hide();
+            $scope.mobileShareModal.hide();
         };
+
+        //Hardware back button handlers
+        $state.current.data.mobileShareModal.isOpenHandler = function () {
+            return $scope.mobileShareModal.isShown()
+        };
+        $state.current.data.mobileShareModal.closeHandler = $scope.closeMobileShareModal;
 
         //Cleanup the popover when we're done with it!
         $scope.$on("$destroy", function () {
-            if ($scope.mobileSharePopover) {
-                $scope.mobileSharePopover.remove();
+            if ($scope.mobileShareModal) {
+                $scope.mobileShareModal.remove();
             }
         });
 
@@ -1787,7 +1794,7 @@
         $scope.$on("$ionicView.afterEnter", function (event, viewData) {
             if ($rootScope.contestJustCreated) {
                 if ($rootScope.user.clientInfo.mobile) {
-                    $scope.openMobileSharePopover();
+                    $scope.openMobileShareModal();
                 }
                 else {
                     $scope.share();

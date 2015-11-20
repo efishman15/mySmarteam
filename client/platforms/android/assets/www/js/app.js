@@ -309,6 +309,17 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "templateUrl": "templates/contest.html",
                         "controller": "ContestCtrl"
                     }
+                },
+                "data": {
+                    "mobileShareModal": {"isOpenHandler": null, closeHandler: null},
+                    "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
+                        if (currentState.data.mobileShareModal.isOpenHandler && currentState.data.mobileShareModal.isOpenHandler() && currentState.data.mobileShareModal.closeHandler) {
+                            currentState.data.mobileShareModal.closeHandler();
+                        }
+                        else {
+                            $rootScope.goBack();
+                        }
+                    }
                 }
             })
 
