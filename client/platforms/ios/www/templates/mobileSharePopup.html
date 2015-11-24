@@ -1,0 +1,29 @@
+<ion-modal-view dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+    <ion-header-bar align-title="center" class="bar bar-dark">
+        <h1 class="title">{{'SHARE_WITH_FRIENDS_TITLE' | translate}}</h1>
+    </ion-header-bar>
+
+    <ion-content class="padding center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+
+        <image class="padding" src="images/facebook/winner1.jpg" width="300">
+        </image>
+
+        <h3 class="padding">{{contestChart.contest.name}}</h3>
+        <h4>{{'SHARE_WITH_FRIENDS_MESSAGE' | translate}}</h4>
+
+        <div class="padding">
+        </div>
+
+        <div class="button-bar padding">
+            <button class="button padding button-bar button-facebook" translate="SHARE"
+                    ng-click="closeMobileShareModal(true)"
+                    analytics-on="click" analytics-event="contest/popup/share">
+            </button>
+            <button class="button padding button-bar button-clear" translate="NOT_NOW"
+                    ng-click="closeMobileShareModal()"
+                    analytics-on="click" analytics-event="contest/popup/share/cancel">
+            </button>
+        </div>
+
+    </ion-content>
+</ion-modal-view>

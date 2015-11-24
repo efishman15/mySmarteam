@@ -1,0 +1,21 @@
+<ion-view title="{{'CONTEST_LEADERS' | translate}}">
+
+    <ion-content dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+
+        <div class="center button-bar padding">
+            <button class="button button-assertive button-small small-font bold" translate="CONTEST_LEADERS_GENERAL_SCORING" ng-click="selectLeaderboard('all')" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'button-outline' : !leaderboards.all.selected}">
+            </button>
+            <button class="button button-assertive button-outline button-small small-font bold center-button-in-ellipse" ng-click="selectLeaderboard('team0')" ng-class="{'button-outline' : !leaderboards.team0.selected}">{{contest.teams[0].name}}
+            </button>
+            <button class="button button-assertive button-outline button-small small-font bold" translate="WEEKLY" ng-click="selectLeaderboard('team1')" ng-class="{'round-button-left' : $root.settings.languages[$root.user.settings.language].direction==='rtl', 'round-button-right' : $root.settings.languages[$root.user.settings.language].direction==='ltr', 'button-outline' : !leaderboards.team1.selected}">{{contest.teams[1].name}}
+            </button>
+        </div>
+
+        <div ng-include="'templates/leaders.html'">
+
+        </div>
+
+    </ion-content>
+
+</ion-view>
+

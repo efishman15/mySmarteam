@@ -1,0 +1,16 @@
+<ion-list class="list-inset" ng-repeat="leader in leaders track by leader.id">
+    <div ng-if="leader.outside" class="row">
+        <div class="col"><strong>{{'MY_POSITION' | translate:{position : leader.rank} }}</strong>
+        </div>
+    </div>
+    <div class="row padding-left padding-right">
+        <div ng-if="!leader.outside" class="col col-center">
+            <h1 class="center">{{leader.rank}}</h1>
+        </div>
+        <div class="item item-divider full-width" ng-class="{'item-avatar-left' : $root.settings.languages[$root.user.settings.language].direction === 'ltr','item-avatar-right' : $root.settings.languages[$root.user.settings.language].direction === 'rtl', 'col-90' : !leader.outside, 'col-100': leader.outside }">
+            <image ng-class="{'leader-avatar-in-leaderboard' : !leader.outside, 'leader-avatar-outside-leaderboard' : leader.outside}" ng-src="{{leader.avatar}}"></image>
+            <h2>{{leader.name}}</h2>
+            <p>{{leader.score}} {{'SCORE' | translate}}</p>
+        </div>
+    </div>
+</ion-list>

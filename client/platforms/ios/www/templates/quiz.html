@@ -1,0 +1,38 @@
+<ion-view view-title="{{'QUIZ' | translate}}" class="bg-question-marks">
+
+    <ion-content class="center" dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
+
+        <canvas id="quizCanvas" height="{{$root.settings.quiz.canvas.height}}" class="quiz-canvas"
+                ng-click="canvasClick($event)" style="height: {{$root.settings.quiz.canvas.height}}px">
+        </canvas>
+
+        <div dir="{{quiz.currentQuestion.direction}}"
+            ng-class="{'animated' : quiz.currentQuestion.doAnimation,
+                        'fix-animation-bug' : quiz.currentQuestion.doAnimation,
+                        'bounceInLeft' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='ltr',
+                        'bounceInRight' : quiz.currentQuestion.doAnimation && $root.settings.languages[$root.session.settings.language].direction==='rtl'}" mytransitionend="questionTransitionEnd">
+
+            <div class="question-text"
+                 ng-class="{'pointer' : $root.session.isAdmin}"
+                 ng-bind-html="quiz.currentQuestion.text"
+                 ng-click="$root.session.isAdmin && openQuestionModal()">
+            </div>
+
+            <div class="list padding">
+                <button id="buttonAnswer{{$index}}"
+                        ng-disabled="quiz.currentQuestion.answered && answer.correct==null && answer.answeredCorrectly==null"
+                        ng-repeat="answer in quiz.currentQuestion.answers track by $index"
+                        class="item button button-full item-text-wrap quiz-answer"
+                        ng-class="{'button-3d' : !quiz.currentQuestion.answered,
+                         'button-positive' : !quiz.currentQuestion.answered,
+                            'button-3d-balanced blink' : answer.answeredCorrectly == true || answer.correct == true,
+                            'button-3d-assertive blink' : answer.answeredCorrectly == false && answer.correct == null}"
+                        ng-click="!quiz.currentQuestion.answered && submitAnswer($index)"
+                        ng-bind-html="answer.text"
+                        animationend="buttonAnimationEnded">
+                </button>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-view>

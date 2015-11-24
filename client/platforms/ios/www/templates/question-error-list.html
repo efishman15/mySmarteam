@@ -1,0 +1,17 @@
+<div class="form-error slide-right" ng-message="required">
+    <i class="ion-information-circled"></i>
+    {{ 'FIELD_REQUIRED' | translate}}
+</div>
+<div class="form-error" ng-message="minlength">
+    <i class="ion-information-circled"></i>
+    {{ 'MINIMUM_CHARACTERS' | translate:{minimum: 2 } }}
+</div>
+<div class="form-error slide-right" ng-message="mustBeDifferent">
+    <i class="ion-information-circled"></i>
+    {{ 'SERVER_ERROR_ENTER_DIFFERENT_ANSWERS_MESSAGE' | translate}}
+</div>
+<div class="form-error slide-right" ng-message="questionAlreadyExists">
+    <i class="ion-information-circled"></i>
+    {{ 'SERVER_ERROR_QUESTION_ALREADY_EXISTS_MESSAGE' | translate}}
+</div>
+
