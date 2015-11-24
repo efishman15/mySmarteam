@@ -85,6 +85,8 @@
   "SERVER_ERROR_MINIMUM_USER_QUESTIONS_PLURAL_MESSAGE" : "אנא הזינו לפחות {{minimum}} שאלות",
   "SERVER_ERROR_MAXIMUM_USER_QUESTIONS_TITLE" : "מקסימום שאלות",
   "SERVER_ERROR_MAXIMUM_USER_QUESTIONS_MESSAGE" : "לא ניתן להזין יותר מ- {{maximum}} שאלות",
+  "SERVER_ERROR_GAME_IS_REQUIRED_TITLE" : "חובה לבחור משחק",
+  "SERVER_ERROR_GAME_IS_REQUIRED_MESSAGE" : "אנא בחרו את המשחק",
   "MY_CONTESTS" : "התחרויות שלי",
   "RUNNING_CONTESTS" : "התחרויות המובילות",
   "RECENTLY_FINISHED_CONTESTS" : "תחרויות שהסתיימו",
@@ -179,13 +181,14 @@
   "REVIEW_MODE_OWNER" : "על מנת לשמור על משחק הוגן, יוצרי התחרות לא יכולים לזכות את קבוצתם בנקודות",
   "REVIEW_MODE_PLAY_AGAIN" : "על מנת לשמור על משחק הוגן, רק תוצאות המשחק הראשון יזכו את קבוצתכם בנקודות",
   "SELECT_CONTEST_TYPE" : "בחרו את סוג התחרות",
-  "CONTEST_TYPE_SYSTEM_TITLE" : "שאלות ממאגר המערכת",
-  "CONTEST_TYPE_SYSTEM_DESCRIPTION" : "{{questions}} שאלות מתחלפות מתוך מאגר המערכת",
-  "CONTEST_TYPE_USER_TITLE" : "שאלות משלי",
-  "CONTEST_TYPE_USER_DESCRIPTION" : "הזינו אתם את השאלות. עד {{max}} שאלות לתחרות",
+  "CONTEST_TYPE_TRIVIA_SYSTEM_TITLE" : "טריוויה: שאלות ממאגר המערכת",
+  "CONTEST_TYPE_TRIVIA_SYSTEM_DESCRIPTION" : "{{questions}} שאלות מתחלפות מתוך מאגר המערכת",
+  "CONTEST_TYPE_TRIVIA_USER_TITLE" : "טריוויה: שאלות משלי",
+  "CONTEST_TYPE_TRIVIA_USER_DESCRIPTION" : "הזינו אתם את השאלות. עד {{max}} שאלות לתחרות",
   "SEARCH" : "חיפוש",
   "SEARCH_MY_QUESTIONS" : "חיפוש שאלות שהוספתי",
   "RESULTS" : "תוצאות",
   "NO_RESULTS" : "אין תוצאות",
-  "MAX_USER_QUESTIONS_REACHED" : "תחרות זו מאפשרת {{max}} שאלות בלבד. אנא הסירו חלק מהשאלות ברשימה"
+  "MAX_USER_QUESTIONS_REACHED" : "תחרות זו מאפשרת {{max}} שאלות בלבד. אנא הסירו חלק מהשאלות ברשימה",
+  "SELECT_GAME" : "בחרו משחק"
 }

@@ -132,17 +132,17 @@ module.exports.start = function (req, res, next) {
                 "share": {"data": {}}
             };
 
-            if (data.contest.questionsSource === "user" && data.contest.userIdCreated.toString() === data.session.userId.toString()) {
+            if (data.contest.content.category.id === "user" && data.contest.userIdCreated.toString() === data.session.userId.toString()) {
                 quiz.clientData.reviewMode = {"reason": "REVIEW_MODE_OWNER"};
             }
-            else if (data.contest.questionsSource === "user" && data.contest.users[data.session.userId].lastPlayed) {
+            else if (data.contest.content.category.id === "user" && data.contest.users[data.session.userId].lastPlayed) {
                 //user is allowed to play a user-based questions contest that he DID NOT create - only once for real points
                 //other plays - are for review only
                 quiz.clientData.reviewMode = {"reason": "REVIEW_MODE_PLAY_AGAIN"};
             }
 
             //Number of questions (either entered by user or X random questions from the system
-            if (data.contest.questionsSource !== "user") {
+            if (data.contest.content.category.id !== "user") {
                 quiz.clientData.totalQuestions = generalUtils.settings.client.quiz.questions.score.length;
                 quiz.serverData.previousQuestions = [];
             }

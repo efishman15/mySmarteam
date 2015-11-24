@@ -1505,4 +1505,26 @@ angular.module("whoSmarter.services", [])
         return service;
     })
 
+    //Hosted Games Service.
+    .factory("HostedGamesService", function ($http, ApiService) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+        var path = "hostedGames/";
+
+        //Get Categories
+        service.getCategories = function (callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "categories", null, callbackOnSuccess, callbackOnError, config)
+        };
+
+        //Get Games
+        service.getGames = function (categoryId, callbackOnSuccess, callbackOnError, config) {
+            return ApiService.post(path, "games", {"categoryId" : categoryId}, callbackOnSuccess, callbackOnError, config)
+        };
+
+        return service;
+    })
+
 

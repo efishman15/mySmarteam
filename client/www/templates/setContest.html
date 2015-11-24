@@ -3,7 +3,7 @@
     <ion-content has-header="true" padding="true"
                  dir="{{$root.settings.languages[$root.user.settings.language].direction}}" drag-content="false">
 
-        <h4 class="center">{{'WHO_IS_SMARTER_QUESTION' | translate}}</h4>
+        <h4 class="center">{{ ('WHO_IS_SMARTER' | translate) + ' - ' + localViewData.content.category.title}}</h4>
 
         <div class="padding" ng-if="$root.session.features.newContest.locked">
             <span class="feature-locked-text">{{'FEATURE_LOCKED_NEW_CONTEST' | translate:{rank : $root.session.features.newContest.unlockRank} }}</span>
@@ -69,7 +69,8 @@
                 <span translate="ENDS_IN"></span>
                     <span class="pointer padding">
                     <strong>{{ $root.settings.newContest.endOptions[localViewData.endOption].units | translate:{number :
-                        $root.settings.newContest.endOptions[localViewData.endOption].number} }} {{ getArrowDirection(true) }}
+                        $root.settings.newContest.endOptions[localViewData.endOption].number} }} {{
+                        getArrowDirection(true) }}
                     </strong>
                     </span>
             </div>
@@ -83,17 +84,8 @@
                 </ionic-datepicker>
             </div>
 
-            <div ng-if="mode==='edit'" class="padding" ng-click="openQuestionsSourcePopover($event)">
-                <span translate="QUESTIONS_SOURCE"></span>
-                    <span class="pointer padding">
-                    <strong>{{ contestQuestionSources[localViewData.questionsSource].displayName | translate}} {{
-                        getArrowDirection(true) }}
-                    </strong>
-                    </span>
-            </div>
-
             <div class="item item-divider set-contest-user-questions-area"
-                 ng-if="localViewData.questionsSource === 'user'">
+                 ng-if="localViewData.content.source === 'trivia' && localViewData.content.category.id === 'user'">
                 <div class="row full-width">
                     <button
                             class="set-contest-question-buttons medium-horizontal-margin icon-{{$root.settings.languages[$root.user.settings.language].align}} ion-plus-round button button-small button-assertive"
@@ -136,8 +128,27 @@
 
             </div>
             <div class="error-container last-error-container form-errors padding"
-                 ng-if="localViewData.questionsSource === 'user' && contestForm.userQuestions.$error && contestForm.$submitted"
+                 ng-if="localViewData.content.source === 'trivia' && localViewData.content.category.id === 'user' && contestForm.userQuestions.$error && contestForm.$submitted"
                  ng-messages="contestForm.userQuestions.$error"
+                 ng-messages-include="templates/setContest-error-list.html">
+            </div>
+
+            <div class="padding center" ng-if="localViewData.content.source !== 'trivia'">
+                <button ng-if="!localViewData.content.game"
+                        class="button-outline set-contest-select-game-button"
+                        ng-click="openChooseGameModal()">{{'SELECT_GAME' | translate}}
+                </button>
+                <image class="pointer" ng-if="localViewData.content.game"
+                       class="set-contest-select-game-image"
+                       ng-src="{{localViewData.content.game.thumbnailUrl}}"
+                       ng-click="openChooseGameModal()"
+                       title="{{'SELECT_GAME' | translate}}">
+                </image>
+                <input type="hidden" name="game" ng-model="localViewData.content.game" gameRequired>
+            </div>
+            <div class="center error-container last-error-container form-errors"
+                 ng-if="localViewData.content.source !== 'trivia' && !localViewData.content.category.game && contestForm.game.$error && contestForm.$submitted"
+                 ng-messages="contestForm.game.$error"
                  ng-messages-include="templates/setContest-error-list.html">
             </div>
 

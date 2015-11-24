@@ -21,6 +21,7 @@ var facebookCanvas = require(path.resolve(__dirname,"./api/facebookCanvas"));
 var paypalIPN = require(path.resolve(__dirname,"./api/paypalPN"));
 var leaderboards = require(path.resolve(__dirname,"./business_logic/leaderboards"));
 var systemBusinessLogic = require(path.resolve(__dirname, "./business_logic/system"));
+var hostedGamesBusinessLogic = require(path.resolve(__dirname, "./business_logic/hostedGames"));
 
 var domain = require("domain");
 
@@ -108,6 +109,9 @@ dalDb.loadSettings(null, function (err, data) {
     app.post("/leaderboard/weekly", isAuthenticated, leaderboards.getWeeklyLeaders);
     app.post("/system/clearCache", isAuthenticated, systemBusinessLogic.clearCache);
     app.post("/system/restart", isAuthenticated, systemBusinessLogic.restart);
+
+    app.post("/hostedGames/categories", isAuthenticated, hostedGamesBusinessLogic.getCategories);
+    app.post("/hostedGames/games", isAuthenticated, hostedGamesBusinessLogic.getGames);
 
     //----------------------------------------------------
     // API's that do NOT require authentication

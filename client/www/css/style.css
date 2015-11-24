@@ -186,16 +186,24 @@ label.item.valid-lr {
 
 .contests-avatar-leader {
     position: relative;
-    top: 10px;
+    top: 15px;
     z-index: 500;
 }
 
 .contests-avatar-leader-ltr {
+    float: right;
     right: -15px;
 }
 
 .contests-avatar-leader-rtl {
+    float: left;
     left: -15px;
+}
+
+.contest-avatar-leader {
+    position: relative;
+    top: 20px;
+    z-index: 500;
 }
 
 .quiz-results-avatar-leader-ltr {
@@ -501,7 +509,7 @@ label.item.valid-lr {
 .set-contest-user-questions-area {
     margin-left: 10px;
     margin-right: 10px;
-    margin-top : 10px;
+    margin-top: 10px;
 }
 
 .set-contest-user-questions-title {
@@ -575,4 +583,18 @@ label.item.valid-lr {
 
 .my-check-rtl-fix {
     margin: 35px;
+}
+
+.contest-type-hosted-game-category {
+    background-color: blue;
+}
+
+.set-contest-select-game-button {
+    width: 250px;
+    height: 250px;
+    font-size: 20px;
+}
+.set-contest-select-game-image {
+    width: 250px;
+    height: 250px;
 }

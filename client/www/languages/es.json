@@ -85,6 +85,8 @@
   "SERVER_ERROR_MINIMUM_USER_QUESTIONS_PLURAL_MESSAGE" : "Por favor, introduzca al menos {{mínimum}} preguntas",
   "SERVER_ERROR_MAXIMUM_USER_QUESTIONS_TITLE" : "preguntas máximos",
   "SERVER_ERROR_MAXIMUM_USER_QUESTIONS_MESSAGE" : "No se puede presentar más de {{maximum}} preguntas",
+  "SERVER_ERROR_GAME_IS_REQUIRED_TITLE" : "requerido Juego",
+  "SERVER_ERROR_GAME_IS_REQUIRED_MESSAGE" : "Por favor, seleccione un juego",
   "MY_CONTESTS": "Mis Concursos",
   "RUNNING_CONTESTS": "Top concursos",
   "RECENTLY_FINISHED_CONTESTS": "Concursos Terminado",
@@ -182,13 +184,14 @@
   "REVIEW_MODE_OWNER" : "For fair play you are only allowed to review your own questions, and your correct answers will not contribute any smartpoints to your team",
   "REVIEW_MODE_PLAY_AGAIN" : "Para el juego limpio sólo sus primeros resultados contribuirán SmartPoints a su equipo",
   "SELECT_CONTEST_TYPE" : "Seleccione el tipo de concurso:",
-  "CONTEST_TYPE_SYSTEM_TITLE" : "Preguntas Sistema generada",
-  "CONTEST_TYPE_SYSTEM_DESCRIPTION" : "{{questions}} preguntas aleatorios generados por el sistema",
-  "CONTEST_TYPE_USER_TITLE" : "Mis propias preguntas",
-  "CONTEST_TYPE_USER_DESCRIPTION" : "Puede introducir {{min}}-{{max}} preguntas de su propio"
+  "CONTEST_TYPE_TRIVIA_SYSTEM_TITLE" : "Trivia: preguntas Sistema generada",
+  "CONTEST_TYPE_TRIVIA_SYSTEM_DESCRIPTION" : "{{questions}} preguntas aleatorios generados por el sistema",
+  "CONTEST_TYPE_TRIVIA_USER_TITLE" : "Trivia: mis propias preguntas",
+  "CONTEST_TYPE_TRIVIA_USER_DESCRIPTION" : "Puede introducir {{min}}-{{max}} preguntas de su propio"
   "SEARCH" : "Buscar",
   "SEARCH_MY_QUESTIONS" : "Buscar preguntas que añaden",
   "RESULTS" : "resultados",
   "NO_RESULTS" : "Sin resultados",
-  "MAX_USER_QUESTIONS_REACHED" : "Este concurso permite hasta {{max}} preguntas , por favor, elimine algunas preguntas de la lista"
+  "MAX_USER_QUESTIONS_REACHED" : "Este concurso permite hasta {{max}} preguntas , por favor, elimine algunas preguntas de la lista",
+  "SELECT_GAME" : "Seleccionar juego"
 }

@@ -1,0 +1,20 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-stable bar-dark" align-title="center" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+        <h1 class="title">{{'SELECT_GAME' | translate}}</h1>
+        <div class="button button-clear" ng-click="closeChooseGameModal()">
+            <span class="icon ion-close"></span>
+        </div>
+    </ion-header-bar>
+    <ion-content class="padding" dir="{{$root.settings.languages[$root.user.settings.language].direction}}">
+
+        <div class="list">
+
+            <a ng-repeat="game in games track by $index" class="item item-thumbnail-{{$root.settings.languages[$root.user.settings.language].align}}" ng-click="closeChooseGameModal(game)">
+                <image ng-src="{{game.thumbnailUrl}}"></image>
+                <h2>{{game.title}}</h2>
+                <p class="white-space-pre-line">{{game.description}}</p>
+            </a>
+
+        </div>
+    </ion-content>
+</ion-modal-view>

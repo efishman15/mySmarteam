@@ -9,17 +9,24 @@
 
         <div class="list">
 
-            <a class="item item-thumbnail-{{$root.settings.languages[$root.user.settings.language].align}}" ng-click="selectContestType('system')">
+            <a class="item item-thumbnail-{{$root.settings.languages[$root.user.settings.language].align}}" ng-click="selectContestContent({'source' : 'trivia', 'icon' : 'images/facebook/contest.png', 'category' : {'id' : 'system', 'title' : ('CONTEST_TYPE_TRIVIA_SYSTEM_TITLE' | translate) }})">
                 <img src="images/facebook/contest.png">
-                <h2>{{'CONTEST_TYPE_SYSTEM_TITLE' | translate}}</h2>
-                <p class="white-space-pre-line">{{'CONTEST_TYPE_SYSTEM_DESCRIPTION' | translate : {questions : $root.settings.newContest.systemTotalQuestions} }}</p>
+                <h2>{{'CONTEST_TYPE_TRIVIA_SYSTEM_TITLE' | translate}}</h2>
+                <p class="white-space-pre-line">{{'CONTEST_TYPE_TRIVIA_SYSTEM_DESCRIPTION' | translate : {questions : $root.settings.newContest.systemTotalQuestions} }}</p>
             </a>
 
-            <a class="item item-thumbnail-{{$root.settings.languages[$root.user.settings.language].align}}" ng-click="selectContestType('user')">
+            <a class="item item-thumbnail-{{$root.settings.languages[$root.user.settings.language].align}}" ng-click="selectContestContent({'source' : 'trivia', 'icon' : 'images/facebook/winner2.jpg', 'category' : {'id' : 'user', 'title' : ('CONTEST_TYPE_TRIVIA_USER_TITLE' | translate) }})">
                 <img src="images/facebook/winner2.jpg">
-                <h2>{{'CONTEST_TYPE_USER_TITLE' | translate}}</h2>
-                <p class="white-space-pre-line">{{'CONTEST_TYPE_USER_DESCRIPTION' | translate : {min: $root.settings.newContest.privateQuestions.min, max: $root.settings.newContest.privateQuestions.max} }}</p>
+                <h2>{{'CONTEST_TYPE_TRIVIA_USER_TITLE' | translate}}</h2>
+                <p class="white-space-pre-line">{{'CONTEST_TYPE_TRIVIA_USER_DESCRIPTION' | translate : {min: $root.settings.newContest.privateQuestions.min, max: $root.settings.newContest.privateQuestions.max} }}</p>
             </a>
+
+            <a ng-repeat="category in gameCategories track by $index" class="item item-thumbnail-{{$root.settings.languages[$root.user.settings.language].align}}" ng-click="selectContestContent({'source' : 'hostedGame', 'icon' : category.thumbnailUrl, 'category' : {'id' : category.id, 'title' : category.name}})">
+                <image class="contest-type-hosted-game-category" ng-src="{{category.thumbnailUrl}}"></image>
+                <h2>{{category.name}}</h2>
+                <p class="white-space-pre-line">{{category.description}}</p>
+            </a>
+
 
         </div>
     </ion-content>

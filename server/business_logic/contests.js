@@ -133,8 +133,8 @@ function validateContestData(data, callback) {
     }
 
     //Required fields
-    if (!data.contest.startDate || !data.contest.endDate || !data.contest.teams || !data.contest.questionsSource) {
-        callback(new exceptions.ServerException("One of the required fields not supplied: startDate, endDate, teams, questionsSource"));
+    if (!data.contest.startDate || !data.contest.endDate || !data.contest.teams || !data.contest.content) {
+        callback(new exceptions.ServerException("One of the required fields not supplied: startDate, endDate, teams, content"));
         return;
     }
 
@@ -182,14 +182,23 @@ function validateContestData(data, callback) {
         return;
     }
 
-    //Illegal question source
-    if (data.contest.questionsSource !== "system" && data.contest.questionsSource !== "user") {
-        callback(new exceptions.ServerException("questionsSource must be 'system' or 'user'", {"questionsSource": data.questionsSource}));
+    //Illegal content source
+    if (!data.contest.content.source || (data.contest.content.source !== "trivia" && data.contest.content.source !== "hostedGame")) {
+        callback(new exceptions.ServerException("content source must be 'trivia' or 'hostedGame'", {"content": data.contest.content}));
+        return;
+    }
+
+    //Illegal content category id for trivia
+    if (data.contest.content.source === "trivia" &&
+        (!data.contest.content.category ||
+        !data.contest.content.category.id ||
+        (data.contest.content.category.id !== 'system' && data.contest.content.category.id !== 'user'))) {
+        callback(new exceptions.ServerException("contest.content.category.id must be 'system' or 'user'", {"content": data.contest.content}));
         return;
     }
 
     //User questions validations
-    if (data.contest.questionsSource === "user") {
+    if (data.contest.content.source === "trivia" && data.contest.content.category.id === "user") {
 
         //Minimum check
         if (!data.contest.questions || data.contest.questions.visibleCount < generalUtils.settings.client.newContest.privateQuestions.min) {
@@ -263,8 +272,8 @@ function validateContestData(data, callback) {
         cleanContest.language = data.session.settings.language;
         cleanContest.score = 0; //The total score gained for this contest
         cleanContest.userIdCreated = data.session.userId;
-        cleanContest.questionsSource = data.contest.questionsSource;
-        if (cleanContest.questionsSource === "user") {
+        cleanContest.content = data.contest.content;
+        if (cleanContest.content.source === "trivia" && cleanContest.content.category.id === "user") {
             cleanContest.questions = data.contest.questions;
         }
 
@@ -328,7 +337,7 @@ function updateContest(data, callback) {
         data.setData["link"] = data.contest.link;
     }
 
-    data.setData.questionsSource = data.contest.questionsSource;
+    data.setData.content = data.contest.content;
     if (data.contest.userQuestions) {
         data.setData.userQuestions = data.contest.userQuestions;
     }

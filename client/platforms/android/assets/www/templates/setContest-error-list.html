@@ -22,3 +22,7 @@
     <i class="ion-information-circled"></i>
     {{ 'SERVER_ERROR_MINIMUM_USER_QUESTIONS_PLURAL_MESSAGE' | translate : {minimum : $root.settings.newContest.privateQuestions.min} }}
 </div>
+<div class="form-error" ng-message="gameRequired">
+    <i class="ion-information-circled"></i>
+    {{ 'SERVER_ERROR_GAME_IS_REQUIRED_MESSAGE' | translate}}
+</div>

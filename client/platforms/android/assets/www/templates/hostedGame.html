@@ -1,0 +1,16 @@
+<ion-view view-title="{{game.title}}">
+
+    <ion-content class="center" dir="{{$root.settings.languages[$root.session.settings.language].direction}}">
+
+        <iframe class="padding"
+                style="width: {{game.width}}px; height: {{game.height}}px;"
+                ng-src="{{getGameUrl()}}"
+                width="{{game.width}}"
+                height="{{game.height}}"
+                frameborder="0"
+                scrolling="no">
+
+        </iframe>
+
+    </ion-content>
+</ion-view>

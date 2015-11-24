@@ -366,6 +366,22 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                 }
             })
 
+            .state("app.hostedGame", {
+                "url": "/hostedGame",
+                "resolve": {
+                    "auth": function resolveAuthentication(UserService) {
+                        return UserService.resolveAuthentication(null, "hostedGame");
+                    }
+                },
+                "params": {"game": null, gameId: null},
+                "views": {
+                    "menuContent": {
+                        "templateUrl": "templates/hostedGame.html",
+                        "controller": "HostedGameCtrl"
+                    }
+                }
+            })
+
             .state("app.setContest", {
                 "url": "/setContest",
                 "resolve": {
@@ -379,16 +395,20 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                         "controller": "SetContestCtrl"
                     }
                 },
-                "params": {"mode": null, "contest": null, "contestType": null},
+                "params": {"mode": null, "contestId" : null, "contest": null, "contentCategoryId": null, content: null},
                 "data": {
                     "questionModal": {"isOpenHandler": null, closeHandler: null},
                     "searchQuestionsModal": {"isOpenHandler": null, closeHandler: null},
+                    "chooseGameModal": {"isOpenHandler": null, closeHandler: null},
                     "backButtonHandler": function backHandler(event, PopupService, currentState, $rootScope) {
                         if (currentState.data.questionModal.isOpenHandler && currentState.data.questionModal.isOpenHandler() && currentState.data.questionModal.closeHandler) {
                             currentState.data.questionModal.closeHandler();
                         }
                         else if (currentState.data.searchQuestionsModal.isOpenHandler && currentState.data.searchQuestionsModal.isOpenHandler() && currentState.data.searchQuestionsModal.closeHandler) {
                             currentState.data.searchQuestionsModal.closeHandler();
+                        }
+                        else if (currentState.data.chooseGameModal.isOpenHandler && currentState.data.chooseGameModal.isOpenHandler() && currentState.data.chooseGameModal.closeHandler) {
+                            currentState.data.chooseGameModal.closeHandler();
                         }
                         else {
                             $rootScope.goBack();

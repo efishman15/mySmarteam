@@ -5,6 +5,7 @@ var logger = require(path.resolve(__dirname,"../utils/logger"));
 var async = require("async");
 var sessionUtils = require(path.resolve(__dirname,"./session"));
 var dalDb = require(path.resolve(__dirname,"../dal/dalDb"));
+var cache = require(path.resolve(__dirname,"../utils/cache"));
 
 //--------------------------------------------------------------------------
 // clearCache
@@ -26,6 +27,7 @@ module.exports.clearCache = function (req, res, next) {
 
         //Reload settings from database
         function (data, callback) {
+            cache.clear();
             data.closeConnection = true;
             dalDb.loadSettings(data, callback);
         },

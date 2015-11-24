@@ -55,7 +55,6 @@ function api(options, method, callback) {
             }));
             return;
         }
-
         var responseData;
         try {
             if (options.json) {

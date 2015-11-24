@@ -1,6 +1,8 @@
 ﻿angular.module("whoSmarter.controllers", ["whoSmarter.services", "ngAnimate"])
 
-    .controller("AppCtrl", function ($scope, $rootScope, $state, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService, ShareService) {
+    .controller("AppCtrl", function ($scope, $rootScope, $state, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService, ShareService, HostedGamesService) {
+
+        $scope.gameCategories = null;
 
         $rootScope.$on("whoSmarter-directionChanged", function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
@@ -66,8 +68,16 @@
         });
 
         $scope.openContestTypeModal = function () {
-            FlurryAgent.logEvent("selectContestType");
-            $scope.contestTypeModal.show();
+            FlurryAgent.logEvent("selectContestContent");
+            if (!$scope.gameCategories) {
+                HostedGamesService.getCategories(function (categories) {
+                    $scope.gameCategories = categories;
+                    $scope.contestTypeModal.show();
+                });
+            }
+            else {
+                $scope.contestTypeModal.show();
+            }
         };
 
         $scope.closeContestTypeModal = function () {
@@ -113,9 +123,13 @@
             }
         };
 
-        $scope.selectContestType = function (contestType) {
+        $scope.selectContestContent = function (content) {
             $scope.closeContestTypeModal();
-            $rootScope.gotoView("app.setContest", false, {"mode": "add", "contestType": contestType});
+            $rootScope.gotoView("app.setContest", false, {
+                "mode": "add",
+                "contentCategoryId": content.category.id,
+                "content": content
+            });
         };
     })
 
@@ -295,7 +309,7 @@
                 "answers": []
             };
 
-            for (var i=0; i<$scope.quiz.currentQuestion.answers.length; i++) {
+            for (var i = 0; i < $scope.quiz.currentQuestion.answers.length; i++) {
                 $scope.question.answers[$scope.quiz.currentQuestion.answers[i].originalIndex] = $scope.quiz.currentQuestion.answers[i].text;
             }
 
@@ -313,7 +327,7 @@
 
             QuizService.setQuestionByAdmin($scope.question, function (result) {
                 $scope.quiz.currentQuestion.text = $scope.question.text;
-                for (var i=0; i<$scope.question.answers.length; i++) {
+                for (var i = 0; i < $scope.question.answers.length; i++) {
                     $scope.quiz.currentQuestion.answers[i].text = $scope.question.answers[$scope.quiz.currentQuestion.answers[i].originalIndex];
                 }
                 $scope.questionModal.hide();
@@ -845,7 +859,7 @@
         });
     })
 
-    .controller("SetContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig, $ionicLoading, $ionicModal) {
+    .controller("SetContestCtrl", function ($scope, $rootScope, $state, $ionicHistory, $translate, $stateParams, ContestsService, PopupService, $ionicPopup, $ionicPopover, PaymentService, $ionicConfig, $ionicLoading, $ionicModal, HostedGamesService) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -904,20 +918,6 @@
             $scope.contestEndDatePicker.from = pastDate;
         }
 
-        $scope.contestQuestionSources = {
-            "system": {
-                "value": "system",
-                "displayName": $translate.instant("SYSTEM_QUESTIONS_SOURCE", {totalQuestions: $rootScope.settings.newContest.systemTotalQuestions})
-            },
-            "user": {
-                "value": "user",
-                "displayName": $translate.instant("USER_QUESTIONS_SOURCE", {
-                    min: $rootScope.settings.newContest.privateQuestions.min,
-                    max: $rootScope.settings.newContest.privateQuestions.max
-                })
-            }
-        }
-
         $scope.showRemoveContest = false;
 
         $scope.searchQuestions = {"searchText": null};
@@ -939,27 +939,6 @@
             $scope.localViewData.endOption = contestEndsInOption.value;
             $scope.localViewData.endDate = new Date((new Date()).getTime() + $rootScope.settings.newContest.endOptions[contestEndsInOption.value].number * $rootScope.settings.newContest.endOptions[contestEndsInOption.value].msecMultiplier);
             $scope.contestEndsInPopover.hide();
-        };
-
-        //-------------------------------------------------------
-        // Choose Questions Source Popover
-        // -------------------------------------------------------
-        $ionicPopover.fromTemplateUrl("templates/chooseQuestionsSource.html", {
-            scope: $scope
-        }).then(function (questionsSourcePopover) {
-            $scope.questionsSourcePopover = questionsSourcePopover;
-        });
-
-        $scope.openQuestionsSourcePopover = function ($event) {
-            $scope.questionsSourcePopover.show($event);
-        };
-
-        $scope.closeQuestionsSourcePopover = function (questionSource) {
-            $scope.localViewData.questionsSource = questionSource.value;
-            if ($scope.localViewData.questionsSource === "user" && !$scope.localViewData.questions && $scope.localViewData.userQuestions && $scope.localViewData.userQuestions.length > 0) {
-                retrieveUserQuestions();
-            }
-            $scope.questionsSourcePopover.hide();
         };
 
         //-------------------------------------------------------
@@ -1115,6 +1094,40 @@
             $scope.searchQuestionsModal.hide();
         };
 
+        //-------------------------------------------------------
+        // HostedGamesService Game modal
+        // -------------------------------------------------------
+        $ionicModal.fromTemplateUrl("templates/chooseGame.html", function (chooseGameModal) {
+            $scope.chooseGameModal = chooseGameModal;
+        }, {
+            scope: $scope,
+            animation: "slide-in-up"
+        });
+
+        $scope.openChooseGameModal = function () {
+            if (!$scope.games) {
+                HostedGamesService.getGames($scope.localViewData.content.category.id, function(games) {
+                    $scope.games = games;
+                    $scope.chooseGameModal.show();
+                });
+            }
+            else {
+                $scope.chooseGameModal.show();
+            }
+        };
+
+        $scope.closeChooseGameModal = function (game) {
+
+            if (!game) {
+                $scope.chooseGameModal.hide();
+                return;
+            }
+
+            $scope.localViewData.content.game = game;
+            $scope.chooseGameModal.hide();
+        };
+
+
         $scope.removeQuestion = function (index) {
             PopupService.confirm("REMOVE_QUESTION", "CONFIRM_REMOVE_QUESTION", {}, function () {
                 if ($scope.localViewData.questions.list && index < $scope.localViewData.questions.list.length) {
@@ -1142,6 +1155,9 @@
             if ($scope.searchQuestionsModal) {
                 $scope.searchQuestionsModal.remove();
             }
+            if ($scope.chooseGameModal) {
+                $scope.chooseGameModal.remove();
+            }
         });
 
         //Hardware back button handlers
@@ -1154,6 +1170,11 @@
             return $scope.searchQuestionsModal.isShown()
         };
         $state.current.data.searchQuestionsModal.closeHandler = $scope.closeSearchQuestionsModal;
+
+        $state.current.data.chooseGameModal.isOpenHandler = function () {
+            return $scope.chooseGameModal.isShown()
+        };
+        $state.current.data.chooseGameModal.closeHandler = $scope.closeChooseGameModal;
 
         $scope.searchSubmitted = function () {
             var existingQuestionIds = [];
@@ -1193,7 +1214,7 @@
                                 $scope.showStartDate = true;
                             }
 
-                            if ($scope.localViewData.questionsSource === "user") {
+                            if ($scope.localViewData.content.source === "trivia" && $scope.localViewData.content.category.id === "user") {
                                 retrieveUserQuestions();
                             }
                         }
@@ -1208,7 +1229,7 @@
                             "startDate": startDate,
                             "endDate": endDate,
                             "endOption": "h24",
-                            "questionsSource": $stateParams.contestType,
+                            "content": $stateParams.content,
                             "participants": 0,
                             "manualParticipants": 0,
                             "manualRating": 0,
@@ -1341,7 +1362,7 @@
         }
 
         $scope.setContest = function () {
-            if ($scope.localViewData.questionsSource === "user") {
+            if ($scope.localViewData.content.source === "trivia" && $scope.localViewData.content.category.id === "user") {
                 if (!$scope.localViewData.questions || $scope.localViewData.questions.visibleCount < $rootScope.settings.newContest.privateQuestions.min) {
                     if (!$scope.contestForm.userQuestions.$error) {
                         $scope.contestForm.userQuestions.$error = {};
@@ -1356,6 +1377,15 @@
 
                     return;
                 }
+            }
+            else if ($scope.localViewData.content.source === "hosted" && !$scope.localViewData.content.game) {
+                if (!$scope.contestForm.game.$error) {
+                    $scope.contestForm.game.$error = {};
+                }
+                $scope.contestForm.game.$error["gameRequired"] = true;
+                $scope.contestForm.game.$invalid = true;
+
+                return;
             }
 
             //Tweak the manual participants
@@ -1872,7 +1902,7 @@
                     "team": "" + teamId,
                     "sourceClick": sourceClick
                 });
-                $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
+                $scope.playNow();
             }
         }
 
@@ -1902,8 +1932,17 @@
                 "contestId": $scope.contestChart.contest._id,
                 "team": "" + $scope.contestChart.contest.myTeam
             });
-            $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
+            $scope.playNow();
         };
+
+        $scope.playNow = function() {
+            if ($scope.contestChart.contest.content.source === "trivia") {
+                $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
+            }
+            else {
+                $rootScope.gotoView("app.hostedGame", false, {game: $scope.contestChart.contest.content.game, gameId: $scope.contestChart.contest.content.game.id});
+            }
+        }
 
         $rootScope.$on("whoSmarter-quizFinished", function (event, results) {
 
@@ -2002,4 +2041,20 @@
         $scope.likeFacebookFanPage = function () {
             window.open($rootScope.settings.general.facebookFanPage, "_system", "location=yes");
         }
+    })
+
+    .controller("HostedGameCtrl", function ($scope, $rootScope, $ionicConfig, $stateParams, $sce) {
+
+        $ionicConfig.backButton.previousTitleText("");
+        $ionicConfig.backButton.text("");
+
+        $scope.$on("$ionicView.beforeEnter", function (event, viewData) {
+            viewData.enableBack = true;
+            $scope.game = $stateParams.game;
+        });
+
+        $scope.getGameUrl = function() {
+            return $sce.trustAsResourceUrl($stateParams.game.url);
+        };
+
     })
