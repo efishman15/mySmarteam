@@ -271,7 +271,9 @@ function validateContestData(data, callback) {
         cleanContest.name = data.contest.name;
         cleanContest.language = data.session.settings.language;
         cleanContest.score = 0; //The total score gained for this contest
-        cleanContest.userIdCreated = data.session.userId;
+
+        cleanContest.creator = {"id" : data.session.userId, "avatar" : data.session.avatar, "name" : data.session.name, "date" : now};
+
         cleanContest.content = data.contest.content;
         if (cleanContest.content.source === "trivia" && cleanContest.content.category.id === "user") {
             cleanContest.questions = data.contest.questions;
@@ -391,27 +393,38 @@ function prepareContestForClient(contest, session) {
 
     //ends In...or ended
     var endMinutes = mathjs.abs(contest.endDate - now) / 1000 / 60;
-
-    var result;
     if (endMinutes >= 60 * 24) {
-        result = endMinutes / 24 / 60;
+        contest.endsInNumber = mathjs.ceil(endMinutes / 24 / 60);
         contest.endsInUnits = "DAYS";
     }
     else if (endMinutes >= 60) {
-        result = endMinutes / 60;
+        contest.endsInNumber = mathjs.ceil(endMinutes / 60);
         contest.endsInUnits = "HOURS";
     }
     else {
-        result = endMinutes;
+        contest.endsInNumber = endMinutes;
         contest.endsInUnits = "MINUTES";
     }
 
-    contest.endsInNumber = mathjs.ceil(result);
+    //starts or started
+    var startMinutes = mathjs.abs(now - contest.startDate) / 1000 / 60;
+    if (startMinutes >= 60 * 24) {
+        contest.startsInNumber = mathjs.ceil(startMinutes / 24 / 60);
+        contest.startsInUnits = "DAYS";
+    }
+    else if (startMinutes >= 60) {
+        contest.startsInNumber = mathjs.ceil(startMinutes / 60);
+        contest.startsInUnits = "HOURS";
+    }
+    else {
+        contest.startsInNumber = startMinutes;
+        contest.startsInUnits = "MINUTES";
+    }
 
     setContestScores(contest);
 
     if (contest.status !== "finished") {
-        if (contest.userIdCreated.toString() === session.userId.toString() || session.isAdmin) {
+        if (contest.creator.id.toString() === session.userId.toString() || session.isAdmin) {
             contest.owner = true;
         }
     }
@@ -426,8 +439,6 @@ function prepareContestForClient(contest, session) {
     delete contest.leader["userId"];
     delete contest["users"];
     delete contest["language"];
-    delete contest["userIdCreated"];
-
 }
 
 //---------------------------------------------------------------------

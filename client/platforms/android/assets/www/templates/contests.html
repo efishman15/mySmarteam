@@ -1,4 +1,4 @@
-<ion-view class="bg-question-marks" title="{{title | translate}}">
+<ion-view class="bg-main" title="{{title | translate}}">
 
     <ion-header ng-if="tab==='recentlyFinished'" ng-include="'templates/roundTabs.html'">
     </ion-header>
@@ -7,7 +7,8 @@
                  overflow-scroll="true" class="hide-vertical-scrollbar"
                  ng-class="{'has-subheader' : tab==='recentlyFinished'}">
 
-        <h4 class="padding center" ng-if="userClick && contestCharts && contestCharts.length === 0">{{'JOIN_A_CONTEST_MESSAGE' | translate}}</h4>
+        <h4 class="padding center" ng-if="userClick && contestCharts && contestCharts.length === 0">
+            {{'JOIN_A_CONTEST_MESSAGE' | translate}}</h4>
 
         <ion-scroll class="scroll-full-height">
 
@@ -16,19 +17,7 @@
                            on-refresh="loadContests(true)">
             </ion-refresher>
             <ion-list ng-repeat="contestChart in contestCharts track by $index">
-                <div class="full-width">
-                    <div class="contest-leader-wrapper" style="width: {{$root.settings.charts.size.width}}px;" dir="{{$root.settings.languages[$root.user.settings.language].oppositeDirection}}">
-                        <image class="pointer avatar-leader contests-avatar-leader contests-avatar-leader-{{$root.settings.languages[$root.user.settings.language].direction}}"
-                               ng-src="{{contestChart.contest.leader.avatar}}"
-                               ng-click="$root.gotoView('app.contest', false, {id : contestChart.contest._id})"
-                               title="{{'CONTEST_LEADER_WITH_NAME' | translate:{name: contestChart.contest.leader.name} }}"
-                               analytics-on="click" analytics-event="contestList/leaderClick">
-                        </image>
-                        <image class="avatar-leader contests-avatar-leader contests-avatar-leader-{{$root.settings.languages[$root.user.settings.language].oppositeDirection}}"
-                               ng-src="{{contestChart.contest.content.source === 'trivia' ? contestChart.contest.content.icon : contestChart.contest.content.game.thumbnailUrl}}"
-                               title="{{contestChart.contest.content.source === 'trivia' ? contestChart.contest.content.category.title : contestChart.contest.content.game.title}}">
-                        </image>
-                    </div>
+                <div class="full-width padding-top">
                     <div fusioncharts class="chart pointer" title="{{contestChart.contest.name}}"
                          type="column2d"
                          dataSource="{{contestChart}}"
@@ -37,8 +26,15 @@
                          height="{{$root.settings.charts.size.height}}"
                          style="width: {{$root.settings.charts.size.width}}px; height: {{$root.settings.charts.size.height}}px;">
                     </div>
+                    <div class="contests-play-image-container">
+                        <img class="contests-play-image pointer"
+                             style="margin-left: -{{$root.settings.contestList.playButton.size/2}}px; margin-top: -{{($root.settings.charts.size.height+$root.settings.contestList.playButton.size)/2}}px"
+                             src="images/go.png"
+                             width="{{$root.settings.contestList.playButton.size}}"
+                             title="{{contestChart.contest.name}}"
+                             ng-click="gotoContest(contestChart.contest._id,contestChart.contest)">
+                    </div>
                 </div>
-
             </ion-list>
         </ion-scroll>
     </ion-content>

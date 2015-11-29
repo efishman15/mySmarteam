@@ -477,7 +477,6 @@ module.exports.facebookLogin = function (data, callback) {
                 }
             };
 
-
             usersCollection.updateOne({"_id": user._id}, setObject
                 , function (err, results) {
 
@@ -994,7 +993,7 @@ function setContest(data, callback) {
 
     //Only contest owners or admins can update the contest
     if (data.checkOwner && !data.session.isAdmin) {
-        whereClause.userIdCreated = ObjectId(data.session.userId);
+        whereClause["creator.id"] = ObjectId(data.session.userId);
     }
 
     contestsCollection.findAndModify(whereClause, {},
@@ -1112,6 +1111,10 @@ function prepareContestsQuery(data, callback) {
     data.contestQuery.sort = [];
 
     var now = (new Date()).getTime();
+
+    if (generalUtils.settings.server.hostedGames.active && (!generalUtils.settings.server.hostedGames.forAdminsOnly && !data.session.isAdmin)) {
+        data.contestQuery.where["content.source"] = "trivia";
+    }
 
     switch (data.tab) {
         case "mine":

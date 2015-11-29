@@ -10,6 +10,8 @@
   "FULL_CONTEST_NAME" : "מי יותר חכם: {{team0}} או {{team1}}?",
   "CONTEST_ENDS_IN": "מסתיימת בעוד {{number}} {{units}}",
   "CONTEST_ENDED" : "הסתיימה לפני {{number}} {{units}}",
+  "CONTEST_STARTED" : "התחילה לפני {{number}} {{units}}",
+  "CONTEST_STARTING" : "מתחילה בעוד {{number}} {{units}}",
   "DEMO_CONTEST_ENDS_IN_UNITS": "ימים",
   "CONTEST_PARTICIPANTS": "משתתפים: {{participants}}",
   "SOUND": "צלילים",
@@ -47,7 +49,7 @@
   "SET": "אישור",
   "DATE_PICKER_ERROR_MESSAGE": "אנא בחרו תאריך",
   "DATE_PICKER_WEEK_DAYS": "א,ב,ג,ד,ה,ו,ש",
-  "DATE_PICKER_MONTHS": "ינואר,פברואר,מרץ,אפריל,מאי,יוני,יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר",
+  "MONTHS": "ינואר,פברואר,מרץ,אפריל,מאי,יוני,יולי,אוגוסט,ספטמבר,אוקטובר,נובמבר,דצמבר",
   "CONTEST_ADMIN_INFO" : "מנהל מערכת",
   "TEAM_SCORE" : "נקודות {{team}}",
   "RATING" : "דירוג",
@@ -190,5 +192,7 @@
   "RESULTS" : "תוצאות",
   "NO_RESULTS" : "אין תוצאות",
   "MAX_USER_QUESTIONS_REACHED" : "תחרות זו מאפשרת {{max}} שאלות בלבד. אנא הסירו חלק מהשאלות ברשימה",
-  "SELECT_GAME" : "בחרו משחק"
+  "SELECT_GAME" : "בחרו משחק",
+  "CREATED_BY" : "נוצרה על ידי {{name}}",
+  "CONTEST_CREATED_ON" : "ב {{day}} ל {{month}}, {{year}}"
 }

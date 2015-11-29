@@ -10,6 +10,8 @@
   "FULL_CONTEST_NAME" : "Who is smarter: {{team0}} or {{team1}}?",
   "CONTEST_ENDS_IN" : "Ends in {{number}} {{units}}",
   "CONTEST_ENDED" : "Contest ended {{number}} {{units}} ago",
+  "CONTEST_STARTED" : "Started {{number}} {{units}} ago",
+  "CONTEST_STARTING" : "Starting in {{number}} {{units}}",
   "DEMO_CONTEST_ENDS_IN_UNITS" : "Days",
   "CONTEST_PARTICIPANTS" : "Participants: {{participants}}",
   "SOUND" : "Sound",
@@ -47,7 +49,7 @@
   "SET" : "Set",
   "DATE_PICKER_ERROR_MESSAGE" : "Please select a date",
   "DATE_PICKER_WEEK_DAYS" : "S,M,T,W,T,F,S",
-  "DATE_PICKER_MONTHS" : "January,February,March,April,May,June,July,August,September,October,November,December",
+  "MONTHS" : "January,February,March,April,May,June,July,August,September,October,November,December",
   "CONTEST_ADMIN_INFO" : "Administrator",
   "TEAM_SCORE" : "{{team}} smartpoints",
   "RATING" : "Rating",
@@ -193,5 +195,7 @@
   "RESULTS" : "Results",
   "NO_RESULTS" : "No results",
   "MAX_USER_QUESTIONS_REACHED" : "This contest allows up to {{max}} questions, please remove some questions from the list",
-  "SELECT_GAME" : "Select game"
+  "SELECT_GAME" : "Select game",
+  "CREATED_BY" : "Created by {{name}}",
+  "CONTEST_CREATED_ON" : "On {{month}} {{day}}, {{year}}"
 }

@@ -20,7 +20,8 @@
                 <i ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"
                    class="icon ion-ios-musical-notes"></i>
 
-                <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"><p>{{localViewData.sound ? 'SOUND_ON' : 'SOUND_OFF' | translate }}</p></span>
+                <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'ltr'"><p>
+                    {{localViewData.sound ? 'SOUND_ON' : 'SOUND_OFF' | translate }}</p></span>
                 <span ng-show="$root.settings.languages[$root.user.settings.language].direction === 'rtl'"
                       class="my-item-note-left">{{localViewData.sound ? 'SOUND_ON' : 'SOUND_OFF' | translate }}</span>
 

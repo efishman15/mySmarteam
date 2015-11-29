@@ -419,9 +419,9 @@ angular.module("whoSmarter.services", [])
 
                         $rootScope.$on("whoSmarter-serverPopup", function (event, data) {
                             //Show the popup with a delay since it might be shown right on app init/login
-                            $timeout(function() {
+                            $timeout(function () {
                                 $rootScope.gotoView("serverPopup", false, {serverPopup: data})
-                            },1000);
+                            }, 1000);
                         });
 
                         if (!$rootScope.settings) {
@@ -603,12 +603,12 @@ angular.module("whoSmarter.services", [])
             return ApiService.post(path, "list", postData, callbackOnSuccess, callbackOnError, config)
         };
 
-        service.prepareContestChart = function (contest) {
+        //timeMode = "starts" or "ends"
+        service.prepareContestChart = function (contest, timeMode) {
 
             var contestCaption;
             var contestSubCaption;
             var contestSubCaptionColor;
-            var contestEndsInColor;
 
             var contestChart = JSON.parse(JSON.stringify($rootScope.settings.charts.contest));
             contestChart.contest = contest;
@@ -622,20 +622,9 @@ angular.module("whoSmarter.services", [])
                 teamsOrder = [1, 0];
             }
 
-            var contestEndTerm
-            if (contest.status !== "finished") {
-                //Contest Running
-                contestCaption = $translate.instant("WHO_IS_SMARTER")
-                contestSubCaption = $translate.instant("CONTEST_NAME", {
-                    team0: contest.teams[0].name,
-                    team1: contest.teams[1].name
-                });
+            var timePhrase = service.getTimePhrase(contest, timeMode);
 
-                contestSubCaptionColor = $rootScope.settings.charts.subCaption.running.color;
-                contestEndsInColor = $rootScope.settings.charts.contestAnnotations.endsIn.running.color;
-                contestEndTerm = "CONTEST_ENDS_IN";
-            }
-            else {
+            if (timeMode === "ends" && contest.status === "finished") {
                 //Contest Finished
                 contestCaption = $translate.instant("WHO_IS_SMARTER_QUESTION_CONTEST_FINISHED");
 
@@ -653,30 +642,29 @@ angular.module("whoSmarter.services", [])
                 }
 
                 contestSubCaptionColor = $rootScope.settings.charts.subCaption.finished.color;
-                contestEndsInColor = $rootScope.settings.charts.contestAnnotations.endsIn.finished.color;
-                contestEndTerm = "CONTEST_ENDED";
-
+            }
+            else {
+                contestCaption = $translate.instant("WHO_IS_SMARTER")
+                contestSubCaption = $translate.instant("CONTEST_NAME", {
+                    team0: contest.teams[0].name,
+                    team1: contest.teams[1].name
+                });
+                contestSubCaptionColor = $rootScope.settings.charts.subCaption.running.color;
             }
 
-            var contestEndString = $translate.instant(contestEndTerm, {
-                number: contest.endsInNumber,
-                units: $translate.instant(contest.endsInUnits)
-            });
-
-            var contestEndsWidth = canvasContext.measureText(contestEndString).width;
+            var contestTimeWidth = canvasContext.measureText(timePhrase.text).width;
             var contestParticipantsString = $translate.instant("CONTEST_PARTICIPANTS", {participants: contest.participants + contest.manualParticipants});
             var contestParticipantsWidth = canvasContext.measureText(contestParticipantsString).width;
 
             var direction = $rootScope.settings.languages[$rootScope.user.settings.language].direction;
             var magicNumbers = $rootScope.settings.charts.contestAnnotations.annotationHorizontalMagicNumbers[direction];
 
-            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].text = contestEndString;
-            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].x = magicNumbers.endsIn.position + (contestEndsWidth / 2 + magicNumbers.endsIn.spacing);
-            contestChart.annotations.groups[0].items[magicNumbers.endsIn.id].fontColor = contestEndsInColor;
+            contestChart.annotations.groups[0].items[magicNumbers.time.id].text = timePhrase.text;
+            contestChart.annotations.groups[0].items[magicNumbers.time.id].x = magicNumbers.time.position + (contestTimeWidth / 2 + magicNumbers.time.spacing);
+            contestChart.annotations.groups[0].items[magicNumbers.time.id].fontColor = timePhrase.color;
 
             contestChart.annotations.groups[0].items[magicNumbers.participants.id].text = contestParticipantsString;
             contestChart.annotations.groups[0].items[magicNumbers.participants.id].x = magicNumbers.participants.position + (contestParticipantsWidth / 2 + magicNumbers.participants.spacing);
-
 
             contestChart.data.push({
                 "label": contest.teams[teamsOrder[0]].name,
@@ -712,9 +700,52 @@ angular.module("whoSmarter.services", [])
 
         //Retrieve Contest User Questions
         service.searchMyQuestions = function (text, existingQuestionIds, callbackOnSuccess, callbackOnError, config) {
-            var postData = {"text": text, "existingQuestionIds" : existingQuestionIds};
+            var postData = {"text": text, "existingQuestionIds": existingQuestionIds};
             return ApiService.post(path, "searchMyQuestions", postData, callbackOnSuccess, callbackOnError, config)
         };
+
+        //Retruns an object {"time" : "ends in xxx, started in xxx, ended xxx days ago, starting etc...", "color" : #color
+        service.getTimePhrase = function (contest, timeMode) {
+
+            var contestTimeTerm;
+            var contestTimeNumber;
+            var contestTimeUnits;
+            var contestTimeColor;
+
+            if (timeMode === "starts") {
+                contestTimeNumber = contest.startsInNumber;
+                contestTimeUnits = contest.startsInUnits;
+                contestTimeColor = $rootScope.settings.charts.contestAnnotations.time.running.color;
+
+                if (contest.status === "running") {
+                    contestTimeTerm = "CONTEST_STARTED";
+                }
+                else {
+                    contestTimeTerm = "CONTEST_STARTING";
+                }
+            }
+            else if (timeMode === "ends") {
+                contestTimeNumber = contest.endsInNumber;
+                contestTimeUnits = contest.endsInUnits;
+
+                if (contest.status === "running") {
+                    contestTimeTerm = "CONTEST_ENDS_IN";
+                    contestTimeColor = $rootScope.settings.charts.contestAnnotations.time.running.color;
+                }
+                else {
+                    //Contest Finished
+                    contestTimeTerm = "CONTEST_ENDED";
+                    contestTimeColor = $rootScope.settings.charts.contestAnnotations.time.finished.color;
+                }
+            }
+
+            var contestTimeString = $translate.instant(contestTimeTerm, {
+                number: contestTimeNumber,
+                units: $translate.instant(contestTimeUnits)
+            });
+
+            return {"text": contestTimeString, "color": contestTimeColor};
+        }
 
         return service;
     })
@@ -753,7 +784,7 @@ angular.module("whoSmarter.services", [])
 
         //Set Question By Admin
         service.setQuestionByAdmin = function (question, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "setQuestionByAdmin", {"question" : question}, callbackOnSuccess, callbackOnError, config)
+            return ApiService.post(path, "setQuestionByAdmin", {"question": question}, callbackOnSuccess, callbackOnError, config)
         };
 
         return service;
@@ -1020,11 +1051,11 @@ angular.module("whoSmarter.services", [])
                 var mobilePostObject = {
                     "method": "share_open_graph",
                     "action": story.action,
-                    "previewPropertyName" : story.object.name,
-                    "previewPropertyValue" : story.object.value
+                    "previewPropertyName": story.object.name,
+                    "previewPropertyValue": story.object.value
                 };
 
-                facebookConnectPlugin.showDialog(mobilePostObject, function(response) {
+                facebookConnectPlugin.showDialog(mobilePostObject, function (response) {
                     callbackOnSuccess(response);
                 }, callbackOnError)
             }
@@ -1193,7 +1224,7 @@ angular.module("whoSmarter.services", [])
                     animateXpAddition(startPoint, endPoint, service.quarter, service.circle);
 
                     //Last iteration should be performed after the animation frame event happened
-                    if (i >=  addition) {
+                    if (i >= addition) {
 
                         //Add the actual xp to the client side
                         $rootScope.session.xpProgress = xpProgress;
@@ -1521,7 +1552,31 @@ angular.module("whoSmarter.services", [])
 
         //Get Games
         service.getGames = function (categoryId, callbackOnSuccess, callbackOnError, config) {
-            return ApiService.post(path, "games", {"categoryId" : categoryId}, callbackOnSuccess, callbackOnError, config)
+            return ApiService.post(path, "games", {"categoryId": categoryId}, callbackOnSuccess, callbackOnError, config)
+        };
+
+        return service;
+    })
+
+    //Date Service.
+    .factory("DateService", function ($translate) {
+
+        //----------------------------------------------
+        // Service Variables
+        //----------------------------------------------
+        var service = this;
+
+        var months = $translate.instant("MONTHS").split(",");
+
+        //Format client date
+        service.formatContestCreateDate = function (dateEpoch) {
+
+            var date = new Date(dateEpoch);
+            var day = date.getDate();
+            var monthIndex = date.getMonth();
+            var year = date.getFullYear();
+
+            return $translate.instant("CONTEST_CREATED_ON", {day: day, month: months[monthIndex], year: year});
         };
 
         return service;

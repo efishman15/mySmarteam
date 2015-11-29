@@ -10,6 +10,8 @@
   "FULL_CONTEST_NAME": "Quién es más listo: {{team0}} o {{team1}}?",
   "CONTEST_ENDS_IN": "termina en {{number}} {{units}}",
   "CONTEST_ENDED": "Concurso terminó hace {{number}} {{units}}",
+  "CONTEST_STARTED" : "Inició Hace {{number}} {{units}}",
+  "CONTEST_STARTING" : "A partir de {{number}} {{units}}",
   "DEMO_CONTEST_ENDS_IN_UNITS": "días",
   "CONTEST_PARTICIPANTS": "Participantes: {{participants}}",
   "SOUND": "Sonido",
@@ -47,7 +49,7 @@
   "SET": "Set",
   "DATE_PICKER_ERROR_MESSAGE": "Por favor, seleccione una fecha",
   "DATE_PICKER_WEEK_DAYS": "D,L,M,M,J,V,S",
-  "DATE_PICKER_MONTHS": "Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre",
+  "MONTHS": "Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre",
   "CONTEST_ADMIN_INFO": "Administrador",
   "TEAM_SCORE": "{{team}} puntoligentes",
   "RATING": "Rating",
@@ -193,5 +195,7 @@
   "RESULTS" : "resultados",
   "NO_RESULTS" : "Sin resultados",
   "MAX_USER_QUESTIONS_REACHED" : "Este concurso permite hasta {{max}} preguntas , por favor, elimine algunas preguntas de la lista",
-  "SELECT_GAME" : "Seleccionar juego"
+  "SELECT_GAME" : "Seleccionar juego",
+  "CREATED_BY" : "Creado por {{name}}",
+  "CONTEST_CREATED_ON" : "El {{day}} de {{month}} {{year}}"
 }

@@ -132,7 +132,7 @@ module.exports.start = function (req, res, next) {
                 "share": {"data": {}}
             };
 
-            if (data.contest.content.category.id === "user" && data.contest.userIdCreated.toString() === data.session.userId.toString()) {
+            if (data.contest.content.category.id === "user" && data.contest.creator.id.toString() === data.session.userId.toString()) {
                 quiz.clientData.reviewMode = {"reason": "REVIEW_MODE_OWNER"};
             }
             else if (data.contest.content.category.id === "user" && data.contest.users[data.session.userId].lastPlayed) {

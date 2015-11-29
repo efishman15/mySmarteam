@@ -233,7 +233,7 @@
 
                 //Add server contests to the end of the array
                 for (var i = 0; i < contestsResult.list.length; i++) {
-                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], i);
+                    var contestChart = ContestsService.prepareContestChart(contestsResult.list[i], "ends");
                     $scope.contestCharts.push(contestChart);
                 }
 
@@ -250,11 +250,14 @@
 
         $scope.fcEvents = {
             "chartClick": function (eventObj, dataObj) {
-                $rootScope.gotoView("app.contest", false, {"id": eventObj.sender.args.dataSource.contest._id});
-                $rootScope.$broadcast("whoSmarter-contestUpdated", eventObj.sender.args.dataSource.contest);
+                $scope.gotoContest(eventObj.sender.args.dataSource.contest._id, eventObj.sender.args.dataSource.contest);
             }
         }
 
+        $scope.gotoContest = function(id, contest) {
+            $rootScope.gotoView("app.contest", false, {"id": id});
+            $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
+        }
     })
 
     .controller("QuizCtrl", function ($scope, $rootScope, $state, $stateParams, UserService, QuizService, PopupService, $ionicHistory, $translate, $timeout, SoundService, XpService, $ionicModal, $ionicConfig) {
@@ -872,7 +875,7 @@
         var datePickerSet = $translate.instant("SET");
         var datePickerErrorMessage = $translate.instant("DATE_PICKER_ERROR_MESSAGE");
         var datePickerWeekDays = $translate.instant("DATE_PICKER_WEEK_DAYS").split(",");
-        var datePickerMonths = $translate.instant("DATE_PICKER_MONTHS").split(",");
+        var datePickerMonths = $translate.instant("MONTHS").split(",");
 
         $scope.contestStartDatePicker = {
             titleLabel: $translate.instant("CONTEST_START"),
@@ -1106,7 +1109,7 @@
 
         $scope.openChooseGameModal = function () {
             if (!$scope.games) {
-                HostedGamesService.getGames($scope.localViewData.content.category.id, function(games) {
+                HostedGamesService.getGames($scope.localViewData.content.category.id, function (games) {
                     $scope.games = games;
                     $scope.chooseGameModal.show();
                 });
@@ -1756,7 +1759,7 @@
 
     })
 
-    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout, ShareService, $ionicModal, $state) {
+    .controller("ContestCtrl", function ($scope, $rootScope, $ionicConfig, $translate, $stateParams, ContestsService, XpService, $ionicHistory, SoundService, $timeout, ShareService, $ionicModal, $state, DateService) {
 
         $ionicConfig.backButton.previousTitleText("");
         $ionicConfig.backButton.text("");
@@ -1774,6 +1777,7 @@
 
         ContestsService.getContest($stateParams.id, function (contest) {
             refreshContest(contest);
+            $scope.contestTimePhrase = ContestsService.getTimePhrase(contest, "ends");
         });
 
         //-------------------------------------------------------
@@ -1793,11 +1797,9 @@
                 $scope.mobileShareModal.hide();
             };
 
-            //Hardware back button handlers
-            $state.current.data.mobileShareModal.isOpenHandler = function () {
-                return $scope.mobileShareModal.isShown()
-            };
-            $state.current.data.mobileShareModal.closeHandler = $scope.closeMobileShareModal;
+            //Hardware back button handlers - perform async - let the state fully load
+            $timeout(function () {
+            }, 2000)
 
         }, {
             scope: $scope,
@@ -1831,6 +1833,14 @@
                     $scope.share();
                 }
             }
+
+            if ($state.current && $state.current.data && $state.current.data.mobileShareModal && !$state.current.data.mobileShareModal.isOpenHandler) {
+                $state.current.data.mobileShareModal.isOpenHandler = function () {
+                    return $scope.mobileShareModal.isShown()
+                };
+                $state.current.data.mobileShareModal.closeHandler = $scope.closeMobileShareModal;
+            }
+
         });
 
         $scope.$on("$ionicView.leave", function (event, viewData) {
@@ -1840,7 +1850,7 @@
 
         function refreshContest(contest) {
 
-            $scope.contestChart = ContestsService.prepareContestChart(contest);
+            $scope.contestChart = ContestsService.prepareContestChart(contest, "starts");
             if (contest.status !== "finished") {
                 if (contest.myTeam === 0 || contest.myTeam === 1) {
                     $scope.buttonState = "play";
@@ -1935,12 +1945,15 @@
             $scope.playNow();
         };
 
-        $scope.playNow = function() {
+        $scope.playNow = function () {
             if ($scope.contestChart.contest.content.source === "trivia") {
                 $rootScope.gotoView("app.quiz", false, {contestId: $scope.contestChart.contest._id});
             }
             else {
-                $rootScope.gotoView("app.hostedGame", false, {game: $scope.contestChart.contest.content.game, gameId: $scope.contestChart.contest.content.game.id});
+                $rootScope.gotoView("app.hostedGame", false, {
+                    game: $scope.contestChart.contest.content.game,
+                    gameId: $scope.contestChart.contest.content.game.id
+                });
             }
         }
 
@@ -2053,7 +2066,7 @@
             $scope.game = $stateParams.game;
         });
 
-        $scope.getGameUrl = function() {
+        $scope.getGameUrl = function () {
             return $sce.trustAsResourceUrl($stateParams.game.url);
         };
 

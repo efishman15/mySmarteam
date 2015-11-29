@@ -594,7 +594,52 @@ label.item.valid-lr {
     height: 250px;
     font-size: 20px;
 }
+
 .set-contest-select-game-image {
     width: 250px;
     height: 250px;
+}
+
+.contests-play-image-container {
+    transform: translateX(50%);
+    -moz-transform: translateX(50%);
+    -webkit-transform: translateX(50%);
+}
+
+.contests-play-image {
+    float: left;
+}
+
+.contest-chart-background {
+    border-color: #28a54c;
+    background-color: #ffe29b;
+    padding-bottom: 5px !important;
+}
+
+.contest-leader-background {
+    border-color: #28a54c;
+    background-color: #2a5a7c;
+    background: linear-gradient(top, #2a5a7c, #bcd9ef);
+    background: -ms-linear-gradient(top, #2a5a7c, #bcd9ef);
+    background: -webkit-gradient(linear, left top, left bottom, from(#2a5a7c), to(#bcd9ef));
+    background: -moz-linear-gradient(top, #2a5a7c, #bcd9ef);
+}
+
+.bg-main {
+    background-color: #ffe29b !important;
+}
+
+.contest-leader-row1 {
+    color: #e0e3e5 !important;
+}
+
+.contest-leader-row2 {
+    color: #383838 !important;
+}
+
+.contest-footer-text {
+    text-decoration: underline;
+    white-space: nowrap;
+    font-size: 12px;
+    color: #004d40;
 }
