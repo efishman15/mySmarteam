@@ -402,7 +402,7 @@ function prepareContestForClient(contest, session) {
         contest.endsInUnits = "HOURS";
     }
     else {
-        contest.endsInNumber = endMinutes;
+        contest.endsInNumber = mathjs.ceil(endMinutes);
         contest.endsInUnits = "MINUTES";
     }
 
@@ -417,7 +417,7 @@ function prepareContestForClient(contest, session) {
         contest.startsInUnits = "HOURS";
     }
     else {
-        contest.startsInNumber = startMinutes;
+        contest.startsInNumber = mathjs.ceil(startMinutes);
         contest.startsInUnits = "MINUTES";
     }
 
