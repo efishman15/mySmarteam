@@ -115,6 +115,7 @@ function register(data, callback) {
                 return;
             }
 
+            newUser.thirdParty = data.user.thirdParty;
             data.user = newUser;
             data.user.justRegistered = true; //does not need to be in db - just returned back to the client
 

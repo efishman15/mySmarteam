@@ -6,7 +6,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/contests.js" afterPath="$PROJECT_DIR$/server/business_logic/contests.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/dal/dalDb.js" afterPath="$PROJECT_DIR$/server/dal/dalDb.js" />
     </list>
     <ignored path="ionic-tutorial.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,11 +27,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="contests.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
+      <file leaf-file-name="dalDb.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/server/dal/dalDb.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.49342892">
-              <caret line="404" column="0" selection-start-line="404" selection-start-column="0" selection-end-line="404" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.76224613">
+              <caret line="121" column="32" selection-start-line="121" selection-start-column="32" selection-end-line="121" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="credentials.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="62" column="23" selection-start-line="62" selection-start-column="23" selection-end-line="62" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -85,7 +95,6 @@
         <option value="$PROJECT_DIR$/client/platforms/ios/cordova/lib/list-devices" />
         <option value="$PROJECT_DIR$/client/www/templates/contests.html___jb_bak___" />
         <option value="$PROJECT_DIR$/server/business_logic/quiz.js" />
-        <option value="$PROJECT_DIR$/server/dal/dalDb.js" />
         <option value="$PROJECT_DIR$/client/www/languages/en.json" />
         <option value="$PROJECT_DIR$/client/www/languages/es.json" />
         <option value="$PROJECT_DIR$/client/www/languages/he.json" />
@@ -105,6 +114,7 @@
         <option value="$PROJECT_DIR$/client/www/templates/contestParticipants.html" />
         <option value="$PROJECT_DIR$/client/config.xml" />
         <option value="$PROJECT_DIR$/server/business_logic/contests.js" />
+        <option value="$PROJECT_DIR$/server/dal/dalDb.js" />
       </list>
     </option>
   </component>
@@ -211,6 +221,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="dal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whoSmarter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="whoSmarter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="server" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="business_logic" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -226,46 +254,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="whoSmarter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="www" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -797,13 +785,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/client/www/js/controllers.js</url>
-          <line>2</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="41" />
     </breakpoint-manager>
     <watches-manager />
@@ -981,26 +962,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="62" column="30" selection-start-line="62" selection-start-column="30" selection-end-line="62" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/dal/dalDb.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1115" column="61" selection-start-line="1115" selection-start-column="61" selection-end-line="1115" selection-end-column="61" />
           <folding />
         </state>
       </provider>
@@ -1037,10 +1002,160 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32754344">
+          <caret line="12" column="56" selection-start-line="12" selection-start-column="56" selection-end-line="12" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clientExternalLibs/ng-cordova-master/demo/www/lib/ionic/css/ionic.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="100.292305">
+          <caret line="4975" column="1" selection-start-line="4975" selection-start-column="1" selection-end-line="4975" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.1434511">
+          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#button#0;n#div#1;n#div#0;n#div#1;n#div#1;n#div#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#1;n#div#1;n#div#0;n#div#1;n#div#1;n#div#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
+            <marker date="1448820212623" expanded="true" signature="1790:1865" placeholder="{...}" />
+            <marker date="1448820212623" expanded="true" signature="2238:2313" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/leaders.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="9" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/weeklyLeaderboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.09147609">
+          <caret line="2" column="38" selection-start-line="2" selection-start-column="37" selection-end-line="2" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/friendsLeaderboard.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.09147609">
+          <caret line="2" column="38" selection-start-line="2" selection-start-column="37" selection-end-line="2" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/roundTabs.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.354838">
+          <caret line="16" column="42" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/setContest.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="47" selection-start-line="0" selection-start-column="47" selection-end-line="0" selection-end-column="47" />
+          <folding>
+            <marker date="1448820626679" expanded="true" signature="1300:1466" placeholder="{...}" />
+            <marker date="1448820626679" expanded="true" signature="4456:4559" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/share.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="60" selection-start-line="0" selection-start-column="60" selection-end-line="0" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/like.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="56" selection-start-line="0" selection-start-column="56" selection-end-line="0" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.387096">
+          <caret line="628" column="41" selection-start-line="628" selection-start-column="41" selection-end-line="628" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/settings.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="70" selection-start-line="0" selection-start-column="70" selection-end-line="0" selection-end-column="70" />
+          <folding>
+            <marker date="1448820954088" expanded="true" signature="231:458" placeholder="{...}" />
+            <marker date="1448820954088" expanded="true" signature="2028:2255" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.20430107">
+          <caret line="282" column="27" selection-start-line="282" selection-start-column="20" selection-end-line="282" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/contests.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.483871">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#ion-list#0;n#ion-scroll#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#1;n#div#0;n#ion-list#0;n#ion-scroll#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/templates/contestParticipants.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.387097">
+          <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/config.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43672457">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49342892">
+          <caret line="404" column="0" selection-start-line="404" selection-start-column="0" selection-end-line="404" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="624" column="60" selection-start-line="624" selection-start-column="60" selection-end-line="624" selection-end-column="60" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1501" column="8" selection-start-line="1501" selection-start-column="8" selection-end-line="1501" selection-end-column="8" />
           <folding>
             <element signature="e#311#21890#0" expanded="false" />
             <element signature="e#322#370#0" expanded="false" />
@@ -1352,7 +1467,6 @@
             <element signature="e#59211#59507#0" expanded="false" />
             <element signature="e#59290#59391#0" expanded="false" />
             <element signature="e#59599#59711#0" expanded="false" />
-            <element signature="e#59859#62900#0" expanded="false" />
             <element signature="e#59870#59918#0" expanded="false" />
             <element signature="e#60108#60296#0" expanded="false" />
             <element signature="e#60162#60225#0" expanded="false" />
@@ -1365,7 +1479,6 @@
             <element signature="e#61256#61388#0" expanded="false" />
             <element signature="e#61430#61784#0" expanded="false" />
             <element signature="e#61816#62429#0" expanded="false" />
-            <element signature="e#62528#62867#0" expanded="false" />
             <element signature="e#62995#63680#0" expanded="false" />
             <element signature="e#63006#63054#0" expanded="false" />
             <element signature="e#63305#63421#0" expanded="false" />
@@ -1381,125 +1494,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/languages/he.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32754344">
-          <caret line="12" column="56" selection-start-line="12" selection-start-column="56" selection-end-line="12" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/clientExternalLibs/ng-cordova-master/demo/www/lib/ionic/css/ionic.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="100.292305">
-          <caret line="4975" column="1" selection-start-line="4975" selection-start-column="1" selection-end-line="4975" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contest.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1434511">
-          <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#button#0;n#div#1;n#div#0;n#div#1;n#div#1;n#div#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#1;n#div#1;n#div#0;n#div#1;n#div#1;n#div#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
-            <marker date="1448820212623" expanded="true" signature="1790:1865" placeholder="{...}" />
-            <marker date="1448820212623" expanded="true" signature="2238:2313" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/leaders.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="9" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/weeklyLeaderboard.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09147609">
-          <caret line="2" column="38" selection-start-line="2" selection-start-column="37" selection-end-line="2" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/friendsLeaderboard.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09147609">
-          <caret line="2" column="38" selection-start-line="2" selection-start-column="37" selection-end-line="2" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/roundTabs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.354838">
-          <caret line="16" column="42" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/setContest.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="47" selection-start-line="0" selection-start-column="47" selection-end-line="0" selection-end-column="47" />
-          <folding>
-            <marker date="1448820626679" expanded="true" signature="1300:1466" placeholder="{...}" />
-            <marker date="1448820626679" expanded="true" signature="4456:4559" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/share.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="60" selection-start-line="0" selection-start-column="60" selection-end-line="0" selection-end-column="76" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/like.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="56" selection-start-line="0" selection-start-column="56" selection-end-line="0" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/css/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.387096">
-          <caret line="628" column="41" selection-start-line="628" selection-start-column="41" selection-end-line="628" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/settings.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="70" selection-start-line="0" selection-start-column="70" selection-end-line="0" selection-end-column="70" />
-          <folding>
-            <marker date="1448820954088" expanded="true" signature="231:458" placeholder="{...}" />
-            <marker date="1448820954088" expanded="true" signature="2028:2255" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20430107">
-          <caret line="282" column="27" selection-start-line="282" selection-start-column="20" selection-end-line="282" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/www/js/controllers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="252" column="23" selection-start-line="252" selection-start-column="23" selection-end-line="252" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.76105136">
+          <caret line="1980" column="25" selection-start-line="1980" selection-start-column="25" selection-end-line="1980" selection-end-column="25" />
           <folding>
             <element signature="e#378#516#0" expanded="false" />
             <element signature="e#578#631#0" expanded="false" />
@@ -1527,7 +1525,6 @@
             <element signature="e#3921#4249#0" expanded="false" />
             <element signature="e#3947#4093#0" expanded="false" />
             <element signature="e#4111#4239#0" expanded="false" />
-            <element signature="e#4341#4400#0" expanded="false" />
             <element signature="e#4560#4814#0" expanded="false" />
             <element signature="e#4663#4802#0" expanded="false" />
             <element signature="e#4986#6153#0" expanded="false" />
@@ -1656,7 +1653,6 @@
             <element signature="e#32960#33379#0" expanded="false" />
             <element signature="e#33067#33367#0" expanded="false" />
             <element signature="e#33137#33308#0" expanded="false" />
-            <element signature="e#33558#36541#0" expanded="false" />
             <element signature="e#33667#33771#0" expanded="false" />
             <element signature="e#33910#34498#0" expanded="false" />
             <element signature="e#34233#34301#0" expanded="false" />
@@ -1666,8 +1662,6 @@
             <element signature="e#34811#34876#0" expanded="false" />
             <element signature="e#34935#34995#0" expanded="false" />
             <element signature="e#35056#35110#0" expanded="false" />
-            <element signature="e#35211#35327#0" expanded="false" />
-            <element signature="e#35253#35317#0" expanded="false" />
             <element signature="e#35388#36533#0" expanded="false" />
             <element signature="e#35491#36523#0" expanded="false" />
             <element signature="e#35651#36507#0" expanded="false" />
@@ -1848,8 +1842,6 @@
             <element signature="e#70335#70576#0" expanded="false" />
             <element signature="e#70451#70524#0" expanded="false" />
             <element signature="e#70626#70783#0" expanded="false" />
-            <element signature="e#70953#71318#0" expanded="false" />
-            <element signature="e#71126#71309#0" expanded="false" />
             <element signature="e#71430#72605#0" expanded="false" />
             <element signature="e#71559#71696#0" expanded="false" />
             <element signature="e#71768#72153#0" expanded="false" />
@@ -1871,20 +1863,11 @@
             <element signature="e#74375#74457#0" expanded="false" />
             <element signature="e#75074#75144#0" expanded="false" />
             <element signature="e#75404#75461#0" expanded="false" />
-            <element signature="e#75693#76248#0" expanded="false" />
-            <element signature="e#75806#75869#0" expanded="false" />
-            <element signature="e#75939#76092#0" expanded="false" />
-            <element signature="e#75975#76030#0" expanded="false" />
             <element signature="e#76215#76230#0" expanded="false" />
             <element signature="e#76250#76325#0" expanded="false" />
             <element signature="e#76427#76545#0" expanded="false" />
             <element signature="e#76470#76535#0" expanded="false" />
             <element signature="e#76675#76735#0" expanded="false" />
-            <element signature="e#77148#77909#0" expanded="false" />
-            <element signature="e#77197#77470#0" expanded="false" />
-            <element signature="e#77309#77379#0" expanded="false" />
-            <element signature="e#77401#77456#0" expanded="false" />
-            <element signature="e#77622#77898#0" expanded="false" />
             <element signature="e#77705#77785#0" expanded="false" />
             <element signature="e#77979#78084#0" expanded="false" />
             <element signature="e#78129#78597#0" expanded="false" />
@@ -1922,9 +1905,6 @@
             <element signature="e#82480#82550#0" expanded="false" />
             <element signature="e#82635#82740#0" expanded="false" />
             <element signature="e#82670#82722#0" expanded="false" />
-            <element signature="e#82909#83188#0" expanded="false" />
-            <element signature="e#82962#83048#0" expanded="false" />
-            <element signature="e#83066#83178#0" expanded="false" />
             <element signature="e#83335#84541#0" expanded="false" />
             <element signature="e#83508#84003#0" expanded="false" />
             <element signature="e#83739#83807#0" expanded="false" />
@@ -1949,37 +1929,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contests.html">
+    <entry file="file://$PROJECT_DIR$/server/business_logic/credentials.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.483871">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#ion-list#0;n#ion-scroll#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#1;n#div#0;n#ion-list#0;n#ion-scroll#0;n#ion-content#0;n#ion-view#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/templates/contestParticipants.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.387097">
-          <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="62" column="23" selection-start-line="62" selection-start-column="23" selection-end-line="62" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/config.xml">
+    <entry file="file://$PROJECT_DIR$/server/dal/dalDb.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43672457">
-          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49342892">
-          <caret line="404" column="0" selection-start-line="404" selection-start-column="0" selection-end-line="404" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.76224613">
+          <caret line="121" column="32" selection-start-line="121" selection-start-column="32" selection-end-line="121" selection-end-column="32" />
           <folding />
         </state>
       </provider>
