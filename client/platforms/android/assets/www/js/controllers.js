@@ -1,18 +1,18 @@
-﻿angular.module("whoSmarter.controllers", ["whoSmarter.services", "ngAnimate"])
+﻿angular.module("topTeamer.controllers", ["topTeamer.services", "ngAnimate"])
 
     .controller("AppCtrl", function ($scope, $rootScope, $state, XpService, $ionicSideMenuDelegate, PopupService, SoundService, $ionicModal, ScreenService, ShareService, HostedGamesService) {
 
         $scope.gameCategories = null;
 
-        $rootScope.$on("whoSmarter-directionChanged", function () {
+        $rootScope.$on("topTeamer-directionChanged", function () {
             $scope.canvas.className = "menu-xp-" + $rootScope.settings.languages[$rootScope.user.settings.language].direction;
         });
 
-        $scope.$on("whoSmarter-windowResize", function () {
+        $scope.$on("topTeamer-windowResize", function () {
             ScreenService.resizeCanvas();
         });
 
-        $scope.$on("whoSmarter-orientationChanged", function () {
+        $scope.$on("topTeamer-orientationChanged", function () {
             ScreenService.resizeCanvas();
         });
 
@@ -41,7 +41,7 @@
             $scope.newRankModal.hide();
         };
 
-        $rootScope.$on("whoSmarter-rankChanged", function (event, data) {
+        $rootScope.$on("topTeamer-rankChanged", function (event, data) {
 
             SoundService.play("audio/finish_great_1");
             $scope.xpProgress = data.xpProgress;
@@ -137,11 +137,11 @@
 
         ScreenService.resizeCanvas();
 
-        $scope.$on("whoSmarter-windowResize", function () {
+        $scope.$on("topTeamer-windowResize", function () {
             ScreenService.resizeCanvas();
         });
 
-        $scope.$on("whoSmarter-orientationChanged", function () {
+        $scope.$on("topTeamer-orientationChanged", function () {
             ScreenService.resizeCanvas();
         });
 
@@ -215,7 +215,7 @@
             $rootScope.gotoView(viewName, false, {}, false, true);
         };
 
-        $scope.$on("whoSmarter-tabChanged", function () {
+        $scope.$on("topTeamer-tabChanged", function () {
             $rootScope.gotoView(tabs[$ionicTabsDelegate.selectedIndex()], true, {userClick: true});
         });
 
@@ -243,7 +243,7 @@
             });
         }
 
-        $rootScope.$on("whoSmarter-contestCreated", function (event, contest) {
+        $rootScope.$on("topTeamer-contestCreated", function (event, contest) {
             $rootScope.deepLinkContestId = contest._id;
             $rootScope.contestJustCreated = true;
         });
@@ -256,7 +256,7 @@
 
         $scope.gotoContest = function(id, contest) {
             $rootScope.gotoView("app.contest", false, {"id": id});
-            $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
+            $rootScope.$broadcast("topTeamer-contestUpdated", contest);
         }
     })
 
@@ -442,7 +442,7 @@
             startQuiz();
         });
 
-        $scope.$on("whoSmarter-windowResize", function () {
+        $scope.$on("topTeamer-windowResize", function () {
             drawQuizProgress();
         });
 
@@ -686,7 +686,7 @@
                     });
 
                 $ionicHistory.goBack();
-                $rootScope.$broadcast("whoSmarter-quizFinished", $scope.quiz.results);
+                $rootScope.$broadcast("topTeamer-quizFinished", $scope.quiz.results);
 
             }
             else {
@@ -848,7 +848,7 @@
 
                             //Check to fire directionChanged event
                             if ($rootScope.settings.languages[$scope.localViewData.language].direction != $rootScope.settings.languages[prevLanguage].direction) {
-                                $rootScope.$broadcast("whoSmarter-directionChanged");
+                                $rootScope.$broadcast("topTeamer-directionChanged");
                             }
                         }
                     });
@@ -1433,11 +1433,11 @@
 
                     if ($stateParams.mode === "add") {
                         FlurryAgent.logEvent("contest/created", contestParams);
-                        $rootScope.$broadcast("whoSmarter-contestCreated", contest);
+                        $rootScope.$broadcast("topTeamer-contestCreated", contest);
                     }
                     else {
                         FlurryAgent.logEvent("contest/updated", contestParams);
-                        $rootScope.$broadcast("whoSmarter-contestUpdated", contest);
+                        $rootScope.$broadcast("topTeamer-contestUpdated", contest);
                     }
 
                 }, function (status, error) {
@@ -1507,7 +1507,7 @@
                 ContestsService.removeContest($scope.localViewData._id,
                     function (data) {
                         $rootScope.goBack();
-                        $rootScope.$broadcast("whoSmarter-contestRemoved");
+                        $rootScope.$broadcast("topTeamer-contestRemoved");
                     });
 
             });
@@ -1957,7 +1957,7 @@
             }
         }
 
-        $rootScope.$on("whoSmarter-quizFinished", function (event, results) {
+        $rootScope.$on("topTeamer-quizFinished", function (event, results) {
 
             refreshContest(results.contest);
             $scope.lastQuizResults = results;
@@ -1967,14 +1967,14 @@
             }, 500);
         });
 
-        $rootScope.$on("whoSmarter-contestRemoved", function () {
+        $rootScope.$on("topTeamer-contestRemoved", function () {
             $timeout(function () {
                 $rootScope.goBack();
             }, 500);
 
         });
 
-        $rootScope.$on("whoSmarter-contestUpdated", function (event, contest) {
+        $rootScope.$on("topTeamer-contestUpdated", function (event, contest) {
             refreshContest(contest);
         });
 

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.fplabs.whosmarter" version="0.0.33" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.fplabs.topteamer" version="0.0.34" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <preference name="loglevel" value="DEBUG" />
     <feature name="Keyboard">
         <param name="android-package" value="com.ionic.keyboard.IonicKeyboard" />
@@ -55,12 +55,12 @@
     <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.9.png" />
     <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.9.png" />
     <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.9.png" />
-    <name>whoSmarter</name>
+    <name>topTeamer</name>
     <description>
         Choose your team out of many contests and play for your team to win.
     </description>
-    <author email="eddy.fishman@gmail.com" href="http://www.whosmarter.com/">
-        whoSmarter Staff
+    <author email="eddy.fishman@gmail.com" href="http://www.topteamer.com/">
+        topTeamer Staff
     </author>
     <content src="index.html" />
     <access origin="*" />
