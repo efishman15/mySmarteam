@@ -5,13 +5,13 @@ Cordova version: 5.0.0
 Config.xml file: 
 
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.fplabs.whosmarter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>whoSmarter</name>
+<widget id="com.fplabs.topteamer" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>topTeamer</name>
   <description>
         Choose your team to play for and prove who is smarter.
     </description>
-  <author email="eddy.fishman@gmail.com" href="http://www.whoSmarter.com/">
-      whoSmarter Staff
+  <author email="eddy.fishman@gmail.com" href="http://www.topteamer.com/">
+      topTeamer Staff
     </author>
   <content src="index.html"/>
   <access origin="*"/>

@@ -81,7 +81,7 @@
                     ],
                     "FacebookDisplayName": [
                         {
-                            "xml": "<string>whoSmarter</string>",
+                            "xml": "<string>topTeamer</string>",
                             "count": 1
                         }
                     ],
@@ -125,39 +125,39 @@
     },
     "installed_plugins": {
         "com.ionic.keyboard": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "com.smartmobilesoftware.androidinappbilling": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-facebook4": {
             "APP_ID": "344342552056",
-            "APP_NAME": "whoSmarter",
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "APP_NAME": "topTeamer",
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-x-socialsharing": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "io.branch.sdk": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "phonegap-plugin-push": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "uk.co.whiteoctober.cordova.appversion": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         }
     },
     "dependent_plugins": {}

@@ -99,11 +99,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<permission android:name=\"com.fplabs.whosmarter.permission.C2D_MESSAGE\" android:protectionLevel=\"signature\" />",
+                            "xml": "<permission android:name=\"com.fplabs.topteamer.permission.C2D_MESSAGE\" android:protectionLevel=\"signature\" />",
                             "count": 1
                         },
                         {
-                            "xml": "<uses-permission android:name=\"com.fplabs.whosmarter.permission.C2D_MESSAGE\" />",
+                            "xml": "<uses-permission android:name=\"com.fplabs.topteamer.permission.C2D_MESSAGE\" />",
                             "count": 1
                         }
                     ],
@@ -137,7 +137,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<receiver android:exported=\"true\" android:name=\"com.google.android.gms.gcm.GcmReceiver\" android:permission=\"com.google.android.c2dm.permission.SEND\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /><category android:name=\"com.fplabs.whosmarter\" /></intent-filter></receiver>",
+                            "xml": "<receiver android:exported=\"true\" android:name=\"com.google.android.gms.gcm.GcmReceiver\" android:permission=\"com.google.android.c2dm.permission.SEND\"><intent-filter><action android:name=\"com.google.android.c2dm.intent.RECEIVE\" /><category android:name=\"com.fplabs.topteamer\" /></intent-filter></receiver>",
                             "count": 1
                         },
                         {
@@ -169,7 +169,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<string name=\"fb_app_name\">whoSmarter</string>",
+                            "xml": "<string name=\"fb_app_name\">topTeamer</string>",
                             "count": 1
                         }
                     ]
@@ -189,40 +189,40 @@
     },
     "installed_plugins": {
         "com.ionic.keyboard": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "com.smartmobilesoftware.androidinappbilling": {
             "BILLING_KEY": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3IFP36K63k81wT0Fa+KfGVsJcomZDxHdHr5Kd+Evyy6Hqw2LXb8jzDhVQOPyKog1oOAnVro/i2qtm3lQXiV0sA8Yfh+FTspUzIv5si7MkI/q9sO2e1YYCgj/7tsqNoKSD0XG7Z06hkfzMpuljbUPATn3SuKncwl/UREC5bwWPkTqCJz6uKMFjdOTPy20LslZ38MzOzeNpJnvWuV+dRogROhScVbgvLGLynEjRxk35sNkanWtzwxNLSwQQJiCH0VSBL+YtFd+GFMfeMMCSAMw6f2rg/OVVeqAQylwdp0K1YjwbmvuM7kr1r+MBzliKt4TCPQ0tuqDVKVOT3aGvYRKDQIDAQAB",
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-facebook4": {
             "APP_ID": "344342552056",
-            "APP_NAME": "whoSmarter",
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "APP_NAME": "topTeamer",
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "cordova-plugin-x-socialsharing": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "io.branch.sdk": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "uk.co.whiteoctober.cordova.appversion": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         },
         "phonegap-plugin-push": {
-            "PACKAGE_NAME": "com.fplabs.whosmarter"
+            "PACKAGE_NAME": "com.fplabs.topteamer"
         }
     },
     "dependent_plugins": {}

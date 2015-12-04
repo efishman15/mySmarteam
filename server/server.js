@@ -142,9 +142,9 @@ dalDb.loadSettings(null, function (err, data) {
     });
 
     var certificate = {
-        key: fs.readFileSync(path.resolve(__dirname,"./certificates/whosmarter.com.key")),
+        key: fs.readFileSync(path.resolve(__dirname,"./certificates/topteamer.com.key")),
         ca: [fs.readFileSync(path.resolve(__dirname,"./certificates/gd_bundle-g2-g1.crt"))],
-        cert: fs.readFileSync(path.resolve(__dirname,"./certificates/whosmarter.crt"))
+        cert: fs.readFileSync(path.resolve(__dirname,"./certificates/topteamer.crt"))
     }
 
     http.createServer(app).listen(80);

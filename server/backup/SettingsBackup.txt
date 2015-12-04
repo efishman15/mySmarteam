@@ -83,16 +83,16 @@
     },
     "facebook" : {
       "secretKey" : "9ddb5d54c189bbf740967e6a6c18ccbb",
-      "signedRequestRedirectUrl" : "https://www.whosmarter.com/#/facebook",
+      "signedRequestRedirectUrl" : "https://www.topteamer.com/#/facebook",
       "appAccessToken" : "344342552056|QiE5jBhMjOyz7XxV93voCQf553A",
       "friendsPageSize" : 25,
       "appId" : "344342552056",
-      "contestImageUrl" : "http://www.whosmarter.com/images/facebook/contest.png",
-      "userOpenGraphProfileUrl" : "http://www.whosmarter.com/facebook/profile/%s/%s"
+      "contestImageUrl" : "http://www.topteamer.com/images/facebook/contest.png",
+      "userOpenGraphProfileUrl" : "http://www.topteamer.com/facebook/profile/%s/%s"
     },
     "versions" : {
       "mustUpdate" : {
-        "minVersion" : "0.0.26",
+        "minVersion" : "0.0.31",
         "popup" : {
           "buttons" : [{
               "action" : "linkExit",
@@ -100,7 +100,8 @@
                 "en" : "OK",
                 "es" : "OK",
                 "he" : "אישור"
-              }
+              },
+              "link" : "#storeLink#"
             }],
           "title" : {
             "en" : "<h1 class=\"title\">New version</h1>",
@@ -112,7 +113,8 @@
             "es" : "<h3>Por favor, actualice a nuestra nueva versión - su cuenta y el rango será preservado</h3>",
             "he" : "<h3>אנא עדכנו לגירסה החדשה שלנו - חשבונכם ורמתכם במשחק יישמרו</h3>"
           },
-          "image" : "http://www.whosmarter.com/images/info.png"
+          "image" : "http://www.topteamer.com/images/info.png",
+          "preventBack" : true
         }
       }
     },
@@ -120,9 +122,9 @@
       "paypal" : {
         "successUrl" : "#/payPalPaymentSuccess",
         "cancelUrl" : "#/payPalCancel",
-        "user" : "testseller2_api1.whosmarter.com",
-        "password" : "9VXL24PFJ9LX8GSS",
-        "signature" : "AvYW0oSj.WW9Wh3OfTtEun4M6OFuApinXztzGPxJWkswTqZuwteL7KEV",
+        "user" : "testseller2_api1.topteamer.com",
+        "password" : "U65E4YM38WRMEPB5",
+        "signature" : "AAUQ2KAWGiinQ15pX-9MGiEvdmkJA211FDmKgNOAjo478kPl8dQexKzk",
         "debug" : true
       },
       "currencies" : {
@@ -166,24 +168,24 @@
     "quiz" : {
       "questions" : {
         "levels" : [{
-            "minCorrectRatio" : 0.7,
+            "minCorrectRatio" : 0.95,
             "maxCorrectRatio" : 1.01,
             "score" : 50
           }, {
-            "minCorrectRatio" : 0.5,
-            "maxCorrectRatio" : 0.7,
+            "minCorrectRatio" : 0.75,
+            "maxCorrectRatio" : 0.95,
             "score" : 100
           }, {
-            "minCorrectRatio" : 0.3,
-            "maxCorrectRatio" : 0.5,
+            "minCorrectRatio" : 0.55,
+            "maxCorrectRatio" : 0.75,
             "score" : 200
           }, {
-            "minCorrectRatio" : 0.1,
-            "maxCorrectRatio" : 0.3,
+            "minCorrectRatio" : 0.5,
+            "maxCorrectRatio" : 0.55,
             "score" : 500
           }, {
             "minCorrectRatio" : 0.0,
-            "maxCorrectRatio" : 0.1,
+            "maxCorrectRatio" : 0.5,
             "score" : 1000
           }]
       },
@@ -204,9 +206,9 @@
           "soundGroup" : "great",
           "clientKey" : "STORY_MADE_MY_TEAM_LEAD",
           "facebookPost" : {
-            "action" : "whosmarter:lead",
+            "action" : "topteamer:lead",
             "dialogImage" : {
-              "url" : "http://www.whosmarter.com/images/facebook/winner1.jpg",
+              "url" : "http://www.topteamer.com/images/facebook/winner1.jpg",
               "width" : 400,
               "height" : 210
             },
@@ -220,9 +222,9 @@
           "soundGroup" : "great",
           "clientKey" : "STORY_YOUR_TEAM_IS_CLOSE_TO_LEAD",
           "facebookPost" : {
-            "action" : "whosmarter:empower",
+            "action" : "topteamer:empower",
             "dialogImage" : {
-              "url" : "http://www.whosmarter.com/images/facebook/winner2.jpg",
+              "url" : "http://www.topteamer.com/images/facebook/winner2.jpg",
               "width" : 400,
               "height" : 210
             },
@@ -236,9 +238,9 @@
           "soundGroup" : "great",
           "clientKey" : "STORY_BECAME_CONTEST_LEADER",
           "facebookPost" : {
-            "action" : "whosmarter:become",
+            "action" : "topteamer:become",
             "dialogImage" : {
-              "url" : "http://www.whosmarter.com/images/facebook/winner2.jpg",
+              "url" : "http://www.topteamer.com/images/facebook/winner2.jpg",
               "width" : 400,
               "height" : 210
             },
@@ -252,9 +254,9 @@
           "soundGroup" : "great",
           "clientKey" : "STORY_BECAME_TEAM_LEADER",
           "facebookPost" : {
-            "action" : "whosmarter:become",
+            "action" : "topteamer:become",
             "dialogImage" : {
-              "url" : "http://www.whosmarter.com/images/facebook/winner2.jpg",
+              "url" : "http://www.topteamer.com/images/facebook/winner2.jpg",
               "width" : 400,
               "height" : 210
             },
@@ -268,9 +270,9 @@
           "soundGroup" : "great",
           "clientKey" : "STORY_PERFECT_SCORE",
           "facebookPost" : {
-            "action" : "whosmarter:promote",
+            "action" : "topteamer:promote",
             "dialogImage" : {
-              "url" : "http://www.whosmarter.com/images/facebook/winner2.jpg",
+              "url" : "http://www.topteamer.com/images/facebook/winner2.jpg",
               "width" : 400,
               "height" : 210
             },
@@ -294,7 +296,7 @@
           "soundGroup" : "great",
           "clientKey" : "STORY_PASSED_FRIENDS_IN_LEADERBOARD",
           "facebookPost" : {
-            "action" : "whosmarter:beat",
+            "action" : "topteamer:beat",
             "dialogImage" : {
               "width" : 400,
               "height" : 210,
@@ -304,6 +306,21 @@
               "name" : "profile"
             }
           }
+        },
+        "reviewPerfectScore" : {
+          "priority" : -100,
+          "soundGroup" : "great",
+          "clientKey" : "STORY_REVIEW_PERFECT_SCORE"
+        },
+        "reviewGotScore" : {
+          "priority" : -200,
+          "soundGroup" : "ok",
+          "clientKey" : "STORY_REVIEW_GOT_SCORE"
+        },
+        "reviewZeroScore" : {
+          "priority" : -300,
+          "soundGroup" : "zero",
+          "clientKey" : "STORY_REVIEW_ZERO_SCORE"
         }
       }
     },
@@ -320,7 +337,7 @@
     },
     "platforms" : {
       "android" : {
-        "storeLink" : "https://play.google.com/store/apps/details?id=com.fplabs.whosmarter"
+        "storeLink" : "https://play.google.com/store/apps/details?id=com.fplabs.topteamer"
       },
       "ios" : {
         "storeLink" : "http://www.apple.com"
@@ -331,7 +348,8 @@
       "friendsAboveMePageSize" : 2
     },
     "contestList" : {
-      "recentlyFinishedDays" : 7
+      "recentlyFinishedDays" : 7,
+      "pageSize" : 10
     },
     "text" : {
       "he" : {
@@ -352,10 +370,14 @@
     },
     "branch" : {
       "key" : "key_live_pocRNjTcwzk0YWxsqcRv3olivweLVuVE",
-      "teamLink" : "http://www.whosmarter.com/facebook/team/%s/%d",
-      "teamLeaderLink" : "http://www.whosmarter.com/facebook/teamLeader/%s/%d",
-      "contestLink" : "http://www.whosmarter.com/facebook/contest/%s",
-      "contestLeaderLink" : "http://www.whosmarter.com/facebook/contestLeader/%s"
+      "teamLink" : "http://www.topteamer.com/facebook/team/%s/%d",
+      "teamLeaderLink" : "http://www.topteamer.com/facebook/teamLeader/%s/%d",
+      "contestLink" : "http://www.topteamer.com/facebook/contest/%s",
+      "contestLeaderLink" : "http://www.topteamer.com/facebook/contestLeader/%s"
+    },
+    "hostedGames" : {
+      "active" : true,
+      "forAdminsOnly" : true
     }
   },
   "client" : {
@@ -411,31 +433,31 @@
         "annotationsFont" : "10px Arial",
         "annotationHorizontalMagicNumbers" : {
           "ltr" : {
-            "endsIn" : {
-              "id" : 0,
-              "position" : "$chartstartx + ",
-              "spacing" : 4
-            },
             "participants" : {
               "id" : 1,
               "position" : "$chartendx - ",
+              "spacing" : 4
+            },
+            "time" : {
+              "id" : 0,
+              "position" : "$chartstartx + ",
               "spacing" : 4
             }
           },
           "rtl" : {
-            "endsIn" : {
-              "id" : 0,
-              "position" : "$chartendx - ",
-              "spacing" : 7
-            },
             "participants" : {
               "id" : 1,
               "position" : "$chartstartx + ",
               "spacing" : 3
+            },
+            "time" : {
+              "id" : 0,
+              "position" : "$chartendx - ",
+              "spacing" : 7
             }
           }
         },
-        "endsIn" : {
+        "time" : {
           "finished" : {
             "color" : "#ff0000"
           },
@@ -530,8 +552,9 @@
       "finishedPalette" : ["#00ff00,#c2c2c2", "#c2c2c2,#00ff00", "#00ff00,#00ff00"]
     },
     "contestList" : {
-      "pageSize" : 5,
-      "distance" : "50%"
+      "playButton" : {
+        "size" : 60
+      }
     },
     "xpControl" : {
       "canvas" : {
@@ -568,12 +591,18 @@
         },
         "pieChartRadius" : 15,
         "width" : 576
+      },
+      "question" : {
+        "maxLength" : 90,
+        "answer" : {
+          "maxLength" : 45
+        }
       }
     },
     "general" : {
-      "baseUrl" : "http://www.whosmarter.com/",
-      "baseUrlSecured" : "https://www.whosmarter.com/",
-      "baseUrlWithoutProtocol" : "//www.whosmarter.com/",
+      "baseUrl" : "http://www.topteamer.com/",
+      "baseUrlSecured" : "https://www.topteamer.com/",
+      "baseUrlWithoutProtocol" : "//www.topteamer.com/",
       "logoUrl" : "images/logo.png",
       "facebookFanPage" : "https://www.facebook.com/392678080828378",
       "webCanvasWidth" : 640,
@@ -584,7 +613,7 @@
       }
     },
     "share" : {
-      "twitterAccount" : "whoSmarter"
+      "twitterAccount" : "topTeamer"
     },
     "facebook" : {
       "readPermissions" : ["public_profile", "email", "user_friends"],
@@ -593,6 +622,38 @@
     "google" : {
       "gcm" : {
         "senderID" : "742205400669"
+      }
+    },
+    "newContest" : {
+      "privateQuestions" : {
+        "min" : 1,
+        "max" : 5
+      },
+      "endOptions" : {
+        "m30" : {
+          "value" : "m30",
+          "number" : 30,
+          "units" : "ENDS_IN_MINUTES",
+          "msecMultiplier" : 60000
+        },
+        "h4" : {
+          "value" : "h4",
+          "number" : 4,
+          "units" : "ENDS_IN_HOURS",
+          "msecMultiplier" : 3600000
+        },
+        "h24" : {
+          "value" : "h24",
+          "number" : 24,
+          "units" : "ENDS_IN_HOURS",
+          "msecMultiplier" : 3600000
+        },
+        "d3" : {
+          "value" : "d3",
+          "number" : 3,
+          "units" : "ENDS_IN_DAYS",
+          "msecMultiplier" : 86400000
+        }
       }
     }
   }

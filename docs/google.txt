@@ -21,7 +21,7 @@
 AIzaSyAnQgWsWFgfcEF4CxtnJR645qXiBCzvndQ
 
             <intent-filter>
-                <data android:host="open" android:scheme="whosmarter" />
+                <data android:host="open" android:scheme="topteamer" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -30,10 +30,10 @@ AIzaSyAnQgWsWFgfcEF4CxtnJR645qXiBCzvndQ
 
 
 
-cordova -d plugin add https://github.com/uofmmike/phonegap-facebook-plugin.git --variable APP_ID="344342552056" --variable APP_NAME="whoSmarter"
-cordova plugin add cordova-plugin-facebook4 --save --variable APP_ID="344342552056" --variable APP_NAME="whoSmarter"
+cordova -d plugin add https://github.com/uofmmike/phonegap-facebook-plugin.git --variable APP_ID="344342552056" --variable APP_NAME="topTeamer"
+cordova plugin add cordova-plugin-facebook4 --save --variable APP_ID="344342552056" --variable APP_NAME="topTeamer"
 
 efu0YlWS7MY:APA91bE8hmfoO_C8H6PFijOl7fNSOrT2yNMoXeJCxifcT2NAoAI_gWunl7sNT5QXjmYwFg5yLOEYm_pqyndslre-7rO8QgT1PjIjNRoUhin8i-IHzlpYpVVJ-0yaWkPIqDfe1UzeC38m
 
 
-{"title" : "дцишфе мъзшеъ згщд оврйбд - ой йеъш злн: щрй ае рвд?", "contestId" : "5625df26701d80c439966494"}
+{"title" : "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ: пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ?", "contestId" : "5625df26701d80c439966494"}

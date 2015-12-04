@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.fplabs.whosmarter" version="0.0.33" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>whoSmarter</name>
+<widget id="com.fplabs.topteamer" version="0.0.33" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>topTeamer</name>
     <description>
         Choose your team out of many contests and play for your team to win.
     </description>
-    <author email="eddy.fishman@gmail.com" href="http://www.whosmarter.com/">
-        whoSmarter Staff
+    <author email="eddy.fishman@gmail.com" href="http://www.topteamer.com/">
+        topTeamer Staff
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -83,6 +83,6 @@
     </platform>
     <plugin name="cordova-plugin-facebook4" spec="^1.0.0">
         <variable name="APP_ID" value="344342552056" />
-        <variable name="APP_NAME" value="whoSmarter" />
+        <variable name="APP_NAME" value="topTeamer" />
     </plugin>
 </widget>

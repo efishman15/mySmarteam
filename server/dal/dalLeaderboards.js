@@ -4,7 +4,7 @@ var generalUtils = require(path.resolve(__dirname,"../utils/general"));
 var Leaderboard = require("agoragames-leaderboard");
 
 //Open connection to general leaderboards (not timebased)
-var generalLeaderboard = new Leaderboard("whosmarter:general");
+var generalLeaderboard = new Leaderboard("topteamer:general");
 
 //---------------------------------------------------------------------------------------------------------------------------
 // private functions
@@ -15,7 +15,7 @@ var generalLeaderboard = new Leaderboard("whosmarter:general");
 //---------------------------------------------------------------------------------------------------------------------------
 module.exports.getContestLeaderboard = getContestLeaderboard;
 function getContestLeaderboard(contestId) {
-    return new Leaderboard("whosmarter:contest_" + contestId);
+    return new Leaderboard("topteamer:contest_" + contestId);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ function getContestLeaderboard(contestId) {
 //---------------------------------------------------------------------------------------------------------------------------
 module.exports.getTeamLeaderboard = getTeamLeaderboard;
 function getTeamLeaderboard(contestId, teamId) {
-    return new Leaderboard("whosmarter:contest_" + contestId + "_team" + teamId);
+    return new Leaderboard("topteamer:contest_" + contestId + "_team" + teamId);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ function getTeamLeaderboard(contestId, teamId) {
 //---------------------------------------------------------------------------------------------------------------------------
 module.exports.getWeeklyLeaderboard = getWeeklyLeaderboard;
 function getWeeklyLeaderboard() {
-    return new Leaderboard("whosmarter:weekly_" + generalUtils.getYearWeek());
+    return new Leaderboard("topteamer:weekly_" + generalUtils.getYearWeek());
 }
 
 //---------------------------------------------------------------------------------------------------------------------------

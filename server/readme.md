@@ -1,1 +1,1 @@
-# whoSmarter server
+# topTeamer server

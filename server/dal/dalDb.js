@@ -1,5 +1,5 @@
 var path = require("path");
-var CONNECTION_STRING = "mongodb://localhost:27017/whoSmarter";
+var CONNECTION_STRING = "mongodb://localhost:27017/topTeamer";
 
 var mongoClient = require("mongodb").MongoClient;
 var uuid = require("node-uuid");

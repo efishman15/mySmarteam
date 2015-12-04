@@ -1,4 +1,4 @@
-angular.module("whoSmarter.services", [])
+angular.module("topTeamer.services", [])
 
     //User Service
     .factory("UserService", function ($q, $rootScope, $http, $state, ApiService, MyAuthService, authService, PopupService, $translate, InfoService, FacebookService, $ionicHistory, $ionicLoading, $ionicConfig, $ionicPlatform, StoreService, $timeout) {
@@ -300,7 +300,7 @@ angular.module("whoSmarter.services", [])
                         //------------------------------------------------------------------------------------
 
                         //Define core events and functions to be used in the app
-                        $rootScope.$on("whoSmarter-httpRequest", function (event, config) {
+                        $rootScope.$on("topTeamer-httpRequest", function (event, config) {
                             if (!config || config.blockUserInterface) {
                                 var direction;
                                 if ($rootScope.settings) {
@@ -319,20 +319,20 @@ angular.module("whoSmarter.services", [])
                             }
                         });
 
-                        $rootScope.$on("whoSmarter-httpResponse", function (event, response) {
+                        $rootScope.$on("topTeamer-httpResponse", function (event, response) {
                             if (!response.config || response.config.blockUserInterface) {
                                 $ionicLoading.hide();
                             }
                             if (response.data.serverPopup) {
                                 var popupEvent = {
-                                    "name": "whoSmarter-serverPopup",
+                                    "name": "topTeamer-serverPopup",
                                     "data": response.data.serverPopup
                                 };
                                 resolveEvents.push(popupEvent);
                             }
                         });
 
-                        $rootScope.$on("whoSmarter-httpResponseError", function (event, rejection) {
+                        $rootScope.$on("topTeamer-httpResponseError", function (event, rejection) {
                             if (!rejection.config || rejection.config.blockUserInterface) {
                                 $ionicLoading.hide();
                             }
@@ -374,7 +374,7 @@ angular.module("whoSmarter.services", [])
                         });
 
                         $rootScope.$on("$translateChangeEnd", function (event, data) {
-                            $rootScope.$broadcast("whoSmarter-languageChanged");
+                            $rootScope.$broadcast("topTeamer-languageChanged");
                         });
 
                         $rootScope.gotoView = function (viewName, isRootView, params, clearHistory, disableAnimate) {
@@ -417,7 +417,7 @@ angular.module("whoSmarter.services", [])
 
                         };
 
-                        $rootScope.$on("whoSmarter-serverPopup", function (event, data) {
+                        $rootScope.$on("topTeamer-serverPopup", function (event, data) {
                             //Show the popup with a delay since it might be shown right on app init/login
                             $timeout(function () {
                                 $rootScope.gotoView("serverPopup", false, {serverPopup: data})
@@ -900,7 +900,7 @@ angular.module("whoSmarter.services", [])
             service.endPoint = $location.$$protocol + "://" + $location.$$host + "/";
         }
         else {
-            service.endPoint = "http://www.whosmarter.com/"
+            service.endPoint = "http://www.topteamer.com/"
         }
 
         //----------------------------------------------
@@ -1235,7 +1235,7 @@ angular.module("whoSmarter.services", [])
                         if (xpProgress.rankChanged) {
                             $rootScope.session.rank = xpProgress.rank;
                             service.initXp();
-                            $rootScope.$broadcast("whoSmarter-rankChanged", {
+                            $rootScope.$broadcast("topTeamer-rankChanged", {
                                 "xpProgress": xpProgress,
                                 "callback": callbackOnRankChange
                             });
@@ -1267,19 +1267,19 @@ angular.module("whoSmarter.services", [])
         var service = this;
 
         service.getLanguage = function () {
-            return store.get("whoSmarter-language");
+            return store.get("topTeamer-language");
         }
 
         service.setLanguage = function (language) {
-            store.set("whoSmarter-language", language);
+            store.set("topTeamer-language", language);
         }
 
         service.getGcmRegistration = function () {
-            return store.get("whoSmarter-gcmRegistration");
+            return store.get("topTeamer-gcmRegistration");
         }
 
         service.setGcmRegistration = function (gcmRegistration) {
-            store.set("whoSmarter-gcmRegistration", gcmRegistration);
+            store.set("topTeamer-gcmRegistration", gcmRegistration);
         }
 
         return service;

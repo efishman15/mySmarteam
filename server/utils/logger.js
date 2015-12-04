@@ -2,7 +2,7 @@ var path = require("path");
 var logger = require("bunyan");
 
 module.exports.console = logger.createLogger({
-    name: "whoSmarterConsole",
+    name: "topTeamerConsole",
     streams: [{
         stream: process.stderr
         // `type: 'stream'` is implied
@@ -10,7 +10,7 @@ module.exports.console = logger.createLogger({
 });
 
 module.exports.server = logger.createLogger({
-    name: "whoSmarterServer",
+    name: "topTeamerServer",
     streams: [{
         type: 'rotating-file',
         path: path.resolve(__dirname,"../logs/server.log"),
@@ -23,7 +23,7 @@ module.exports.server = logger.createLogger({
 });
 
 module.exports.paypalIPN = logger.createLogger({
-    name: "whoSmarterPayPalIPN",
+    name: "topTeamerPayPalIPN",
     streams: [{
         type: 'rotating-file',
         path: path.resolve(__dirname,"../logs/paypal/paypalIPN.log"),
@@ -36,7 +36,7 @@ module.exports.paypalIPN = logger.createLogger({
 });
 
 module.exports.facebookIPN = logger.createLogger({
-    name: "whoSmarterFacebookIPN",
+    name: "topTeamerFacebookIPN",
     streams: [{
         type: 'rotating-file',
         path: path.resolve(__dirname,"../logs/facebook/facebookIPN.log"),

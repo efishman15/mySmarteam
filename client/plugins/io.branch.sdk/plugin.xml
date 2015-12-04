@@ -29,12 +29,12 @@
 
         <config-file target="AndroidManifest.xml" parent="application">
             <activity
-                    android:name="com.fplabs.whosmarter.MainhActivity"
+                    android:name="com.fplabs.topteamer.MainhActivity"
                     android:label="@string/app_name">
 
                 <!-- Add this intent filter below, and change yourapp to your app name -->
                 <intent-filter>
-                    <data android:scheme="whosmarter" android:host="open"/>
+                    <data android:scheme="topteamer" android:host="open"/>
                     <action android:name="android.intent.action.VIEW"/>
                     <category android:name="android.intent.category.DEFAULT"/>
                     <category android:name="android.intent.category.BROWSABLE"/>

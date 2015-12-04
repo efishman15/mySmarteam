@@ -1,4 +1,4 @@
-angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers", "ui.router", "ionic", "http-auth-interceptor", "ngMessages", "pascalprecht.translate", "ng-fusioncharts", "ezfb", "ionic-datepicker", "angular-storage", "ngCordova"])
+angular.module("topTeamer.app", ["topTeamer.services", "topTeamer.controllers", "ui.router", "ionic", "http-auth-interceptor", "ngMessages", "pascalprecht.translate", "ng-fusioncharts", "ezfb", "ionic-datepicker", "angular-storage", "ngCordova"])
     .run(function ($ionicPlatform, $rootScope, $location) {
         $ionicPlatform.ready(function () {
 
@@ -109,15 +109,15 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
         $httpProvider.interceptors.push(function ($rootScope, $q) {
             return {
                 request: function (config) {
-                    $rootScope.$broadcast("whoSmarter-httpRequest", config)
+                    $rootScope.$broadcast("topTeamer-httpRequest", config)
                     return config;
                 },
                 response: function (response) {
-                    $rootScope.$broadcast("whoSmarter-httpResponse", response)
+                    $rootScope.$broadcast("topTeamer-httpResponse", response)
                     return response;
                 },
                 responseError: function (rejection) {
-                    $rootScope.$broadcast("whoSmarter-httpResponseError", rejection)
+                    $rootScope.$broadcast("topTeamer-httpResponseError", rejection)
                     return $q.reject(rejection);
                 }
             }
@@ -710,7 +710,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             var w = angular.element($window);
 
             w.bind("resize", function () {
-                scope.$broadcast("whoSmarter-windowResize");
+                scope.$broadcast("topTeamer-windowResize");
                 scope.$apply();
             });
         }
@@ -721,7 +721,7 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
             var w = angular.element($window);
 
             w.bind("orientationchange", function () {
-                scope.$broadcast("whoSmarter-orientationChanged");
+                scope.$broadcast("topTeamer-orientationChanged");
                 scope.$apply();
             });
         }
@@ -763,14 +763,14 @@ angular.module("whoSmarter.app", ["whoSmarter.services", "whoSmarter.controllers
                     var target = tabsCtrl.selectedIndex() + 1;
                     if (target < tabsCtrl.tabs.length) {
                         scope.$apply(tabsCtrl.select(target));
-                        scope.$broadcast("whoSmarter-tabChanged");
+                        scope.$broadcast("topTeamer-tabChanged");
                     }
                 };
                 var onSwipeRight = function () {
                     var target = tabsCtrl.selectedIndex() - 1;
                     if (target >= 0) {
                         scope.$apply(tabsCtrl.select(target));
-                        scope.$broadcast("whoSmarter-tabChanged");
+                        scope.$broadcast("topTeamer-tabChanged");
                     }
                 };
 

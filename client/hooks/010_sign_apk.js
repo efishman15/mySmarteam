@@ -1,5 +1,5 @@
 var spawn = require('child_process').spawn,
-    cp    = spawn('cmd.exe', ['/c', 'c:\\dev\\whoSmarter_sign.bat']);
+    cp    = spawn('cmd.exe', ['/c', 'c:\\dev\\topTeamer_sign.bat']);
 
 cp.stdout.on('data', function (data) {
     console.log('stdout: ' + data);
