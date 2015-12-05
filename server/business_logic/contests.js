@@ -381,28 +381,10 @@ function prepareContestForClient(contest, session) {
         contest.myTeam = contest.users[session.userId].team;
     }
 
-    if (contest.endDate < now) {
-        contest.status = "finished";
-    }
-    else if (contest.startDate > now) {
-        contest.status = "starting";
-    }
-    else {
-        contest.status = "running";
-    }
-
     setContestScores(contest);
 
-    if (contest.status !== "finished") {
-        if (contest.creator.id.toString() === session.userId.toString() || session.isAdmin) {
-            contest.owner = true;
-        }
-    }
-    else {
-        //When contest has finished - only admins can update it
-        if (session.isAdmin) {
-            contest.owner = true;
-        }
+    if (session.isAdmin || contest.creator.id.toString() === session.userId.toString()) {
+        contest.owner = true;
     }
 
     //Fields not to be disclosed to the client

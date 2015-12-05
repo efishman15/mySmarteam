@@ -708,6 +708,18 @@ angular.module("topTeamer.services", [])
         service.getTimePhrase = function (contest, timeMode) {
 
             var now = (new Date()).getTime();
+
+            //Set contest status
+            if (contest.endDate < now) {
+                contest.status = "finished";
+            }
+            else if (contest.startDate > now) {
+                contest.status = "starting";
+            }
+            else {
+                contest.status = "running";
+            }
+
             var contestTimeTerm;
             var contestTimeNumber;
             var contestTimeUnits;

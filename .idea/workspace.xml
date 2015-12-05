@@ -6,621 +6,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc34f676-9d87-4ede-b873-c15e1c839728" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDV.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVAvailability.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVAvailabilityDeprecated.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVCommandDelegate.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVCommandDelegateImpl.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVCommandDelegateImpl.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVCommandQueue.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVCommandQueue.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVConfigParser.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVConfigParser.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVDebug.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVHandleOpenURL.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVHandleOpenURL.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVInvokedUrlCommand.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVInvokedUrlCommand.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVJSON.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVJSON.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVJSON_private.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVJSON_private.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVLocalStorage.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVLocalStorage.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVPlugin.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVPlugin.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVPluginResult.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVPluginResult.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVScreenOrientationDelegate.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVShared.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVTimer.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVTimer.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVURLProtocol.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVURLProtocol.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVUserAgentUtil.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVUserAgentUtil.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVViewController.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVViewController.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVWebViewDelegate.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVWebViewDelegate.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVWhitelist.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/CDVWhitelist.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSArray+Comparisons.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSArray+Comparisons.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSData+Base64.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSData+Base64.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSDictionary+Extensions.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSDictionary+Extensions.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/NSMutableArray+QueueAdditions.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/UIDevice+Extensions.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/Classes/UIDevice+Extensions.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/CordovaLib.xcodeproj/project.pbxproj" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/VERSION" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/CordovaLib/cordova.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/apple_ios_version" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/apple_osx_version" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/apple_xcode_version" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/build" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/build-debug.xcconfig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/build-release.xcconfig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/build.xcconfig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/check_reqs" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/clean" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/clean.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/defaults.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/build.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/check_reqs.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/clean.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/copy-www-build-step.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/list-devices" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/list-emulator-images" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/list-started-emulators" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/run.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/spawn.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/start-emulator" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/lib/versions.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/log" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/run" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/run.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/version" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/cordova/version.bat" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/platform_www/cordova.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter.xcodeproj/project.pbxproj" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Classes/AppDelegate.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Classes/AppDelegate.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Classes/MainViewController.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Classes/MainViewController.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Classes/MainViewController.xib" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/README" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/com.ionic.keyboard/IonicKeyboard.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/com.ionic.keyboard/IonicKeyboard.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/com.ionic.keyboard/UIWebViewExtension.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/com.ionic.keyboard/UIWebViewExtension.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/FBSDKCoreKit" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolver.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKAppLinkUtility.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKButton.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKConstants.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKCopying.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKGraphErrorRecoveryProcessor.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKMacros.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKMutableCopying.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKProfile.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKProfilePictureView.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKSettings.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKTestUsersManager.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Headers/FBSDKUtility.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Info.plist" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/Modules/module.modulemap" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKAccessTokenCacheV4.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKBridgeAPICrypto.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKBridgeAPIProtocol.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKBridgeAPIProtocolNativeV1.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKBridgeAPIProtocolWebV1.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKError.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKGraphRequestBody.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKGraphRequestMetadata.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKURLConnection.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKCoreKit.framework/PrivateHeaders/FBSDKWebDialogView.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/FBSDKLoginKit" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Headers/FBSDKLoginButton.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Headers/FBSDKLoginConstants.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Headers/FBSDKLoginKit.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Headers/FBSDKLoginManager.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Headers/FBSDKLoginManagerLoginResult.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Headers/FBSDKLoginTooltipView.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Headers/FBSDKTooltipView.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Info.plist" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKLoginKit.framework/Modules/module.modulemap" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/FBSDKShareKit" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKAppGroupAddDialog.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKAppGroupContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKAppGroupJoinDialog.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKAppInviteContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKAppInviteDialog.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKGameRequestContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKGameRequestDialog.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKLikeButton.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKLikeControl.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKLikeObjectType.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKLiking.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKMessageDialog.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKSendButton.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareAPI.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareButton.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareConstants.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareDialog.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareDialogMode.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareKit.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareLinkContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareOpenGraphAction.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareOpenGraphContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareOpenGraphObject.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareOpenGraphValueContainer.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKSharePhoto.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKSharePhotoContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareVideo.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKShareVideoContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKSharing.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKSharingButton.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Headers/FBSDKSharingContent.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Info.plist" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FBSDKShareKit.framework/Modules/module.modulemap" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FacebookConnectPlugin.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-facebook4/FacebookConnectPlugin.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-inappbrowser/CDVInAppBrowser.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-inappbrowser/CDVInAppBrowser.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-splashscreen/CDVSplashScreen.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-splashscreen/CDVSplashScreen.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-splashscreen/CDVViewController+SplashScreen.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-splashscreen/CDVViewController+SplashScreen.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-x-socialsharing/SocialSharing.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/cordova-plugin-x-socialsharing/SocialSharing.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/io.branch.sdk/BNCDevice.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/io.branch.sdk/BNCDevice.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/org.apache.cordova.device/CDVDevice.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/org.apache.cordova.device/CDVDevice.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/phonegap-plugin-push/AppDelegate+notification.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/phonegap-plugin-push/AppDelegate+notification.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/phonegap-plugin-push/PushPlugin.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/phonegap-plugin-push/PushPlugin.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/uk.co.whiteoctober.cordova.appversion/AppVersion.h" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Plugins/uk.co.whiteoctober.cordova.appversion/AppVersion.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-40.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-40@2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-50.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-50@2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-60.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-60@2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-60@3x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-72.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-72@2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-76.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-76@2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-small.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon-small@2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/icons/icon@2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-568h@2x~iphone.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-667h.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-736h.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-Landscape-736h.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-Landscape@2x~ipad.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-Landscape~ipad.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-Portrait@2x~ipad.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default-Portrait~ipad.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default@2x~iphone.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/Resources/splash/Default~iphone.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/config.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/main.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/whoSmarter/whoSmarter-Info.plist" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/click_ok.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/click_ok.ogg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/click_wrong.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/click_wrong.ogg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_great_1.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_great_1.ogg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_ok_1.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_ok_1.ogg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_zero_1.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_zero_1.ogg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_zero_2.mp3" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/audio/finish_zero_2.ogg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/cordova.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/cordova_plugins.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/css/style.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/favicon.ico" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/bg_home.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/bg_question_marks.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/correct.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/demo_contest_en.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/demo_contest_es.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/demo_contest_he.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/error.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/facebook/contest.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/facebook/winner1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/facebook/winner2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/info.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/info_question.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/logo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/newVersion.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/new_rank.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/products/s1000.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/airplane.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/alligator.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/bear.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/bear.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/bird.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/bird.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/butterfly.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/butterfly.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/cat.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/cat.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/cow.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/cow.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/dinosaur.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/dog.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/dog.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/elephant.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/elephant.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/fly.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/frog.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/frog.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/giraffe.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/horse.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/lion.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/monkey.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/owl.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/pig.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/zebra.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/animal/zebra.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/beatles.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/begin.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/ben_gurion.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/cards.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chess.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/a.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/a7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/ab.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/ab7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/abm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/am.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/b.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/b7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/bb.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/bb7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/bbm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/bm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/c.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/c7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/cm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/d.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/d7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/db.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/db7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/dbm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/dm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/e.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/e7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/eb.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/eb7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/ebm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/em.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/f.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/f7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/fm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/g.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/g7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/gb.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/gb7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/gbm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/chords/gm.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/black.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/blue.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/brown.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/gray.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/green.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/grey.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/pink.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/purple.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/red.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/white.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/colors/yellow.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/einstein.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/elvis.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/eshkol.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/australia.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/austria.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/belgium.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/brazil.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/canada.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/china.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/cyprus.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/denmark.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/egypt.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/france.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/germany.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/greece.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/india.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/iran.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/iraq.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/ireland.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/israel.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/italy.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/japan.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/jordan.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/lebanon.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/morocco.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/netherlands.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/romania.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/russia.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/spain.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/sweden.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/switzerland.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/syria.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/turkey.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/unitedkingdom.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flags/unitedstates.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/flower.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/food/apple.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/food/kitchen.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/food/tomato.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/food/waterglass.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fa1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fa2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fb1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fb2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fb3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fc1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fc2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fc3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fd1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fd2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fd3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fe1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fe2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fe3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/ff1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/ff2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/ff3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fg1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/fg2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/ga#1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/ga1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gab1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gb1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gc1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gc2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gd1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gd2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/ge1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/ge2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gf1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gf2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gg1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/gg2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/keyf.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/notes/keyg.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/peres.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/rabin.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/sharon.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_falling_rocks.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_no_biking.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_no_entry.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_no_parking.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_no_right_turn.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_no_walking.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_parking.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_slipping.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_slow_down.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_speed_limit.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_stop.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_watch_bikes.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/traffic/he_watch_pedestrians.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/watch.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/questions/weizmann.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/addthis.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/app-net.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/behance.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/blogger.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/deviantart.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/digg.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/dribbble.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/email.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/etsy.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/facebook.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/flickr.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/foursquare.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/github.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/googleplus.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/hangouts.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/indiegogo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/instagram.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/kickstarter.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/lastfm.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/linkedin.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/livejournal.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/meetup.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/messenger-generic.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/mixcloud.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/myspace.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/orkut.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/paypal.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/picasa.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/pinterest.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/reddit.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/rss.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/sharethis.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/skype.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/soundcloud.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/spotify.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/stackoverflow.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/steam.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/stumbleupon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/tumblr.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/twitter.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/vimeo.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/vk.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/wordpress.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/yelp.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/youtube-variation.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/images/social/youtube.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/js/app.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/js/controllers.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/js/services.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/languages/en.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/languages/es.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/languages/he.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/angular-easyfb/angular-easyfb.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/angular-fusioncharts-3.1/angular-fusioncharts.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/angular-messages/angular-messages.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/angular-storage/angular-storage.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/angular-translate/angular-translate.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/animate.css/animate.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/branch/moblie.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/branch/web.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/flurry/flurry.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/fusioncharts-3.9.0/fusioncharts.charts.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/fusioncharts-3.9.0/fusioncharts.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic-datepicker-0.9.0/ionic-datepicker.bundle.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/.bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/css/ionic.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/css/ionic.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/fonts/ionicons.eot" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/fonts/ionicons.svg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/fonts/ionicons.ttf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/fonts/ionicons.woff" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/js/http-auth-interceptor.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/js/ionic-angular.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/js/ionic-angular.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/js/ionic.bundle.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/js/ionic.bundle.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/js/ionic.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/js/ionic.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_action-sheet.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_animations.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_backdrop.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_badge.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_bar.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_button-bar.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_button.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_checkbox.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_form.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_grid.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_items.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_list.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_loaders.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_loading.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_menu.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_mixins.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_modal.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_platform.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_popover.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_popup.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_progress.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_radio.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_range.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_refresher.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_reset.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_scaffolding.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_select.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_slide-box.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_spinner.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_split-pane.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_tabs.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_toggle.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_transitions.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_type.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_util.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/_variables.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/ionic.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/ionicons/_ionicons-animation.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/ionicons/_ionicons-font.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/ionicons/_ionicons-icons.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/ionicons/_ionicons-variables.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ionic/scss/ionicons/ionicons.scss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/lib/ngCordova/ng-cordova.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/com.ionic.keyboard/www/keyboard.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/cordova-plugin-facebook4/www/facebookConnectPlugin.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/cordova-plugin-inappbrowser/www/inappbrowser.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/cordova-plugin-splashscreen/www/splashscreen.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/cordova-plugin-x-socialsharing/www/SocialSharing.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/io.branch.sdk/dist/build.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/org.apache.cordova.device/www/device.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/phonegap-plugin-push/www/push.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/plugins/uk.co.whiteoctober.cordova.appversion/www/AppVersionPlugin.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/privacypolicy.htm" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/chart.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/chooseEndsIn.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/chooseGame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/chooseLanguage.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/contest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/contestParticipants.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/contestType.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/contests.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/facebookPost.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/friendsLeaderboard.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/home.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/hostedGame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/leaders.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/like.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/menu.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/mobileSharePopup.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/newRank.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/payment.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/question-error-list.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/question.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/questionInfo.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/quiz.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/roundTabs.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/searchQuestions-error-list.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/searchQuestions.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/serverPopup.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/setContest-error-list.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/setContest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/settings.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/share.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/systemTools.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/tabs.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/templates/weeklyLeaderboard.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/platforms/ios/www/whosmarter.apk" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/plugins/ios.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client/www/topteamer.apk" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/.gradle/2.2.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/client/platforms/android/.gradle/2.2.1/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/.gradle/2.2.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/client/platforms/android/.gradle/2.2.1/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/config.xml" afterPath="$PROJECT_DIR$/client/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/package.json" afterPath="$PROJECT_DIR$/client/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/AndroidManifest.xml" afterPath="$PROJECT_DIR$/client/platforms/android/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/assets/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/platforms/android/assets/www/js/controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/assets/www/js/services.js" afterPath="$PROJECT_DIR$/client/platforms/android/assets/www/js/services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/assets/www/languages/en.json" afterPath="$PROJECT_DIR$/client/platforms/android/assets/www/languages/en.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/assets/www/languages/es.json" afterPath="$PROJECT_DIR$/client/platforms/android/assets/www/languages/es.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/assets/www/languages/he.json" afterPath="$PROJECT_DIR$/client/platforms/android/assets/www/languages/he.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/android/res/xml/config.xml" afterPath="$PROJECT_DIR$/client/platforms/android/res/xml/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/platforms/platforms.json" afterPath="$PROJECT_DIR$/client/platforms/platforms.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/controllers.js" afterPath="$PROJECT_DIR$/client/www/js/controllers.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/js/services.js" afterPath="$PROJECT_DIR$/client/www/js/services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/en.json" afterPath="$PROJECT_DIR$/client/www/languages/en.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/es.json" afterPath="$PROJECT_DIR$/client/www/languages/es.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/www/languages/he.json" afterPath="$PROJECT_DIR$/client/www/languages/he.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/business_logic/contests.js" afterPath="$PROJECT_DIR$/server/business_logic/contests.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/views/fbcontest.jade" afterPath="$PROJECT_DIR$/server/views/fbcontest.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server/views/fbcontestleader.jade" afterPath="$PROJECT_DIR$/server/views/fbcontestleader.jade" />
     </list>
     <ignored path="ionic-tutorial.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -641,10 +28,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="config.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/config.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.027638191">
+            <state vertical-scroll-proportion="-0.7096774">
               <caret line="1" column="49" selection-start-line="1" selection-start-column="49" selection-end-line="1" selection-end-column="49" />
               <folding />
             </state>
@@ -1167,7 +554,7 @@
         <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="135" column="27" selection-start-line="135" selection-start-column="27" selection-end-line="135" selection-end-column="27" />
+              <caret line="296" column="0" selection-start-line="296" selection-start-column="0" selection-end-line="296" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -1193,11 +580,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="services.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="services.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="726" column="44" selection-start-line="726" selection-start-column="44" selection-end-line="726" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.4389359">
+              <caret line="711" column="32" selection-start-line="711" selection-start-column="32" selection-end-line="711" selection-end-column="32" />
               <folding>
                 <element signature="e#321#369#0" expanded="false" />
                 <element signature="e#587#635#0" expanded="false" />
@@ -1341,14 +728,8 @@
                 <element signature="e#26265#26441#0" expanded="false" />
                 <element signature="e#26566#26735#0" expanded="false" />
                 <element signature="e#26850#27005#0" expanded="false" />
-                <element signature="e#27115#31206#0" expanded="false" />
                 <element signature="e#27531#27583#0" expanded="false" />
                 <element signature="e#27601#27653#0" expanded="false" />
-                <element signature="e#27797#28808#0" expanded="false" />
-                <element signature="e#28011#28207#0" expanded="false" />
-                <element signature="e#28292#28488#0" expanded="false" />
-                <element signature="e#28510#28698#0" expanded="false" />
-                <element signature="e#28826#29197#0" expanded="false" />
                 <element signature="e#28969#29087#0" expanded="false" />
                 <element signature="e#30480#30621#0" expanded="false" />
                 <element signature="e#30659#30799#0" expanded="false" />
@@ -1356,182 +737,182 @@
                 <element signature="e#31335#31520#0" expanded="false" />
                 <element signature="e#31665#31848#0" expanded="false" />
                 <element signature="e#32010#32224#0" expanded="false" />
-                <element signature="e#34481#34700#0" expanded="false" />
-                <element signature="e#34788#34906#0" expanded="false" />
-                <element signature="e#35105#36610#0" expanded="false" />
-                <element signature="e#35116#35164#0" expanded="false" />
-                <element signature="e#35418#35586#0" expanded="false" />
-                <element signature="e#35733#36066#0" expanded="false" />
-                <element signature="e#35806#35863#0" expanded="false" />
-                <element signature="e#35892#35951#0" expanded="false" />
-                <element signature="e#36182#36300#0" expanded="false" />
-                <element signature="e#36436#36578#0" expanded="false" />
-                <element signature="e#36709#39552#0" expanded="false" />
-                <element signature="e#36720#36768#0" expanded="false" />
-                <element signature="e#36953#37972#0" expanded="false" />
-                <element signature="e#36978#37962#0" expanded="false" />
-                <element signature="e#37012#37628#0" expanded="false" />
-                <element signature="e#37061#37135#0" expanded="false" />
-                <element signature="e#37181#37608#0" expanded="false" />
-                <element signature="e#37650#37948#0" expanded="false" />
-                <element signature="e#37697#37928#0" expanded="false" />
-                <element signature="e#38077#39276#0" expanded="false" />
-                <element signature="e#38107#38397#0" expanded="false" />
-                <element signature="e#38234#38383#0" expanded="false" />
-                <element signature="e#38430#38626#0" expanded="false" />
-                <element signature="e#38560#38612#0" expanded="false" />
-                <element signature="e#38787#39058#0" expanded="false" />
-                <element signature="e#39107#39265#0" expanded="false" />
-                <element signature="e#39134#39251#0" expanded="false" />
-                <element signature="e#39172#39233#0" expanded="false" />
-                <element signature="e#39323#39520#0" expanded="false" />
-                <element signature="e#39409#39508#0" expanded="false" />
-                <element signature="e#39625#40003#0" expanded="false" />
-                <element signature="e#39636#39684#0" expanded="false" />
-                <element signature="e#39880#39971#0" expanded="false" />
-                <element signature="e#40079#42069#0" expanded="false" />
-                <element signature="e#40090#40138#0" expanded="false" />
-                <element signature="e#40283#40380#0" expanded="false" />
-                <element signature="e#40394#40464#0" expanded="false" />
-                <element signature="e#40474#40522#0" expanded="false" />
-                <element signature="e#40687#40740#0" expanded="false" />
-                <element signature="e#40790#40845#0" expanded="false" />
-                <element signature="e#40943#41405#0" expanded="false" />
-                <element signature="e#41054#41189#0" expanded="false" />
-                <element signature="e#41099#41171#0" expanded="false" />
-                <element signature="e#41255#41394#0" expanded="false" />
-                <element signature="e#41298#41376#0" expanded="false" />
-                <element signature="e#41524#42037#0" expanded="false" />
-                <element signature="e#41668#41812#0" expanded="false" />
-                <element signature="e#41713#41794#0" expanded="false" />
-                <element signature="e#41878#42026#0" expanded="false" />
-                <element signature="e#41921#42008#0" expanded="false" />
-                <element signature="e#42164#42212#0" expanded="false" />
-                <element signature="e#42457#43720#0" expanded="false" />
-                <element signature="e#42491#42600#0" expanded="false" />
-                <element signature="e#42618#43710#0" expanded="false" />
-                <element signature="e#42640#43393#0" expanded="false" />
-                <element signature="e#42752#43004#0" expanded="false" />
-                <element signature="e#42885#42982#0" expanded="false" />
-                <element signature="e#43057#43356#0" expanded="false" />
-                <element signature="e#43110#43194#0" expanded="false" />
-                <element signature="e#43245#43334#0" expanded="false" />
-                <element signature="e#43424#43696#0" expanded="false" />
-                <element signature="e#43468#43592#0" expanded="false" />
-                <element signature="e#43598#43677#0" expanded="false" />
-                <element signature="e#43829#45046#0" expanded="false" />
-                <element signature="e#43863#44530#0" expanded="false" />
-                <element signature="e#43938#44497#0" expanded="false" />
-                <element signature="e#44007#44298#0" expanded="false" />
-                <element signature="e#44140#44269#0" expanded="false" />
-                <element signature="e#44324#44479#0" expanded="false" />
-                <element signature="e#44373#44457#0" expanded="false" />
-                <element signature="e#44548#45036#0" expanded="false" />
-                <element signature="e#44570#44728#0" expanded="false" />
-                <element signature="e#44632#44708#0" expanded="false" />
-                <element signature="e#44743#45022#0" expanded="false" />
-                <element signature="e#44787#44919#0" expanded="false" />
-                <element signature="e#44925#45004#0" expanded="false" />
-                <element signature="e#45137#45721#0" expanded="false" />
-                <element signature="e#45171#45268#0" expanded="false" />
-                <element signature="e#45286#45711#0" expanded="false" />
-                <element signature="e#45308#45458#0" expanded="false" />
-                <element signature="e#45362#45438#0" expanded="false" />
-                <element signature="e#45473#45697#0" expanded="false" />
-                <element signature="e#45517#45594#0" expanded="false" />
-                <element signature="e#45600#45679#0" expanded="false" />
-                <element signature="e#45834#46303#0" expanded="false" />
-                <element signature="e#45875#46113#0" expanded="false" />
-                <element signature="e#46203#46271#0" expanded="false" />
-                <element signature="e#46633#46794#0" expanded="false" />
-                <element signature="e#46698#46774#0" expanded="false" />
-                <element signature="e#46809#47033#0" expanded="false" />
-                <element signature="e#46853#46930#0" expanded="false" />
-                <element signature="e#46936#47015#0" expanded="false" />
-                <element signature="e#47163#48208#0" expanded="false" />
-                <element signature="e#47174#47222#0" expanded="false" />
-                <element signature="e#47638#48176#0" expanded="false" />
-                <element signature="e#47692#47731#0" expanded="false" />
-                <element signature="e#47758#47906#0" expanded="false" />
-                <element signature="e#47937#48103#0" expanded="false" />
-                <element signature="e#48121#48166#0" expanded="false" />
-                <element signature="e#48292#53828#0" expanded="false" />
-                <element signature="e#48303#48351#0" expanded="false" />
-                <element signature="e#48696#51833#0" expanded="false" />
-                <element signature="e#48734#48833#0" expanded="false" />
-                <element signature="e#49036#49123#0" expanded="false" />
-                <element signature="e#49880#49967#0" expanded="false" />
-                <element signature="e#50672#50720#0" expanded="false" />
-                <element signature="e#50794#50906#0" expanded="false" />
-                <element signature="e#50959#51072#0" expanded="false" />
-                <element signature="e#51090#51171#0" expanded="false" />
-                <element signature="e#51904#53322#0" expanded="false" />
-                <element signature="e#52176#53311#0" expanded="false" />
-                <element signature="e#52230#53296#0" expanded="false" />
-                <element signature="e#52580#53278#0" expanded="false" />
-                <element signature="e#52880#53256#0" expanded="false" />
-                <element signature="e#53074#53228#0" expanded="false" />
-                <element signature="e#53382#53797#0" expanded="false" />
-                <element signature="e#53909#54606#0" expanded="false" />
-                <element signature="e#53920#53968#0" expanded="false" />
-                <element signature="e#54126#54189#0" expanded="false" />
-                <element signature="e#54241#54307#0" expanded="false" />
-                <element signature="e#54358#54428#0" expanded="false" />
-                <element signature="e#54494#54574#0" expanded="false" />
-                <element signature="e#54714#58494#0" expanded="false" />
-                <element signature="e#54725#54773#0" expanded="false" />
-                <element signature="e#55016#57481#0" expanded="false" />
-                <element signature="e#55056#57471#0" expanded="false" />
-                <element signature="e#55375#55554#0" expanded="false" />
-                <element signature="e#55424#55531#0" expanded="false" />
-                <element signature="e#55744#55860#0" expanded="false" />
-                <element signature="e#55903#56059#0" expanded="false" />
-                <element signature="e#56569#56853#0" expanded="false" />
-                <element signature="e#56966#57123#0" expanded="false" />
-                <element signature="e#57213#57407#0" expanded="false" />
-                <element signature="e#57266#57381#0" expanded="false" />
-                <element signature="e#57611#58067#0" expanded="false" />
-                <element signature="e#57725#57804#0" expanded="false" />
-                <element signature="e#57897#58030#0" expanded="false" />
-                <element signature="e#57938#58016#0" expanded="false" />
-                <element signature="e#58138#58462#0" expanded="false" />
-                <element signature="e#58260#58450#0" expanded="false" />
-                <element signature="e#58570#59419#0" expanded="false" />
-                <element signature="e#58581#58629#0" expanded="false" />
-                <element signature="e#58788#59386#0" expanded="false" />
-                <element signature="e#58842#58881#0" expanded="false" />
-                <element signature="e#59037#59376#0" expanded="false" />
-                <element signature="e#59121#59362#0" expanded="false" />
-                <element signature="e#59505#60748#0" expanded="false" />
-                <element signature="e#59516#59564#0" expanded="false" />
-                <element signature="e#59824#60099#0" expanded="false" />
-                <element signature="e#59926#59983#0" expanded="false" />
-                <element signature="e#60215#60511#0" expanded="false" />
-                <element signature="e#60294#60395#0" expanded="false" />
-                <element signature="e#60603#60715#0" expanded="false" />
-                <element signature="e#60874#60922#0" expanded="false" />
-                <element signature="e#61112#61300#0" expanded="false" />
-                <element signature="e#61166#61229#0" expanded="false" />
-                <element signature="e#61247#61290#0" expanded="false" />
-                <element signature="e#61352#63480#0" expanded="false" />
-                <element signature="e#61418#62802#0" expanded="false" />
-                <element signature="e#61661#62412#0" expanded="false" />
-                <element signature="e#61756#61898#0" expanded="false" />
-                <element signature="e#61999#62152#0" expanded="false" />
-                <element signature="e#62260#62392#0" expanded="false" />
-                <element signature="e#62434#62788#0" expanded="false" />
-                <element signature="e#62820#63433#0" expanded="false" />
-                <element signature="e#63999#64684#0" expanded="false" />
-                <element signature="e#64010#64058#0" expanded="false" />
-                <element signature="e#64309#64425#0" expanded="false" />
-                <element signature="e#64539#64652#0" expanded="false" />
-                <element signature="e#64779#65497#0" expanded="false" />
-                <element signature="e#64790#64838#0" expanded="false" />
-                <element signature="e#65100#65216#0" expanded="false" />
-                <element signature="e#65332#65465#0" expanded="false" />
-                <element signature="e#65570#66228#0" expanded="false" />
-                <element signature="e#65581#65629#0" expanded="false" />
-                <element signature="e#65900#66196#0" expanded="false" />
+                <element signature="e#34800#35019#0" expanded="false" />
+                <element signature="e#35107#35225#0" expanded="false" />
+                <element signature="e#35424#36929#0" expanded="false" />
+                <element signature="e#35435#35483#0" expanded="false" />
+                <element signature="e#35737#35905#0" expanded="false" />
+                <element signature="e#36052#36385#0" expanded="false" />
+                <element signature="e#36125#36182#0" expanded="false" />
+                <element signature="e#36211#36270#0" expanded="false" />
+                <element signature="e#36501#36619#0" expanded="false" />
+                <element signature="e#36755#36897#0" expanded="false" />
+                <element signature="e#37028#39871#0" expanded="false" />
+                <element signature="e#37039#37087#0" expanded="false" />
+                <element signature="e#37272#38291#0" expanded="false" />
+                <element signature="e#37297#38281#0" expanded="false" />
+                <element signature="e#37331#37947#0" expanded="false" />
+                <element signature="e#37380#37454#0" expanded="false" />
+                <element signature="e#37500#37927#0" expanded="false" />
+                <element signature="e#37969#38267#0" expanded="false" />
+                <element signature="e#38016#38247#0" expanded="false" />
+                <element signature="e#38396#39595#0" expanded="false" />
+                <element signature="e#38426#38716#0" expanded="false" />
+                <element signature="e#38553#38702#0" expanded="false" />
+                <element signature="e#38749#38945#0" expanded="false" />
+                <element signature="e#38879#38931#0" expanded="false" />
+                <element signature="e#39106#39377#0" expanded="false" />
+                <element signature="e#39426#39584#0" expanded="false" />
+                <element signature="e#39453#39570#0" expanded="false" />
+                <element signature="e#39491#39552#0" expanded="false" />
+                <element signature="e#39642#39839#0" expanded="false" />
+                <element signature="e#39728#39827#0" expanded="false" />
+                <element signature="e#39944#40322#0" expanded="false" />
+                <element signature="e#39955#40003#0" expanded="false" />
+                <element signature="e#40199#40290#0" expanded="false" />
+                <element signature="e#40398#42388#0" expanded="false" />
+                <element signature="e#40409#40457#0" expanded="false" />
+                <element signature="e#40602#40699#0" expanded="false" />
+                <element signature="e#40713#40783#0" expanded="false" />
+                <element signature="e#40793#40841#0" expanded="false" />
+                <element signature="e#41006#41059#0" expanded="false" />
+                <element signature="e#41109#41164#0" expanded="false" />
+                <element signature="e#41262#41724#0" expanded="false" />
+                <element signature="e#41373#41508#0" expanded="false" />
+                <element signature="e#41418#41490#0" expanded="false" />
+                <element signature="e#41574#41713#0" expanded="false" />
+                <element signature="e#41617#41695#0" expanded="false" />
+                <element signature="e#41843#42356#0" expanded="false" />
+                <element signature="e#41987#42131#0" expanded="false" />
+                <element signature="e#42032#42113#0" expanded="false" />
+                <element signature="e#42197#42345#0" expanded="false" />
+                <element signature="e#42240#42327#0" expanded="false" />
+                <element signature="e#42483#42531#0" expanded="false" />
+                <element signature="e#42776#44039#0" expanded="false" />
+                <element signature="e#42810#42919#0" expanded="false" />
+                <element signature="e#42937#44029#0" expanded="false" />
+                <element signature="e#42959#43712#0" expanded="false" />
+                <element signature="e#43071#43323#0" expanded="false" />
+                <element signature="e#43204#43301#0" expanded="false" />
+                <element signature="e#43376#43675#0" expanded="false" />
+                <element signature="e#43429#43513#0" expanded="false" />
+                <element signature="e#43564#43653#0" expanded="false" />
+                <element signature="e#43743#44015#0" expanded="false" />
+                <element signature="e#43787#43911#0" expanded="false" />
+                <element signature="e#43917#43996#0" expanded="false" />
+                <element signature="e#44148#45365#0" expanded="false" />
+                <element signature="e#44182#44849#0" expanded="false" />
+                <element signature="e#44257#44816#0" expanded="false" />
+                <element signature="e#44326#44617#0" expanded="false" />
+                <element signature="e#44459#44588#0" expanded="false" />
+                <element signature="e#44643#44798#0" expanded="false" />
+                <element signature="e#44692#44776#0" expanded="false" />
+                <element signature="e#44867#45355#0" expanded="false" />
+                <element signature="e#44889#45047#0" expanded="false" />
+                <element signature="e#44951#45027#0" expanded="false" />
+                <element signature="e#45062#45341#0" expanded="false" />
+                <element signature="e#45106#45238#0" expanded="false" />
+                <element signature="e#45244#45323#0" expanded="false" />
+                <element signature="e#45456#46040#0" expanded="false" />
+                <element signature="e#45490#45587#0" expanded="false" />
+                <element signature="e#45605#46030#0" expanded="false" />
+                <element signature="e#45627#45777#0" expanded="false" />
+                <element signature="e#45681#45757#0" expanded="false" />
+                <element signature="e#45792#46016#0" expanded="false" />
+                <element signature="e#45836#45913#0" expanded="false" />
+                <element signature="e#45919#45998#0" expanded="false" />
+                <element signature="e#46153#46622#0" expanded="false" />
+                <element signature="e#46194#46432#0" expanded="false" />
+                <element signature="e#46522#46590#0" expanded="false" />
+                <element signature="e#46952#47113#0" expanded="false" />
+                <element signature="e#47017#47093#0" expanded="false" />
+                <element signature="e#47128#47352#0" expanded="false" />
+                <element signature="e#47172#47249#0" expanded="false" />
+                <element signature="e#47255#47334#0" expanded="false" />
+                <element signature="e#47482#48527#0" expanded="false" />
+                <element signature="e#47493#47541#0" expanded="false" />
+                <element signature="e#47957#48495#0" expanded="false" />
+                <element signature="e#48011#48050#0" expanded="false" />
+                <element signature="e#48077#48225#0" expanded="false" />
+                <element signature="e#48256#48422#0" expanded="false" />
+                <element signature="e#48440#48485#0" expanded="false" />
+                <element signature="e#48611#54147#0" expanded="false" />
+                <element signature="e#48622#48670#0" expanded="false" />
+                <element signature="e#49015#52152#0" expanded="false" />
+                <element signature="e#49053#49152#0" expanded="false" />
+                <element signature="e#49355#49442#0" expanded="false" />
+                <element signature="e#50199#50286#0" expanded="false" />
+                <element signature="e#50991#51039#0" expanded="false" />
+                <element signature="e#51113#51225#0" expanded="false" />
+                <element signature="e#51278#51391#0" expanded="false" />
+                <element signature="e#51409#51490#0" expanded="false" />
+                <element signature="e#52223#53641#0" expanded="false" />
+                <element signature="e#52495#53630#0" expanded="false" />
+                <element signature="e#52549#53615#0" expanded="false" />
+                <element signature="e#52899#53597#0" expanded="false" />
+                <element signature="e#53199#53575#0" expanded="false" />
+                <element signature="e#53393#53547#0" expanded="false" />
+                <element signature="e#53701#54116#0" expanded="false" />
+                <element signature="e#54228#54925#0" expanded="false" />
+                <element signature="e#54239#54287#0" expanded="false" />
+                <element signature="e#54445#54508#0" expanded="false" />
+                <element signature="e#54560#54626#0" expanded="false" />
+                <element signature="e#54677#54747#0" expanded="false" />
+                <element signature="e#54813#54893#0" expanded="false" />
+                <element signature="e#55033#58813#0" expanded="false" />
+                <element signature="e#55044#55092#0" expanded="false" />
+                <element signature="e#55335#57800#0" expanded="false" />
+                <element signature="e#55375#57790#0" expanded="false" />
+                <element signature="e#55694#55873#0" expanded="false" />
+                <element signature="e#55743#55850#0" expanded="false" />
+                <element signature="e#56063#56179#0" expanded="false" />
+                <element signature="e#56222#56378#0" expanded="false" />
+                <element signature="e#56888#57172#0" expanded="false" />
+                <element signature="e#57285#57442#0" expanded="false" />
+                <element signature="e#57532#57726#0" expanded="false" />
+                <element signature="e#57585#57700#0" expanded="false" />
+                <element signature="e#57930#58386#0" expanded="false" />
+                <element signature="e#58044#58123#0" expanded="false" />
+                <element signature="e#58216#58349#0" expanded="false" />
+                <element signature="e#58257#58335#0" expanded="false" />
+                <element signature="e#58457#58781#0" expanded="false" />
+                <element signature="e#58579#58769#0" expanded="false" />
+                <element signature="e#58889#59738#0" expanded="false" />
+                <element signature="e#58900#58948#0" expanded="false" />
+                <element signature="e#59107#59705#0" expanded="false" />
+                <element signature="e#59161#59200#0" expanded="false" />
+                <element signature="e#59356#59695#0" expanded="false" />
+                <element signature="e#59440#59681#0" expanded="false" />
+                <element signature="e#59824#61067#0" expanded="false" />
+                <element signature="e#59835#59883#0" expanded="false" />
+                <element signature="e#60143#60418#0" expanded="false" />
+                <element signature="e#60245#60302#0" expanded="false" />
+                <element signature="e#60534#60830#0" expanded="false" />
+                <element signature="e#60613#60714#0" expanded="false" />
+                <element signature="e#60922#61034#0" expanded="false" />
+                <element signature="e#61193#61241#0" expanded="false" />
+                <element signature="e#61431#61619#0" expanded="false" />
+                <element signature="e#61485#61548#0" expanded="false" />
+                <element signature="e#61566#61609#0" expanded="false" />
+                <element signature="e#61671#63799#0" expanded="false" />
+                <element signature="e#61737#63121#0" expanded="false" />
+                <element signature="e#61980#62731#0" expanded="false" />
+                <element signature="e#62075#62217#0" expanded="false" />
+                <element signature="e#62318#62471#0" expanded="false" />
+                <element signature="e#62579#62711#0" expanded="false" />
+                <element signature="e#62753#63107#0" expanded="false" />
+                <element signature="e#63139#63752#0" expanded="false" />
+                <element signature="e#64318#65003#0" expanded="false" />
+                <element signature="e#64329#64377#0" expanded="false" />
+                <element signature="e#64628#64744#0" expanded="false" />
+                <element signature="e#64858#64971#0" expanded="false" />
+                <element signature="e#65098#65816#0" expanded="false" />
+                <element signature="e#65109#65157#0" expanded="false" />
+                <element signature="e#65419#65535#0" expanded="false" />
+                <element signature="e#65651#65784#0" expanded="false" />
+                <element signature="e#65889#66547#0" expanded="false" />
+                <element signature="e#65900#65948#0" expanded="false" />
+                <element signature="e#66219#66515#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -1602,9 +983,9 @@
         <option value="$PROJECT_DIR$/server/views/fbcontestleader.jade" />
         <option value="$PROJECT_DIR$/server/views/fbcontest.jade" />
         <option value="$PROJECT_DIR$/client/www/js/controllers.js" />
-        <option value="$PROJECT_DIR$/server/business_logic/contests.js" />
-        <option value="$PROJECT_DIR$/client/www/js/services.js" />
         <option value="$PROJECT_DIR$/client/config.xml" />
+        <option value="$PROJECT_DIR$/client/www/js/services.js" />
+        <option value="$PROJECT_DIR$/server/business_logic/contests.js" />
       </list>
     </option>
   </component>
@@ -3132,10 +2513,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+    <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="726" column="44" selection-start-line="726" selection-start-column="44" selection-end-line="726" selection-end-column="44" />
+          <caret line="421" column="81" selection-start-line="421" selection-start-column="81" selection-end-line="421" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/config.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.7096774">
+          <caret line="1" column="49" selection-start-line="1" selection-start-column="49" selection-end-line="1" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="296" column="0" selection-start-line="296" selection-start-column="0" selection-end-line="296" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/www/js/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4389359">
+          <caret line="711" column="32" selection-start-line="711" selection-start-column="32" selection-end-line="711" selection-end-column="32" />
           <folding>
             <element signature="e#321#369#0" expanded="false" />
             <element signature="e#587#635#0" expanded="false" />
@@ -3279,14 +2684,8 @@
             <element signature="e#26265#26441#0" expanded="false" />
             <element signature="e#26566#26735#0" expanded="false" />
             <element signature="e#26850#27005#0" expanded="false" />
-            <element signature="e#27115#31206#0" expanded="false" />
             <element signature="e#27531#27583#0" expanded="false" />
             <element signature="e#27601#27653#0" expanded="false" />
-            <element signature="e#27797#28808#0" expanded="false" />
-            <element signature="e#28011#28207#0" expanded="false" />
-            <element signature="e#28292#28488#0" expanded="false" />
-            <element signature="e#28510#28698#0" expanded="false" />
-            <element signature="e#28826#29197#0" expanded="false" />
             <element signature="e#28969#29087#0" expanded="false" />
             <element signature="e#30480#30621#0" expanded="false" />
             <element signature="e#30659#30799#0" expanded="false" />
@@ -3294,207 +2693,183 @@
             <element signature="e#31335#31520#0" expanded="false" />
             <element signature="e#31665#31848#0" expanded="false" />
             <element signature="e#32010#32224#0" expanded="false" />
-            <element signature="e#34481#34700#0" expanded="false" />
-            <element signature="e#34788#34906#0" expanded="false" />
-            <element signature="e#35105#36610#0" expanded="false" />
-            <element signature="e#35116#35164#0" expanded="false" />
-            <element signature="e#35418#35586#0" expanded="false" />
-            <element signature="e#35733#36066#0" expanded="false" />
-            <element signature="e#35806#35863#0" expanded="false" />
-            <element signature="e#35892#35951#0" expanded="false" />
-            <element signature="e#36182#36300#0" expanded="false" />
-            <element signature="e#36436#36578#0" expanded="false" />
-            <element signature="e#36709#39552#0" expanded="false" />
-            <element signature="e#36720#36768#0" expanded="false" />
-            <element signature="e#36953#37972#0" expanded="false" />
-            <element signature="e#36978#37962#0" expanded="false" />
-            <element signature="e#37012#37628#0" expanded="false" />
-            <element signature="e#37061#37135#0" expanded="false" />
-            <element signature="e#37181#37608#0" expanded="false" />
-            <element signature="e#37650#37948#0" expanded="false" />
-            <element signature="e#37697#37928#0" expanded="false" />
-            <element signature="e#38077#39276#0" expanded="false" />
-            <element signature="e#38107#38397#0" expanded="false" />
-            <element signature="e#38234#38383#0" expanded="false" />
-            <element signature="e#38430#38626#0" expanded="false" />
-            <element signature="e#38560#38612#0" expanded="false" />
-            <element signature="e#38787#39058#0" expanded="false" />
-            <element signature="e#39107#39265#0" expanded="false" />
-            <element signature="e#39134#39251#0" expanded="false" />
-            <element signature="e#39172#39233#0" expanded="false" />
-            <element signature="e#39323#39520#0" expanded="false" />
-            <element signature="e#39409#39508#0" expanded="false" />
-            <element signature="e#39625#40003#0" expanded="false" />
-            <element signature="e#39636#39684#0" expanded="false" />
-            <element signature="e#39880#39971#0" expanded="false" />
-            <element signature="e#40079#42069#0" expanded="false" />
-            <element signature="e#40090#40138#0" expanded="false" />
-            <element signature="e#40283#40380#0" expanded="false" />
-            <element signature="e#40394#40464#0" expanded="false" />
-            <element signature="e#40474#40522#0" expanded="false" />
-            <element signature="e#40687#40740#0" expanded="false" />
-            <element signature="e#40790#40845#0" expanded="false" />
-            <element signature="e#40943#41405#0" expanded="false" />
-            <element signature="e#41054#41189#0" expanded="false" />
-            <element signature="e#41099#41171#0" expanded="false" />
-            <element signature="e#41255#41394#0" expanded="false" />
-            <element signature="e#41298#41376#0" expanded="false" />
-            <element signature="e#41524#42037#0" expanded="false" />
-            <element signature="e#41668#41812#0" expanded="false" />
-            <element signature="e#41713#41794#0" expanded="false" />
-            <element signature="e#41878#42026#0" expanded="false" />
-            <element signature="e#41921#42008#0" expanded="false" />
-            <element signature="e#42164#42212#0" expanded="false" />
-            <element signature="e#42457#43720#0" expanded="false" />
-            <element signature="e#42491#42600#0" expanded="false" />
-            <element signature="e#42618#43710#0" expanded="false" />
-            <element signature="e#42640#43393#0" expanded="false" />
-            <element signature="e#42752#43004#0" expanded="false" />
-            <element signature="e#42885#42982#0" expanded="false" />
-            <element signature="e#43057#43356#0" expanded="false" />
-            <element signature="e#43110#43194#0" expanded="false" />
-            <element signature="e#43245#43334#0" expanded="false" />
-            <element signature="e#43424#43696#0" expanded="false" />
-            <element signature="e#43468#43592#0" expanded="false" />
-            <element signature="e#43598#43677#0" expanded="false" />
-            <element signature="e#43829#45046#0" expanded="false" />
-            <element signature="e#43863#44530#0" expanded="false" />
-            <element signature="e#43938#44497#0" expanded="false" />
-            <element signature="e#44007#44298#0" expanded="false" />
-            <element signature="e#44140#44269#0" expanded="false" />
-            <element signature="e#44324#44479#0" expanded="false" />
-            <element signature="e#44373#44457#0" expanded="false" />
-            <element signature="e#44548#45036#0" expanded="false" />
-            <element signature="e#44570#44728#0" expanded="false" />
-            <element signature="e#44632#44708#0" expanded="false" />
-            <element signature="e#44743#45022#0" expanded="false" />
-            <element signature="e#44787#44919#0" expanded="false" />
-            <element signature="e#44925#45004#0" expanded="false" />
-            <element signature="e#45137#45721#0" expanded="false" />
-            <element signature="e#45171#45268#0" expanded="false" />
-            <element signature="e#45286#45711#0" expanded="false" />
-            <element signature="e#45308#45458#0" expanded="false" />
-            <element signature="e#45362#45438#0" expanded="false" />
-            <element signature="e#45473#45697#0" expanded="false" />
-            <element signature="e#45517#45594#0" expanded="false" />
-            <element signature="e#45600#45679#0" expanded="false" />
-            <element signature="e#45834#46303#0" expanded="false" />
-            <element signature="e#45875#46113#0" expanded="false" />
-            <element signature="e#46203#46271#0" expanded="false" />
-            <element signature="e#46633#46794#0" expanded="false" />
-            <element signature="e#46698#46774#0" expanded="false" />
-            <element signature="e#46809#47033#0" expanded="false" />
-            <element signature="e#46853#46930#0" expanded="false" />
-            <element signature="e#46936#47015#0" expanded="false" />
-            <element signature="e#47163#48208#0" expanded="false" />
-            <element signature="e#47174#47222#0" expanded="false" />
-            <element signature="e#47638#48176#0" expanded="false" />
-            <element signature="e#47692#47731#0" expanded="false" />
-            <element signature="e#47758#47906#0" expanded="false" />
-            <element signature="e#47937#48103#0" expanded="false" />
-            <element signature="e#48121#48166#0" expanded="false" />
-            <element signature="e#48292#53828#0" expanded="false" />
-            <element signature="e#48303#48351#0" expanded="false" />
-            <element signature="e#48696#51833#0" expanded="false" />
-            <element signature="e#48734#48833#0" expanded="false" />
-            <element signature="e#49036#49123#0" expanded="false" />
-            <element signature="e#49880#49967#0" expanded="false" />
-            <element signature="e#50672#50720#0" expanded="false" />
-            <element signature="e#50794#50906#0" expanded="false" />
-            <element signature="e#50959#51072#0" expanded="false" />
-            <element signature="e#51090#51171#0" expanded="false" />
-            <element signature="e#51904#53322#0" expanded="false" />
-            <element signature="e#52176#53311#0" expanded="false" />
-            <element signature="e#52230#53296#0" expanded="false" />
-            <element signature="e#52580#53278#0" expanded="false" />
-            <element signature="e#52880#53256#0" expanded="false" />
-            <element signature="e#53074#53228#0" expanded="false" />
-            <element signature="e#53382#53797#0" expanded="false" />
-            <element signature="e#53909#54606#0" expanded="false" />
-            <element signature="e#53920#53968#0" expanded="false" />
-            <element signature="e#54126#54189#0" expanded="false" />
-            <element signature="e#54241#54307#0" expanded="false" />
-            <element signature="e#54358#54428#0" expanded="false" />
-            <element signature="e#54494#54574#0" expanded="false" />
-            <element signature="e#54714#58494#0" expanded="false" />
-            <element signature="e#54725#54773#0" expanded="false" />
-            <element signature="e#55016#57481#0" expanded="false" />
-            <element signature="e#55056#57471#0" expanded="false" />
-            <element signature="e#55375#55554#0" expanded="false" />
-            <element signature="e#55424#55531#0" expanded="false" />
-            <element signature="e#55744#55860#0" expanded="false" />
-            <element signature="e#55903#56059#0" expanded="false" />
-            <element signature="e#56569#56853#0" expanded="false" />
-            <element signature="e#56966#57123#0" expanded="false" />
-            <element signature="e#57213#57407#0" expanded="false" />
-            <element signature="e#57266#57381#0" expanded="false" />
-            <element signature="e#57611#58067#0" expanded="false" />
-            <element signature="e#57725#57804#0" expanded="false" />
-            <element signature="e#57897#58030#0" expanded="false" />
-            <element signature="e#57938#58016#0" expanded="false" />
-            <element signature="e#58138#58462#0" expanded="false" />
-            <element signature="e#58260#58450#0" expanded="false" />
-            <element signature="e#58570#59419#0" expanded="false" />
-            <element signature="e#58581#58629#0" expanded="false" />
-            <element signature="e#58788#59386#0" expanded="false" />
-            <element signature="e#58842#58881#0" expanded="false" />
-            <element signature="e#59037#59376#0" expanded="false" />
-            <element signature="e#59121#59362#0" expanded="false" />
-            <element signature="e#59505#60748#0" expanded="false" />
-            <element signature="e#59516#59564#0" expanded="false" />
-            <element signature="e#59824#60099#0" expanded="false" />
-            <element signature="e#59926#59983#0" expanded="false" />
-            <element signature="e#60215#60511#0" expanded="false" />
-            <element signature="e#60294#60395#0" expanded="false" />
-            <element signature="e#60603#60715#0" expanded="false" />
-            <element signature="e#60874#60922#0" expanded="false" />
-            <element signature="e#61112#61300#0" expanded="false" />
-            <element signature="e#61166#61229#0" expanded="false" />
-            <element signature="e#61247#61290#0" expanded="false" />
-            <element signature="e#61352#63480#0" expanded="false" />
-            <element signature="e#61418#62802#0" expanded="false" />
-            <element signature="e#61661#62412#0" expanded="false" />
-            <element signature="e#61756#61898#0" expanded="false" />
-            <element signature="e#61999#62152#0" expanded="false" />
-            <element signature="e#62260#62392#0" expanded="false" />
-            <element signature="e#62434#62788#0" expanded="false" />
-            <element signature="e#62820#63433#0" expanded="false" />
-            <element signature="e#63999#64684#0" expanded="false" />
-            <element signature="e#64010#64058#0" expanded="false" />
-            <element signature="e#64309#64425#0" expanded="false" />
-            <element signature="e#64539#64652#0" expanded="false" />
-            <element signature="e#64779#65497#0" expanded="false" />
-            <element signature="e#64790#64838#0" expanded="false" />
-            <element signature="e#65100#65216#0" expanded="false" />
-            <element signature="e#65332#65465#0" expanded="false" />
-            <element signature="e#65570#66228#0" expanded="false" />
-            <element signature="e#65581#65629#0" expanded="false" />
-            <element signature="e#65900#66196#0" expanded="false" />
+            <element signature="e#34800#35019#0" expanded="false" />
+            <element signature="e#35107#35225#0" expanded="false" />
+            <element signature="e#35424#36929#0" expanded="false" />
+            <element signature="e#35435#35483#0" expanded="false" />
+            <element signature="e#35737#35905#0" expanded="false" />
+            <element signature="e#36052#36385#0" expanded="false" />
+            <element signature="e#36125#36182#0" expanded="false" />
+            <element signature="e#36211#36270#0" expanded="false" />
+            <element signature="e#36501#36619#0" expanded="false" />
+            <element signature="e#36755#36897#0" expanded="false" />
+            <element signature="e#37028#39871#0" expanded="false" />
+            <element signature="e#37039#37087#0" expanded="false" />
+            <element signature="e#37272#38291#0" expanded="false" />
+            <element signature="e#37297#38281#0" expanded="false" />
+            <element signature="e#37331#37947#0" expanded="false" />
+            <element signature="e#37380#37454#0" expanded="false" />
+            <element signature="e#37500#37927#0" expanded="false" />
+            <element signature="e#37969#38267#0" expanded="false" />
+            <element signature="e#38016#38247#0" expanded="false" />
+            <element signature="e#38396#39595#0" expanded="false" />
+            <element signature="e#38426#38716#0" expanded="false" />
+            <element signature="e#38553#38702#0" expanded="false" />
+            <element signature="e#38749#38945#0" expanded="false" />
+            <element signature="e#38879#38931#0" expanded="false" />
+            <element signature="e#39106#39377#0" expanded="false" />
+            <element signature="e#39426#39584#0" expanded="false" />
+            <element signature="e#39453#39570#0" expanded="false" />
+            <element signature="e#39491#39552#0" expanded="false" />
+            <element signature="e#39642#39839#0" expanded="false" />
+            <element signature="e#39728#39827#0" expanded="false" />
+            <element signature="e#39944#40322#0" expanded="false" />
+            <element signature="e#39955#40003#0" expanded="false" />
+            <element signature="e#40199#40290#0" expanded="false" />
+            <element signature="e#40398#42388#0" expanded="false" />
+            <element signature="e#40409#40457#0" expanded="false" />
+            <element signature="e#40602#40699#0" expanded="false" />
+            <element signature="e#40713#40783#0" expanded="false" />
+            <element signature="e#40793#40841#0" expanded="false" />
+            <element signature="e#41006#41059#0" expanded="false" />
+            <element signature="e#41109#41164#0" expanded="false" />
+            <element signature="e#41262#41724#0" expanded="false" />
+            <element signature="e#41373#41508#0" expanded="false" />
+            <element signature="e#41418#41490#0" expanded="false" />
+            <element signature="e#41574#41713#0" expanded="false" />
+            <element signature="e#41617#41695#0" expanded="false" />
+            <element signature="e#41843#42356#0" expanded="false" />
+            <element signature="e#41987#42131#0" expanded="false" />
+            <element signature="e#42032#42113#0" expanded="false" />
+            <element signature="e#42197#42345#0" expanded="false" />
+            <element signature="e#42240#42327#0" expanded="false" />
+            <element signature="e#42483#42531#0" expanded="false" />
+            <element signature="e#42776#44039#0" expanded="false" />
+            <element signature="e#42810#42919#0" expanded="false" />
+            <element signature="e#42937#44029#0" expanded="false" />
+            <element signature="e#42959#43712#0" expanded="false" />
+            <element signature="e#43071#43323#0" expanded="false" />
+            <element signature="e#43204#43301#0" expanded="false" />
+            <element signature="e#43376#43675#0" expanded="false" />
+            <element signature="e#43429#43513#0" expanded="false" />
+            <element signature="e#43564#43653#0" expanded="false" />
+            <element signature="e#43743#44015#0" expanded="false" />
+            <element signature="e#43787#43911#0" expanded="false" />
+            <element signature="e#43917#43996#0" expanded="false" />
+            <element signature="e#44148#45365#0" expanded="false" />
+            <element signature="e#44182#44849#0" expanded="false" />
+            <element signature="e#44257#44816#0" expanded="false" />
+            <element signature="e#44326#44617#0" expanded="false" />
+            <element signature="e#44459#44588#0" expanded="false" />
+            <element signature="e#44643#44798#0" expanded="false" />
+            <element signature="e#44692#44776#0" expanded="false" />
+            <element signature="e#44867#45355#0" expanded="false" />
+            <element signature="e#44889#45047#0" expanded="false" />
+            <element signature="e#44951#45027#0" expanded="false" />
+            <element signature="e#45062#45341#0" expanded="false" />
+            <element signature="e#45106#45238#0" expanded="false" />
+            <element signature="e#45244#45323#0" expanded="false" />
+            <element signature="e#45456#46040#0" expanded="false" />
+            <element signature="e#45490#45587#0" expanded="false" />
+            <element signature="e#45605#46030#0" expanded="false" />
+            <element signature="e#45627#45777#0" expanded="false" />
+            <element signature="e#45681#45757#0" expanded="false" />
+            <element signature="e#45792#46016#0" expanded="false" />
+            <element signature="e#45836#45913#0" expanded="false" />
+            <element signature="e#45919#45998#0" expanded="false" />
+            <element signature="e#46153#46622#0" expanded="false" />
+            <element signature="e#46194#46432#0" expanded="false" />
+            <element signature="e#46522#46590#0" expanded="false" />
+            <element signature="e#46952#47113#0" expanded="false" />
+            <element signature="e#47017#47093#0" expanded="false" />
+            <element signature="e#47128#47352#0" expanded="false" />
+            <element signature="e#47172#47249#0" expanded="false" />
+            <element signature="e#47255#47334#0" expanded="false" />
+            <element signature="e#47482#48527#0" expanded="false" />
+            <element signature="e#47493#47541#0" expanded="false" />
+            <element signature="e#47957#48495#0" expanded="false" />
+            <element signature="e#48011#48050#0" expanded="false" />
+            <element signature="e#48077#48225#0" expanded="false" />
+            <element signature="e#48256#48422#0" expanded="false" />
+            <element signature="e#48440#48485#0" expanded="false" />
+            <element signature="e#48611#54147#0" expanded="false" />
+            <element signature="e#48622#48670#0" expanded="false" />
+            <element signature="e#49015#52152#0" expanded="false" />
+            <element signature="e#49053#49152#0" expanded="false" />
+            <element signature="e#49355#49442#0" expanded="false" />
+            <element signature="e#50199#50286#0" expanded="false" />
+            <element signature="e#50991#51039#0" expanded="false" />
+            <element signature="e#51113#51225#0" expanded="false" />
+            <element signature="e#51278#51391#0" expanded="false" />
+            <element signature="e#51409#51490#0" expanded="false" />
+            <element signature="e#52223#53641#0" expanded="false" />
+            <element signature="e#52495#53630#0" expanded="false" />
+            <element signature="e#52549#53615#0" expanded="false" />
+            <element signature="e#52899#53597#0" expanded="false" />
+            <element signature="e#53199#53575#0" expanded="false" />
+            <element signature="e#53393#53547#0" expanded="false" />
+            <element signature="e#53701#54116#0" expanded="false" />
+            <element signature="e#54228#54925#0" expanded="false" />
+            <element signature="e#54239#54287#0" expanded="false" />
+            <element signature="e#54445#54508#0" expanded="false" />
+            <element signature="e#54560#54626#0" expanded="false" />
+            <element signature="e#54677#54747#0" expanded="false" />
+            <element signature="e#54813#54893#0" expanded="false" />
+            <element signature="e#55033#58813#0" expanded="false" />
+            <element signature="e#55044#55092#0" expanded="false" />
+            <element signature="e#55335#57800#0" expanded="false" />
+            <element signature="e#55375#57790#0" expanded="false" />
+            <element signature="e#55694#55873#0" expanded="false" />
+            <element signature="e#55743#55850#0" expanded="false" />
+            <element signature="e#56063#56179#0" expanded="false" />
+            <element signature="e#56222#56378#0" expanded="false" />
+            <element signature="e#56888#57172#0" expanded="false" />
+            <element signature="e#57285#57442#0" expanded="false" />
+            <element signature="e#57532#57726#0" expanded="false" />
+            <element signature="e#57585#57700#0" expanded="false" />
+            <element signature="e#57930#58386#0" expanded="false" />
+            <element signature="e#58044#58123#0" expanded="false" />
+            <element signature="e#58216#58349#0" expanded="false" />
+            <element signature="e#58257#58335#0" expanded="false" />
+            <element signature="e#58457#58781#0" expanded="false" />
+            <element signature="e#58579#58769#0" expanded="false" />
+            <element signature="e#58889#59738#0" expanded="false" />
+            <element signature="e#58900#58948#0" expanded="false" />
+            <element signature="e#59107#59705#0" expanded="false" />
+            <element signature="e#59161#59200#0" expanded="false" />
+            <element signature="e#59356#59695#0" expanded="false" />
+            <element signature="e#59440#59681#0" expanded="false" />
+            <element signature="e#59824#61067#0" expanded="false" />
+            <element signature="e#59835#59883#0" expanded="false" />
+            <element signature="e#60143#60418#0" expanded="false" />
+            <element signature="e#60245#60302#0" expanded="false" />
+            <element signature="e#60534#60830#0" expanded="false" />
+            <element signature="e#60613#60714#0" expanded="false" />
+            <element signature="e#60922#61034#0" expanded="false" />
+            <element signature="e#61193#61241#0" expanded="false" />
+            <element signature="e#61431#61619#0" expanded="false" />
+            <element signature="e#61485#61548#0" expanded="false" />
+            <element signature="e#61566#61609#0" expanded="false" />
+            <element signature="e#61671#63799#0" expanded="false" />
+            <element signature="e#61737#63121#0" expanded="false" />
+            <element signature="e#61980#62731#0" expanded="false" />
+            <element signature="e#62075#62217#0" expanded="false" />
+            <element signature="e#62318#62471#0" expanded="false" />
+            <element signature="e#62579#62711#0" expanded="false" />
+            <element signature="e#62753#63107#0" expanded="false" />
+            <element signature="e#63139#63752#0" expanded="false" />
+            <element signature="e#64318#65003#0" expanded="false" />
+            <element signature="e#64329#64377#0" expanded="false" />
+            <element signature="e#64628#64744#0" expanded="false" />
+            <element signature="e#64858#64971#0" expanded="false" />
+            <element signature="e#65098#65816#0" expanded="false" />
+            <element signature="e#65109#65157#0" expanded="false" />
+            <element signature="e#65419#65535#0" expanded="false" />
+            <element signature="e#65651#65784#0" expanded="false" />
+            <element signature="e#65889#66547#0" expanded="false" />
+            <element signature="e#65900#65948#0" expanded="false" />
+            <element signature="e#66219#66515#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/contests.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="135" column="27" selection-start-line="135" selection-start-column="27" selection-end-line="135" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server/business_logic/quiz.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="421" column="81" selection-start-line="421" selection-start-column="81" selection-end-line="421" selection-end-column="81" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/config.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.027638191">
-          <caret line="1" column="49" selection-start-line="1" selection-start-column="49" selection-end-line="1" selection-end-column="49" />
-          <folding />
         </state>
       </provider>
     </entry>
