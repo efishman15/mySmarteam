@@ -707,14 +707,27 @@ angular.module("topTeamer.services", [])
         //Retruns an object {"time" : "ends in xxx, started in xxx, ended xxx days ago, starting etc...", "color" : #color
         service.getTimePhrase = function (contest, timeMode) {
 
+            var now = (new Date()).getTime();
             var contestTimeTerm;
             var contestTimeNumber;
             var contestTimeUnits;
             var contestTimeColor;
 
             if (timeMode === "starts") {
-                contestTimeNumber = contest.startsInNumber;
-                contestTimeUnits = contest.startsInUnits;
+                var startMinutes = Math.abs(now - contest.startDate) / 1000 / 60;
+                if (startMinutes >= 60 * 24) {
+                    contestTimeNumber = Math.ceil(startMinutes / 24 / 60);
+                    contestTimeUnits = "DAYS";
+                }
+                else if (startMinutes >= 60) {
+                    contestTimeNumber = Math.ceil(startMinutes / 60);
+                    contestTimeUnits = "HOURS";
+                }
+                else {
+                    contestTimeNumber = Math.ceil(startMinutes);
+                    contestTimeUnits = "MINUTES";
+                }
+
                 contestTimeColor = $rootScope.settings.charts.contestAnnotations.time.running.color;
 
                 if (contest.status === "running") {
@@ -725,8 +738,19 @@ angular.module("topTeamer.services", [])
                 }
             }
             else if (timeMode === "ends") {
-                contestTimeNumber = contest.endsInNumber;
-                contestTimeUnits = contest.endsInUnits;
+                var endMinutes = Math.abs(contest.endDate - now) / 1000 / 60;
+                if (endMinutes >= 60 * 24) {
+                    contestTimeNumber = Math.ceil(endMinutes / 24 / 60);
+                    contestTimeUnits = "DAYS";
+                }
+                else if (endMinutes >= 60) {
+                    contestTimeNumber = Math.ceil(endMinutes / 60);
+                    contestTimeUnits = "HOURS";
+                }
+                else {
+                    contestTimeNumber = Math.ceil(endMinutes);
+                    contestTimeUnits = "MINUTES";
+                }
 
                 if (contest.status === "running") {
                     contestTimeTerm = "CONTEST_ENDS_IN";

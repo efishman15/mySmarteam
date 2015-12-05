@@ -114,12 +114,12 @@
             }
         });
 
-        $scope.share = function () {
+        $scope.share = function (contest) {
             if ($rootScope.user.clientInfo.mobile) {
-                ShareService.mobileShare();
+                ShareService.mobileShare(contest);
             }
             else {
-                $rootScope.gotoView("app.share", false);
+                $rootScope.gotoView("app.share", false, {"contest": contest});
             }
         };
 
@@ -245,7 +245,7 @@
 
         $rootScope.$on("topTeamer-contestCreated", function (event, contest) {
             $rootScope.deepLinkContestId = contest._id;
-            $rootScope.contestJustCreated = true;
+            $rootScope.contestJustCreated = contest;
         });
 
         $scope.fcEvents = {
@@ -254,7 +254,7 @@
             }
         }
 
-        $scope.gotoContest = function(id, contest) {
+        $scope.gotoContest = function (id, contest) {
             $rootScope.gotoView("app.contest", false, {"id": id});
             $rootScope.$broadcast("topTeamer-contestUpdated", contest);
         }
@@ -1792,7 +1792,14 @@
 
             $scope.closeMobileShareModal = function (sharePressed) {
                 if (sharePressed) {
-                    $scope.share();
+                    var contest;
+                    if ($rootScope.contestJustCreated) {
+                        contest = $rootScope.contestJustCreated;
+                    }
+                    else if ($scope.contestChart && $scope.contestChart.contest) {
+                        contest = $scope.contestChart.contest;
+                    }
+                    $scope.share(contest);
                 }
                 $scope.mobileShareModal.hide();
             };
@@ -1823,14 +1830,17 @@
 
         });
 
+        $scope.$on("modal.hidden", function (event, viewData) {
+            $rootScope.contestJustCreated = null;
+        });
+
         $scope.$on("$ionicView.afterEnter", function (event, viewData) {
             if ($rootScope.contestJustCreated) {
-                $rootScope.contestJustCreated = false;
                 if ($rootScope.user.clientInfo.mobile) {
                     $scope.openMobileShareModal();
                 }
                 else {
-                    $scope.share();
+                    $scope.share($rootScope.contestJustCreated);
                 }
             }
 
@@ -1845,7 +1855,7 @@
 
         $scope.$on("$ionicView.leave", function (event, viewData) {
             $scope.animateResults = false;
-            $rootScope.contestJustCreated = false;
+            $rootScope.contestJustCreated = null;
         });
 
         function refreshContest(contest) {
@@ -1978,12 +1988,15 @@
             refreshContest(contest);
         });
 
-        $scope.share = function () {
+        $scope.share = function (contest) {
+            if (!contest) {
+                contest = $scope.contestChart.contest;
+            }
             if ($rootScope.user.clientInfo.mobile) {
-                ShareService.mobileShare($scope.contestChart.contest);
+                ShareService.mobileShare(contest);
             }
             else {
-                $rootScope.gotoView("app.share", false, {contest: $scope.contestChart.contest});
+                $rootScope.gotoView("app.share", false, {contest: contest});
             }
         };
     })

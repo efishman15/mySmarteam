@@ -391,36 +391,6 @@ function prepareContestForClient(contest, session) {
         contest.status = "running";
     }
 
-    //ends In...or ended
-    var endMinutes = mathjs.abs(contest.endDate - now) / 1000 / 60;
-    if (endMinutes >= 60 * 24) {
-        contest.endsInNumber = mathjs.ceil(endMinutes / 24 / 60);
-        contest.endsInUnits = "DAYS";
-    }
-    else if (endMinutes >= 60) {
-        contest.endsInNumber = mathjs.ceil(endMinutes / 60);
-        contest.endsInUnits = "HOURS";
-    }
-    else {
-        contest.endsInNumber = mathjs.ceil(endMinutes);
-        contest.endsInUnits = "MINUTES";
-    }
-
-    //starts or started
-    var startMinutes = mathjs.abs(now - contest.startDate) / 1000 / 60;
-    if (startMinutes >= 60 * 24) {
-        contest.startsInNumber = mathjs.ceil(startMinutes / 24 / 60);
-        contest.startsInUnits = "DAYS";
-    }
-    else if (startMinutes >= 60) {
-        contest.startsInNumber = mathjs.ceil(startMinutes / 60);
-        contest.startsInUnits = "HOURS";
-    }
-    else {
-        contest.startsInNumber = mathjs.ceil(startMinutes);
-        contest.startsInUnits = "MINUTES";
-    }
-
     setContestScores(contest);
 
     if (contest.status !== "finished") {
