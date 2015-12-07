@@ -643,3 +643,9 @@ label.item.valid-lr {
     font-size: 12px;
     color: #004d40;
 }
+
+.contest-animation-share-image {
+    position: absolute;
+    top : 6px;
+    font-size: 45px;
+}

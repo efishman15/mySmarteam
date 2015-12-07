@@ -56,10 +56,15 @@
         </div>
 
         <div ng-if="animateResults" class="padding-left padding-right">
-            <div class="item item-balanced item-divider center long-animated {{lastQuizResults.data.animation}}">
+            <div class="item item-divider center long-animated {{lastQuizResults.data.animation}}">
                 <h2>{{lastQuizResults.data.clientKey + '_TITLE' | translate }}</h2>
 
                 <h3>{{lastQuizResults.data.clientKey + '_MESSAGE' | translate: lastQuizResults.data.clientValues }}</h3>
+                <i class="balanced pointer contest-animation-share-image ion-android-share-alt"
+                   style="{{$root.settings.languages[$root.session.settings.language].oppositeAlign}}: 10px;"
+                   ng-click="share()"
+                   analytics-on="click"
+                   analytics-event="contest/share/animation/click"></i>
             </div>
         </div>
 
