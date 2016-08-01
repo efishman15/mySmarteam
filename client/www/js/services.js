@@ -64,19 +64,19 @@ angular.module("topTeamer.services", [])
         //Init user
         service.initUser = function (callbackOnSuccess, language, geoInfo) {
 
-            language = StoreService.getLanguage();
+            language = null; //StoreService.getLanguage();
 
             if (language) {
                 service.localInitUser(callbackOnSuccess, language, geoInfo);
             }
             else {
-                //InfoService.getGeoInfo(function (geoResult, geoInfo) {
-                //StoreService.setLanguage(geoResult.language);
-                //service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
-                StoreService.setLanguage("he");
-                service.localInitUser(callbackOnSuccess, "he", geoInfo);
+                InfoService.getGeoInfo(function (geoResult, geoInfo) {
+                StoreService.setLanguage(geoResult.language);
+                service.localInitUser(callbackOnSuccess, geoResult.language, geoInfo);
+                //StoreService.setLanguage("he");
+                //service.localInitUser(callbackOnSuccess, "he", geoInfo);
                 //});
-            }
+            })}
         };
 
         //Set Facebook Credentials from the facebook response
